@@ -1,0 +1,73 @@
+<% include ./partials/header %>
+<script type="text/javascript">
+	document.onreadystatechange = function () {
+		var state = document.readyState
+		if (state == 'interactive') {
+			document.getElementById('contents').style.visibility="hidden";
+		}else if (state == 'complete') {
+			setTimeout(function(){
+				document.getElementById('interactive');
+				document.getElementById('load').style.visibility="hidden";
+				document.getElementById('contents').style.visibility="visible";
+			},1000);
+		}
+	}
+	var tempArr = [];
+	var humidArr = [];
+	var arr = [];
+	arr.push(["Date", "Temperature", "Humidity"]);
+<% charts.forEach(function(myChart){ %>
+		tempArr.push([new Date("<%=myChart.date%>"), <%=myChart.temp%>]);
+		arr.push([new Date("<%=myChart.date%>"), <%=myChart.temp%>, <%=myChart.humid%>]);
+		humidArr.push([new Date("<%=myChart.date%>"), <%=myChart.humid%>]);
+	<% }); %>
+	drawChart('chart_div', 'Temperature', tempArr);
+	drawChart('chart_div1', 'Humidity', humidArr);
+    drawChart('chart_div2', 'Temperature + Humidity', arr);
+	var options = {
+		width: 900,
+		height: 500,
+		legend: {position: 'none'},
+		enableInteractivity: false,
+		chartArea: {
+		  width: '85%'
+		},
+		hAxis: {
+		  viewWindow: {
+		    min: new Date(tempArr[0][0]), // first temp reading
+		    max: new Date(tempArr[tempArr.length - 1][0]) // latest temp reading
+		  },
+		  gridlines: {
+		    count: -1,
+		    units: {
+		      days: {format: ['MMM dd']},
+		      hours: {format: ['HH:mm', 'ha']},
+		    }
+		  },
+		  minorGridlines: {
+		    units: {
+		      hours: {format: ['hh:mm:ss a', 'ha']},
+		      minutes: {format: ['HH:mm a Z', ':mm']}
+		    }
+		  }
+		}
+	};
+</script>
+<body>
+	<div id="load"></div>
+	<div class="container" id="contents">
+		<select id="mySelect">
+			<option value="" default>Display ..</option>
+			<option value="Yesterday">Yesterday</option>
+			<option value="Today">Today</option>
+			<option value="Week">Week</option>
+			<option value="Month">Month</option>
+			<option value="All Time">All Time</option>
+		</select>
+		<div id="chart_div" style="width: 900px; height: 500px;"></div>
+		<div id="chart_div1" style="width: 900px; height: 500px;"></div>
+		<div id="chart_div2" style="width: 900px; height: 500px;"></div>
+	</div>
+</body>
+
+<% include ./partials/footer %>
