@@ -7,26 +7,26 @@ var express        = require("express"),
     sensor         = require('node-dht-sensor'),
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
-    schedule       = require('node-schedule'),
-    http          = require('http');
+    // schedule       = require('node-schedule'),
+    // http          = require('http');
     app            = express();
 // requiring routes
 var indexRoutes   = require("./routes/index"),
     sensorRoutes  = require("./routes/sensors"),
     chartRoutes   = require("./routes/charts");
 
-var lightsOn = schedule.scheduleJob('00 20 * * *', function(){
-    http.get("http://192.168.1.129:5000/2", (resp)=> { console.log(resp)});
-});
-var lightsOff = schedule.scheduleJob('00 14 * * *', function(){
-    http.get("http://192.168.1.129:5000/2", (resp)=> { console.log(resp)});
-});
-var pumpOn = schedule.scheduleJob('00 19 * * *', function(){
-    http.get("http://192.168.1.129:5000/3", (resp)=> { console.log(resp)});
-});
-var pumpOff = schedule.scheduleJob('05 19 * * *', function(){
-    http.get("http://192.168.1.129:5000/3", (resp)=> { console.log(resp)});
-});
+// var lightsOn = schedule.scheduleJob('00 20 * * *', function(){
+//     http.get("http://192.168.1.129:5000/2", (resp)=> { console.log(resp)});
+// });
+// var lightsOff = schedule.scheduleJob('00 14 * * *', function(){
+//     http.get("http://192.168.1.129:5000/2", (resp)=> { console.log(resp)});
+// });
+// var pumpOn = schedule.scheduleJob('00 19 * * *', function(){
+//     http.get("http://192.168.1.129:5000/3", (resp)=> { console.log(resp)});
+// });
+// var pumpOff = schedule.scheduleJob('05 19 * * *', function(){
+//     http.get("http://192.168.1.129:5000/3", (resp)=> { console.log(resp)});
+// });
 mongoose.connect("mongodb://username:password@ds219191.mlab.com:19191/dht-sensors", function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
