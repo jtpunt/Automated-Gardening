@@ -1,7 +1,7 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 const outlet1 = new Gpio(2, 'out'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'out');
-const APPROVED_GPIO = [2,3]; // gpios that the system is set uo to handle
+const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
 
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
