@@ -41,6 +41,49 @@ function setChartHandler(chart, data, title){
         chart.draw(data, options);
     });
 }
+function setDateHandler(chart, data, title){
+    var fromDate = null;
+    var toDate = null;
+    var dateFormat = "mm/dd/yy",
+        from = $( "#from" )
+            .datepicker({
+                defaultDate: "+1w",
+                changeMonth: true,
+                numberOfMonths: 3
+            })
+            .on( "change", function() {
+                to.datepicker( "option", "minDate", getDate( this ) );
+                fromDate = getDate(this);
+                console.log("Date from changed!", getDate(this));
+            }),
+        to = $( "#to" ).datepicker({
+            defaultDate: "+1w",
+            changeMonth: true,
+            numberOfMonths: 3
+        })
+            .on( "change", function() {
+                from.datepicker( "option", "maxDate", getDate( this ) );
+                toDate = getDate(this);
+                console.log(fromDate, toDate);
+                if(fromDate !== null && toDate !== null){
+                    console.log("update charts");
+                    options.hAxis.viewWindow.min = fromDate;
+                    options.hAxis.viewWindow.max = toDate;
+                    options.title=title;
+                    chart.draw(data, options);
+                }
+                console.log("Date to changed!", getDate(this));
+            });
+    function getDate( element ) {
+        var date;
+        try {
+            date = $.datepicker.parseDate( dateFormat, element.value );
+        } catch( error ) {
+            date = null;
+        }
+        return date;
+    }
+}
 // if multi-line chart
 //      add options below
 //           curveType: 'function',
@@ -68,5 +111,6 @@ function drawChart(ele, title, readings) {
         options.title=title;
         chart.draw(data, options);
         setChartHandler(chart, data, title);
+        setDateHandler(chart, data, title);
     }});
 }
