@@ -1,0 +1,25 @@
+<% include ./partials/header %>
+<% sensors.forEach(function(sensor){ %>
+	<script type="text/javascript">
+		drawGauge(<%=sensor.temperature%> * 9/5 + 32, 0, 'temp' + <%=sensor.pin%>);
+		drawGauge(<%=sensor.humidity%>, 1, 'humid' + <%=sensor.pin%>);
+	</script>
+<% }); %>
+<body>
+	<div id="load"></div>
+	<div class="container"  id="contents">
+		<h3>CURRENT CONDITIONS</h3>
+		<% sensors.forEach(function(sensor){ %>
+			<div class="row">
+				<div class="col-sm-3">
+					<div id="temp<%=sensor.pin%>"></div>
+				</div>
+				<div class="col-sm-3">
+					<div id="humid<%=sensor.pin%>"></div>
+				</div>
+			</div>
+		<% 
+		}); %>
+	</div>
+</body>
+<% include ./partials/footer %>
