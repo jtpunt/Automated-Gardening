@@ -1,8 +1,10 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+var schedule      = require('node-schedule');
+// Living room lights use 'out', otherwise, set to 'high'
 const outlet1 = new Gpio(2, 'out'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'out');
 const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
-
+var schedules = [];
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
         if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)
@@ -26,7 +28,7 @@ function getStatus(gpio_input, res){
     }
 }
 function validateInput(gpio_input, res, fn){
-    if(isNaN(gpio_input)){ // make sure a number was passed in
+    if(Number.isNaN(gpio_input)){ // make sure a number was passed in
         console.log("not a number!\n");
         return false;
     }else if(APPROVED_GPIO.includes(gpio_input)){ // was 2 or 3 passed in?
@@ -39,11 +41,37 @@ function validateInput(gpio_input, res, fn){
 }
 module.exports = function(app) {
     app.get('/:id', function(req, res){
+        console.log("in /:id route\n");
         var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
         validateInput(gpio_input, res, activateRelay);
     });
+    // returns all schedules
+    app.get('/schedule', function(req, res) {
+        
+    });
+    // add a new chedule
+    app.post('/schedule', function(req, res){
+        
+    });
+    // edit an existing schedule
+    app.put('/schedule/:id', function(req, res){
+        
+    });
+    // delete an existing schedule
+    app.delete('/schedule/:id', function(req, res){
+        
+    });
     app.get('/status/:id', function(req, res){
+        console.log("in /status/:id route\n");
         var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
         validateInput(gpio_input, res, getStatus);
     });
 };
+var lightsOn = schedule.scheduleJob('30 15 * * *', function(){
+    activateRelay(3);
+    console.log(schedules);
+    console.log(schedules[0].cancel());
+    console.log(schedules);
+});
+schedules.push(lightsOn);
+schedules[0].cancel();
