@@ -13,7 +13,8 @@ var express        = require("express"),
 // requiring routes
 var indexRoutes   = require("./routes/index"),
     sensorRoutes  = require("./routes/sensors"),
-    chartRoutes   = require("./routes/charts");
+    chartRoutes   = require("./routes/charts"),
+    schedRoutes   = require("./routes/schedule");
 
 // var lightsOn = schedule.scheduleJob('00 20 * * *', function(){
 //     http.get("http://192.168.1.129:5000/2", (resp)=> { console.log(resp)});
@@ -27,7 +28,7 @@ var indexRoutes   = require("./routes/index"),
 // var pumpOff = schedule.scheduleJob('05 19 * * *', function(){
 //     http.get("http://192.168.1.129:5000/3", (resp)=> { console.log(resp)});
 // });
-mongoose.connect("mongodb://username:password@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
+mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
@@ -66,6 +67,7 @@ app.use(function(req, res, next){
 app.use("/", indexRoutes);
 app.use("/sensors", sensorRoutes);
 app.use("/charts", chartRoutes);
+app.use("/schedule", schedRoutes);
 var port = 8080;
 app.listen(port,process.env.IP, function(){
     console.log("server started on port ", port); 
