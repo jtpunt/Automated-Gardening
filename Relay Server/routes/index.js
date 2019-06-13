@@ -80,6 +80,20 @@ module.exports = function(app) {
             else{
                 console.log(schedule, " created");
                 schedule.save();
+                var mySchedule = {
+                    newSchedule.second,
+                    newSchedule.minute,
+                    newSchedule.hour,
+                    newSchedule.date,
+                    newSchedule.month,
+                    newSchedule.year,
+                    newSchedule.dayOfWeek
+                };
+                var j = schedule.scheduleJob(mySchedule, function(){
+                    console.log('Schedule created!');
+                });
+                schedules.push(j);
+                console.log(schedules);
             }
         });
     });
