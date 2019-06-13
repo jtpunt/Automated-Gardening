@@ -1,10 +1,14 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var schedule      = require('node-schedule');
+var Scheduler     = require("../models/schedular"),
 // Living room lights use 'out', otherwise, set to 'high'
 const outlet1 = new Gpio(2, 'out'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'out');
 const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
 var schedules = [];
+var ip = require("ip");
+var localIP = ip.address();
+console.log(localIP);
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
         if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)
@@ -47,19 +51,77 @@ module.exports = function(app) {
     });
     // returns all schedules
     app.get('/schedule', function(req, res) {
-        
+        Scheduler.find({}, (err, schedules) => {
+            if(err)
+                console.log(err);
+            else{
+                console.log(schedules);
+                res.write(JSON.stringify(schedules));
+                res.status(200).end();
+            }
+            
+        });
     });
     // add a new chedule
     app.post('/schedule', function(req, res){
-        
+        let newSchedule = { 
+            local_ip: req.body.local_ip, 
+            gpio: req.body.gpio,
+            second: req.body.second,
+            minute: req.body.minute,
+            hour: req.body.hour,
+            date: req.body.date,
+            month: req.body.month,
+            year: req.body.year,
+            dayOfWeek: req.body.dayOfWeek
+        };
+        Scheduler.create(newSchedule, (err, schedule) =>{
+            if(err) console.log(err);
+            else{
+                console.log(schedule, " created");
+                schedule.save();
+            }
+        });
+    });
+    app.get('/schedule/:schedule_id', function(req, res) {
+        Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
+            if(err) res.redirect("back");
+            else{
+                console.log(foundSchedule);
+                res.write(JSON.stringify(foundSchedule));
+            }
+        }); 
     });
     // edit an existing schedule
-    app.put('/schedule/:id', function(req, res){
-        
+    app.put('/schedule/:schedule_id', function(req, res){
+        let newSchedule = { 
+            local_ip: req.body.local_ip, 
+            gpio: req.body.gpio,
+            second: req.body.second,
+            minute: req.body.minute,
+            hour: req.body.hour,
+            date: req.body.date,
+            month: req.body.month,
+            year: req.body.year,
+            dayOfWeek: req.body.dayOfWeek
+        };
+        Scheduler.findByIdAndUpdate(req.params.schedule_id, {$set: newData}, (err, schedule) => {
+            if(err){
+                console.log(err);
+            } else {
+                console.log("Successfully Updated!");
+                console.log(schedule);
+            }
+        });
     });
     // delete an existing schedule
-    app.delete('/schedule/:id', function(req, res){
-        
+    app.delete('/schedule/:schedule_id', function(req, res){
+        Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
+            if(err)
+                console.log(err);
+            else
+                console.log("Success!");
+        });
     });
     app.get('/status/:id', function(req, res){
         console.log("in /status/:id route\n");
