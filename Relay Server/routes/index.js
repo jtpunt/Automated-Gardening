@@ -9,6 +9,13 @@ var schedules = [];
 var ip = require("ip");
 var localIP = ip.address();
 console.log(localIP);
+Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
+    if(err)
+        console.log(err);
+    else{
+        console.log(mySchedules);
+    }
+});
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
         if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)
