@@ -8,6 +8,7 @@
 **********************************************************************/
 var express = require('express');
 var routes = require('./routes/index.js');
+var mongoose = require("mongoose");
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser'); // body parser middleware
 var port = 5000;
@@ -23,6 +24,15 @@ app.set('view engine', 'handlebars');
 **********************************************************************/
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
+mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
+    if(err){
+        console.log("Error connecting to mongodb", err);
+        // default schedule here
+    }else{
+        console.log("No errors occured");
+        // query db for schedule setup
+    }
+});
 /**********************************************************************
 * Setup Routes For Our Server
 **********************************************************************/

@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-var scheduleSchema = new mongoose.Schema({
+var schedulerSchema = new mongoose.Schema({
     local_ip: String,
     gpio: Number,
     second: Number,

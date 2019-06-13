@@ -1,6 +1,6 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var schedule      = require('node-schedule');
-var Scheduler     = require("../models/schedular"),
+var Scheduler     = require("../models/scheduler");
 // Living room lights use 'out', otherwise, set to 'high'
 const outlet1 = new Gpio(2, 'out'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'out');
@@ -44,12 +44,7 @@ function validateInput(gpio_input, res, fn){
     }
 }
 module.exports = function(app) {
-    app.get('/:id', function(req, res){
-        console.log("in /:id route\n");
-        var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-        validateInput(gpio_input, res, activateRelay);
-    });
-    // returns all schedules
+        // returns all schedules
     app.get('/schedule', function(req, res) {
         Scheduler.find({}, (err, schedules) => {
             if(err)
@@ -64,7 +59,8 @@ module.exports = function(app) {
     });
     // add a new chedule
     app.post('/schedule', function(req, res){
-        let newSchedule = { 
+        console.log(req.body);
+        var newSchedule = { 
             local_ip: req.body.local_ip, 
             gpio: req.body.gpio,
             second: req.body.second,
@@ -80,6 +76,26 @@ module.exports = function(app) {
             else{
                 console.log(schedule, " created");
                 schedule.save();
+                var mySchedule = {
+                    second: newSchedule['second'],
+                    minute: newSchedule['minute'],
+                    hour: newSchedule['hour'],
+                    // date: newSchedule['date'],
+                    // month: newSchedule['month'],
+                    // year: newSchedule['year'],
+                    // dayOfWeek: newSchedule['dayOfWeek']
+                };
+                console.log(mySchedule);
+                console.log(schedule._id);
+                var node_schedule      = require('node-schedule');
+                var j = node_schedule.scheduleJob(mySchedule, function(){
+                    console.log('Schedule created!');
+                    activateRelay(newSchedule['gpio']);
+                });
+                var db_id = schedule._id;
+                var obj = {"_id": schedule._id, j};
+                schedules.push(obj);
+                console.log(schedules);
             }
         });
     });
@@ -122,6 +138,11 @@ module.exports = function(app) {
             else
                 console.log("Success!");
         });
+    });
+    app.get('/:id', function(req, res){
+        console.log("in /:id route\n");
+        var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
+        validateInput(gpio_input, res, activateRelay);
     });
     app.get('/status/:id', function(req, res){
         console.log("in /status/:id route\n");
