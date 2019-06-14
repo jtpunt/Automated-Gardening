@@ -6,12 +6,13 @@ var express    = require("express"),
 // Shows all active schedules
 router.get("/", (req, res) =>{
     http.get("http://192.168.1.12:5000/schedule", (resp) => {
-        console.log(resp)
+        // console.log(resp)
         let str = '';
         resp.on('data', function(chunk) {
             var data = JSON.parse(chunk);
             console.log(data);
-            res.status(200).end();
+            res.render("schedule", {stylesheets: ["/static/css/sensors.css"]});
+            // res.status(200).end();
         });
     }).on("error", (err) => {
         console.log("Error: " + err.message);
@@ -19,12 +20,14 @@ router.get("/", (req, res) =>{
     });
 });
 router.post("/", (req, res) => {
+    console.log(req.body);
+    console.log(req.body.time.split(":")[0]);
     const newSchedule = querystring.stringify({ 
         local_ip: req.body.local_ip, 
-        gpio: req.body.gpio,
+        gpio: req.body.pin,
         second: req.body.second,
-        minute: req.body.minute,
-        hour: req.body.hour,
+        minute: req.body.time.split(":")[1],
+        hour: req.body.time.split(":")[0],
         date: req.body.date,
         month: req.body.month,
         year: req.body.year,
@@ -59,6 +62,7 @@ router.post("/", (req, res) => {
     // Write data to request body
     myReq.write(newSchedule);
     myReq.end();
+    res.status(200).end();
 });
 //EDIT
 router.get("/:schedule_id/edit", (req, res) => {
