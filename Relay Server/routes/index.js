@@ -168,7 +168,7 @@ module.exports = function(app) {
             if(mySchedule._id == schedule_id){
                 console.log("Match found at index, ", i);
                 console.log(mySchedule._id);
-                mySchedule.cancel();
+                mySchedule.j.cancel();
                 console.log("Schedule canceled and removed!\n");
                 schedule.slice(i, 1);
             }
