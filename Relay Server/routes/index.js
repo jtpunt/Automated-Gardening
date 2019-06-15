@@ -19,10 +19,10 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
                 second: mySchedule['second'],
                 minute: mySchedule['minute'],
                 hour: mySchedule['hour'],
-                date: mySchedule['date'],
-                month: mySchedule['month'],
-                year: mySchedule['year'],
-                dayOfWeek: mySchedule['dayOfWeek']
+                // date: mySchedule['date'],
+                // month: mySchedule['month'],
+                // year: mySchedule['year'],
+                // dayOfWeek: mySchedule['dayOfWeek']
             };
             var node_schedule      = require('node-schedule');
             var j = node_schedule.scheduleJob(newSchedule, function(){
@@ -93,10 +93,10 @@ module.exports = function(app) {
             second: req.body.second,
             minute: req.body.minute,
             hour: req.body.hour,
-            date: req.body.date,
-            month: req.body.month,
-            year: req.body.year,
-            dayOfWeek: req.body.dayOfWeek
+            // date: req.body.date,
+            // month: req.body.month,
+            // year: req.body.year,
+            // dayOfWeek: req.body.dayOfWeek
         };
         Scheduler.create(newSchedule, (err, schedule) =>{
             if(err) console.log(err);
