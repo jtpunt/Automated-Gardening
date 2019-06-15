@@ -24,8 +24,8 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
                 // year: mySchedule['year'],
                 // dayOfWeek: mySchedule['dayOfWeek']
             };
-            var node_schedule      = require('node-schedule');
-            var j = node_schedule.scheduleJob(newSchedule, function(){
+            // var node_schedule      = require('node-schedule');
+            var j = schedule.scheduleJob(newSchedule, function(){
                 console.log('Schedule created!');
                 activateRelay(mySchedule['gpio']);
             });
