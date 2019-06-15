@@ -167,8 +167,13 @@ module.exports = function(app) {
             console.log(typeof mySchedule._id);
             if(mySchedule._id == schedule_id){
                 console.log("Match found at index, ", i);
+                console.log(mySchedule._id);
+                mySchedule.cancel();
+                console.log("Schedule canceled and removed!\n");
+                schedule.slice(i, 1);
             }
-        })
+        });
+        console.log(schedules);
         // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
         //     if(err)
         //         console.log(err);
