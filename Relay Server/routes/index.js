@@ -162,10 +162,10 @@ module.exports = function(app) {
     // delete an existing schedule
     app.delete('/schedule/:schedule_id', function(req, res){
         var schedule_id = req.params.schedule_id;
-        console.log(schedule_id);
+        console.log(typeof schedule_id);
         schedules.forEach(function(mySchedule, i){
-            console.log(mySchedule._id);
-            if(mySchedule._id === schedule_id){
+            console.log(typeof mySchedule._id);
+            if(mySchedule._id == schedule_id){
                 console.log("Match found at index, ", i);
             }
         })
@@ -187,11 +187,3 @@ module.exports = function(app) {
         validateInput(gpio_input, res, getStatus);
     });
 };
-var lightsOn = schedule.scheduleJob('30 15 * * *', function(){
-    activateRelay(3);
-    console.log(schedules);
-    console.log(schedules[0].cancel());
-    console.log(schedules);
-});
-schedules.push(lightsOn);
-schedules[0].cancel();
