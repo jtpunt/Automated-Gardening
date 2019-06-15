@@ -19,7 +19,7 @@
 					<div class="rTableCell"><%=schedule.hour%>:<%=schedule.minute%></div>
 					<div>
 						<a class="btn btn-warning" href="/schedule/<%=schedule._id%>/edit">Edit</a>
-		                <form action="/schedule/<%=schedule._id%>?_method=DELETE" method="POST" class="delete-form">
+		                <form action="/schedule/<%=schedule._id%>/local_ip/<%=schedule.local_ip%>/?_method=DELETE" method="POST" class="delete-form">
 		                    <button class="btn btn-danger">Delete</button>
 		                </form>
 		            </div>
