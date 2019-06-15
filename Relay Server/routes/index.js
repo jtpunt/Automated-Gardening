@@ -32,7 +32,7 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
                 activateRelay(newSchedule['gpio']);
             });
             var db_id = mySchedule._id;
-            var obj = {"_id": mySchedule._id, j.Job};
+            var obj = {"_id": mySchedule._id, j};
             schedules.push(obj);
         });
         console.log(schedules);
@@ -169,7 +169,7 @@ module.exports = function(app) {
             if(mySchedule._id == schedule_id){
                 console.log("Match found at index, ", i);
                 console.log(mySchedule._id);
-                mySchedule.cancel();
+                mySchedule.j.cancel();
                 console.log("Schedule canceled and removed!\n");
                 schedules.splice(i, 1);
             }
