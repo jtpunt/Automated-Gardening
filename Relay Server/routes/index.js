@@ -15,21 +15,19 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
     else{
         console.log(mySchedules);
         mySchedules.forEach(function(mySchedule){
-            var newSchedule = { 
-                local_ip: mySchedule.local_ip, 
-                gpio: mySchedule.gpio,
-                second: mySchedule.second,
-                minute: mySchedule.minute,
-                hour: mySchedule.hour,
-                date: mySchedule.date,
-                month: mySchedule.month,
-                year: mySchedule.year,
-                dayOfWeek: mySchedule.dayOfWeek
+            var newSchedule = {
+                second: mySchedule['second'],
+                minute: mySchedule['minute'],
+                hour: mySchedule['hour'],
+                date: mySchedule['date'],
+                month: mySchedule['month'],
+                year: mySchedule['year'],
+                dayOfWeek: mySchedule['dayOfWeek']
             };
             var node_schedule      = require('node-schedule');
-            var j = node_schedule.scheduleJob(mySchedule, function(){
+            var j = node_schedule.scheduleJob(newSchedule, function(){
                 console.log('Schedule created!');
-                activateRelay(newSchedule['gpio']);
+                activateRelay(mySchedule['gpio']);
             });
             console.log(j);
             var obj = {"_id": mySchedule._id, j};
