@@ -16,7 +16,7 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
         console.log(mySchedules);
         mySchedules.forEach(function(mySchedule){
             var newSchedule = {
-                second: mySchedule['second'],
+                // second: mySchedule['second'],
                 minute: mySchedule['minute'],
                 hour: mySchedule['hour'],
                 // date: mySchedule['date'],
@@ -104,7 +104,7 @@ module.exports = function(app) {
                 console.log(schedule, " created");
                 schedule.save();
                 var mySchedule = {
-                    second: newSchedule['second'],
+                    // second: newSchedule['second'],
                     minute: newSchedule['minute'],
                     hour: newSchedule['hour'],
                     // date: newSchedule['date'],
