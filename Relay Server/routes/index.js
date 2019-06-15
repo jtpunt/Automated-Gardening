@@ -14,7 +14,7 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
         console.log(err);
     else{
         console.log(mySchedules);
-        mySchedule.forEach(mySchedule){
+        mySchedule.forEach(function(mySchedule){
             var newSchedule = { 
                 local_ip: mySchedule.local_ip, 
                 gpio: mySchedule.gpio,
