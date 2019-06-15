@@ -171,7 +171,7 @@ module.exports = function(app) {
                 console.log(mySchedule._id);
                 mySchedule.j.cancel();
                 console.log("Schedule canceled and removed!\n");
-                schedules.slice(i, 1);
+                schedules.splice(i, 1);
             }
         });
         console.log(schedules.length);
