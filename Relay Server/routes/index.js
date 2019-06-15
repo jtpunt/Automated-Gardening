@@ -163,6 +163,7 @@ module.exports = function(app) {
     app.delete('/schedule/:schedule_id', function(req, res){
         var schedule_id = req.params.schedule_id;
         console.log(typeof schedule_id);
+        console.log(schedules.length);
         schedules.forEach(function(mySchedule, i){
             console.log(typeof mySchedule._id);
             if(mySchedule._id == schedule_id){
@@ -170,10 +171,10 @@ module.exports = function(app) {
                 console.log(mySchedule._id);
                 mySchedule.j.cancel();
                 console.log("Schedule canceled and removed!\n");
-                schedule.slice(i, 1);
+                schedules.slice(i, 1);
             }
         });
-        console.log(schedules);
+        console.log(schedules.length);
         // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
         //     if(err)
         //         console.log(err);
