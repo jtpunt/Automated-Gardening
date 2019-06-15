@@ -35,8 +35,8 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
             var obj = {"_id": mySchedule._id, j};
             schedules.push(obj);
         });
+        console.log(schedules);
     }
-    console.log(schedules);
 });
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
