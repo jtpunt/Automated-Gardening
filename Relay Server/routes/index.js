@@ -14,7 +14,29 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
         console.log(err);
     else{
         console.log(mySchedules);
+        mySchedule.forEach(mySchedule){
+            var newSchedule = { 
+                local_ip: mySchedule.local_ip, 
+                gpio: mySchedule.gpio,
+                second: mySchedule.second,
+                minute: mySchedule.minute,
+                hour: mySchedule.hour,
+                date: mySchedule.date,
+                month: mySchedule.month,
+                year: mySchedule.year,
+                dayOfWeek: mySchedule.dayOfWeek
+            };
+            var node_schedule      = require('node-schedule');
+            var j = node_schedule.scheduleJob(mySchedule, function(){
+                console.log('Schedule created!');
+                activateRelay(newSchedule['gpio']);
+            });
+            var db_id = mySchedule._id;
+            var obj = {"_id": mySchedule._id, j};
+            schedules.push(obj);
+        });
     }
+    console.log(schedules);
 });
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
