@@ -31,7 +31,7 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
                 console.log('Schedule created!');
                 activateRelay(newSchedule['gpio']);
             });
-            var db_id = mySchedule._id;
+            console.log(j);
             var obj = {"_id": mySchedule._id, j};
             schedules.push(obj);
         });
