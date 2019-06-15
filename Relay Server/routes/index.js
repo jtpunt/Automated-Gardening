@@ -139,12 +139,13 @@ module.exports = function(app) {
     });
     // delete an existing schedule
     app.delete('/schedule/:schedule_id', function(req, res){
-        Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
-            if(err)
-                console.log(err);
-            else
-                console.log("Success!");
-        });
+        console.log(req.params.schedule_id);
+        // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
+        //     if(err)
+        //         console.log(err);
+        //     else
+        //         console.log("Success!");
+        // });
     });
     app.get('/:id', function(req, res){
         console.log("in /:id route\n");

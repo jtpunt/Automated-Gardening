@@ -11,7 +11,7 @@ router.get("/", (req, res) =>{
         resp.on('data', function(chunk) {
             var data = JSON.parse(chunk);
             console.log(data);
-            res.render("schedule", {stylesheets: ["/static/css/sensors.css"]});
+            res.render("schedule", {schedules: data, stylesheets: ["/static/css/sensors.css"]});
             // res.status(200).end();
         });
     }).on("error", (err) => {
@@ -73,7 +73,8 @@ router.put("/:schedule_id", (req, res) => {
 
 })
 router.delete("/:schedule_id", (req, res) => {
-    
+    console.log("in delete route\n");
+    res.status(200).end();
 });
 
 module.exports = router;
