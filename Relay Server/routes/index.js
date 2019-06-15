@@ -161,7 +161,13 @@ module.exports = function(app) {
     });
     // delete an existing schedule
     app.delete('/schedule/:schedule_id', function(req, res){
-        console.log(req.params.schedule_id);
+        var schedule_id = req.params.schedule_id;
+        console.log(schedule_id);
+        schedules.forEach(function(mySchedule, i){
+            if(mySchedule._id === schedule_id){
+                console.log("Match found at index, " i);
+            }
+        })
         // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
         //     if(err)
         //         console.log(err);
