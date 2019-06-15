@@ -164,6 +164,7 @@ module.exports = function(app) {
         var schedule_id = req.params.schedule_id;
         console.log(schedule_id);
         schedules.forEach(function(mySchedule, i){
+            console.log(mySchedule._id);
             if(mySchedule._id === schedule_id){
                 console.log("Match found at index, ", i);
             }
