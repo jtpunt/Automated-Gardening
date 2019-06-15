@@ -107,10 +107,10 @@ module.exports = function(app) {
                     second: newSchedule['second'],
                     minute: newSchedule['minute'],
                     hour: newSchedule['hour'],
-                    date: newSchedule['date'],
-                    month: newSchedule['month'],
-                    year: newSchedule['year'],
-                    dayOfWeek: newSchedule['dayOfWeek']
+                    // date: newSchedule['date'],
+                    // month: newSchedule['month'],
+                    // year: newSchedule['year'],
+                    // dayOfWeek: newSchedule['dayOfWeek']
                 };
                 console.log(mySchedule);
                 console.log(schedule._id);
