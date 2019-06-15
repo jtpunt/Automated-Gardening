@@ -164,23 +164,24 @@ module.exports = function(app) {
         var schedule_id = req.params.schedule_id;
         console.log(typeof schedule_id);
         console.log(schedules.length);
-        schedules.forEach(function(mySchedule, i){
-            console.log(typeof mySchedule._id);
-            if(mySchedule._id == schedule_id){
-                console.log("Match found at index, ", i);
-                console.log(mySchedule._id);
-                mySchedule.j.cancel();
-                console.log("Schedule canceled and removed!\n");
-                schedules.splice(i, 1);
+        Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
+            if(err)
+                console.log(err);
+            else{
+                schedules.forEach(function(mySchedule, i){
+                    console.log(typeof mySchedule._id);
+                    if(mySchedule._id == schedule_id){
+                        console.log("Match found at index, ", i);
+                        console.log(mySchedule._id);
+                        mySchedule.j.cancel();
+                        console.log("Schedule canceled and removed!\n");
+                        schedules.splice(i, 1);
+                    }
+                });
+                console.log(schedules.length);
             }
+            console.log("Success!");
         });
-        console.log(schedules.length);
-        // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
-        //     if(err)
-        //         console.log(err);
-        //     else
-        //         console.log("Success!");
-        // });
     });
     app.get('/:id', function(req, res){
         console.log("in /:id route\n");
