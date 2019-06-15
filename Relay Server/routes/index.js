@@ -165,7 +165,7 @@ module.exports = function(app) {
         console.log(schedule_id);
         schedules.forEach(function(mySchedule, i){
             if(mySchedule._id === schedule_id){
-                console.log("Match found at index, " i);
+                console.log("Match found at index, ", i);
             }
         })
         // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
