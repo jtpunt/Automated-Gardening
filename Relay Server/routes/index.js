@@ -16,6 +16,7 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
         console.log(mySchedules);
         mySchedules.forEach(function(mySchedule){
             var newSchedule = {
+                // commented out second below because it would cause the relay to be activated every other second
                 // second: mySchedule['second'],
                 minute: mySchedule['minute'],
                 hour: mySchedule['hour'],
