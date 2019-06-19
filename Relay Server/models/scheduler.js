@@ -11,4 +11,4 @@ var scheduleSchema = new mongoose.Schema({
     dayOfWeek: Number
     
 });
-module.exports = mongoose.model('Scheduler', scheduleSchema, 'schedules');
+module.exports = mongoose.model('Scheduler', scheduleSchema);

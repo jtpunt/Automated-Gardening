@@ -7,7 +7,7 @@ var express    = require("express"),
 
 router.get("/", (req, res) =>{
     getSensors((sensors) => {
-        res.render("sensors", {sensors: sensors, stylesheets: ["/static/css/sensors.css"]});
+        res.render("sensor/index", {sensors: sensors, stylesheets: ["/static/css/sensors.css"]});
     });
 });
 router.post("/", (req, res) => {
@@ -17,7 +17,7 @@ router.post("/", (req, res) => {
             console.log(sensor, " created");
             sensor.save();
             getSensors((sensors) =>{
-                res.render("sensors", {sensors: sensors});
+                res.render("sensor/index", {sensors: sensors});
             });
         }
     });
@@ -28,7 +28,7 @@ router.get("/:sensor_id/edit", (req, res) => {
         if(err) res.redirect("back");
         else{
             console.log(foundSensor);
-            res.render("edit", {sensor: foundSensor});
+            res.render("sensor/edit", {sensor: foundSensor});
         }
     });
 });
@@ -49,7 +49,7 @@ router.delete("/:sensor_id", (req, res) => {
         if(err) res.redirect("back");
         else{
             getSensors((sensors) => {
-                res.render("sensors", {sensors: sensors});
+                res.render("sensor/index", {sensors: sensors});
             });
         }
     });

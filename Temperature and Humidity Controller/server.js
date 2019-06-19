@@ -68,6 +68,16 @@ app.use("/", indexRoutes);
 app.use("/sensors", sensorRoutes);
 app.use("/charts", chartRoutes);
 app.use("/schedule", schedRoutes);
+app.use(function(req,res){
+    res.status(404);
+    res.render('404');
+});
+app.use(function(err, req, res, next){
+    console.error(err.stack);
+    res.type('plain/text');
+    res.status(500);
+    res.render('500');
+});
 var port = 8080;
 app.listen(port,process.env.IP, function(){
     console.log("server started on port ", port); 

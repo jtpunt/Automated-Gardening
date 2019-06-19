@@ -2,7 +2,43 @@ var express    = require("express"),
     http       = require('http'),
     querystring= require('querystring'),
     router     = express.Router();
-
+function buildSchedule(mySchedule){
+    var obj = {};
+    if(mySchedule.local_ip !== null && mySchedule.local_ip !== undefined){
+        console.log("VALID IP\n");
+        obj.local_ip = mySchedule.local_ip;
+    }
+    if(mySchedule.gpio !== null && mySchedule.gpio !== undefined){
+        console.log("VALID GPIO\n");
+        obj.gpio = mySchedule.gpio;
+    }
+    if(mySchedule.second !== null && mySchedule.second !== undefined){
+        console.log("VALID SECOND\n");
+        obj.second = mySchedule.second;
+    }
+    if(mySchedule.time !== null && mySchedule.time !== undefined){
+        console.log("VALID TIME\n");
+        obj.minute = mySchedule.time.split(":")[1];
+        obj.hour = mySchedule.time.split(":")[0];
+    }
+    if(mySchedule.date !== null && mySchedule.date !== undefined){
+        obj.date = mySchedule.date;
+    }
+    if(mySchedule.month !== null && mySchedule.month !== undefined){
+        obj.month = mySchedule.month;
+    }
+    if(mySchedule.year !== null && mySchedule.year !== undefined){
+        obj.year = mySchedule.year;
+    }
+    if(mySchedule.dayOfWeek !== null && mySchedule.dayOfWeek !== undefined){
+        obj.dayOfWeek = mySchedule.dayOfWeek;
+    }
+    return obj;
+}
+// CREATE mongodb schema for devices, etc, relays, temp/humid sensors, water sensors
+// then return ip address of all relay devices. query the 1st device in that list to
+// return all schedules set by all relays
+// ALSO, set up a route on the relay to return all the schedules for that device
 // Shows all active schedules
 router.get("/", (req, res) =>{
     http.get("http://192.168.1.12:5000/schedule", (resp) => {
@@ -11,36 +47,30 @@ router.get("/", (req, res) =>{
         resp.on('data', function(chunk) {
             var data = JSON.parse(chunk);
             console.log(data);
-            res.render("schedule", {schedules: data, stylesheets: ["/static/css/sensors.css"]});
+            res.render("schedule/index", {schedules: data, stylesheets: ["/static/css/sensors.css"]});
             // res.status(200).end();
         });
     }).on("error", (err) => {
         console.log("Error: " + err.message);
-
+        res.render("500");
+        res.status(500).end();
     });
 });
+router.get("/:relay_id", (req, res) => {
+   // return all the schedules for that relay
+    // Shows all active schedules
+});
 router.post("/", (req, res) => {
-    console.log(req.body);
-    console.log(req.body.time.split(":")[0]);
-    const newSchedule = querystring.stringify({ 
-        local_ip: req.body.local_ip, 
-        gpio: req.body.pin,
-        second: req.body.second,
-        minute: req.body.time.split(":")[1],
-        hour: req.body.time.split(":")[0],
-        date: req.body.date,
-        month: req.body.month,
-        year: req.body.year,
-        dayOfWeek: req.body.dayOfWeek
-    });
+    const scheduleObj = buildSchedule(req.body);
+    const scheduleStr = querystring.stringify(scheduleObj);
     const options = {
-        hostname: '192.168.1.12',
+        hostname: req.body.local_ip,
         port: 5000,
         path: '/schedule',
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(newSchedule)
+            'Content-Length': Buffer.byteLength(scheduleStr)
         }
     };
     const myReq = http.request(options, (res) => {
@@ -60,8 +90,9 @@ router.post("/", (req, res) => {
     });
     
     // Write data to request body
-    myReq.write(newSchedule);
+    myReq.write(scheduleStr);
     myReq.end();
+    res.redirect("/schedule");
     res.status(200).end();
 });
 //EDIT
@@ -74,7 +105,6 @@ router.put("/:schedule_id", (req, res) => {
 })
 router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
     console.log("in delete route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
-    res.status(200).end();
 
     const options = {
         hostname: req.params.local_ip,
@@ -105,6 +135,7 @@ router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
     // Write data to request body
     // myReq.write(newSchedule);
     myReq.end();
+    res.redirect("/schedule");
 });
 
 module.exports = router;

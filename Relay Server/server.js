@@ -31,6 +31,7 @@ mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors"
     }else{
         console.log("No errors occured");
         // query db for schedule setup
+        // 
     }
 });
 /**********************************************************************

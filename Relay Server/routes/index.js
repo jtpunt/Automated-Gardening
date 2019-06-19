@@ -37,6 +37,10 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
         console.log(schedules);
     }
 });
+function buildSchedule(mySchedule){
+    var obj = {};
+    
+}
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
         if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)
@@ -91,7 +95,7 @@ module.exports = function(app) {
         var newSchedule = { 
             local_ip: req.body.local_ip, 
             gpio: req.body.gpio,
-            second: req.body.second,
+            // second: req.body.second,
             minute: req.body.minute,
             hour: req.body.hour,
             // date: req.body.date,
