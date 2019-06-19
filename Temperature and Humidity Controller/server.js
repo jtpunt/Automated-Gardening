@@ -7,6 +7,7 @@ var express        = require("express"),
     // sensor         = require('node-dht-sensor'),
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
+    Device         = require("./models/device"),
     // schedule       = require('node-schedule'),
     // http          = require('http'),
     app            = express();
