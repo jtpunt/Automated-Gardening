@@ -24,7 +24,7 @@ app.set('view engine', 'handlebars');
 **********************************************************************/
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
-mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
+mongoose.connect("mongodb://username:password@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
