@@ -13,7 +13,7 @@ var express        = require("express"),
 // requiring routes
 var indexRoutes   = require("./routes/index");
 
-mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
+mongoose.connect("mongodb://username:password@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
