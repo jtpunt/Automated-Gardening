@@ -8,34 +8,44 @@ var express        = require("express"),
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
     Device         = require("./models/device"),
-    // schedule       = require('node-schedule'),
-    // http          = require('http'),
+    env            = process.env.NODE_ENV || 'development',
+    config         = require('./config')[env],
+    ip             = require("ip"),
+        
     app            = express();
 // requiring routes
 var indexRoutes   = require("./routes/index"),
     sensorRoutes  = require("./routes/sensors"),
     chartRoutes   = require("./routes/charts"),
     schedRoutes   = require("./routes/schedule");
+    
+var localIP = ip.address(),
+    port    = config.server.port,
+    connStr = config.getConnStr();
+    
 
-// var lightsOn = schedule.scheduleJob('00 20 * * *', function(){
-//     http.get("http://192.168.1.129:5000/2", (resp)=> { console.log(resp)});
-// });
-// var lightsOff = schedule.scheduleJob('00 14 * * *', function(){
-//     http.get("http://192.168.1.129:5000/2", (res6p)=> { console.log(resp)});
-// });
-// var pumpOn = schedule.scheduleJob('00 19 * * *', function(){
-//     http.get("http://192.168.1.129:5000/3", (resp)=> { console.log(resp)});
-// });
-// var pumpOff = schedule.scheduleJob('05 19 * * *', function(){
-//     http.get("http://192.168.1.129:5000/3", (resp)=> { console.log(resp)});
-// });
-mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
+mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
     }else{
         console.log("No errors occured");
-        // query db for schedule setup
+        var gpios = [2,3];
+        gpios.forEach((pin) => {
+            var newDeviceObj = {
+                local_ip: localIP,
+                deviceName: 'Temp/Humid Sensors',
+                deviceType: 'DHT11 Sensor',
+                gpio: pin
+            }
+            Device.create(newDeviceObj, (err, newDevice) =>{
+                if(err) console.log(err);
+                else{
+                    newDevice.save();
+                    console.log("Device saved!");
+                }
+            });
+        })
     }
 });
 // seedDB();
@@ -79,7 +89,6 @@ app.use(function(err, req, res, next){
     res.status(500);
     res.render('500');
 });
-var port = 8080;
-app.listen(port,process.env.IP, function(){
+app.listen(port, process.env.IP, function(){
     console.log("server started on port ", port); 
 });

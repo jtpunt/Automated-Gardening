@@ -11,8 +11,14 @@ var routes = require('./routes/index.js');
 var mongoose = require("mongoose");
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser'); // body parser middleware
-var port = 5000;
+var ip  = require("ip");
 var app = express();
+var localIP = ip.address();
+var env = process.env.NODE_ENV || 'development';
+var config = require('./config')[env];
+var localIP = ip.address(),
+    port    = config.server.port,
+    connStr = config.getConnStr();
 /**********************************************************************
 * Setup our handlebars engine for handling file extensions that end in
 * 'handlebars'
@@ -24,14 +30,24 @@ app.set('view engine', 'handlebars');
 **********************************************************************/
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
-mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
+mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
     }else{
         console.log("No errors occured");
-        // query db for schedule setup
-        // 
+        var newDeviceObj = {
+            local_ip: localIP,
+            deviceName: 'Relay Server Band Room',
+            deviceType: 'Relay Server',
+        }
+        Device.create(newDeviceObj, (err, newDevice) =>{
+            if(err) console.log(err);
+            else{
+                newDevice.save();
+                console.log("Device saved!");
+            }
+        });
     }
 });
 /**********************************************************************

@@ -7,18 +7,40 @@ var express        = require("express"),
     // sensor         = require('node-dht-sensor'),
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
+    env            = process.env.NODE_ENV || 'development',
+    config         = require('./config')[env],
     // schedule       = require('node-schedule'),
     // http          = require('http'),
     app            = express();
 // requiring routes
 var indexRoutes   = require("./routes/index");
 
-mongoose.connect("mongodb://jtpunt:1ch33s31@ds219191.mlab.com:19191/dht-sensors",{ useNewUrlParser: true }, function(err){
+var localIP = ip.address(),
+    port    = config.server.port,
+    connStr = config.getConnStr();
+
+mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
     }else{
         console.log("No errors occured");
+        var gpios = [2,3];
+        gpios.forEach((pin) = > {
+            var newDeviceObj = {
+                local_ip: localIP,
+                deviceName: 'Temp/Humid Sensors',
+                deviceType: 'DHT11 Sensor',
+                gpio: pin
+            }
+            Device.create(newDeviceObj, (err, newDevice) =>{
+                if(err) console.log(err);
+                else{
+                    newDevice.save();
+                    console.log("Device saved!");
+                }
+            });
+        })
         // query db for schedule setup
     }
 });
@@ -50,7 +72,6 @@ app.use(function(req, res, next){
 });
 // Shortens the route declarations
 app.use("/readings", indexRoutes);
-var port = 8080;
 app.listen(port,process.env.IP, function(){
     console.log("server started on port ", port); 
 });
