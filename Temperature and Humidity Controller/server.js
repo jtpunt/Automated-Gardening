@@ -39,6 +39,7 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         Device.create(newDeviceObj, (err, newDevice) =>{
             if(err) console.log(err);
             else{
+                newDevice.gpio.push(2);
                 newDevice.save();
                 console.log("Device saved!");
             }

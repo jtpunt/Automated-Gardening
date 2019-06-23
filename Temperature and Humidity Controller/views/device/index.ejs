@@ -5,78 +5,103 @@
 	    width: 75%;
 	    padding: 10px;">
 		<div class="col-md-9">
-			<h2>My Schedules</h2>
+			<h2>My DHT11 Sensors</h2>
 			<div class="rTable">
 				<div class="rTableRow">
 					<div class="rTableHead"><strong>IP Address</strong></div>
-					<div class="rTableHead"><span style="font-weight: bold;">Pin #</span></div>
-					<div class="rTableHead">Time</div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device Name</span></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device GPIOs</span></div>
 				</div>
-				<% devices.forEach(function(device){ %>
+				<% dht11Arr.forEach(function(dht11){ %>
 				<div class="rTableRow">
-					<div class="rTableCell"><%=schedule.local_ip%></div>
-					<div class="rTableCell"><%=schedule.gpio%></div>
-					<div class="rTableCell"><%=schedule.hour%>:<%=schedule.minute%></div>
+					<div class="rTableCell"><%=dht11.local_ip%></div>
+					<div class="rTableCell"><%=dht11.deviceName%></div>
+					<div class="rTableCell"><%=dht11.gpio%></div>
 					<div>
-						<a class="btn btn-warning" href="/schedule/<%=schedule._id%>/edit">Edit</a>
-		                <form action="/schedule/<%=schedule._id%>/local_ip/<%=schedule.local_ip%>/?_method=DELETE" method="POST" class="delete-form">
-		                    <button class="btn btn-danger">Delete</button>
-		                </form>
+						<a class="btn btn-warning" href="/devices/<%=dht11._id%>/edit">Edit</a>
 		            </div>
 				</div>
 				<% }); %>
 			</div>
-			<div class="well">
-		        <!--Setting up the add new comment button that is used for collapsing-->
-		        <div class="text-right">
-		            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
-		            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Schedule</a>
-		        </div>
-		        <!--Comment section title-->
-		        <h4><strong>Schedules <i class="fa fa-calendar" aria-hidden="true"></i></strong></h4>
-		        <!--Collapse Add a comment form START-->
-		        <div class="collapse" id="collapseComment">
-		            <div class="well" style="border-left: 5px solid #00C851;">
-		                <!--If the user is logged in, show the new comment form-->
-		                <h4>Add your new schedule <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
-		                <form id="add-comment-form" action="/schedule" method="POST">
-		                    <div class="form-group">
-		                    	<select name="local_ip">
-		                    		<option value="-1" selected="selected" disabled>Select Your Relay's IP Address:</option>
-	    							<option value="192.168.1.12">192.168.1.12</option>
-		                    	</select>
-	  							<select name="gpio">
-		                    		<option value="-1" selected="selected" disabled>Select Your GPIO:</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-				                    <option value="5">5</option>
-				                    <option value="6">6</option>
-				                    <option value="12">12</option>
-				                    <option value="13">13</option>
-				                    <option value="16">16</option>
-				                    <option value="17">17</option>
-				                    <option value="18">18</option>
-				                    <option value="19">19</option>
-				                    <option value="20">20</option>
-				                    <option value="21">21</option>
-				                    <option value="22">22</option>
-				                    <option value="23">23</option>
-				                    <option value="24">24</option>
-				                    <option value="25">25</option>
-				                    <option value="26">26</option>
-									<option value="27">27</option>
-	  							</select>
-								<input type="time" id="time" name="time" value="13:30" required>
-		                    </div>
-		                    <div class="form-group">
-		                        <button class="btn btn-success btn-sm">Add Schedule <span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
-		                    </div>
-		                </form>
+		</div>
+		<div class="col-md-9">
+			<h2>My DHT22 Sensors</h2>
+			<div class="rTable">
+				<div class="rTableRow">
+					<div class="rTableHead"><strong>IP Address</strong></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device Name</span></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device GPIO</span></div>
+				</div>
+				<% dht22Arr.forEach(function(dht22){ %>
+				<div class="rTableRow">
+					<div class="rTableCell"><%=dht22.local_ip%></div>
+					<div class="rTableCell"><%=dht22.deviceName%></div>
+					<div class="rTableCell"><%=dht22.gpio%></div>
+					<div>
+						<a class="btn btn-warning" href="/devices/<%=dht22._id%>/edit">Edit</a>
 		            </div>
-		        </div>
-		        <!--Collapse Add a comment form END-->
-		        <hr>
+				</div>
+				<% }); %>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<h2>My Relays</h2>
+			<div class="rTable">
+				<div class="rTableRow">
+					<div class="rTableHead"><strong>IP Address</strong></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device Name</span></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device GPIO</span></div>
+				</div>
+				<% relayArr.forEach(function(relay){ %>
+				<div class="rTableRow">
+					<div class="rTableCell"><%=relay.local_ip%></div>
+					<div class="rTableCell"><%=relay.deviceName%></div>
+					<div class="rTableCell"><%=relay.gpio%></div>
+					<div>
+						<a class="btn btn-warning" href="/devices/<%=relay._id%>/edit">Edit</a>
+		            </div>
+				</div>
+				<% }); %>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<h2>My Soil Sensors</h2>
+			<div class="rTable">
+				<div class="rTableRow">
+					<div class="rTableHead"><strong>IP Address</strong></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device Name</span></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device GPIO</span></div>
+				</div>
+				<% soilArr.forEach(function(soil){ %>
+				<div class="rTableRow">
+					<div class="rTableCell"><%=soil.local_ip%></div>
+					<div class="rTableCell"><%=soil.deviceName%></div>
+					<div class="rTableCell"><%=soil.gpio%></div>
+					<div>
+						<a class="btn btn-warning" href="/devices/<%=soil._id%>/edit">Edit</a>
+		            </div>
+				</div>
+				<% }); %>
+			</div>
+		</div>
+		<div class="col-md-9">
+			<h2>My Water Sensors</h2>
+			<div class="rTable">
+				<div class="rTableRow">
+					<div class="rTableHead"><strong>IP Address</strong></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device Name</span></div>
+					<div class="rTableHead"><span style="font-weight: bold;">Device GPIO</span></div>
+				</div>
+				<% waterArr.forEach(function(water){ %>
+				<div class="rTableRow">
+					<div class="rTableCell"><%=water.local_ip%></div>
+					<div class="rTableCell"><%=water.deviceName%></div>
+					<div class="rTableCell"><%=water.gpio%></div>
+					<div>
+						<a class="btn btn-warning" href="/devices/<%=water._id%>/edit">Edit</a>
+		            </div>
+				</div>
+				<% }); %>
 			</div>
 		</div>
 	</div>
