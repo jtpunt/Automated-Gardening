@@ -11,9 +11,11 @@ var routes = require('./routes/index.js');
 var mongoose = require("mongoose");
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser'); // body parser middleware
+var Device = require("./models/device"),
 var ip  = require("ip");
 var app = express();
 var localIP = ip.address();
+
 var env = process.env.NODE_ENV || 'development';
 var config = require('./config')[env];
 var localIP = ip.address(),
