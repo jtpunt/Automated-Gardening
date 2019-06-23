@@ -38,7 +38,7 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         console.log("No errors occured");
         var newDeviceObj = {
             local_ip: localIP,
-            deviceName: 'Relay Server Living Room',
+            deviceName: 'New Relay Server',
             deviceType: 'Relay Server',
         }
         Device.create(newDeviceObj, (err, newDevice) =>{
