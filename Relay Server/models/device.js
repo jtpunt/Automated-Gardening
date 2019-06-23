@@ -12,4 +12,4 @@ var deviceSchema = new mongoose.Schema({
     }
 });
 deviceSchema.index({local_ip: 1, deviceType: 1, gpio: 1}, { unique: true});
-module.exports = mongoose.model('Devices', deviceSchema);
+module.exports = mongoose.model('Device', deviceSchema);

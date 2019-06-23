@@ -15,9 +15,10 @@ var express        = require("express"),
     app            = express();
 // requiring routes
 var indexRoutes   = require("./routes/index"),
+    deviceRoutes  = require("./routes/devices"),
     sensorRoutes  = require("./routes/sensors"),
     chartRoutes   = require("./routes/charts"),
-    schedRoutes   = require("./routes/schedule");
+    schedRoutes   = require("./routes/schedules");
     
 var localIP = ip.address(),
     port    = config.server.port,
@@ -30,22 +31,18 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         // default schedule here
     }else{
         console.log("No errors occured");
-        var gpios = [2,3];
-        gpios.forEach((pin) => {
-            var newDeviceObj = {
-                local_ip: localIP,
-                deviceName: 'Temp/Humid Sensors',
-                deviceType: 'DHT11 Sensor',
-                gpio: pin
+        var newDeviceObj = {
+            local_ip: localIP,
+            deviceName: 'Temp/Humid Sensors',
+            deviceType: 'DHT11 Sensor'
+        }
+        Device.create(newDeviceObj, (err, newDevice) =>{
+            if(err) console.log(err);
+            else{
+                newDevice.save();
+                console.log("Device saved!");
             }
-            Device.create(newDeviceObj, (err, newDevice) =>{
-                if(err) console.log(err);
-                else{
-                    newDevice.save();
-                    console.log("Device saved!");
-                }
-            });
-        })
+        });
     }
 });
 // seedDB();
@@ -76,6 +73,7 @@ app.use(function(req, res, next){
 });
 // Shortens the route declarations
 app.use("/", indexRoutes);
+app.use("/devices", deviceRoutes);
 app.use("/sensors", sensorRoutes);
 app.use("/charts", chartRoutes);
 app.use("/schedule", schedRoutes);
