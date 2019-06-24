@@ -5,6 +5,7 @@ var express        = require("express"),
     LocalStrategy  = require("passport-local"),
     methodOverride = require("method-override"),
     // sensor         = require('node-dht-sensor'),
+    ip             = require("ip");
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
     env            = process.env.NODE_ENV || 'development',
@@ -19,31 +20,31 @@ var localIP = ip.address(),
     port    = config.server.port,
     connStr = config.getConnStr();
 
-mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
-    if(err){
-        console.log("Error connecting to mongodb", err);
-        // default schedule here
-    }else{
-        console.log("No errors occured");
-        var gpios = [2,3];
-        gpios.forEach((pin) = > {
-            var newDeviceObj = {
-                local_ip: localIP,
-                deviceName: 'Temp/Humid Sensors',
-                deviceType: 'DHT11 Sensor',
-                gpio: pin
-            }
-            Device.create(newDeviceObj, (err, newDevice) =>{
-                if(err) console.log(err);
-                else{
-                    newDevice.save();
-                    console.log("Device saved!");
-                }
-            });
-        })
+// mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
+//     if(err){
+//         console.log("Error connecting to mongodb", err);
+//         // default schedule here
+//     }else{
+        // console.log("No errors occured");
+        // var gpios = [2,3];
+        // gpios.forEach((pin) = > {
+        //     var newDeviceObj = {
+        //         local_ip: localIP,
+        //         deviceName: 'Temp/Humid Sensors',
+        //         deviceType: 'DHT11 Sensor',
+        //         gpio: pin
+        //     }
+        //     Device.create(newDeviceObj, (err, newDevice) =>{
+        //         if(err) console.log(err);
+        //         else{
+        //             newDevice.save();
+        //             console.log("Device saved!");
+        //         }
+        //     });
+        // })
         // query db for schedule setup
-    }
-});
+//     }
+// });
 // seedDB();
 
 app.set('view engine', 'ejs');
@@ -71,7 +72,7 @@ app.use(function(req, res, next){
     next();
 });
 // Shortens the route declarations
-app.use("/readings", indexRoutes);
+app.use("/", indexRoutes);
 app.listen(port,process.env.IP, function(){
     console.log("server started on port ", port); 
 });
