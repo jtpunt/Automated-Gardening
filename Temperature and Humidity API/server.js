@@ -8,6 +8,7 @@ var express        = require("express"),
     ip             = require("ip");
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
+    Device         = require("./models/device"),
     env            = process.env.NODE_ENV || 'development',
     config         = require('./config')[env],
     // schedule       = require('node-schedule'),
