@@ -1,29 +1,40 @@
 var express = require("express"),
-    // dhtSensor  = require('node-dht-sensor'),
+    dhtSensor  = require('node-dht-sensor'),
     async = require("asyncawait/async"),
     await = require("asyncawait/await"),
     Sensor = require("../models/sensor"),
+    ip = require("ip"),
+    localIP = ip.address(),
     http = require('http'),
     router = express.Router();
 
-router.get("/", (req, res) => {
-   console.log(req.params.gpios);
-   console.log(req.query.gpios);
-   res.status(200).end();
-});
-// root route
 // router.get("/", (req, res) => {
-//     getSensors((sensors) => { // Get our sensors from our mongo database
-//         (async(() => { // Perform asynchronous calls to ensure we get each temp/humid reading before rendering the HTML page
-//             let sensorData = []; // store each
-//             sensors.forEach((mySensor) => { // for each sensor in the database, use the sensor type (DHT11 or DHT22) and GPIO pin to get the temp/humid reading
-//                 sensorData.push(await (readSensor(mySensor.sensor, mySensor.pin))); // push the temp/humid reading into an array that holds sensor data
-//             });
-//             res.write(JSON.stringify(sensorData));
-//             res.status("200").end();
-//         }))();
-//     });
+//   console.log(typeof req.query.sensors);
+//   let sensors = JSON.parse(req.query.sensors);
+//     (async(() => { // Perform asynchronous calls to ensure we get each temp/humid reading before rendering the HTML page
+//         let sensorData = []; // store each
+//         sensors.forEach((mySensor) => { // for each sensor in the database, use the sensor type (DHT11 or DHT22) and GPIO pin to get the temp/humid reading
+//             sensorData.push(await (readSensor(mySensor.sensor, mySensor.pin))); // push the temp/humid reading into an array that holds sensor data
+//         });
+//         res.write(JSON.stringify(sensorData));
+//         res.status("200").end();
+//     }))();
 // });
+// root route
+router.get("/", (req, res) => {
+    getDeviceConfig((device) => { // Get our sensors from our mongo database
+        console.log(device);
+        res.status(200).end();
+        // (async(() => { // Perform asynchronous calls to ensure we get each temp/humid reading before rendering the HTML page
+        //     let sensorData = []; // store each
+        //     sensors.forEach((mySensor) => { // for each sensor in the database, use the sensor type (DHT11 or DHT22) and GPIO pin to get the temp/humid reading
+        //         sensorData.push(await (readSensor(mySensor.sensor, mySensor.pin))); // push the temp/humid reading into an array that holds sensor data
+        //     });
+        //     res.write(JSON.stringify(sensorData));
+        //     res.status("200").end();
+        // }))();
+    });
+});
 // router.get("/:id", (req, res) => {
 //     // idea,
 //     getSensors((sensors) => { // Get our sensors from our mongo database
@@ -52,11 +63,11 @@ function readSensor(sensor, pin) {
     });
 }
 
-function getSensors(_callback) {
-    Sensor.find({}, (err, sensors) => {
+function getDeviceConfig(_callback) {
+    Devices.find({local_ip: localIP}, (err, device) => {
         if (err) console.log(err);
         else {
-            _callback(sensors);
+            _callback(device);
         }
     });
 }

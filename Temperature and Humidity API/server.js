@@ -20,31 +20,28 @@ var localIP = ip.address(),
     port    = config.server.port,
     connStr = config.getConnStr();
 
-// mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
-//     if(err){
-//         console.log("Error connecting to mongodb", err);
-//         // default schedule here
-//     }else{
-        // console.log("No errors occured");
-        // var gpios = [2,3];
-        // gpios.forEach((pin) = > {
-        //     var newDeviceObj = {
-        //         local_ip: localIP,
-        //         deviceName: 'Temp/Humid Sensors',
-        //         deviceType: 'DHT11 Sensor',
-        //         gpio: pin
-        //     }
-        //     Device.create(newDeviceObj, (err, newDevice) =>{
-        //         if(err) console.log(err);
-        //         else{
-        //             newDevice.save();
-        //             console.log("Device saved!");
-        //         }
-        //     });
-        // })
-        // query db for schedule setup
-//     }
-// });
+mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
+    if(err){
+        console.log("Error connecting to mongodb", err);
+        // default schedule here
+    }else{
+        console.log("No errors occured");
+        var newDeviceObj = {
+            local_ip: localIP,
+            port: port,
+            deviceName: 'Temp/Humid Sensors',
+            deviceType: 'DHT11 Sensor',
+            gpio: [2,3]
+        }
+        Device.create(newDeviceObj, (err, newDevice) =>{
+            if(err) console.log(err);
+            else{
+                newDevice.save();
+                console.log("Device saved!");
+            }
+        });
+    }
+});
 // seedDB();
 
 app.set('view engine', 'ejs');
