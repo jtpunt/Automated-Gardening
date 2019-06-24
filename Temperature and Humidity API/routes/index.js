@@ -3,6 +3,7 @@ var express = require("express"),
     async = require("asyncawait/async"),
     await = require("asyncawait/await"),
     Sensor = require("../models/sensor"),
+    Device = require("../models/device"),
     ip = require("ip"),
     localIP = ip.address(),
     http = require('http'),
@@ -64,7 +65,7 @@ function readSensor(sensor, pin) {
 }
 
 function getDeviceConfig(_callback) {
-    Devices.find({local_ip: localIP}, (err, device) => {
+    Device.find({local_ip: localIP}, (err, device) => {
         if (err) console.log(err);
         else {
             _callback(device);
