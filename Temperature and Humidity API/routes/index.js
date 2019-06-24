@@ -6,9 +6,12 @@ var express = require("express"),
     http = require('http'),
     router = express.Router();
 
-
+router.get("/:gpios", (req, res) => {
+   console.log(req.params.gpios);
+   res.status(200).end();
+});
 // root route
-router.get("/readings", (req, res) => {
+router.get("/s", (req, res) => {
     getSensors((sensors) => { // Get our sensors from our mongo database
         (async(() => { // Perform asynchronous calls to ensure we get each temp/humid reading before rendering the HTML page
             let sensorData = []; // store each
@@ -20,7 +23,7 @@ router.get("/readings", (req, res) => {
         }))();
     });
 });
-router.get("/readings/:id", (req, res) => {
+router.get("/:id", (req, res) => {
     // idea,
     getSensors((sensors) => { // Get our sensors from our mongo database
         (async(() => { // Perform asynchronous calls to ensure we get each temp/humid reading before rendering the HTML page

@@ -1,4 +1,62 @@
 <% include ../partials/header %>
+<script type="text/javascript">
+    function deleteEle(e){
+        console.log("event called!", e);
+        console.log(e.parentNode);
+        var form_group = e.parentNode;
+        form_group.parentNode.removeChild(form_group);
+    }
+    function getSelect(gpio){
+        var accepted_gpios = [2,3,4,5,6,12,13,16,17,18,19,20,21,22,23,24,25,26,27];
+        var form_group = document.createElement("div");
+        var label      = document.createElement("label");
+        var select     = document.createElement("select");
+        var option     = document.createElement("option");
+        
+        var delBtn     = document.createElement("button");
+
+        form_group.className = "form-group";
+        label.htmlFor        = "gpio";
+        label.innerText      = "GPIO #";
+        select.name          = "gpio";
+        delBtn.className     = "btn btn-warning";
+        delBtn.innerText     = "Delete";
+
+        option.value = -1;
+        option.disabled;
+        option.innerText = "Select Your GPIO Pin #:";
+        
+        form_group.appendChild(label);
+        form_group.appendChild(select);
+        form_group.appendChild(delBtn);
+        select.appendChild(option);
+        
+        delBtn.onclick = function(e){
+            form_group.parentNode.removeChild(form_group);
+        }
+        accepted_gpios.forEach(function(myGpio){
+           var option = document.createElement("option"); 
+           option.value = myGpio;
+           option.innerText = myGpio;
+           if(myGpio === gpio){
+               option.selected = true;
+           }
+           select.appendChild(option);
+        });
+        return form_group;
+    }
+    document.onreadystatechange = () => {
+        
+        var addGpioBtn = document.getElementById("addGpioBtn");
+        addGpioBtn.onclick = function(e){
+            console.log("Hello!\n");
+            var input = document.createElement("input");
+            console.log(addGpioBtn);
+            addGpioBtn.parentNode.insertBefore(getSelect(2), addGpioBtn);
+        }; 
+        
+    }
+</script>
 <div class="container">
     <div class="row">
         <h1 style="text-align: center;">Edit <%=device.deviceType%></h1>
@@ -33,9 +91,10 @@
                             <option value="26" <% if (myGpio == 26) { %>selected="selected"<% } %>>26</option>
                             <option value="27" <% if (myGpio == 27) { %>selected="selected"<% } %>>27</option>
         				</select>
+        				<button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
     			    </div>
                 <% });%>
-
+                <button id="addGpioBtn" type="button">Add GPIO</button>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit!</button>
                 </div>

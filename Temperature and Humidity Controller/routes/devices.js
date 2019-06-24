@@ -54,7 +54,18 @@ router.get("/:device_id/edit", (req, res) => {
 });
 // UPDATE
 router.put("/:device_id", (req, res) => {
-
+    console.log("in put request!");
+    console.log(req.body);
+    let newData = { deviceName: req.body.deviceName, gpio: req.body.gpio};
+    Device.findByIdAndUpdate(req.params.device_id, {$set: newData}, (err, device) => {
+        if(err){
+            res.redirect("back");
+        } else {
+            console.log("Successfully Updated!");
+            res.redirect("/devices");
+            res.status(200).end();
+        }
+    });
 })
 router.delete("/:device_id", (req, res) => {
 

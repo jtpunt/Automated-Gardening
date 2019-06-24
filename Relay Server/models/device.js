@@ -6,10 +6,11 @@ var deviceSchema = new mongoose.Schema({
         type: String,
         enum: ['DHT11 Sensor', 'DHT22 Sensor', 'Relay Server', 'Soil Moisture Sensor', 'Water Level Sensor']
     },
-    gpio: {
+    gpio: [ {
         type: Number,
         enum: [2,3,4,5,6,12,13,16,17,18,19,20,21,22,23,24,25,26,27]
-    }
+        }
+    ]
 });
-deviceSchema.index({local_ip: 1, deviceType: 1, gpio: 1}, { unique: true});
-module.exports = mongoose.model('Device', deviceSchema);
+deviceSchema.index({local_ip: 1, deviceType: 1}, { unique: true});
+module.exports = mongoose.model('Device', deviceSchema, 'devices');

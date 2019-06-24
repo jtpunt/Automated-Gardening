@@ -1,7 +1,9 @@
-var express    = require("express"),
-    http       = require('http'),
-    querystring= require('querystring'),
-    router     = express.Router();
+var express       = require("express"),
+    http          = require('http'),
+    Device        = require("../models/device"),
+    Scheduler     = require("../models/scheduler");
+    querystring   = require('querystring'),
+    router        = express.Router();
 function buildSchedule(mySchedule){
     var obj = {};
     if(mySchedule.local_ip !== null && mySchedule.local_ip !== undefined){
@@ -41,20 +43,36 @@ function buildSchedule(mySchedule){
 // ALSO, set up a route on the relay to return all the schedules for that device
 // Shows all active schedules
 router.get("/", (req, res) =>{
-    http.get("http://192.168.1.12:5000/schedule", (resp) => {
-        // console.log(resp)
-        let str = '';
-        resp.on('data', function(chunk) {
-            var data = JSON.parse(chunk);
-            console.log(data);
-            res.render("schedule/index", {schedules: data, stylesheets: ["/static/css/sensors.css"]});
-            // res.status(200).end();
-        });
-    }).on("error", (err) => {
-        console.log("Error: " + err.message);
-        res.render("500");
-        res.status(500).end();
+    Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+        if(err) console.log(err);
+        else{
+            Scheduler.find({}, (err, schedule) => {
+                if(err) console.log(err);
+                else{
+                    console.log("result:", schedule);
+                    res.render("schedule/index", {schedules: schedule, devices: devices, stylesheets: ["/static/css/sensors.css"]});
+                    res.status(200).end();
+                }
+                // console.log(schedule);
+                // res.render("schedule/index", {schedules: schedule, devices: devices, stylesheets: ["/static/css/sensors.css"]});
+            });
+            // http.get("http://192.168.1.12:5000/schedule", (resp) => {
+            //     // console.log(resp)
+            //     let str = '';
+            //     resp.on('data', function(chunk) {
+            //         var data = JSON.parse(chunk);
+            //         console.log(data);
+            //         res.render("schedule/index", {schedules: data, devices: devices, stylesheets: ["/static/css/sensors.css"]});
+            //         // res.status(200).end();
+            //     });
+            // }).on("error", (err) => {
+            //     console.log("Error: " + err.message);
+            //     res.render("500");
+            //     res.status(500).end();
+            // });
+        }
     });
+
 });
 router.get("/:relay_id", (req, res) => {
    // return all the schedules for that relay

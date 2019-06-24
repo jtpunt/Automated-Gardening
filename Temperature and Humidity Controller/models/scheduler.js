@@ -1,11 +1,6 @@
 var mongoose = require("mongoose");
 var scheduleSchema = new mongoose.Schema({
-    device: {
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Device"
-        }
-    }
+    local_ip: String,
     gpio: Number,
     second: Number,
     minute: Number,
@@ -16,4 +11,4 @@ var scheduleSchema = new mongoose.Schema({
     dayOfWeek: Number
     
 });
-module.exports = mongoose.model('Schedule', scheduleSchema);
+module.exports = mongoose.model('Scheduler', scheduleSchema, 'schedules');
