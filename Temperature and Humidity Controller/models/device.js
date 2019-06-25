@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var deviceSchema = new mongoose.Schema({
     local_ip: String,
+    port: Number,
     deviceName: String,
     deviceType: {
         type: String,
@@ -13,4 +14,4 @@ var deviceSchema = new mongoose.Schema({
     ]
 });
 deviceSchema.index({local_ip: 1, deviceType: 1}, { unique: true});
-module.exports = mongoose.model('Device', deviceSchema, 'devices');
+module.exports = mongoose.model('Device', deviceSchema);

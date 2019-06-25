@@ -1,8 +1,12 @@
 <% include ./partials/header %>
-<% sensors.forEach(function(sensor){ %>
+<% console.log("EJS sensors", sensors);
+
+sensors.forEach(function(sensor){ console.log("Hello!", sensor); %>
 	<script type="text/javascript">
-		drawGauge(<%=sensor.temperature%> * 9/5 + 32, 0, 'temp' + <%=sensor.pin%>);
-		drawGauge(<%=sensor.humidity%>, 1, 'humid' + <%=sensor.pin%>);
+		var tempId = "temp<%=sensor.pin%><%=sensor._id%>";
+		var humidId = "humid<%=sensor.pin%><%=sensor._id%>";
+		drawGauge(<%=sensor.temperature%> * 9/5 + 32, 0, tempId);
+		drawGauge(<%=sensor.humidity%>, 1, humidId);
 	</script>
 <% }); %>
 <body>
@@ -12,10 +16,10 @@
 		<% sensors.forEach(function(sensor){ %>
 			<div class="row">
 				<div class="col-sm-3">
-					<div id="temp<%=sensor.pin%>"></div>
+					<div id="temp<%=sensor.pin%><%=sensor._id%>"></div>
 				</div>
 				<div class="col-sm-3">
-					<div id="humid<%=sensor.pin%>"></div>
+					<div id="humid<%=sensor.pin%><%=sensor._id%>"></div>
 				</div>
 			</div>
 		<% 
