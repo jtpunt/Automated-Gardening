@@ -8,7 +8,7 @@ var express = require("express"),
     schedule = require('node-schedule'),
     Scheduler = require("../models/scheduler"),
     ip = require("ip"),
-    localIP = ip.address()
+    localIP = ip.address(),
     router    = express.Router();
 
 const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
