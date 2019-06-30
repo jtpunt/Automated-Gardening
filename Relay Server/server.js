@@ -8,7 +8,7 @@
 **********************************************************************/
 var express = require('express');
 var indexRoutes = require('./routes/index.js');
-var schedRoutes = require('./routes/schedules.js');
+//var schedRoutes = require('./routes/schedules.js');
 var mongoose = require("mongoose");
 //var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser'); // body parser middleware
@@ -56,8 +56,8 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
 /**********************************************************************
 * Setup Routes For Our Server
 **********************************************************************/
+//app.use("/schedule", schedRoutes);
 app.use("/", indexRoutes);
-app.use("/schedule", schedRoutes);
 /**********************************************************************
 * Start The Server
 **********************************************************************/
