@@ -4,13 +4,12 @@
 // Living room lights use 'out', otherwise, set to 'high'
 
 var express = require("express"),
-    Gpio = require('onoff').Gpio, //include onoff to interact with the GPIO
     schedule = require('node-schedule'),
     Scheduler = require("../models/scheduler"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
-
+const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'high');
 const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
