@@ -19,7 +19,7 @@ var express = require("express"),
 const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'high');
 
-console.log(scheduleArr);
+console.log(process.scheduleArr);
 
 
 function activateRelay(gpio_input) { //function to start blinkingp

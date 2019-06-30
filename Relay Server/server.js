@@ -7,7 +7,6 @@
 * The tools needed for this web application
 **********************************************************************/
 var express     = require('express'),
-    indexRoutes = require('./routes/index.js'),
     mongoose    = require("mongoose"),
     bodyParser  = require('body-parser'), // body parser middleware
     Device      = require("./models/device"),
@@ -19,6 +18,8 @@ var config = require('./config')[env];
 var localIP = ip.address(),
     port    = config.server.port,
     connStr = config.getConnStr();
+    
+var indexRoutes = require('./routes/index.js');
 /**********************************************************************
 * Setup our handlebars engine for handling file extensions that end in
 * 'handlebars'
@@ -50,7 +51,7 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         });
     }
 });
-global.scheduleArr = [2];
+process.scheduleArr = [2];
 /**********************************************************************
 * Setup Routes For Our Server
 **********************************************************************/
