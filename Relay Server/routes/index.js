@@ -2,6 +2,9 @@
 //var schedule      = require('node-schedule');
 //var Scheduler     = require("../models/scheduler");
 // Living room lights use 'out', otherwise, set to 'high'
+const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
+const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
+const outlet2 = new Gpio(3, 'high');
 
 var express = require("express"),
     schedule = require('node-schedule'),
@@ -9,15 +12,13 @@ var express = require("express"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
-const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
-const outlet2 = new Gpio(3, 'high');
 const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
 var schedules = [];
 process.on('SIGINT', () => {
   outlet1.unexport();
   outlet2.unexport();
-});
+})
+console.log(outlet1.readSync());
 var scheduleObj = {
     scheduleArr: [],
     getSchedules: function(){
