@@ -6,16 +6,13 @@
 /**********************************************************************
 * The tools needed for this web application
 **********************************************************************/
-var express = require('express');
-var indexRoutes = require('./routes/index.js');
-//var schedRoutes = require('./routes/schedules.js');
-var mongoose = require("mongoose");
-//var handlebars = require('express-handlebars').create({defaultLayout:'main'});
-var bodyParser = require('body-parser'); // body parser middleware
-var Device = require("./models/device");
-var ip  = require("ip");
-var app = express();
-var localIP = ip.address();
+var express     = require('express'),
+    indexRoutes = require('./routes/index.js'),
+    mongoose    = require("mongoose"),
+    bodyParser  = require('body-parser'), // body parser middleware
+    Device      = require("./models/device"),
+    ip          = require("ip"),
+    app         = express();
 
 var env = process.env.NODE_ENV || 'development';
 var config = require('./config')[env];
