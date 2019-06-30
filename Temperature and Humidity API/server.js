@@ -1,9 +1,9 @@
 var express        = require("express"),
     bodyParser     = require("body-parser"),
     mongoose       = require("mongoose"),
-    passport       = require("passport"),
-    LocalStrategy  = require("passport-local"),
-    methodOverride = require("method-override"),
+//    passport       = require("passport"),
+  //  LocalStrategy  = require("passport-local"),
+//    methodOverride = require("method-override"),
     // sensor         = require('node-dht-sensor'),
     ip             = require("ip");
     Sensor         = require("./models/sensor"),
@@ -45,17 +45,17 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
 });
 // seedDB();
 
-app.set('view engine', 'ejs');
+//app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
 // PASSPORT CONFIGURATION
-app.use(require("express-session")({
-    secret: "Once again Rusty wins cutest dog!",
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(methodOverride("_method")); // _method is what we are telling it to look for
+//app.use(require("express-session")({
+  //  secret: "Once again Rusty wins cutest dog!",
+    //resave: false,
+    //saveUninitialized: false
+//}));
+//app.use(methodOverride("_method")); // _method is what we are telling it to look for
 // app.use(passport.initialize());
 // app.use(passport.session());
 
