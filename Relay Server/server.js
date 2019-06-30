@@ -53,6 +53,7 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         });
     }
 });
+app.locals.scheduleArr = [];
 /**********************************************************************
 * Setup Routes For Our Server
 **********************************************************************/

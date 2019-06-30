@@ -3,10 +3,7 @@
 //var Scheduler     = require("../models/scheduler");
 // Living room lights use 'out', otherwise, set to 'high'
 const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
-var schedules = [];
-var ip = require("ip");
-var localIP = ip.address();
-console.log(localIP);
+
 process.on('SIGINT', () => {
   outlet1.unexport();
   outlet2.unexport();
@@ -22,8 +19,8 @@ var express = require("express"),
 const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'high');
 
-
-
+var arr = router.get("scheduleArr");
+console.log(arr);
 
 
 function activateRelay(gpio_input) { //function to start blinkingp
