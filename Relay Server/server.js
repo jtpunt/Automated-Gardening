@@ -9,7 +9,7 @@
 var express = require('express');
 var routes = require('./routes/index.js');
 var mongoose = require("mongoose");
-var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+//var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 var bodyParser = require('body-parser'); // body parser middleware
 var Device = require("./models/device");
 var ip  = require("ip");
@@ -25,8 +25,8 @@ var localIP = ip.address(),
 * Setup our handlebars engine for handling file extensions that end in
 * 'handlebars'
 **********************************************************************/
-app.engine('handlebars', handlebars.engine); 
-app.set('view engine', 'handlebars');
+//app.engine('handlebars', handlebars.engine); 
+//app.set('view engine', 'handlebars');
 /**********************************************************************
 * Setup what type of data the server can receive via GET/POST requests
 **********************************************************************/
