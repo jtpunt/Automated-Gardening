@@ -31,19 +31,6 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         // default schedule here
     }else{
         console.log("No errors occured");
-        var newDeviceObj = {
-            local_ip: localIP,
-            deviceName: 'Temp/Humid Sensors',
-            deviceType: 'DHT11 Sensor'
-        }
-        Device.create(newDeviceObj, (err, newDevice) =>{
-            if(err) console.log(err);
-            else{
-                newDevice.gpio.push(2);
-                newDevice.save();
-                console.log("Device saved!");
-            }
-        });
     }
 });
 // seedDB();

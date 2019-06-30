@@ -15,6 +15,7 @@ sensors.forEach(function(sensor){ console.log("Hello!", sensor); %>
 		<h3>CURRENT CONDITIONS</h3>
 		<% sensors.forEach(function(sensor){ %>
 			<div class="row">
+				<h3><%=sensor.deviceName%></h3>
 				<div class="col-sm-3">
 					<div id="temp<%=sensor.pin%><%=sensor._id%>"></div>
 				</div>

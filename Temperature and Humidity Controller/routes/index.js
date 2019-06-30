@@ -22,6 +22,7 @@ router.get("/", (req, res) => {
                         var myData = JSON.parse(chunk);
                         myData.forEach(function(reading){
                           reading['_id'] = device['_id'];
+                          reading['deviceName'] = device['deviceName'];
                           data.push(reading); 
                         });
                         console.log("data arr: ", data);
