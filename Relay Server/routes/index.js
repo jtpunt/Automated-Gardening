@@ -19,7 +19,7 @@ var express = require("express"),
 const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
 const outlet2 = new Gpio(3, 'high');
 
-var arr = router.get("scheduleArr");
+var arr = router.locals.scheduleArr;
 console.log(arr);
 
 
