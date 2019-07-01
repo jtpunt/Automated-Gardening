@@ -90,7 +90,8 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
     else{
         console.log(myDevice);
         myDevice[0]['gpio'].forEach(function(myGpio){
-            outlets.push({"gpio": myGpio, "outlet": new Gpio(myGpio)});
+            const myOutlet = new Gpio(myGpio);
+            outlets.push({gpio: myGpio, outlet: myOutlet});
         });
         console.log(outlets);
     }
