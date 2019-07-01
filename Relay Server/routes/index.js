@@ -2,14 +2,13 @@
 //var schedule      = require('node-schedule');
 //var Scheduler     = require("../models/scheduler");
 // Living room lights use 'out' with an initial state of 0, otherwise, set to 'high' with an initial state of 1
-const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-const outlet1 = new Gpio(2, 'high'); //use GPIO pin 4, and specify that it is output
-const outlet2 = new Gpio(3, 'high');
+// const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 
 var express = require("express"),
     schedule = require('node-schedule'),
     Devices = require("../models/device"),
     Scheduler = require("../models/scheduler"),
+    Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
@@ -17,8 +16,9 @@ const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
 var schedules = [];
 var outlets = [];
 process.on('SIGINT', () => {
-  outlet1.unexport();
-  outlet2.unexport();
+    outlets.forEach(function(outlet){
+       outlet['outlet'].unexport();
+    });
 })
 console.log(outlet1.readSync());
 var scheduleObj = {
@@ -108,19 +108,6 @@ function activateRelay(gpio_input) { //function to start blinkingp
             }
         }
     });
-    // if(gpio_input === 2){
-    //     if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)
-    //         outlet1.writeSync(1); //set pin state to 1 (turn LED on)
-    //     } else {
-    //         outlet1.writeSync(0); //set pin state to 0 (turn LED off)
-    //     }
-    // }else{
-    //     if (outlet2.readSync() === 0) { //check the pin state, if the state is 0 (or off)
-    //         outlet2.writeSync(1); //set pin state to 1 (turn LED on)
-    //     } else {
-    //         outlet2.writeSync(0); //set pin state to 0 (turn LED off)
-    //     }
-    // }
 }
 function getStatus(gpio_input, res){
     outlets.forEach(function(outlet){
