@@ -123,11 +123,11 @@ function activateRelay(gpio_input) { //function to start blinkingp
     // }
 }
 function getStatus(gpio_input, res){
-    if(gpio_input === 2){
-        res.write(JSON.stringify(outlet1.readSync()));
-    }else{
-        res.write(JSON.stringify(outlet2.readSync()));
-    }
+    outlets.forEach(function(outlet){
+        if(outlet["gpio"] === gpio_input){
+            res.write(JSON.stringify(outlet['outlet'].readSync()));
+        }
+    });
 }
 function validateInput(gpio_input, res, fn){
     if(Number.isNaN(gpio_input)){ // make sure a number was passed in
