@@ -115,6 +115,7 @@ router.post("/", (req, res) => {
 });
 //EDIT
 router.get("/:schedule_id/edit", (req, res) => {
+    console.log("in get EDIT route with ", req.params.schedule_id, '\n');
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
         if(err) console.log(err);
         else{
