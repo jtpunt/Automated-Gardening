@@ -117,7 +117,7 @@ function getStatus(gpio_input, res){
             if(outlet['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
                 res.write(JSON.stringify(!curState));
             }else{ // 1 means on, 0 means off here
-                res.write(JSON.stringify(!curState));
+                res.write(JSON.stringify(curState));
             }
         }
     });
