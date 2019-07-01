@@ -20,7 +20,6 @@ process.on('SIGINT', () => {
        outlet['outlet'].unexport();
     });
 })
-console.log(outlet1.readSync());
 var scheduleObj = {
     scheduleArr: [],
     getSchedules: function(){
@@ -95,6 +94,7 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
             outlets.push({"gpio": myGpio, "outlet": new Gpio(myGpio)});
         });
         console.log(outlets);
+        console.log(outlets[0]['outlet'].readSync());
     }
 });
 function activateRelay(gpio_input) { //function to start blinkingp
