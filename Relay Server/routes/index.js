@@ -8,12 +8,14 @@ const outlet2 = new Gpio(3, 'high');
 
 var express = require("express"),
     schedule = require('node-schedule'),
+    Devices = require("../models/devices"),
     Scheduler = require("../models/scheduler"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
 const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
 var schedules = [];
+var outlets = [];
 process.on('SIGINT', () => {
   outlet1.unexport();
   outlet2.unexport();
@@ -84,7 +86,18 @@ Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
         console.log(schedules);
     }
 });
-
+Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+    if(err)
+        console.log(err);
+    else{
+        console.log(mySchedules);
+        myDevice[0]['gpio'].forEach(function(myGpio){
+            outlets.push({"gpio": myGpio, outlet: new Gpio(myGpio)});
+            schedules.push(obj);
+        });
+        console.log(outlets);
+    }
+});
 function activateRelay(gpio_input) { //function to start blinkingp
     if(gpio_input === 2){
         if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)

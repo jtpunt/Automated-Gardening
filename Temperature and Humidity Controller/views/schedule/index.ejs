@@ -18,8 +18,8 @@
 					<div class="rTableCell"><%=schedule.gpio%></div>
 					<div class="rTableCell"><%=schedule.hour%>:<%=schedule.minute%></div>
 					<div>
-						<a class="btn btn-warning" href="/schedule/<%=schedule._id%>/edit">Edit</a>
-		                <form action="/schedule/<%=schedule._id%>/local_ip/<%=schedule.local_ip%>/?_method=DELETE" method="POST" class="delete-form">
+						<a class="btn btn-warning" href="/schedule/<%=schedule._id%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
+		                <form action="/schedule/<%=schedule._id%>/local_ip/<%=schedule.local_ip%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">
 		                    <button class="btn btn-danger">Delete</button>
 		                </form>
 		            </div>
@@ -45,14 +45,14 @@
 		                    		<option value="-1" selected="selected" disabled>Select Your Relay's IP Address:</option>
 		                    		<% devices.forEach(function(device){ %>
 		                    			<option value=<%=device.local_ip%>><%=device.local_ip%></option>
+		                    		<% }) %>
 		                    	</select>
 	  							<select name="gpio">
 		                    		<option value="-1" selected="selected" disabled>Select Your GPIO:</option>
-									<% device['gpio'].forEach(function(myGpio){%>
+									<% devices[0]['gpio'].forEach(function(myGpio){%>
 										<option value=<%=myGpio%>><%=myGpio%></option>
 									<% }) %>
 	  							</select>
-	  								<% }) %>
 								<input type="time" id="time" name="time" value="13:30" required>
 		                    </div>
 		                    <div class="form-group">

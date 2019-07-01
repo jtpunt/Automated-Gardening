@@ -9,16 +9,20 @@
                 		<option value="-1" disabled>Select Your Relay's IP Address:</option>
                 		<option value=<%=schedule.local_ip%> selected="selected"><%=schedule.local_ip%></option>
                 	</select>
+                </div>
+                <div class="form-group">
   					<select name="gpio">
                 		<option value="-1" disabled>Select Your GPIO:</option>
 						<option value="<%=schedule.gpio%>" selected="selected"><%=schedule.gpio%></option>
 						<option value="3">3</option>
   					</select>
+  				</div>
+  				 <div class="form-group">
 					<input type="time" id="time" name="time" value="<%=schedule.hour%>:<%=schedule.min%>" required>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-success btn-sm">Add Schedule <span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
-                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success btn-sm">Add Schedule <span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
+                </div>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit!</button>
                 </div>
