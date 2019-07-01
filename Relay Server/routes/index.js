@@ -115,7 +115,8 @@ function getStatus(gpio_input, res){
         if(outlet["gpio"] === gpio_input){
             var curState = outlet['outlet'].readSync();
             if(outlet['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
-                res.write(JSON.stringify(!curState));
+                curState ^= 1;
+                res.write(JSON.stringify(curState));
             }else{ // 1 means on, 0 means off here
                 res.write(JSON.stringify(curState));
             }
