@@ -8,7 +8,7 @@ const outlet2 = new Gpio(3, 'high');
 
 var express = require("express"),
     schedule = require('node-schedule'),
-    Devices = require("../models/devices"),
+    Devices = require("../models/device"),
     Scheduler = require("../models/scheduler"),
     ip = require("ip"),
     localIP = ip.address(),
