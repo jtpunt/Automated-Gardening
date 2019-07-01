@@ -101,10 +101,10 @@ function activateRelay(gpio_input) { //function to start blinkingp
     outlets.forEach(function(outlet){
         if(outlet["gpio"] === gpio_input){
             console.log("outlet found!\n");
-            if (outlet.readSync() === 0) { //check the pin state, if the state is 0 (or off)
-                outlet.writeSync(1); //set pin state to 1 (turn LED on)
+            if (outlet['outlet'].readSync() === 0) { //check the pin state, if the state is 0 (or off)
+                outlet['outlet'].writeSync(1); //set pin state to 1 (turn LED on)
             } else {
-                outlet.writeSync(0); //set pin state to 0 (turn LED off)
+                outlet['outlet'].writeSync(0); //set pin state to 0 (turn LED off)
             }
         }
     });
