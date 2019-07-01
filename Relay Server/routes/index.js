@@ -16,9 +16,9 @@ const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
 var schedules = [];
 var outlets = [];
 process.on('SIGINT', () => {
-    outlets.forEach(function(outlet){
-       outlet['outlet'].unexport();
-    });
+    // outlets.forEach(function(outlet){
+    //   outlet['outlet'].unexport();
+    // });
 })
 var scheduleObj = {
     scheduleArr: [],
@@ -94,7 +94,6 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
             outlets.push({"gpio": myGpio, "outlet": new Gpio(myGpio)});
         });
         console.log(outlets);
-        console.log(outlets[0]['outlet'].readSync());
     }
 });
 function activateRelay(gpio_input) { //function to start blinkingp
