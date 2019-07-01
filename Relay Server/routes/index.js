@@ -19,7 +19,6 @@ process.on('SIGINT', () => {
        outlet['outlet'].unexport();
     });
 })
-console.log(outlet1.readSync());
 var scheduleObj = {
     scheduleArr: [],
     getSchedules: function(){
