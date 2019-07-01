@@ -208,7 +208,7 @@ router.put('/schedule/:schedule_id', function(req, res){
                     console.log(mySchedule._id);
                     mySchedule.j.cancel();
                     console.log("Schedule canceled and removed!\n");
-                    mySchedule.reschedule(newSchedule);
+                    mySchedule.j.reschedule(newSchedule);
                 }
             });
             console.log("Successfully Updated!");

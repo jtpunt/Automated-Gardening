@@ -119,6 +119,7 @@ router.get("/:schedule_id/edit", (req, res) => {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
         if(err) console.log(err);
         else{
+                console.log(foundSchedule);
                 res.render("schedule/edit", {schedule: foundSchedule, stylesheets: ["/static/css/sensors.css"]});
                 res.status(200).end();
         }
@@ -132,7 +133,7 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
     const options = {
         hostname: req.body.local_ip,
         port: 5000,
-        path: '/schedule',
+        path: '/schedule/' + req.params.schedule_id,
         method: 'PUT',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
