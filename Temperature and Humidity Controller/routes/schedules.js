@@ -115,15 +115,53 @@ router.post("/", (req, res) => {
 });
 //EDIT
 router.get("/:schedule_id/edit", (req, res) => {
-
+    Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
+        if(err) console.log(err);
+        else{
+                res.render("schedule/edit", {schedule: foundSchedule, stylesheets: ["/static/css/sensors.css"]});
+                res.status(200).end();
+        }
+    });
 });
 // UPDATE
-router.put("/:schedule_id", (req, res) => {
-
+router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
+    console.log("in put route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
+    const scheduleObj = buildSchedule(req.body);
+    const scheduleStr = querystring.stringify(scheduleObj);
+    const options = {
+        hostname: req.body.local_ip,
+        port: 5000,
+        path: '/schedule',
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(scheduleStr)
+        }
+    };
+    const myReq = http.request(options, (res) => {
+        console.log(`STATUS: ${res.statusCode}`);
+        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+            console.log(`BODY: ${chunk}`);
+        });
+        res.on('end', () => {
+            console.log('No more data in response.');
+        });
+    });
+    
+    myReq.on('error', (e) => {
+        console.error(`problem with request: ${e.message}`);
+    });
+    
+    // Write data to request body
+    myReq.write(scheduleStr);
+    myReq.end();
+    res.redirect("/schedule");
+    res.status(200).end();
 })
 router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
     console.log("in delete route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
-
     const options = {
         hostname: req.params.local_ip,
         port: 5000,
@@ -149,9 +187,6 @@ router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
     myReq.on('error', (e) => {
         console.error(`problem with request: ${e.message}`);
     });
-    
-    // Write data to request body
-    // myReq.write(newSchedule);
     myReq.end();
     res.redirect("/schedule");
 });

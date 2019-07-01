@@ -184,21 +184,32 @@ router.get('/schedule/:schedule_id', function(req, res) {
 });
 // edit an existing schedule
 router.put('/schedule/:schedule_id', function(req, res){
+    var schedule_id = req.params.schedule_id;
     let newSchedule = { 
-        local_ip: req.body.local_ip, 
-        gpio: req.body.gpio,
-        second: req.body.second,
+        // local_ip: req.body.local_ip, 
+        // gpio: req.body.gpio,
+        // second: req.body.second,
         minute: req.body.minute,
         hour: req.body.hour,
-        date: req.body.date,
-        month: req.body.month,
-        year: req.body.year,
-        dayOfWeek: req.body.dayOfWeek
+        // date: req.body.date,
+        // month: req.body.month,
+        // year: req.body.year,
+        // dayOfWeek: req.body.dayOfWeek
     };
-    Scheduler.findByIdAndUpdate(req.params.schedule_id, {$set: newData}, (err, schedule) => {
+    Scheduler.findByIdAndUpdate(req.params.schedule_id, {$set: newSchedule}, (err, schedule) => {
         if(err){
             console.log(err);
         } else {
+            schedules.forEach(function(mySchedule, i){
+                console.log(typeof mySchedule._id);
+                if(mySchedule._id == schedule_id){
+                    console.log("Match found at index, ", i);
+                    console.log(mySchedule._id);
+                    mySchedule.j.cancel();
+                    console.log("Schedule canceled and removed!\n");
+                    mySchedule.reschedule(newSchedule);
+                }
+            });
             console.log("Successfully Updated!");
             console.log(schedule);
         }
