@@ -90,28 +90,37 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
     if(err)
         console.log(err);
     else{
-        console.log(mySchedules);
+        console.log(myDevice);
         myDevice[0]['gpio'].forEach(function(myGpio){
-            outlets.push({"gpio": myGpio, outlet: new Gpio(myGpio)});
-            schedules.push(obj);
+            outlets.push({"gpio": myGpio, "outlet": new Gpio(myGpio)});
         });
         console.log(outlets);
     }
 });
 function activateRelay(gpio_input) { //function to start blinkingp
-    if(gpio_input === 2){
-        if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)
-            outlet1.writeSync(1); //set pin state to 1 (turn LED on)
-        } else {
-            outlet1.writeSync(0); //set pin state to 0 (turn LED off)
+    outlets.forEach(function(outlet){
+        if(outlet["gpio"] === gpio_input){
+            console.log("outlet found!\n");
+            if (outlet.readSync() === 0) { //check the pin state, if the state is 0 (or off)
+                outlet.writeSync(1); //set pin state to 1 (turn LED on)
+            } else {
+                outlet.writeSync(0); //set pin state to 0 (turn LED off)
+            }
         }
-    }else{
-        if (outlet2.readSync() === 0) { //check the pin state, if the state is 0 (or off)
-            outlet2.writeSync(1); //set pin state to 1 (turn LED on)
-        } else {
-            outlet2.writeSync(0); //set pin state to 0 (turn LED off)
-        }
-    }
+    });
+    // if(gpio_input === 2){
+    //     if (outlet1.readSync() === 0) { //check the pin state, if the state is 0 (or off)
+    //         outlet1.writeSync(1); //set pin state to 1 (turn LED on)
+    //     } else {
+    //         outlet1.writeSync(0); //set pin state to 0 (turn LED off)
+    //     }
+    // }else{
+    //     if (outlet2.readSync() === 0) { //check the pin state, if the state is 0 (or off)
+    //         outlet2.writeSync(1); //set pin state to 1 (turn LED on)
+    //     } else {
+    //         outlet2.writeSync(0); //set pin state to 0 (turn LED off)
+    //     }
+    // }
 }
 function getStatus(gpio_input, res){
     if(gpio_input === 2){
