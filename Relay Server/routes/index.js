@@ -91,8 +91,9 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
         console.log("Test: ", myDevice);
         myDevice[0]['gpio'].forEach(function(myGpio){
             var myOutlet = new Gpio(myGpio, 'high');
-            console.log("Initial State:", myOutlet.readSync());
-            outlets.push({gpio: myGpio, outlet: myOutlet});
+            var initialState = myOutlet.readSync();
+            console.log("Initial State:", initialState);
+            outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
         });
         console.log(outlets);
     }
@@ -112,7 +113,12 @@ function activateRelay(gpio_input) { //function to start blinkingp
 function getStatus(gpio_input, res){
     outlets.forEach(function(outlet){
         if(outlet["gpio"] === gpio_input){
-            res.write(JSON.stringify(outlet['outlet'].readSync()));
+            var curState = outlet['outlet'].readSync();
+            if(outlet['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
+                res.write(JSON.stringify(!curState));
+            }else{ // 1 means on, 0 means off here
+                res.write(JSON.stringify(!curState));
+            }
         }
     });
 }
