@@ -90,7 +90,8 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
     else{
         console.log("Test: ", myDevice);
         myDevice[0]['gpio'].forEach(function(myGpio){
-            var myOutlet = new Gpio(myGpio);
+            var myOutlet = new Gpio(myGpio, null, { activeLow: true });
+            console.log("Initial State:", myOutlet.readSync());
             outlets.push({gpio: myGpio, outlet: myOutlet});
         });
         console.log(outlets);
@@ -129,8 +130,10 @@ function validateInput(gpio_input, res, fn){
     // returns all schedules
 router.get('/schedule', function(req, res) {
     Scheduler.find({}, (err, schedules) => {
-        if(err)
+        if(err){
             console.log(err);
+            res.status(400).end();
+        }
         else{
             console.log(schedules);
             res.write(JSON.stringify(schedules));
@@ -154,7 +157,10 @@ router.post('/schedule', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     Scheduler.create(newSchedule, (err, schedule) =>{
-        if(err) console.log(err);
+        if(err) {
+            console.log(err);
+            res.status(400).end();
+        }
         else{
             console.log(schedule, " created");
             schedule.save();
@@ -178,15 +184,19 @@ router.post('/schedule', function(req, res){
             var obj = {"_id": schedule._id, j};
             schedules.push(obj);
             console.log(schedules);
+            res.status(200).end();
         }
     });
 });
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
-        if(err) res.redirect("back");
+        if(err) {
+            res.redirect("back");
+        }
         else{
             console.log(foundSchedule);
             res.write(JSON.stringify(foundSchedule));
+            res.status(200).end();
         }
     }); 
 });
@@ -208,6 +218,7 @@ router.put('/schedule/:schedule_id', function(req, res){
     Scheduler.findByIdAndUpdate(req.params.schedule_id, {$set: newSchedule}, (err, schedule) => {
         if(err){
             console.log(err);
+            res.status(400).end();
         } else {
             schedules.forEach(function(mySchedule, i){
                 console.log(typeof mySchedule._id);
@@ -221,6 +232,7 @@ router.put('/schedule/:schedule_id', function(req, res){
             });
             console.log("Successfully Updated!");
             console.log(schedule);
+            res.status(200).end();
         }
     });
 });
@@ -230,8 +242,10 @@ router.delete('/schedule/:schedule_id', function(req, res){
     console.log(typeof schedule_id);
     console.log(schedules.length);
     Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
-        if(err)
+        if(err){
             console.log(err);
+            res.status(400).end();
+        }
         else{
             schedules.forEach(function(mySchedule, i){
                 console.log(typeof mySchedule._id);
@@ -244,8 +258,8 @@ router.delete('/schedule/:schedule_id', function(req, res){
                 }
             });
             console.log(schedules.length);
+            res.status(200).end();
         }
-        console.log("Success!");
     });
 });
 router.get('/status/:id', function(req, res){
