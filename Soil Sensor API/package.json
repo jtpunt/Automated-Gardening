@@ -1,0 +1,14 @@
+{
+  "name": "Soil_Sensor_API",
+  "version": "0.0.0",
+  "description": "",
+  "main": "test.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jonathan Perry",
+  "license": "ISC",
+  "dependencies": {
+    "mcp-spi-adc": "^2.0.6"
+  }
+}
