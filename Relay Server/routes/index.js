@@ -134,7 +134,55 @@ function validateInput(gpio_input, res, fn){
         res.status(400).end();
     }
 }
-    // returns all schedules
+router.get('/device', function(req, res) {
+    Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+        if(err){
+            console.log(err);
+        }else{
+            
+        }
+    });
+});
+router.post('/device', function(req, res) {
+    Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+        if(err){
+            console.log(err);
+        }else{
+            
+        }
+    });
+});
+router.get('/device/:device_id', function(req, res) {
+    Devices.findById(req.param.device_id, (err, myDevice) => {
+        if(err){
+            console.log(err);
+        }else{
+            
+        }
+    });
+});
+router.patch('/device/:device_id', function(req, res) {
+    
+    Devices.findByIdAndUpdate(req.param.device_id, {$set: updatedGpios}, (err, myDevice) => {
+        if(err){
+            console.log(err);
+        }else{
+            outlets.forEach(function(outlet) {
+                
+            });
+        }
+    });
+});
+router.delete('/device/:device_id', function(req, res) {
+    Devices.findByIdAndDelete(req.param.device_id, (err, myDevice) => {
+        if(err){
+            console.log(err);
+        }else{
+            
+        }
+    });
+});
+// returns all schedules
 router.get('/schedule', function(req, res) {
     Scheduler.find({}, (err, schedules) => {
         if(err){
