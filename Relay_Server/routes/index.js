@@ -101,6 +101,7 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
     }
 });
 function activateRelay(gpio_input) { //function to start blinkingp
+    console.log(gpio_input);
     outlets.forEach(function(outlet){
         if(outlet["gpio"] === gpio_input){
             console.log("outlet found!\n");
