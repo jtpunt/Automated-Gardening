@@ -102,7 +102,9 @@ Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) =>
 });
 function activateRelay(gpio_input) { //function to start blinkingp
     console.log(gpio_input);
+    console.log(outlets);
     outlets.forEach(function(outlet){
+        console.log(outlet);
         if(outlet["gpio"] === gpio_input){
             console.log("outlet found!\n");
             if (outlet['outlet'].readSync() === 0) { //check the pin state, if the state is 0 (or off)
