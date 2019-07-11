@@ -238,7 +238,7 @@ router.post('/schedule', function(req, res){
             var node_schedule      = require('node-schedule');
             var j = node_schedule.scheduleJob(mySchedule, function(){
                 console.log('Schedule created!');
-                activateRelay(newSchedule['gpio']);
+                activateRelay(Number(newSchedule['gpio']));
             });
             var db_id = schedule._id;
             var obj = {"_id": schedule._id, j};
