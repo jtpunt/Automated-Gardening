@@ -22,6 +22,7 @@ process.on('SIGINT', () => {
 var scheduleObj = {
     scheduleArr: [],
     getSchedules: function(){
+        let context = this;
         Scheduler.find({local_ip: localIP}, function(err, mySchedules){
             if(err)
                 console.log(err);
@@ -45,7 +46,7 @@ var scheduleObj = {
                     });
                     console.log(j);
                     var obj = {"_id": mySchedule._id, j};
-                    setSchedule(obj);
+                    context.setSchedule(obj);
                 });
             }
         });
