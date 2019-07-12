@@ -45,8 +45,7 @@ var scheduleObj = {
                     });
                     console.log(j);
                     var obj = {"_id": mySchedule._id, j};
-                    this.setSchedule
-                    this.schedules.push(obj);
+                    this.setSchedule(obj);
                 }.bind(this));
                 console.log(schedules);
             }
@@ -56,6 +55,7 @@ var scheduleObj = {
         this.scheduleArr.push(newScheduleObj);
     }
 }
+scheduleObj.getSchedules();
 Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
     if(err)
         console.log(err);
