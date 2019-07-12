@@ -45,8 +45,8 @@ var scheduleObj = {
                     });
                     console.log(j);
                     var obj = {"_id": mySchedule._id, j};
-                    this.setSchedule(obj);
-                }.bind(this));
+                    setSchedule(obj);
+                });
             }
         });
     },
