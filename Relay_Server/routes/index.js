@@ -46,12 +46,13 @@ var scheduleObj = {
                     });
                     console.log(j);
                     var obj = {"_id": mySchedule._id, j};
-                    context.setSchedule(obj);
+                    this.setSchedule(obj);
                 });
             }
-        });
+        }).call(this);
     },
     setSchedule: function(newScheduleObj){
+        console.log("Received Schedule Obj\n");
         this.scheduleArr.push(newScheduleObj);
     }
 }
