@@ -47,7 +47,6 @@ var scheduleObj = {
                     var obj = {"_id": mySchedule._id, j};
                     this.setSchedule(obj);
                 }.bind(this));
-                console.log(schedules);
             }
         });
     },
@@ -56,34 +55,34 @@ var scheduleObj = {
     }
 }
 scheduleObj.getSchedules();
-Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
-    if(err)
-        console.log(err);
-    else{
-        console.log(mySchedules);
-        mySchedules.forEach(function(mySchedule){
-            var newSchedule = {
-                // commented out second below because it would cause the relay to be activated every other second
-                // second: mySchedule['second'],
-                minute: mySchedule['minute'],
-                hour: mySchedule['hour'],
-                // date: mySchedule['date'],
-                // month: mySchedule['month'],
-                // year: mySchedule['year'],
-                // dayOfWeek: mySchedule['dayOfWeek']
-            };
-            // var node_schedule      = require('node-schedule');
-            var j = schedule.scheduleJob(newSchedule, function(){
-                console.log('Schedule created!');
-                activateRelay(mySchedule['gpio']);
-            });
-            console.log(j);
-            var obj = {"_id": mySchedule._id, j};
-            schedules.push(obj);
-        });
-        console.log(schedules);
-    }
-});
+// Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
+//     if(err)
+//         console.log(err);
+//     else{
+//         console.log(mySchedules);
+//         mySchedules.forEach(function(mySchedule){
+//             var newSchedule = {
+//                 // commented out second below because it would cause the relay to be activated every other second
+//                 // second: mySchedule['second'],
+//                 minute: mySchedule['minute'],
+//                 hour: mySchedule['hour'],
+//                 // date: mySchedule['date'],
+//                 // month: mySchedule['month'],
+//                 // year: mySchedule['year'],
+//                 // dayOfWeek: mySchedule['dayOfWeek']
+//             };
+//             // var node_schedule      = require('node-schedule');
+//             var j = schedule.scheduleJob(newSchedule, function(){
+//                 console.log('Schedule created!');
+//                 activateRelay(mySchedule['gpio']);
+//             });
+//             console.log(j);
+//             var obj = {"_id": mySchedule._id, j};
+//             schedules.push(obj);
+//         });
+//         console.log(schedules);
+//     }
+// });
 Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
     if(err)
         console.log(err);
