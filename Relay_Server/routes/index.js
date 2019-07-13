@@ -93,6 +93,7 @@ var scheduleObj = {
                     self.scheduleArr[index]['job'].cancel();
                     console.log("Schedule canceled and removed!\n");
                     self.scheduleArr.splice(index, 1);
+                    console.log(self.scheduleArr.length);
                 }
             });
         }else{
