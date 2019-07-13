@@ -100,14 +100,15 @@ var scheduleObj = {
         }
     },
     findSchedule: function(schedule_id){
+        let i = -1;
         console.log("Searching for schedule..\n");
-        this.scheduleArr.forEach(function(mySchedule, i){
+        this.scheduleArr.forEach(function(mySchedule, index){
             if(mySchedule._id == schedule_id){
                 console.log("Match found at: ", i);
-                return i;
+                i = index;
             }
         })
-        return -1;
+        return i;
     }
 }
 scheduleObj.getSchedules();
