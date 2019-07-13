@@ -367,11 +367,12 @@ router.delete('/schedule/:schedule_id', function(req, res){
     console.log(schedules.length);
     try{
         scheduleObj.deleteSchedule(schedule_id);
-        console.log("Successfully Updated!");
-        // res.status(200).end();
+        console.log("Successfully Deleted!");
+        res.status(200).end();
     }catch(err){
+        console.log("Error caught!\n");
         console.log(err);
-        // res.status(400).end();
+        res.status(400).end();
     }
     // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
     //     if(err){
