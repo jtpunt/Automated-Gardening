@@ -59,6 +59,7 @@ var scheduleObj = {
     editSchedule: function(schedule_id, newSchedule){
         let self = this;
         let index = this.findSchedule(schedule_id);
+        console.log("Editing Schedule Function: ", index);
         if(index !== -1){
             console.log("Match found at index, ", index);
             // console.log(mySchedule._id);
@@ -79,8 +80,9 @@ var scheduleObj = {
     deleteSchedule: function(schedule_id){
         let self = this;
         let index = this.findSchedule(schedule_id);
+        console.log("Deleting Schedule Function: ", index);
         if(index !== -1){
-            console.log("Match found at index, ", i);
+            console.log("Match found at index, ", index);
             console.log(mySchedule._id);
             Scheduler.findByIdAndRemove(schedule_id, (err) => {
                 if(err){
@@ -98,8 +100,10 @@ var scheduleObj = {
         }
     },
     findSchedule: function(schedule_id){
+        console.log("Searching for schedule..\n");
         this.scheduleArr.forEach(function(mySchedule, i){
             if(mySchedule._id == schedule_id){
+                console.log("Match found at: ", i);
                 return i;
             }
         })
