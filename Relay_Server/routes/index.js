@@ -40,12 +40,12 @@ var scheduleObj = {
                         // dayOfWeek: mySchedule['dayOfWeek']
                     };
                     // var node_schedule      = require('node-schedule');
-                    var j = schedule.scheduleJob(newSchedule, function(){
+                    var job = schedule.scheduleJob(newSchedule, function(){
                         console.log('Schedule created!');
                         activateRelay(mySchedule['gpio']);
                     });
-                    console.log(j);
-                    var obj = {"_id": mySchedule._id, j};
+                    console.log(job);
+                    var obj = {"_id": mySchedule._id, job};
                     self.setSchedule(obj);
                 });
             }
@@ -55,6 +55,55 @@ var scheduleObj = {
         console.log("Received Schedule Obj\n");
         this.scheduleArr.push(newScheduleObj);
         console.log("My scheduleArr", this.scheduleArr);
+    },
+    editSchedule: function(schedule_id, newSchedule){
+        let self = this;
+        let index = this.findSchedule(schedule_id);
+        if(index !== -1){
+            console.log("Match found at index, ", index);
+            // console.log(mySchedule._id);
+            Scheduler.findByIdAndUpdate(schedule_id, {$set: newSchedule}, (err, schedule) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                } else {
+                    self.scheduleArr[index]['job'].cancel();
+                    console.log("Schedule canceled and removed!\n");
+                    self.scheduleArr[index]['job'].reschedule(newSchedule);
+                }
+            });
+        }else{
+            throw "Schedule not found!";
+        }
+    },
+    deleteSchedule: function(schedule_id){
+        let self = this;
+        let index = this.findSchedule(schedule_id);
+        if(index !== -1){
+            console.log("Match found at index, ", i);
+            console.log(mySchedule._id);
+            Scheduler.findByIdAndRemove(schedule_id, (err) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                }
+                else{
+                    self.scheduleArr[index]['job'].cancel();
+                    console.log("Schedule canceled and removed!\n");
+                    self.scheduleArr.splice(index, 1);
+                }
+            });
+        }else{
+            throw "Schedule not found!";
+        }
+    },
+    findSchedule: function(schedule_id){
+        this.scheduleArr.forEach(function(mySchedule, i){
+            if(mySchedule._id == schedule_id){
+                return i;
+            }
+        })
+        return -1;
     }
 }
 scheduleObj.getSchedules();
@@ -75,12 +124,12 @@ scheduleObj.getSchedules();
 //                 // dayOfWeek: mySchedule['dayOfWeek']
 //             };
 //             // var node_schedule      = require('node-schedule');
-//             var j = schedule.scheduleJob(newSchedule, function(){
+//             var job = schedule.scheduleJob(newSchedule, function(){
 //                 console.log('Schedule created!');
 //                 activateRelay(mySchedule['gpio']);
 //             });
-//             console.log(j);
-//             var obj = {"_id": mySchedule._id, j};
+//             console.log(job);
+//             var obj = {"_id": mySchedule._id, job};
 //             schedules.push(obj);
 //         });
 //         console.log(schedules);
@@ -238,12 +287,12 @@ router.post('/schedule', function(req, res){
             console.log(mySchedule);
             console.log(schedule._id);
             var node_schedule      = require('node-schedule');
-            var j = node_schedule.scheduleJob(mySchedule, function(){
+            var job = node_schedule.scheduleJob(mySchedule, function(){
                 console.log('Schedule created!');
                 activateRelay(Number(newSchedule['gpio']));
             });
             var db_id = schedule._id;
-            var obj = {"_id": schedule._id, j};
+            var obj = {"_id": schedule._id, job};
             schedules.push(obj);
             console.log(schedules);
             res.status(200).end();
@@ -277,52 +326,68 @@ router.put('/schedule/:schedule_id', function(req, res){
         // year: req.body.year,
         // dayOfWeek: req.body.dayOfWeek
     };
-    Scheduler.findByIdAndUpdate(req.params.schedule_id, {$set: newSchedule}, (err, schedule) => {
-        if(err){
-            console.log(err);
-            res.status(400).end();
-        } else {
-            schedules.forEach(function(mySchedule, i){
-                console.log(typeof mySchedule._id);
-                if(mySchedule._id == schedule_id){
-                    console.log("Match found at index, ", i);
-                    console.log(mySchedule._id);
-                    mySchedule.j.cancel();
-                    console.log("Schedule canceled and removed!\n");
-                    mySchedule.j.reschedule(newSchedule);
-                }
-            });
-            console.log("Successfully Updated!");
-            console.log(schedule);
-            res.status(200).end();
-        }
-    });
+    try{
+        scheduleObj.editSchedule(schedule_id, newSchedule);
+        console.log("Successfully Updated!");
+        res.status(200).end();
+    }catch(err){
+        res.status(400).end();
+    }
+    // Scheduler.findByIdAndUpdate(req.params.schedule_id, {$set: newSchedule}, (err, schedule) => {
+    //     if(err){
+    //         console.log(err);
+    //         res.status(400).end();
+    //     } else {
+    //         scheduleObj.editSchedule(schedule_id, newSchedule);
+    //         // schedules.forEach(function(mySchedule, i){
+    //         //     console.log(typeof mySchedule._id);
+    //         //     if(mySchedule._id == schedule_id){
+    //         //         console.log("Match found at index, ", i);
+    //         //         console.log(mySchedule._id);
+    //         //         mySchedule.j.cancel();
+    //         //         console.log("Schedule canceled and removed!\n");
+    //         //         mySchedule.j.reschedule(newSchedule);
+    //         //     }
+    //         // });
+    //         console.log("Successfully Updated!");
+    //         console.log(schedule);
+    //         res.status(200).end();
+    //     }
+    // });
 });
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', function(req, res){
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     console.log(schedules.length);
-    Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
-        if(err){
-            console.log(err);
-            res.status(400).end();
-        }
-        else{
-            schedules.forEach(function(mySchedule, i){
-                console.log(typeof mySchedule._id);
-                if(mySchedule._id == schedule_id){
-                    console.log("Match found at index, ", i);
-                    console.log(mySchedule._id);
-                    mySchedule.j.cancel();
-                    console.log("Schedule canceled and removed!\n");
-                    schedules.splice(i, 1);
-                }
-            });
-            console.log(schedules.length);
-            res.status(200).end();
-        }
-    });
+    try{
+        scheduleObj.deleteSchedule(schedule_id);
+        console.log("Successfully Updated!");
+        res.status(200).end();
+    }catch(err){
+        res.status(400).end();
+    }
+    // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
+    //     if(err){
+    //         console.log(err);
+    //         res.status(400).end();
+    //     }
+    //     else{
+    //         scheduleObj.deleteSchedule(schedule_id);
+    //         // schedules.forEach(function(mySchedule, i){
+    //         //     console.log(typeof mySchedule._id);
+    //         //     if(mySchedule._id == schedule_id){
+    //         //         console.log("Match found at index, ", i);
+    //         //         console.log(mySchedule._id);
+    //         //         mySchedule.j.cancel();
+    //         //         console.log("Schedule canceled and removed!\n");
+    //         //         schedules.splice(i, 1);
+    //         //     }
+    //         // });
+    //         console.log(schedules.length);
+    //         res.status(200).end();
+    //     }
+    // });
 });
 router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");
