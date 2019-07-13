@@ -83,7 +83,7 @@ var scheduleObj = {
         console.log("Deleting Schedule Function: ", index);
         if(index !== -1){
             console.log("Match found at index, ", index);
-            console.log(mySchedule._id);
+            console.log(mySchedule_id);
             Scheduler.findByIdAndRemove(schedule_id, (err) => {
                 if(err){
                     console.log(err);
@@ -104,8 +104,8 @@ var scheduleObj = {
         console.log("Searching for schedule..\n");
         this.scheduleArr.forEach(function(mySchedule, index){
             if(mySchedule._id == schedule_id){
-                console.log("Match found at: ", i);
                 i = index;
+                console.log("Match found at: ", i);
             }
         })
         return i;
