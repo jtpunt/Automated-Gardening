@@ -83,7 +83,6 @@ var scheduleObj = {
         console.log("Deleting Schedule Function: ", index);
         if(index !== -1){
             console.log("Match found at index, ", index);
-            console.log(mySchedule_id);
             Scheduler.findByIdAndRemove(schedule_id, (err) => {
                 if(err){
                     console.log(err);
