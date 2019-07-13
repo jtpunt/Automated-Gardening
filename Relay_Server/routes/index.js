@@ -299,7 +299,7 @@ router.post('/schedule', function(req, res){
             });
             var db_id = schedule._id;
             var obj = {"_id": schedule._id, job};
-            schedules.push(obj);
+            scheduleObj.scheduleArr.push(obj);
             console.log(schedules);
             res.status(200).end();
         }
