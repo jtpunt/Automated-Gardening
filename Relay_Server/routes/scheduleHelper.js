@@ -1,4 +1,5 @@
 var Scheduler     = require("../models/scheduler"),
+    schedule      = require('node-schedule'),
     ip            = require("ip"),
     localIP       = ip.address();
 var scheduleObj = {
