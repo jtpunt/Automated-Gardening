@@ -22,7 +22,7 @@ process.on('SIGINT', () => {
 })
 
 scheduleHelper.getSchedules(activateRelay);
-deviceHelper.getDevices();
+// outletHelper.getDevices();
 Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
     if(err)
         console.log(err);
