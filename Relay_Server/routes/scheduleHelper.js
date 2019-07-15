@@ -1,5 +1,6 @@
 var Scheduler     = require("../models/scheduler"),
-    ip            = require("ip");
+    ip            = require("ip"),
+    localIP       = ip.address();
 var scheduleObj = {
     scheduleArr: [],
     createSchedule: function(newSchedule){
