@@ -5,7 +5,7 @@ var Scheduler     = require("../models/scheduler"),
     
 var scheduleObj = {
     scheduleArr: [],
-    createSchedule: function(newSchedule){
+    createSchedule: function(newSchedule, activateRelay){
         let self = this;
         Scheduler.create(newSchedule, (err, mySchedule) =>{
             if(err) {
@@ -30,7 +30,7 @@ var scheduleObj = {
             }
         });
     },
-    getSchedules: function(){
+    getSchedules: function(activateRelay){
         let self = this;
         Scheduler.find({local_ip: localIP}, function(err, mySchedules){
             if(err)

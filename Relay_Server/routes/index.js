@@ -20,8 +20,7 @@ process.on('SIGINT', () => {
     });
 })
 
-// scheduleObj.getSchedules();
-scheduleHelper.getSchedules();
+scheduleHelper.getSchedules(activateRelay);
 Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
     if(err)
         console.log(err);
@@ -156,7 +155,7 @@ router.post('/schedule', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     try{
-        scheduleHelper.createSchedule(newSchedule);
+        scheduleHelper.createSchedule(newSchedule, activateRelay);
         console.log("Schedule successfully created!\n");
         res.status(200).end();
     }catch(err){
