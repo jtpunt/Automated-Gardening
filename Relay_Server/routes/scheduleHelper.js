@@ -2,6 +2,7 @@ var Scheduler     = require("../models/scheduler"),
     schedule      = require('node-schedule'),
     ip            = require("ip"),
     localIP       = ip.address();
+    
 var scheduleObj = {
     scheduleArr: [],
     createSchedule: function(newSchedule){
@@ -15,13 +16,8 @@ var scheduleObj = {
                 console.log(mySchedule, " created");
                 mySchedule.save();
                 var newSchedule = {
-                    // second: newSchedule['second'],
                     minute: newSchedule['minute'],
                     hour: newSchedule['hour'],
-                    // date: newSchedule['date'],
-                    // month: newSchedule['month'],
-                    // year: newSchedule['year'],
-                    // dayOfWeek: newSchedule['dayOfWeek']
                 };
                 var job = schedule.scheduleJob(newSchedule, function(){
                     console.log('Schedule created!');
