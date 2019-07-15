@@ -16,14 +16,14 @@ var scheduleObj = {
                 console.log(mySchedule, " created");
                 mySchedule.save();
                 var newSchedule = {
-                    minute: newSchedule['minute'],
-                    hour: newSchedule['hour'],
+                    minute: mySchedule['minute'],
+                    hour: mySchedule['hour'],
                 };
                 console.log(newSchedule);
-                // var job = schedule.scheduleJob(newSchedule, function(){
-                //     console.log('Schedule created!');
-                //     activateRelay(Number(newSchedule['gpio']));
-                // });
+                var job = schedule.scheduleJob(newSchedule, function(){
+                    console.log('Schedule created!');
+                    activateRelay(Number(newSchedule['gpio']));
+                });
                 var db_id = schedule._id;
                 var obj = {"_id": schedule._id, job};
                 self.setSchedule(obj);
