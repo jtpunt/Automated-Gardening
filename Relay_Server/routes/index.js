@@ -21,6 +21,35 @@ process.on('SIGINT', () => {
 })
 var scheduleObj = {
     scheduleArr: [],
+    createSchedule: function(newSchedule){
+        let self = this;
+        Scheduler.create(newSchedule, (err, mySchedule) =>{
+            if(err) {
+                console.log(err);
+                throw err;
+            }
+            else{
+                console.log(mySchedule, " created");
+                mySchedule.save();
+                var newSchedule = {
+                    // second: newSchedule['second'],
+                    minute: newSchedule['minute'],
+                    hour: newSchedule['hour'],
+                    // date: newSchedule['date'],
+                    // month: newSchedule['month'],
+                    // year: newSchedule['year'],
+                    // dayOfWeek: newSchedule['dayOfWeek']
+                };
+                var job = schedule.scheduleJob(newSchedule, function(){
+                    console.log('Schedule created!');
+                    activateRelay(Number(newSchedule['gpio']));
+                });
+                var db_id = schedule._id;
+                var obj = {"_id": schedule._id, job};
+                self.setSchedule(obj);
+            }
+        });
+    },
     getSchedules: function(){
         let self = this;
         Scheduler.find({local_ip: localIP}, function(err, mySchedules){
@@ -42,7 +71,7 @@ var scheduleObj = {
                     // var node_schedule      = require('node-schedule');
                     var job = schedule.scheduleJob(newSchedule, function(){
                         console.log('Schedule created!');
-                        activateRelay(mySchedule['gpio']);
+                        activateRelay(Number(mySchedule['gpio']));
                     });
                     console.log(job);
                     var obj = {"_id": mySchedule._id, job};
@@ -106,41 +135,50 @@ var scheduleObj = {
         this.scheduleArr.forEach(function(mySchedule, index){
             if(mySchedule._id == schedule_id){
                 i = index;
-                console.log("Match found at: ", i);
+                return i;
             }
         })
         return i;
     }
 }
+var deviceObject = {
+        deviceArray: [],
+        createDevice: function(newDevice){
+            
+        },
+        getDevices: function(){
+            Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+                if(err){
+                    console.log(err);
+                }
+                else{
+                    if(myDevice.length > 0){
+                        console.log("Test: ", myDevice);
+                        myDevice[0]['gpio'].forEach(function(myGpio){
+                            var myOutlet = new Gpio(myGpio, 'high');
+                            var initialState = myOutlet.readSync();
+                            console.log("Initial State:", initialState);
+                            outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                        });
+                        console.log(outlets);
+                    }
+                }
+            });
+        },
+        setDevice: function(newDeviceObj){
+            this.deviceArray.push(newDeviceObj);   
+        },
+        editDevice: function(device_id){
+            
+        },
+        deleteDevice: function(device_id){
+            
+        },
+        findDevice: function(device_id){
+            
+        }
+}
 scheduleObj.getSchedules();
-// Scheduler.find({local_ip: localIP}, (err, mySchedules) => {
-//     if(err)
-//         console.log(err);
-//     else{
-//         console.log(mySchedules);
-//         mySchedules.forEach(function(mySchedule){
-//             var newSchedule = {
-//                 // commented out second below because it would cause the relay to be activated every other second
-//                 // second: mySchedule['second'],
-//                 minute: mySchedule['minute'],
-//                 hour: mySchedule['hour'],
-//                 // date: mySchedule['date'],
-//                 // month: mySchedule['month'],
-//                 // year: mySchedule['year'],
-//                 // dayOfWeek: mySchedule['dayOfWeek']
-//             };
-//             // var node_schedule      = require('node-schedule');
-//             var job = schedule.scheduleJob(newSchedule, function(){
-//                 console.log('Schedule created!');
-//                 activateRelay(mySchedule['gpio']);
-//             });
-//             console.log(job);
-//             var obj = {"_id": mySchedule._id, job};
-//             schedules.push(obj);
-//         });
-//         console.log(schedules);
-//     }
-// });
 Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
     if(err)
         console.log(err);
@@ -187,7 +225,8 @@ function getStatus(gpio_input, res){
 }
 function validateInput(gpio_input, res, fn){
     if(Number.isNaN(gpio_input)){ // make sure a number was passed in
-        console.log("not a number!\n");
+        console.log("Not a number!\n");
+        // throw "Not a number"
     }else if(APPROVED_GPIO.includes(gpio_input)){ // was 2 or 3 passed in?
         fn(gpio_input, res);
         res.status(200).end();
@@ -273,37 +312,45 @@ router.post('/schedule', function(req, res){
         // year: req.body.year,
         // dayOfWeek: req.body.dayOfWeek
     };
-    Scheduler.create(newSchedule, (err, schedule) =>{
-        if(err) {
-            console.log(err);
-            res.status(400).end();
-        }
-        else{
-            console.log(schedule, " created");
-            schedule.save();
-            var mySchedule = {
-                // second: newSchedule['second'],
-                minute: newSchedule['minute'],
-                hour: newSchedule['hour'],
-                // date: newSchedule['date'],
-                // month: newSchedule['month'],
-                // year: newSchedule['year'],
-                // dayOfWeek: newSchedule['dayOfWeek']
-            };
-            console.log(mySchedule);
-            console.log(schedule._id);
-            var node_schedule      = require('node-schedule');
-            var job = node_schedule.scheduleJob(mySchedule, function(){
-                console.log('Schedule created!');
-                activateRelay(Number(newSchedule['gpio']));
-            });
-            var db_id = schedule._id;
-            var obj = {"_id": schedule._id, job};
-            scheduleObj.scheduleArr.push(obj);
-            console.log(schedules);
-            res.status(200).end();
-        }
-    });
+    try{
+        scheduleObj.createSchedule(newSchedule);
+        console.log("Schedule successfully created!\n");
+        res.status(200).end();
+    }catch(err){
+        console.log(err);
+        res.status(400).end();
+    }
+    // Scheduler.create(newSchedule, (err, schedule) =>{
+    //     if(err) {
+    //         console.log(err);
+    //         res.status(400).end();
+    //     }
+    //     else{
+    //         console.log(schedule, " created");
+    //         schedule.save();
+    //         var mySchedule = {
+    //             // second: newSchedule['second'],
+    //             minute: newSchedule['minute'],
+    //             hour: newSchedule['hour'],
+    //             // date: newSchedule['date'],
+    //             // month: newSchedule['month'],
+    //             // year: newSchedule['year'],
+    //             // dayOfWeek: newSchedule['dayOfWeek']
+    //         };
+    //         console.log(mySchedule);
+    //         console.log(schedule._id);
+    //         var node_schedule      = require('node-schedule');
+    //         var job = node_schedule.scheduleJob(mySchedule, function(){
+    //             console.log('Schedule created!');
+    //             activateRelay(Number(newSchedule['gpio']));
+    //         });
+    //         var db_id = schedule._id;
+    //         var obj = {"_id": schedule._id, job};
+    //         scheduleObj.scheduleArr.push(obj);
+    //         console.log(schedules);
+    //         res.status(200).end();
+    //     }
+    // });
 });
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
@@ -339,27 +386,6 @@ router.put('/schedule/:schedule_id', function(req, res){
     }catch(err){
         res.status(400).end();
     }
-    // Scheduler.findByIdAndUpdate(req.params.schedule_id, {$set: newSchedule}, (err, schedule) => {
-    //     if(err){
-    //         console.log(err);
-    //         res.status(400).end();
-    //     } else {
-    //         scheduleObj.editSchedule(schedule_id, newSchedule);
-    //         // schedules.forEach(function(mySchedule, i){
-    //         //     console.log(typeof mySchedule._id);
-    //         //     if(mySchedule._id == schedule_id){
-    //         //         console.log("Match found at index, ", i);
-    //         //         console.log(mySchedule._id);
-    //         //         mySchedule.j.cancel();
-    //         //         console.log("Schedule canceled and removed!\n");
-    //         //         mySchedule.j.reschedule(newSchedule);
-    //         //     }
-    //         // });
-    //         console.log("Successfully Updated!");
-    //         console.log(schedule);
-    //         res.status(200).end();
-    //     }
-    // });
 });
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', function(req, res){
@@ -375,27 +401,6 @@ router.delete('/schedule/:schedule_id', function(req, res){
         console.log(err);
         res.status(400).end();
     }
-    // Scheduler.findByIdAndRemove(req.params.schedule_id, (err) => {
-    //     if(err){
-    //         console.log(err);
-    //         res.status(400).end();
-    //     }
-    //     else{
-    //         scheduleObj.deleteSchedule(schedule_id);
-    //         // schedules.forEach(function(mySchedule, i){
-    //         //     console.log(typeof mySchedule._id);
-    //         //     if(mySchedule._id == schedule_id){
-    //         //         console.log("Match found at index, ", i);
-    //         //         console.log(mySchedule._id);
-    //         //         mySchedule.j.cancel();
-    //         //         console.log("Schedule canceled and removed!\n");
-    //         //         schedules.splice(i, 1);
-    //         //     }
-    //         // });
-    //         console.log(schedules.length);
-    //         res.status(200).end();
-    //     }
-    // });
 });
 router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");

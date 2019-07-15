@@ -78,7 +78,7 @@ router.get("/:relay_id", (req, res) => {
    // return all the schedules for that relay
     // Shows all active schedules
 });
-router.post("/", (req, res) => {
+router.post("/", (req, resp) => {
     const scheduleObj = buildSchedule(req.body);
     const scheduleStr = querystring.stringify(scheduleObj);
     const options = {
@@ -100,6 +100,8 @@ router.post("/", (req, res) => {
         });
         res.on('end', () => {
             console.log('No more data in response.');
+            resp.redirect("/schedule");
+            resp.status(200).end();
         });
     });
     
@@ -110,8 +112,6 @@ router.post("/", (req, res) => {
     // Write data to request body
     myReq.write(scheduleStr);
     myReq.end();
-    res.redirect("/schedule");
-    res.status(200).end();
 });
 //EDIT
 router.get("/:schedule_id/edit", (req, res) => {
@@ -126,7 +126,7 @@ router.get("/:schedule_id/edit", (req, res) => {
     });
 });
 // UPDATE
-router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
+router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
     console.log("in put route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
     const scheduleObj = buildSchedule(req.body);
     const scheduleStr = querystring.stringify(scheduleObj);
@@ -149,6 +149,9 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
         });
         res.on('end', () => {
             console.log('No more data in response.');
+            console.log(res.statusCode);
+            resp.redirect("/schedule");
+            resp.status(200).end();
         });
     });
     
@@ -159,10 +162,8 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
     // Write data to request body
     myReq.write(scheduleStr);
     myReq.end();
-    res.redirect("/schedule");
-    res.status(200).end();
 })
-router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
+router.delete("/:schedule_id/local_ip/:local_ip", (req, resp) => {
     console.log("in delete route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
     const options = {
         hostname: req.params.local_ip,
@@ -183,6 +184,9 @@ router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
         });
         res.on('end', () => {
             console.log('No more data in response.');
+            console.log(res.statusCode);
+            resp.redirect("/schedule");
+            resp.status(200).end();
         });
     });
     
@@ -190,7 +194,6 @@ router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
         console.error(`problem with request: ${e.message}`);
     });
     myReq.end();
-    res.redirect("/schedule");
 });
 
 module.exports = router;
