@@ -1,0 +1,123 @@
+var Scheduler     = require("../models/scheduler");
+var scheduleObj = {
+    scheduleArr: [],
+    createSchedule: function(newSchedule){
+        let self = this;
+        Scheduler.create(newSchedule, (err, mySchedule) =>{
+            if(err) {
+                console.log(err);
+                throw err;
+            }
+            else{
+                console.log(mySchedule, " created");
+                mySchedule.save();
+                var newSchedule = {
+                    // second: newSchedule['second'],
+                    minute: newSchedule['minute'],
+                    hour: newSchedule['hour'],
+                    // date: newSchedule['date'],
+                    // month: newSchedule['month'],
+                    // year: newSchedule['year'],
+                    // dayOfWeek: newSchedule['dayOfWeek']
+                };
+                var job = schedule.scheduleJob(newSchedule, function(){
+                    console.log('Schedule created!');
+                    activateRelay(Number(newSchedule['gpio']));
+                });
+                var db_id = schedule._id;
+                var obj = {"_id": schedule._id, job};
+                self.setSchedule(obj);
+            }
+        });
+    },
+    getSchedules: function(){
+        let self = this;
+        Scheduler.find({local_ip: localIP}, function(err, mySchedules){
+            if(err)
+                console.log(err);
+            else{
+                console.log(mySchedules);
+                mySchedules.forEach(function(mySchedule){
+                    var newSchedule = {
+                        // commented out second below because it would cause the relay to be activated every other second
+                        // second: mySchedule['second'],
+                        minute: mySchedule['minute'],
+                        hour: mySchedule['hour'],
+                        // date: mySchedule['date'],
+                        // month: mySchedule['month'],
+                        // year: mySchedule['year'],
+                        // dayOfWeek: mySchedule['dayOfWeek']
+                    };
+                    // var node_schedule      = require('node-schedule');
+                    var job = schedule.scheduleJob(newSchedule, function(){
+                        console.log('Schedule created!');
+                        activateRelay(Number(mySchedule['gpio']));
+                    });
+                    console.log(job);
+                    var obj = {"_id": mySchedule._id, job};
+                    self.setSchedule(obj);
+                });
+            }
+        });
+    },
+    setSchedule: function(newScheduleObj){
+        console.log("Received Schedule Obj\n");
+        this.scheduleArr.push(newScheduleObj);
+        console.log("My scheduleArr", this.scheduleArr);
+    },
+    editSchedule: function(schedule_id, newSchedule){
+        let self = this;
+        let index = this.findSchedule(schedule_id);
+        console.log("Editing Schedule Function: ", index);
+        if(index !== -1){
+            console.log("Match found at index, ", index);
+            // console.log(mySchedule._id);
+            Scheduler.findByIdAndUpdate(schedule_id, {$set: newSchedule}, (err, schedule) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                } else {
+                    self.scheduleArr[index]['job'].cancel();
+                    console.log("Schedule canceled and removed!\n");
+                    self.scheduleArr[index]['job'].reschedule(newSchedule);
+                }
+            });
+        }else{
+            throw "Schedule not found!";
+        }
+    },
+    deleteSchedule: function(schedule_id){
+        let self = this;
+        let index = this.findSchedule(schedule_id);
+        console.log("Deleting Schedule Function: ", index);
+        if(index !== -1){
+            console.log("Match found at index, ", index);
+            Scheduler.findByIdAndRemove(schedule_id, (err) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                }
+                else{
+                    console.log("in else\n");
+                    self.scheduleArr[index]['job'].cancel();
+                    console.log("Schedule canceled and removed!\n");
+                    self.scheduleArr.splice(index, 1);
+                    console.log(self.scheduleArr.length);
+                }
+            });
+        }else{
+            throw "Schedule not found!";
+        }
+    },
+    findSchedule: function(schedule_id){
+        let i = -1;
+        console.log("Searching for schedule..\n");
+        this.scheduleArr.forEach(function(mySchedule, index){
+            if(mySchedule._id == schedule_id){
+                i = index;
+                return i;
+            }
+        })
+        return i;
+    }
+}
