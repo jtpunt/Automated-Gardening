@@ -19,10 +19,11 @@ var scheduleObj = {
                     minute: newSchedule['minute'],
                     hour: newSchedule['hour'],
                 };
-                var job = schedule.scheduleJob(newSchedule, function(){
-                    console.log('Schedule created!');
-                    activateRelay(Number(newSchedule['gpio']));
-                });
+                console.log(newSchedule);
+                // var job = schedule.scheduleJob(newSchedule, function(){
+                //     console.log('Schedule created!');
+                //     activateRelay(Number(newSchedule['gpio']));
+                // });
                 var db_id = schedule._id;
                 var obj = {"_id": schedule._id, job};
                 self.setSchedule(obj);
