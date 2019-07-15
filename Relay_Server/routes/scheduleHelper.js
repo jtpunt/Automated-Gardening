@@ -1,4 +1,5 @@
-var Scheduler     = require("../models/scheduler");
+var Scheduler     = require("../models/scheduler"),
+    ip            = require("ip");
 var scheduleObj = {
     scheduleArr: [],
     createSchedule: function(newSchedule){
