@@ -25,7 +25,7 @@ var scheduleObj = {
                     activateRelay(Number(newSchedule['gpio']));
                 });
                 var db_id = schedule._id;
-                var obj = {"_id": schedule._id, job};
+                var obj = {"_id": mySchedule['_id'], job};
                 self.setSchedule(obj);
             }
         });
@@ -54,7 +54,7 @@ var scheduleObj = {
                         activateRelay(Number(mySchedule['gpio']));
                     });
                     console.log(job);
-                    var obj = {"_id": mySchedule._id, job};
+                    var obj = {"_id": mySchedule['_id'], job};
                     self.setSchedule(obj);
                 });
             }
