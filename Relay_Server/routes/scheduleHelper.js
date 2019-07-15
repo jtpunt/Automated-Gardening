@@ -110,7 +110,7 @@ var scheduleObj = {
         }
     },
     findSchedule: function(schedule_id){
-        return this.scheduleArr.findIndex((mySchedule) => mySchedule['_id'] === schedule_id);
+        return this.scheduleArr.findIndex((mySchedule) => mySchedule['_id'] == schedule_id);
         // let i = -1;
         // console.log("Searching for schedule..\n");
         // this.scheduleArr.forEach(function(mySchedule, index){
