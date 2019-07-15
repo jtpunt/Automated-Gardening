@@ -121,3 +121,4 @@ var scheduleObj = {
         return i;
     }
 }
+module.exports = scheduleObj;
