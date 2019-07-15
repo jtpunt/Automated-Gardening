@@ -22,7 +22,7 @@ var scheduleObj = {
                 console.log(newSchedule);
                 var job = schedule.scheduleJob(newSchedule, function(){
                     console.log('Schedule created!');
-                    activateRelay(Number(newSchedule['gpio']));
+                    activateRelay(Number(mySchedule['gpio']));
                 });
                 var db_id = schedule._id;
                 var obj = {"_id": mySchedule['_id'], job};
