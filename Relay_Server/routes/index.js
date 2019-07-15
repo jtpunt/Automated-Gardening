@@ -7,7 +7,6 @@ const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var express = require("express"),
     schedule = require('node-schedule'),
     Devices = require("../models/device"),
-    // Scheduler = require("../models/scheduler"),
     scheduleHelper = require("./scheduleHelper.js"),
     ip = require("ip"),
     localIP = ip.address(),
@@ -20,165 +19,7 @@ process.on('SIGINT', () => {
        outlet['outlet'].unexport();
     });
 })
-// var scheduleObj = {
-//     scheduleArr: [],
-//     createSchedule: function(newSchedule){
-//         let self = this;
-//         Scheduler.create(newSchedule, (err, mySchedule) =>{
-//             if(err) {
-//                 console.log(err);
-//                 throw err;
-//             }
-//             else{
-//                 console.log(mySchedule, " created");
-//                 mySchedule.save();
-//                 var newSchedule = {
-//                     // second: newSchedule['second'],
-//                     minute: newSchedule['minute'],
-//                     hour: newSchedule['hour'],
-//                     // date: newSchedule['date'],
-//                     // month: newSchedule['month'],
-//                     // year: newSchedule['year'],
-//                     // dayOfWeek: newSchedule['dayOfWeek']
-//                 };
-//                 var job = schedule.scheduleJob(newSchedule, function(){
-//                     console.log('Schedule created!');
-//                     activateRelay(Number(newSchedule['gpio']));
-//                 });
-//                 var db_id = schedule._id;
-//                 var obj = {"_id": schedule._id, job};
-//                 self.setSchedule(obj);
-//             }
-//         });
-//     },
-//     getSchedules: function(){
-//         let self = this;
-//         Scheduler.find({local_ip: localIP}, function(err, mySchedules){
-//             if(err)
-//                 console.log(err);
-//             else{
-//                 console.log(mySchedules);
-//                 mySchedules.forEach(function(mySchedule){
-//                     var newSchedule = {
-//                         // commented out second below because it would cause the relay to be activated every other second
-//                         // second: mySchedule['second'],
-//                         minute: mySchedule['minute'],
-//                         hour: mySchedule['hour'],
-//                         // date: mySchedule['date'],
-//                         // month: mySchedule['month'],
-//                         // year: mySchedule['year'],
-//                         // dayOfWeek: mySchedule['dayOfWeek']
-//                     };
-//                     // var node_schedule      = require('node-schedule');
-//                     var job = schedule.scheduleJob(newSchedule, function(){
-//                         console.log('Schedule created!');
-//                         activateRelay(Number(mySchedule['gpio']));
-//                     });
-//                     console.log(job);
-//                     var obj = {"_id": mySchedule._id, job};
-//                     self.setSchedule(obj);
-//                 });
-//             }
-//         });
-//     },
-//     setSchedule: function(newScheduleObj){
-//         console.log("Received Schedule Obj\n");
-//         this.scheduleArr.push(newScheduleObj);
-//         console.log("My scheduleArr", this.scheduleArr);
-//     },
-//     editSchedule: function(schedule_id, newSchedule){
-//         let self = this;
-//         let index = this.findSchedule(schedule_id);
-//         console.log("Editing Schedule Function: ", index);
-//         if(index !== -1){
-//             console.log("Match found at index, ", index);
-//             // console.log(mySchedule._id);
-//             Scheduler.findByIdAndUpdate(schedule_id, {$set: newSchedule}, (err, schedule) => {
-//                 if(err){
-//                     console.log(err);
-//                     throw err;
-//                 } else {
-//                     self.scheduleArr[index]['job'].cancel();
-//                     console.log("Schedule canceled and removed!\n");
-//                     self.scheduleArr[index]['job'].reschedule(newSchedule);
-//                 }
-//             });
-//         }else{
-//             throw "Schedule not found!";
-//         }
-//     },
-//     deleteSchedule: function(schedule_id){
-//         let self = this;
-//         let index = this.findSchedule(schedule_id);
-//         console.log("Deleting Schedule Function: ", index);
-//         if(index !== -1){
-//             console.log("Match found at index, ", index);
-//             Scheduler.findByIdAndRemove(schedule_id, (err) => {
-//                 if(err){
-//                     console.log(err);
-//                     throw err;
-//                 }
-//                 else{
-//                     console.log("in else\n");
-//                     self.scheduleArr[index]['job'].cancel();
-//                     console.log("Schedule canceled and removed!\n");
-//                     self.scheduleArr.splice(index, 1);
-//                     console.log(self.scheduleArr.length);
-//                 }
-//             });
-//         }else{
-//             throw "Schedule not found!";
-//         }
-//     },
-//     findSchedule: function(schedule_id){
-//         let i = -1;
-//         console.log("Searching for schedule..\n");
-//         this.scheduleArr.forEach(function(mySchedule, index){
-//             if(mySchedule._id == schedule_id){
-//                 i = index;
-//                 return i;
-//             }
-//         })
-//         return i;
-//     }
-// }
-var deviceObject = {
-        deviceArray: [],
-        createDevice: function(newDevice){
-            
-        },
-        getDevices: function(){
-            Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-                if(err){
-                    console.log(err);
-                }
-                else{
-                    if(myDevice.length > 0){
-                        console.log("Test: ", myDevice);
-                        myDevice[0]['gpio'].forEach(function(myGpio){
-                            var myOutlet = new Gpio(myGpio, 'high');
-                            var initialState = myOutlet.readSync();
-                            console.log("Initial State:", initialState);
-                            outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
-                        });
-                        console.log(outlets);
-                    }
-                }
-            });
-        },
-        setDevice: function(newDeviceObj){
-            this.deviceArray.push(newDeviceObj);   
-        },
-        editDevice: function(device_id){
-            
-        },
-        deleteDevice: function(device_id){
-            
-        },
-        findDevice: function(device_id){
-            
-        }
-}
+
 // scheduleObj.getSchedules();
 scheduleHelper.getSchedules();
 Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
@@ -315,7 +156,6 @@ router.post('/schedule', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     try{
-        // scheduleObj.createSchedule(newSchedule);
         scheduleHelper.createSchedule(newSchedule);
         console.log("Schedule successfully created!\n");
         res.status(200).end();
@@ -323,37 +163,6 @@ router.post('/schedule', function(req, res){
         console.log(err);
         res.status(400).end();
     }
-    // Scheduler.create(newSchedule, (err, schedule) =>{
-    //     if(err) {
-    //         console.log(err);
-    //         res.status(400).end();
-    //     }
-    //     else{
-    //         console.log(schedule, " created");
-    //         schedule.save();
-    //         var mySchedule = {
-    //             // second: newSchedule['second'],
-    //             minute: newSchedule['minute'],
-    //             hour: newSchedule['hour'],
-    //             // date: newSchedule['date'],
-    //             // month: newSchedule['month'],
-    //             // year: newSchedule['year'],
-    //             // dayOfWeek: newSchedule['dayOfWeek']
-    //         };
-    //         console.log(mySchedule);
-    //         console.log(schedule._id);
-    //         var node_schedule      = require('node-schedule');
-    //         var job = node_schedule.scheduleJob(mySchedule, function(){
-    //             console.log('Schedule created!');
-    //             activateRelay(Number(newSchedule['gpio']));
-    //         });
-    //         var db_id = schedule._id;
-    //         var obj = {"_id": schedule._id, job};
-    //         scheduleObj.scheduleArr.push(obj);
-    //         console.log(schedules);
-    //         res.status(200).end();
-    //     }
-    // });
 });
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
@@ -383,7 +192,6 @@ router.put('/schedule/:schedule_id', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     try{
-        // scheduleObj.editSchedule(schedule_id, newSchedule);
         scheduleHelper.editSchedule(schedule_id, newSchedule);
         console.log("Successfully Updated!");
         res.status(200).end();
@@ -397,7 +205,6 @@ router.delete('/schedule/:schedule_id', function(req, res){
     console.log(typeof schedule_id);
     console.log(schedules.length);
     try{
-        // scheduleObj.deleteSchedule(schedule_id);
         scheduleHelper.deleteSchedule(schedule_id);
         console.log("Successfully Deleted!");
         res.status(200).end();
