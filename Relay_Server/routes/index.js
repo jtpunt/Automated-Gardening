@@ -8,6 +8,7 @@ var express = require("express"),
     schedule = require('node-schedule'),
     Devices = require("../models/device"),
     scheduleHelper = require("./scheduleHelper.js"),
+    deviceHelper   = require("./deviceHelper.js"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
@@ -21,6 +22,7 @@ process.on('SIGINT', () => {
 })
 
 scheduleHelper.getSchedules(activateRelay);
+deviceHelper.getDevices();
 Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
     if(err)
         console.log(err);
@@ -179,17 +181,6 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', function(req, res){
     console.log("in put route with ", '\n');
     var schedule_id = req.params.schedule_id;
-    let newSchedule = { 
-        // local_ip: req.body.local_ip, 
-        // gpio: req.body.gpio,
-        // second: req.body.second,
-        minute: req.body.minute,
-        hour: req.body.hour,
-        // date: req.body.date,
-        // month: req.body.month,
-        // year: req.body.year,
-        // dayOfWeek: req.body.dayOfWeek
-    };
     try{
         scheduleHelper.editSchedule(schedule_id, newSchedule);
         console.log("Successfully Updated!");

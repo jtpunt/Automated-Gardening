@@ -110,15 +110,16 @@ var scheduleObj = {
         }
     },
     findSchedule: function(schedule_id){
-        let i = -1;
-        console.log("Searching for schedule..\n");
-        this.scheduleArr.forEach(function(mySchedule, index){
-            if(mySchedule._id == schedule_id){
-                i = index;
-                return i;
-            }
-        })
-        return i;
+        return this.scheduleArr.findIndex((mySchedule) => mySchedule['_id'] === schedule_id);
+        // let i = -1;
+        // console.log("Searching for schedule..\n");
+        // this.scheduleArr.forEach(function(mySchedule, index){
+        //     if(mySchedule._id == schedule_id){
+        //         i = index;
+        //         return i;
+        //     }
+        // })
+        // return i;
     }
 }
 module.exports = scheduleObj;

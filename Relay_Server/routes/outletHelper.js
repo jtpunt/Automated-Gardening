@@ -1,11 +1,14 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-var Devices = require("../models/device");
-var deviceObj = {
+var Devices = require("../models/device"),
+    ip      = require("ip"),
+    localIP = ip.address();
+    
+var outletObj = {
         outletArr: [],
-        createDevice: function(newDevice){
+        createOutlet: function(newDevice){
             
         },
-        getDevices: function(){
+        getOutlets: function(){
             var self = this;
             Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
                 if(err){
@@ -18,24 +21,24 @@ var deviceObj = {
                             var myOutlet = new Gpio(myGpio, 'high');
                             var initialState = myOutlet.readSync();
                             console.log("Initial State:", initialState);
-                            self.outletArr.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                            self.setDevice({gpio: myGpio, initialState: initialState, outlet: myOutlet});
                         });
                         console.log(outletArr);
                     }
                 }
             });
         },
-        setDevice: function(newDeviceObj){
+        setOutlet: function(newDeviceObj){
             this.outletArr.push(newDeviceObj);   
         },
-        editDevice: function(device_id){
+        editOutlet: function(device_id){
             
         },
-        deleteDevice: function(device_id){
+        deleteOutlet: function(device_id){
             
         },
-        findDevice: function(device_id){
-            
+        findOutlet: function(gpio_input){
+            return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
         }
 }
-module.exports = deviceObj;
+module.exports = outletObj;
