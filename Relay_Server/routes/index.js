@@ -7,7 +7,7 @@ const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var express = require("express"),
     schedule = require('node-schedule'),
     Devices = require("../models/device"),
-    outletHelper   = require("./outletHelper.js"),
+    // outletHelper   = require("./outletHelper.js"),
     scheduleHelper = require("./scheduleHelper.js"),
     ip = require("ip"),
     localIP = ip.address(),
@@ -20,56 +20,52 @@ process.on('SIGINT', () => {
        outlet['outlet'].unexport();
     });
 })
-try{
-    outletHelper.getOutlets();
-    scheduleHelper.getSchedules(outletHelper.activateRelay);
-}catch(err){
-    console.log(err);
+    // outletHelper.getOutlets();
+scheduleHelper.getSchedules(activateRelay);
+Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+    if(err)
+        console.log(err);
+    else{
+        if(myDevice.length > 0){
+            console.log("Test: ", myDevice);
+            myDevice[0]['gpio'].forEach(function(myGpio){
+                var myOutlet = new Gpio(myGpio, 'high');
+                var initialState = myOutlet.readSync();
+                console.log("Initial State:", initialState);
+                outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+            });
+            console.log(outlets);
+        }
+    }
+});
+function activateRelay(gpio_input) { //function to start blinkingp
+    console.log(gpio_input);
+    console.log(outlets);
+    outlets.forEach(function(outlet){
+        console.log(outlet);
+        if(outlet["gpio"] === gpio_input){
+            console.log("outlet found!\n");
+            if (outlet['outlet'].readSync() === 0) { //check the pin state, if the state is 0 (or off)
+                outlet['outlet'].writeSync(1); //set pin state to 1 (turn LED on)
+            } else {
+                outlet['outlet'].writeSync(0); //set pin state to 0 (turn LED off)
+            }
+        }
+    });
 }
-// Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-//     if(err)
-//         console.log(err);
-//     else{
-//         if(myDevice.length > 0){
-//             console.log("Test: ", myDevice);
-//             myDevice[0]['gpio'].forEach(function(myGpio){
-//                 var myOutlet = new Gpio(myGpio, 'high');
-//                 var initialState = myOutlet.readSync();
-//                 console.log("Initial State:", initialState);
-//                 outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
-//             });
-//             console.log(outlets);
-//         }
-//     }
-// });
-// function activateRelay(gpio_input) { //function to start blinkingp
-//     console.log(gpio_input);
-//     console.log(outlets);
-//     outlets.forEach(function(outlet){
-//         console.log(outlet);
-//         if(outlet["gpio"] === gpio_input){
-//             console.log("outlet found!\n");
-//             if (outlet['outlet'].readSync() === 0) { //check the pin state, if the state is 0 (or off)
-//                 outlet['outlet'].writeSync(1); //set pin state to 1 (turn LED on)
-//             } else {
-//                 outlet['outlet'].writeSync(0); //set pin state to 0 (turn LED off)
-//             }
-//         }
-//     });
-// }
-// function getStatus(gpio_input, res){
-//     outlets.forEach(function(outlet){
-//         if(outlet["gpio"] === gpio_input){
-//             var curState = outlet['outlet'].readSync();
-//             if(outlet['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
-//                 curState ^= 1;
-//                 res.write(JSON.stringify(curState));
-//             }else{ // 1 means on, 0 means off here
-//                 res.write(JSON.stringify(curState));
-//             }
-//         }
-//     });
-// }
+function getStatus(gpio_input, res){
+    outlets.forEach(function(outlet){
+        if(outlet["gpio"] === gpio_input){
+            var curState = outlet['outlet'].readSync();
+            if(outlet['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
+                curState ^= 1;
+                res.write(JSON.stringify(curState));
+            }else{ // 1 means on, 0 means off here
+                res.write(JSON.stringify(curState));
+            }
+        }
+    });
+}
 function validateInput(gpio_input, res, fn){
     if(Number.isNaN(gpio_input)){ // make sure a number was passed in
         console.log("Not a number!\n");
@@ -160,7 +156,7 @@ router.post('/schedule', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     try{
-        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay);
+        scheduleHelper.createSchedule(newSchedule, activateRelay);
         console.log("Schedule successfully created!\n");
         res.status(200).end();
     }catch(err){
@@ -214,11 +210,11 @@ router.delete('/schedule/:schedule_id', function(req, res){
 router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-    validateInput(gpio_input, res, outletHelper.getStatus);
+    validateInput(gpio_input, res, getStatus);
 });
 router.get('/activate/:id', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-    validateInput(gpio_input, res, outletHelper.activateRelay);
+    validateInput(gpio_input, res, activateRelay);
 });
 module.exports = router;
