@@ -23,7 +23,7 @@ process.on('SIGINT', () => {
     // outletHelper.getOutlets();
 scheduleHelper.getSchedules(activateRelay);
 try{
-    outlets = outletHelper.loadOutlets();
+    outlets = outletHelper();
 }catch(err){
     console.log(err);
 }
