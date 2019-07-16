@@ -36,28 +36,30 @@ var outletObj = {
         },
         deleteOutlet: function(gpio_input){
             let self = this;
-            let index = this.findOutlet(gpio_input);
+            let index = self.findOutlet(gpio_input);
         },
         findOutlet: function(gpio_input){
             return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
         },
         activateRelay: function(gpio_input) { //function to start blinkingp
             console.log(gpio_input);
-            let index = this.findOutlet(gpio_input);
+            let self = this;
+            let index = self.findOutlet(gpio_input);
             if(index !== -1){
                 console.log("outlet found!\n");
-                if(this.outletArr[index]['outlet'].readSync() === 0){ //check the pin state, if the state is 0 (or off)
-                    this.outletArr[index]['outlet'].writeSync(1); //set pin state to 1 (turn LED on)
+                if(self.outletArr[index]['outlet'].readSync() === 0){ //check the pin state, if the state is 0 (or off)
+                    self.outletArr[index]['outlet'].writeSync(1); //set pin state to 1 (turn LED on)
                 }else{
-                    this.outletArr[index]['outlet'].writeSync(0); //set pin state to 0 (turn LED off)
+                    self.outletArr[index]['outlet'].writeSync(0); //set pin state to 0 (turn LED off)
                 }
             }
         },
         getStatus: function(gpio_input){
-            let index = this.findOutlet(gpio_input);
+            let self = this;
+            let index = self.findOutlet(gpio_input);
             if(index !== -1){
-                let curState = this.outletArr[index]['outlet'].readSync();
-                if(this.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
+                let curState = self.outletArr[index]['outlet'].readSync();
+                if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
                     curState ^= 1;
                 }
                 return curState;
