@@ -7,7 +7,7 @@ const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var express = require("express"),
     schedule = require('node-schedule'),
     Devices = require("../models/device"),
-    // outletHelper   = require("./outletHelper.js"),
+    outletHelper   = require("./outletHelper.js"),
     scheduleHelper = require("./scheduleHelper.js"),
     ip = require("ip"),
     localIP = ip.address(),
@@ -22,22 +22,25 @@ process.on('SIGINT', () => {
 })
     // outletHelper.getOutlets();
 scheduleHelper.getSchedules(activateRelay);
-Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-    if(err)
-        console.log(err);
-    else{
-        if(myDevice.length > 0){
-            console.log("Test: ", myDevice);
-            myDevice[0]['gpio'].forEach(function(myGpio){
-                var myOutlet = new Gpio(myGpio, 'high');
-                var initialState = myOutlet.readSync();
-                console.log("Initial State:", initialState);
-                outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
-            });
-            console.log(outlets);
-        }
-    }
-});
+try{
+    outlets = outlet.loadOutlets();
+}
+// Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+//     if(err)
+//         console.log(err);
+//     else{
+//         if(myDevice.length > 0){
+//             console.log("Test: ", myDevice);
+//             myDevice[0]['gpio'].forEach(function(myGpio){
+//                 var myOutlet = new Gpio(myGpio, 'high');
+//                 var initialState = myOutlet.readSync();
+//                 console.log("Initial State:", initialState);
+//                 outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+//             });
+//             console.log(outlets);
+//         }
+//     }
+// });
 function activateRelay(gpio_input) { //function to start blinkingp
     console.log(gpio_input);
     console.log(outlets);
