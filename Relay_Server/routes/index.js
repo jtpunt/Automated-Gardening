@@ -23,7 +23,9 @@ process.on('SIGINT', () => {
     // outletHelper.getOutlets();
 scheduleHelper.getSchedules(activateRelay);
 try{
-    outlets = outlet.loadOutlets();
+    outlets = outletHelper.loadOutlets();
+}catch(err){
+    console.log(err);
 }
 // Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
 //     if(err)
