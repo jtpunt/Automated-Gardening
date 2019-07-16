@@ -181,6 +181,10 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', function(req, res){
     console.log("in put route with ", '\n');
     var schedule_id = req.params.schedule_id;
+    var newSchedule = { 
+        minute: req.body.minute,
+        hour: req.body.hour,
+    };
     try{
         scheduleHelper.editSchedule(schedule_id, newSchedule);
         console.log("Successfully Updated!");
