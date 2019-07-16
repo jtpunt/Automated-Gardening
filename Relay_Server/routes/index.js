@@ -7,8 +7,8 @@ const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var express = require("express"),
     schedule = require('node-schedule'),
     Devices = require("../models/device"),
-    scheduleHelper = require("./scheduleHelper.js"),
     outletHelper   = require("./outletHelper.js"),
+    scheduleHelper = require("./scheduleHelper.js"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
@@ -20,8 +20,12 @@ process.on('SIGINT', () => {
        outlet['outlet'].unexport();
     });
 })
-outletHelper.getOutlets();
-scheduleHelper.getSchedules(outletHelper.activateRelay.call(outletHelper));
+try{
+    outletHelper.getOutlets();
+    scheduleHelper.getSchedules(outletHelper.activateRelay);
+}catch(err){
+    console.log(err);
+}
 // Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
 //     if(err)
 //         console.log(err);
@@ -156,7 +160,7 @@ router.post('/schedule', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     try{
-        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay.call(outletHelper));
+        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay);
         console.log("Schedule successfully created!\n");
         res.status(200).end();
     }catch(err){

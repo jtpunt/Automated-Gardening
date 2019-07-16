@@ -13,6 +13,7 @@ var outletObj = {
             Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
                 if(err){
                     console.log(err);
+                    throw err;
                 }
                 else{
                     if(myDevice.length > 0){
@@ -24,6 +25,8 @@ var outletObj = {
                             self.setOutlet({gpio: myGpio, initialState: initialState, outlet: myOutlet});
                         });
                         console.log(self.outletArr);
+                    }else{
+                        throw "No configuration found for this device!"
                     }
                 }
             });
@@ -39,7 +42,6 @@ var outletObj = {
             let index = self.findOutlet(gpio_input);
         },
         activateRelay: function(gpio_input) { //function to start blinkingp
-            console.log(gpio_input);
             let self = this;
             let index = self.findOutlet(gpio_input);
             if(index !== -1){
