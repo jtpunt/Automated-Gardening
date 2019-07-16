@@ -21,7 +21,7 @@ process.on('SIGINT', () => {
     });
 })
 outletHelper.getOutlets();
-scheduleHelper.getSchedules(outletHelper.activateRelay);
+scheduleHelper.getSchedules(outletHelper.activateRelay.call(outletHelper));
 // Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
 //     if(err)
 //         console.log(err);
@@ -156,7 +156,7 @@ router.post('/schedule', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     try{
-        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay);
+        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay.call(outletHelper));
         console.log("Schedule successfully created!\n");
         res.status(200).end();
     }catch(err){

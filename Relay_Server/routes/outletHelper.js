@@ -38,9 +38,6 @@ var outletObj = {
             let self = this;
             let index = self.findOutlet(gpio_input);
         },
-        findOutlet: function(gpio_input){
-            return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
-        },
         activateRelay: function(gpio_input) { //function to start blinkingp
             console.log(gpio_input);
             let self = this;
@@ -64,6 +61,9 @@ var outletObj = {
                 }
                 return curState;
             }
+        },
+        findOutlet: function(gpio_input){
+            return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
         }
 }
 module.exports = outletObj;
