@@ -21,7 +21,7 @@ process.on('SIGINT', () => {
     });
 })
 outletHelper.getOutlets();
-scheduleHelper.getSchedules(outletHelper.activateRelay.call(outletHelper));
+scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
 // try{
 //     outlets = outletHelper();
 // }catch(err){
@@ -71,12 +71,12 @@ scheduleHelper.getSchedules(outletHelper.activateRelay.call(outletHelper));
 //         }
 //     });
 // }
-function validateInput(gpio_input, res, fn){
+function validateInput(gpio_input, res, fn, context){
     if(Number.isNaN(gpio_input)){ // make sure a number was passed in
         console.log("Not a number!\n");
         // throw "Not a number"
     }else if(APPROVED_GPIO.includes(gpio_input)){ // was 2 or 3 passed in?
-        fn(gpio_input, res);
+        fn.call(context, gpio_input, res);
         res.status(200).end();
     }else{
         console.log("in else\n");
