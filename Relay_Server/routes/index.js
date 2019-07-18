@@ -7,7 +7,7 @@ const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var express = require("express"),
     schedule = require('node-schedule'),
     Devices = require("../models/device"),
-    // outletHelper   = require("./outletHelper.js"),
+    outletHelper   = require("./outletHelper.js"),
     scheduleHelper = require("./scheduleHelper.js"),
     ip = require("ip"),
     localIP = ip.address(),
@@ -20,8 +20,9 @@ process.on('SIGINT', () => {
        outlet['outlet'].unexport();
     });
 })
-    // outletHelper.getOutlets();
+outletHelper.getOutlets();
 scheduleHelper.getSchedules(activateRelay);
+console.log(outletHelper.getStatus(2));
 // try{
 //     outlets = outletHelper();
 // }catch(err){
