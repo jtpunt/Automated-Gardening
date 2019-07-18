@@ -30,35 +30,42 @@ var scheduleObj = {
             }
         });
     },
-    getSchedules: function(activateRelay){
+    getSchedules: async function(activateRelay){
         let self = this;
-        Scheduler.find({local_ip: localIP}, function(err, mySchedules){
-            if(err)
-                console.log(err);
-            else{
-                console.log(mySchedules);
-                mySchedules.forEach(function(mySchedule){
-                    var newSchedule = {
-                        // commented out second below because it would cause the relay to be activated every other second
-                        // second: mySchedule['second'],
-                        minute: mySchedule['minute'],
-                        hour: mySchedule['hour'],
-                        // date: mySchedule['date'],
-                        // month: mySchedule['month'],
-                        // year: mySchedule['year'],
-                        // dayOfWeek: mySchedule['dayOfWeek']
-                    };
-                    // var node_schedule      = require('node-schedule');
-                    var job = schedule.scheduleJob(newSchedule, function(){
-                        console.log('Schedule created!');
-                        activateRelay(Number(mySchedule['gpio']));
-                    });
-                    console.log(job);
-                    var obj = {"_id": mySchedule['_id'], job};
-                    self.setSchedule(obj);
-                });
-            }
-        });
+        try{
+            const doc = await Scheduler.find({local_ip: localIP});
+            return doc;
+        }
+        catch(err){
+            console.log(err);
+        }
+        // Scheduler.find({local_ip: localIP}, function(err, mySchedules){
+        //     if(err)
+        //         console.log(err);
+        //     else{
+        //         console.log(mySchedules);
+        //         mySchedules.forEach(function(mySchedule){
+        //             var newSchedule = {
+        //                 // commented out second below because it would cause the relay to be activated every other second
+        //                 // second: mySchedule['second'],
+        //                 minute: mySchedule['minute'],
+        //                 hour: mySchedule['hour'],
+        //                 // date: mySchedule['date'],
+        //                 // month: mySchedule['month'],
+        //                 // year: mySchedule['year'],
+        //                 // dayOfWeek: mySchedule['dayOfWeek']
+        //             };
+        //             // var node_schedule      = require('node-schedule');
+        //             var job = schedule.scheduleJob(newSchedule, function(){
+        //                 console.log('Schedule created!');
+        //                 activateRelay(Number(mySchedule['gpio']));
+        //             });
+        //             console.log(job);
+        //             var obj = {"_id": mySchedule['_id'], job};
+        //             self.setSchedule(obj);
+        //         });
+        //     }
+        // });
     },
     setSchedule: function(newScheduleObj){
         console.log("Received Schedule Obj\n");
