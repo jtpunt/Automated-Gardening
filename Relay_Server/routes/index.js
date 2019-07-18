@@ -216,7 +216,7 @@ router.delete('/schedule/:schedule_id', function(req, res){
 router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-    if(Number.isNaN(gpio_input)){
+    if(!Number.isNaN(gpio_input)){
         console.log("is a valid number!\n");
         let status = outletHelper.getStatus(gpio_input);
         res.write(JSON.stringify(status));
@@ -227,11 +227,11 @@ router.get('/status/:id', function(req, res){
 router.get('/activate/:id', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-    if(Number.isNaN(gpio_input)){
+    if(!Number.isNaN(gpio_input)){
         console.log("is a valid number!\n");
         outletHelper.activateRelay(gpio_input);
         res.status(200).end();
     }
-    validateInput(gpio_input, res, outletHelper.activateRelay, outletHelper);
+    // validateInput(gpio_input, res, outletHelper.activateRelay, outletHelper);
 });
 module.exports = router;
