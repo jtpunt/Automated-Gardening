@@ -12,7 +12,7 @@ var express = require("express"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
-
+var APPROVED_GPIO = [2, 3];
 var schedules = [];
 var outlets = [];
 process.on('SIGINT', () => {
