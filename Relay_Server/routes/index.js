@@ -22,28 +22,28 @@ process.on('SIGINT', () => {
 })
 outletHelper.getOutlets();
 scheduleHelper.getSchedules(activateRelay);
-console.log(outletHelper.getStatus(2));
+console.log("Outlet Status: \n", outletHelper.getStatus(2));
 // try{
 //     outlets = outletHelper();
 // }catch(err){
 //     console.log(err);
 // }
-Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-    if(err)
-        console.log(err);
-    else{
-        if(myDevice.length > 0){
-            console.log("Test: ", myDevice);
-            myDevice[0]['gpio'].forEach(function(myGpio){
-                var myOutlet = new Gpio(myGpio, 'high');
-                var initialState = myOutlet.readSync();
-                console.log("Initial State:", initialState);
-                outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
-            });
-            console.log(outlets);
-        }
-    }
-});
+// Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+//     if(err)
+//         console.log(err);
+//     else{
+//         if(myDevice.length > 0){
+//             console.log("Test: ", myDevice);
+//             myDevice[0]['gpio'].forEach(function(myGpio){
+//                 var myOutlet = new Gpio(myGpio, 'high');
+//                 var initialState = myOutlet.readSync();
+//                 console.log("Initial State:", initialState);
+//                 outlets.push({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+//             });
+//             console.log(outlets);
+//         }
+//     }
+// });
 function activateRelay(gpio_input) { //function to start blinkingp
     console.log(gpio_input);
     console.log(outlets);

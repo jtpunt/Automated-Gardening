@@ -10,6 +10,7 @@ var outletObj = {
         },
         getOutlets: function(){
             var self = this;
+            console.log("in getOutlets\n");
             Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
                 if(err){
                     console.log(err);
