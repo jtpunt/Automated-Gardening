@@ -31,7 +31,7 @@ var scheduleObj = {
             }
         });
     },
-    getSchedules: function(activateRelay){
+    getSchedules: function(activateRelay, outletHelper){
         let self = this;
         Scheduler.find({local_ip: localIP}, function(err, mySchedules){
             if(err)
@@ -52,7 +52,7 @@ var scheduleObj = {
                     // var node_schedule      = require('node-schedule');
                     var job = schedule.scheduleJob(newSchedule, function(){
                         console.log('Schedule created!');
-                        activateRelay(Number(mySchedule['gpio']));
+                        activateRelay.call(outletHelper, Number(mySchedule['gpio']));
                     });
                     console.log(job);
                     var obj = {"_id": mySchedule['_id'], job};
