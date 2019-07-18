@@ -21,7 +21,7 @@ process.on('SIGINT', () => {
     });
 })
 outletHelper.getOutlets();
-scheduleHelper.getSchedules(outletHelper.activateRelay);
+scheduleHelper.getSchedules(outletHelper.activateRelay.call(outletHelper));
 // try{
 //     outlets = outletHelper();
 // }catch(err){
@@ -161,7 +161,7 @@ router.post('/schedule', function(req, res){
         // dayOfWeek: req.body.dayOfWeek
     };
     try{
-        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay);
+        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay.call(outletHelper));
         console.log("Schedule successfully created!\n");
         res.status(200).end();
     }catch(err){
@@ -215,11 +215,11 @@ router.delete('/schedule/:schedule_id', function(req, res){
 router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-    validateInput(gpio_input, res, outletHelper.getStatus);
+    validateInput(gpio_input, res, outletHelper.getStatus.call(outletHelper));
 });
 router.get('/activate/:id', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-    validateInput(gpio_input, res, outletHelper.activateRelay);
+    validateInput(gpio_input, res, outletHelper.activateRelay.call(outletHelper));
 });
 module.exports = router;
