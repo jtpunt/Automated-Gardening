@@ -7,6 +7,7 @@ var scheduleObj = {
     scheduleArr: [],
     createSchedule: function(newSchedule, activateRelay){
         let self = this;
+        console.log(this, activateRelay);
         Scheduler.create(newSchedule, (err, mySchedule) =>{
             if(err) {
                 console.log(err);
