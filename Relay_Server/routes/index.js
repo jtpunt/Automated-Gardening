@@ -24,7 +24,10 @@ var callMyPromise = async () => {
     var result = await outletHelper.getOutlets();
     return result;
 }
-console.log(callMyPromise());
+callMyPromise().then(function(result){
+    console.log(result);
+})
+
 scheduleHelper.getSchedules(activateRelay);
 
 // try{
