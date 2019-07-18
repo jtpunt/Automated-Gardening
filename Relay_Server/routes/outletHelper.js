@@ -24,6 +24,7 @@ var outletObj = {
                             var initialState = myOutlet.readSync();
                             console.log("Initial State:", initialState);
                             self.setOutlet({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                            self.findOutlet(myGpio);
                         });
                         console.log(self.outletArr);
                     }else{

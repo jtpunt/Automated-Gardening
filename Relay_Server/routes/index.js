@@ -12,7 +12,7 @@ var express = require("express"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
-const APPROVED_GPIO = [2,3]; // gpios that the system is set up to handle
+
 var schedules = [];
 var outlets = [];
 process.on('SIGINT', () => {
@@ -20,16 +20,8 @@ process.on('SIGINT', () => {
        outlet['outlet'].unexport();
     });
 })
-var callMyPromise = async () => {
-    var result = await scheduleHelper.getSchedules(activateRelay);
-    return result;
-}
-callMyPromise().then(function(result){
-    console.log(result);
-})
-
-// scheduleHelper.getSchedules(activateRelay);
-
+outletHelper.getOutlets();
+scheduleHelper.getSchedules(activateRelay);
 // try{
 //     outlets = outletHelper();
 // }catch(err){
@@ -91,7 +83,6 @@ function validateInput(gpio_input, res, fn){
         res.status(400).end();
     }
 }
-console.log("Outlet Status: \n", outletHelper.getStatus(2));
 router.get('/device', function(req, res) {
     Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
         if(err){
