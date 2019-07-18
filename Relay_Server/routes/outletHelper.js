@@ -46,6 +46,7 @@ var outletObj = {
         activateRelay: function(gpio_input) { //function to start blinkingp
             let self = this;
             let index = self.findOutlet(gpio_input);
+            console.log("in activateRelay\n");
             if(index !== -1){
                 console.log("outlet found!\n");
                 if(self.outletArr[index]['outlet'].readSync() === 0){ //check the pin state, if the state is 0 (or off)
@@ -58,6 +59,7 @@ var outletObj = {
         getStatus: function(gpio_input){
             let self = this;
             let index = self.findOutlet(gpio_input);
+            console.log("In getStatus\n");
             if(index !== -1){
                 console.log("Outlet Found!\n");
                 let curState = self.outletArr[index]['outlet'].readSync();
