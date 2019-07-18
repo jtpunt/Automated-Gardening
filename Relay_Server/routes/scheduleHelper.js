@@ -34,6 +34,7 @@ var scheduleObj = {
         let self = this;
         try{
             const doc = await Scheduler.find({local_ip: localIP});
+            console.log(doc);
             return doc;
         }
         catch(err){
