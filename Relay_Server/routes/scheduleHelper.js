@@ -5,7 +5,7 @@ var Scheduler     = require("../models/scheduler"),
     
 var scheduleObj = {
     scheduleArr: [],
-    createSchedule: function(newSchedule, activateRelay){
+    createSchedule: function(newSchedule, activateRelay, outletHelper){
         let self = this;
         console.log(this, activateRelay);
         Scheduler.create(newSchedule, (err, mySchedule) =>{
@@ -23,7 +23,7 @@ var scheduleObj = {
                 console.log(newSchedule);
                 var job = schedule.scheduleJob(newSchedule, function(){
                     console.log('Schedule created!');
-                    activateRelay(Number(mySchedule['gpio']));
+                    activateRelay.call(outletHelper, Number(mySchedule['gpio']));
                 });
                 var db_id = schedule._id;
                 var obj = {"_id": mySchedule['_id'], job};
