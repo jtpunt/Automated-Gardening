@@ -58,6 +58,7 @@ var outletObj = {
             let self = this;
             let index = self.findOutlet(gpio_input);
             if(index !== -1){
+                console.log("Outlet Found!\n");
                 let curState = self.outletArr[index]['outlet'].readSync();
                 if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
                     curState ^= 1;
