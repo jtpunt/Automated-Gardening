@@ -21,14 +21,14 @@ process.on('SIGINT', () => {
     });
 })
 var callMyPromise = async () => {
-    var result = await outletHelper.getOutlets();
+    var result = await scheduleHelper.getSchedules(activateRelay);
     return result;
 }
 callMyPromise().then(function(result){
     console.log(result);
 })
 
-scheduleHelper.getSchedules(activateRelay);
+// scheduleHelper.getSchedules(activateRelay);
 
 // try{
 //     outlets = outletHelper();
