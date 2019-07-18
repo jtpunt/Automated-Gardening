@@ -76,7 +76,8 @@ function validateInput(gpio_input, res, fn, context){
         console.log("Not a number!\n");
         // throw "Not a number"
     }else if(APPROVED_GPIO.includes(gpio_input)){ // was 2 or 3 passed in?
-        fn.call(context, gpio_input, res);
+        let status = fn.call(context, gpio_input, res);
+        res.write(JSON.stringify(status));
         res.status(200).end();
     }else{
         console.log("in else\n");
