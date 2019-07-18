@@ -33,7 +33,7 @@ var scheduleObj = {
     getSchedules: function(activateRelay){
         let self = this;
         console.log("in getSchedules\n");
-        new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             
             //do something, fetch something....
             //you guessed it, mongo queries go here.
