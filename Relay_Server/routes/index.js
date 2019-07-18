@@ -71,19 +71,19 @@ scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
 //         }
 //     });
 // }
-// function validateInput(gpio_input, res, fn, context){
-//     if(Number.isNaN(gpio_input)){ // make sure a number was passed in
-//         console.log("Not a number!\n");
-//         // throw "Not a number"
-//     }else if(APPROVED_GPIO.includes(gpio_input)){ // was 2 or 3 passed in?
-//         let status = fn.call(context, gpio_input, res);
-//         res.write(JSON.stringify(status));
-//         res.status(200).end();
-//     }else{
-//         console.log("in else\n");
-//         res.status(400).end();
-//     }
-// }
+function validateInput(gpio_input, res, fn, context){
+    if(Number.isNaN(gpio_input)){ // make sure a number was passed in
+        console.log("Not a number!\n");
+        // throw "Not a number"
+    }else if(APPROVED_GPIO.includes(gpio_input)){ // was 2 or 3 passed in?
+        let status = fn.call(context, gpio_input, res);
+        res.write(JSON.stringify(status));
+        res.status(200).end();
+    }else{
+        console.log("in else\n");
+        res.status(400).end();
+    }
+}
 router.get('/device', function(req, res) {
     Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
         if(err){
@@ -217,6 +217,7 @@ router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
     if(Number.isNaN(gpio_input)){
+        console.log("is a valid number!\n");
         let status = outletHelper.getStatus(gpio_input);
         res.write(JSON.stringify(status));
         res.status(200).end();
@@ -227,8 +228,10 @@ router.get('/activate/:id', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
     if(Number.isNaN(gpio_input)){
+        console.log("is a valid number!\n");
         outletHelper.activateRelay(gpio_input);
         res.status(200).end();
     }
+    validateInput(gpio_input, res, outletHelper.activateRelay, outletHelper);
 });
 module.exports = router;
