@@ -30,17 +30,21 @@ var scheduleObj = {
             }
         });
     },
-    getSchedules: async function(activateRelay){
+    getSchedules: function(activateRelay){
         let self = this;
         console.log("in getSchedules\n");
-        try{
-            const doc = await Scheduler.find({local_ip: localIP});
-            console.log(doc);
-            return doc;
-        }
-        catch(err){
-            console.log(err);
-        }
+        new Promise((resolve, reject) => {
+            
+            //do something, fetch something....
+            //you guessed it, mongo queries go here.
+            Scheduler.find({local_ip: localIP})      
+            .then(function(result){            //another query can be called based on my result...
+                console.log("Within promise with: ", result);       
+                return result;
+            }).then(function(result){ 
+                 resolve(result);
+            });
+        })
         // Scheduler.find({local_ip: localIP}, function(err, mySchedules){
         //     if(err)
         //         console.log(err);
