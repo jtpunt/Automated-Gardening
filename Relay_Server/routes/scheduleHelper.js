@@ -32,6 +32,7 @@ var scheduleObj = {
     },
     getSchedules: async function(activateRelay){
         let self = this;
+        console.log("in getSchedules\n");
         try{
             const doc = await Scheduler.find({local_ip: localIP});
             console.log(doc);
