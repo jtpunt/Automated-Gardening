@@ -16,9 +16,7 @@ var APPROVED_GPIO = [2, 3];
 var schedules = [];
 var outlets = [];
 process.on('SIGINT', () => {
-    outlets.forEach(function(outlet){
-       outlet['outlet'].unexport();
-    });
+    outHelper.releaseGpioMem();
 })
 outletHelper.getOutlets();
 scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);

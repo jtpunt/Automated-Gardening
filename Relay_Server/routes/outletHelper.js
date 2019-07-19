@@ -8,6 +8,11 @@ var outletObj = {
         createOutlet: function(newDevice){
             
         },
+        releaseGpioMem: function(){
+            this.outletArr.forEach((outlet) => {
+                outlet['outlet'].unexport();
+            });
+        },
         getOutlets: function(){
             var self = this;
             console.log("in getOutlets\n");
