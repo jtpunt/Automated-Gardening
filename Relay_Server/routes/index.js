@@ -2,7 +2,6 @@
 //var schedule      = require('node-schedule');
 //var Scheduler     = require("../models/scheduler");
 // Living room lights use 'out' with an initial state of 0, otherwise, set to 'high' with an initial state of 1
-const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 
 var express = require("express"),
     schedule = require('node-schedule'),
@@ -13,8 +12,7 @@ var express = require("express"),
     localIP = ip.address(),
     router    = express.Router();
 var APPROVED_GPIO = [2, 3];
-var schedules = [];
-var outlets = [];
+
 process.on('SIGINT', () => {
     outletHelper.releaseGpioMem();
 })
