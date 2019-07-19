@@ -5,7 +5,7 @@ var Scheduler     = require("../models/scheduler"),
     
 var scheduleObj = {
     scheduleArr: [],
-    createSchedule: function(newSchedule, activateRelay, outletHelper){
+    createSchedule: function(newSchedule, activateRelay, context){
         let self = this;
         console.log(this, activateRelay);
         Scheduler.create(newSchedule, (err, mySchedule) =>{
@@ -23,7 +23,7 @@ var scheduleObj = {
                 console.log(newSchedule);
                 var job = schedule.scheduleJob(newSchedule, function(){
                     console.log('Schedule created!');
-                    activateRelay.call(outletHelper, Number(mySchedule['gpio']));
+                    activateRelay.call(context, Number(mySchedule['gpio']));
                 });
                 var db_id = schedule._id;
                 var obj = {"_id": mySchedule['_id'], job};
@@ -31,7 +31,7 @@ var scheduleObj = {
             }
         });
     },
-    getSchedules: function(activateRelay, outletHelper){
+    getSchedules: function(activateRelay, context){
         let self = this;
         Scheduler.find({local_ip: localIP}, function(err, mySchedules){
             if(err)
@@ -52,7 +52,7 @@ var scheduleObj = {
                     // var node_schedule      = require('node-schedule');
                     var job = schedule.scheduleJob(newSchedule, function(){
                         console.log('Schedule created!');
-                        activateRelay.call(outletHelper, Number(mySchedule['gpio']));
+                        activateRelay.call(context, Number(mySchedule['gpio']));
                     });
                     console.log(job);
                     var obj = {"_id": mySchedule['_id'], job};
