@@ -16,7 +16,7 @@ var APPROVED_GPIO = [2, 3];
 process.on('SIGINT', () => {
     outletHelper.releaseGpioMem();
 })
-outletHelper.getOutlets();
+outletHelper.getOutletSetup();
 scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
 // try{
 //     outlets = outletHelper();
@@ -52,7 +52,12 @@ router.get('/device/:device_id', function(req, res) {
     });
 });
 router.patch('/device/:device_id', function(req, res) {
-    
+    var newSchedule = { 
+        local_ip: req.body.local_ip, 
+        gpio: req.body.gpio,
+        minute: req.body.minute,
+        hour: req.body.hour,
+    };
     Devices.findByIdAndUpdate(req.param.device_id, {$set: updatedGpios}, (err, myDevice) => {
         if(err){
             console.log(err);

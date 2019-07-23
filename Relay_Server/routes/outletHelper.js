@@ -13,7 +13,7 @@ var outletObj = {
                 outlet['outlet'].unexport();
             });
         },
-        getOutlets: function(){
+        getOutletSetup: function(){
             var self = this;
             console.log("in getOutlets\n");
             Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
@@ -41,12 +41,64 @@ var outletObj = {
         setOutlet: function(newOutletObj){
             this.outletArr.push(newOutletObj);   
         },
-        editOutlet: function(gpio_input){
-            
+        // updatedOutlet = {
+        //      local_ip: local_ip, 
+        //      device_name: device_name,
+        //      device_type: device_type,
+        //      gpio: gpio
+        // }
+        // updatedGpio: [ { prevGpio: prevGpio, newGpio: newGpio }]
+        editOutlet: function(device_id, updatedOutlet, updatedGpio){
+            let self = this;
+            // make sure all prevGpios in updatedOutlet array exist in the current setup
+            updatedGpio.forEach(function(gpip){
+                let index = self.findOutlet(gpio['prevGpio']);
+                if(index !== -1){ 
+                    gpio['outletArrIdx'] = index; // save the idx that the gpio was found in
+                }else{
+                    throw "Gpio not found in setup!";
+                }
+            });
+            Devices.findByIdAndUpdate(device_id, {$set: updatedOutlet}, (err, myDevice) => {
+                if(err){
+                    console.log(err);
+                }else{
+                    updatedGpio.forEach(function(gpip){
+                       let index = gpio['outletArrIdx'];
+                       if(gpio['prevGpio'] !== gpio['updatedGpio']){
+                           self.outletArr[index]['outlet'].unexport();
+                           if(updatedGpio['newGpio'] !== undefined && updatedGpio['newGpio'] !== null){
+                               self.outletArr[index]['outlet'] = new Gpio(gpio['newGpio'], 'high');
+                           }else{ // case 2: gpio['newGpio'] is undefined or null
+                                self.outletArr.splice(index, 1); // delete 
+                           }
+                       }else{ // gpio did not change
+                           // do nothing
+                       }
+                    });
+                    self.outletArr.forEach(function(outlet){
+                        
+                    });
+                    // case 1: gpio is updated
+                    //  - clear resources for each outlet
+                    // self.outletArr[index]['outlet'].unexport();
+                    // case 2: gpio['newGpio'] is undefined or null
+                    //  - clear resources for each outlet
+                    // self.releaseGpioMem();
+                }
+            });
         },
-        deleteOutlet: function(gpio_input){
+        deleteOutlet: function(outletObj){
             let self = this;
             let index = self.findOutlet(gpio_input);
+            Devices.findByIdAndDelete(req.param.device_id, (err, myDevice) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                }else{
+                    
+                }
+            });
         },
         activateRelay: function(gpio_input) { //function to start blinkingp
             let self = this;
@@ -75,7 +127,10 @@ var outletObj = {
             }
         },
         findOutlet: function(gpio_input){
-            return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
+            return this.outletArr.findIndex((outlet) => outlet['gpio_input'] === gpio_input);
+        },
+        findOutletId: function(outlet_id){
+            return this.outletArr.findIndex((outlet) => outlet['_id'] === outlet_id);
         }
 }
 module.exports = outletObj;

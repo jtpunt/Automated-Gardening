@@ -66,14 +66,14 @@ var scheduleObj = {
         this.scheduleArr.push(newScheduleObj);
         console.log("My scheduleArr", this.scheduleArr);
     },
-    editSchedule: function(schedule_id, newSchedule){
+    editSchedule: function(schedule_id, updatedSchedule){
         let self = this;
         let index = this.findSchedule(schedule_id);
         console.log("Editing Schedule Function: ", index);
         if(index !== -1){
             console.log("Match found at index, ", index);
             // console.log(mySchedule._id);
-            Scheduler.findByIdAndUpdate(schedule_id, {$set: newSchedule}, (err, schedule) => {
+            Scheduler.findByIdAndUpdate(schedule_id, {$set: updatedSchedule}, (err, schedule) => {
                 if(err){
                     console.log(err);
                     throw err;
@@ -112,15 +112,6 @@ var scheduleObj = {
     },
     findSchedule: function(schedule_id){
         return this.scheduleArr.findIndex((mySchedule) => mySchedule['_id'] == schedule_id);
-        // let i = -1;
-        // console.log("Searching for schedule..\n");
-        // this.scheduleArr.forEach(function(mySchedule, index){
-        //     if(mySchedule._id == schedule_id){
-        //         i = index;
-        //         return i;
-        //     }
-        // })
-        // return i;
     }
 }
 module.exports = scheduleObj;
