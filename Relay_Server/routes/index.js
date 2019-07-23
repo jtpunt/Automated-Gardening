@@ -147,7 +147,6 @@ router.put('/schedule/:schedule_id', function(req, res){
 router.delete('/schedule/:schedule_id', function(req, res){
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
-    console.log(schedules.length);
     try{
         scheduleHelper.deleteSchedule(schedule_id);
         console.log("Successfully Deleted!");
