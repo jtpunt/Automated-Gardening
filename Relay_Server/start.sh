@@ -1,2 +1,2 @@
 #!/bin/sh
-/usr/local/bin/forever start ~/Automated-Gardening/Relay_Server/server.js
+/home/pi/Automated-Gardening/Relay_Server/node_modules/bin/forever start /home/pi/Automated-Gardening/Relay_Server/server.js
