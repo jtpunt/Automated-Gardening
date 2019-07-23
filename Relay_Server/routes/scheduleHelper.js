@@ -80,7 +80,7 @@ var scheduleObj = {
                 } else {
                     self.scheduleArr[index]['job'].cancel();
                     console.log("Schedule canceled and removed!\n");
-                    self.scheduleArr[index]['job'].reschedule(newSchedule);
+                    self.scheduleArr[index]['job'].reschedule(updatedSchedule);
                 }
             });
         }else{
