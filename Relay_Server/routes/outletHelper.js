@@ -127,7 +127,7 @@ var outletObj = {
             }
         },
         findOutlet: function(gpio_input){
-            return this.outletArr.findIndex((outlet) => outlet['gpio_input'] === gpio_input);
+            return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
         },
         findOutletId: function(outlet_id){
             return this.outletArr.findIndex((outlet) => outlet['_id'] === outlet_id);
