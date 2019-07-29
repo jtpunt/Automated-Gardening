@@ -17,6 +17,7 @@ var scheduleObj = {
                 console.log(mySchedule, " created");
                 mySchedule.save();
                 var newSchedule = {
+                    second: mySchedule['second'],
                     minute: mySchedule['minute'],
                     hour: mySchedule['hour'],
                 };
@@ -41,7 +42,7 @@ var scheduleObj = {
                 mySchedules.forEach(function(mySchedule){
                     var newSchedule = {
                         // commented out second below because it would cause the relay to be activated every other second
-                        // second: mySchedule['second'],
+                        second: mySchedule['second'],
                         minute: mySchedule['minute'],
                         hour: mySchedule['hour'],
                         // date: mySchedule['date'],

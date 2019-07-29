@@ -14,14 +14,19 @@ function buildSchedule(mySchedule){
         console.log("VALID GPIO\n");
         obj.gpio = mySchedule.gpio;
     }
-    if(mySchedule.second !== null && mySchedule.second !== undefined){
-        console.log("VALID SECOND\n");
-        obj.second = mySchedule.second;
-    }
+    // if(mySchedule.second !== null && mySchedule.second !== undefined){
+    //     console.log("VALID SECOND\n");
+    //     obj.second = mySchedule.second;
+    // }
     if(mySchedule.time !== null && mySchedule.time !== undefined){
         console.log("VALID TIME\n");
-        obj.minute = mySchedule.time.split(":")[1];
-        obj.hour = mySchedule.time.split(":")[0];
+        let splitTimeArr = mySchedule.time.split(":");
+        obj.second = splitTimeArr[2];
+        obj.minute = splitTimeArr[1];
+        obj.hour = splitTimeArr[0];
+        // obj.second = mySchedule.time.split(":")[2];
+        // obj.minute = mySchedule.time.split(":")[1];
+        // obj.hour = mySchedule.time.split(":")[0];
     }
     if(mySchedule.date !== null && mySchedule.date !== undefined){
         obj.date = mySchedule.date;
