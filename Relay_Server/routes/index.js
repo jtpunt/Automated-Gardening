@@ -132,7 +132,7 @@ router.put('/schedule/:schedule_id', function(req, res){
     console.log("in put route with ", '\n');
     var schedule_id = req.params.schedule_id;
     var newSchedule = { 
-        second: req.body:second,
+        second: req.body.second,
         minute: req.body.minute,
         hour: req.body.hour,
     };
