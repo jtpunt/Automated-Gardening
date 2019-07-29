@@ -16,7 +16,7 @@
 				<div class="rTableRow">
 					<div class="rTableCell"><%=schedule.local_ip%></div>
 					<div class="rTableCell"><%=schedule.gpio%></div>
-					<div class="rTableCell"><%=schedule.hour%>:<%=schedule.minute%></div>
+					<div class="rTableCell"><%=schedule.hour%>:<%=schedule.minute%>:<%=schedule.second%></div>
 					<div>
 						<a class="btn btn-warning" href="/schedule/<%=schedule._id%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
 		                <form action="/schedule/<%=schedule._id%>/local_ip/<%=schedule.local_ip%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">
@@ -53,7 +53,7 @@
 										<option value=<%=myGpio%>><%=myGpio%></option>
 									<% }) %>
 	  							</select>
-								<input type="time" id="time" name="time" value="13:30:00" required>
+								<input type="time" id="time" name="time" value="13:30:00" step="1" required>
 		                    </div>
 		                    <div class="form-group">
 		                        <button class="btn btn-success btn-sm">Add Schedule <span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
