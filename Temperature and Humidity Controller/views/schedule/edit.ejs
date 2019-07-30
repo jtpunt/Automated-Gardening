@@ -18,7 +18,11 @@
   					</select>
   				</div>
   				 <div class="form-group">
-					<input type="time" id="time" name="time" value="<%=schedule['hour']%>:<%=schedule['minute']%>:<%=schedule['second']%>" required>
+  				     <% if(schedule['minute'] < 10){ %>
+    					<input type="time" id="time" name="time" value="<%=schedule['hour']%>:0<%=schedule['minute']%>:<%=schedule['second']%>" step="1" required>
+    				<% }else { %>
+    				    <input type="time" id="time" name="time" value="<%=schedule['hour']%>:<%=schedule['minute']%>:<%=schedule['second']%>" step="1" required>
+    				<% } %>
                 </div>
                 <div class="form-group">
                     <button class="btn btn-success btn-sm">Add Schedule <span class="glyphicon glyphicon-comment" aria-hidden="true"></span></button>
