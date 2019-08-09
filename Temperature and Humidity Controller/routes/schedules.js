@@ -47,6 +47,12 @@ function buildSchedule(mySchedule){
 // return all schedules set by all relays
 // ALSO, set up a route on the relay to return all the schedules for that device
 // Shows all active schedules
+var groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
 router.get("/", (req, res) =>{
     Device.find({deviceType: "Relay Server"}, (err, devices) =>{
         if(err) console.log(err);
@@ -54,8 +60,10 @@ router.get("/", (req, res) =>{
             Scheduler.find({}, (err, schedule) => {
                 if(err) console.log(err);
                 else{
-                    console.log("result:", schedule);
-                    res.render("schedule/index", {schedules: schedule, devices: devices, stylesheets: ["/static/css/sensors.css"]});
+                    console.log("result:", schedule, devices);
+                    let schedulesByIp = groupBy(schedule, 'local_ip');
+                    console.log(schedulesByIp);
+                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/sensors.css"]});
                     res.status(200).end();
                 }
                 // console.log(schedule);
