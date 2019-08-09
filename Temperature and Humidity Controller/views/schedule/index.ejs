@@ -9,7 +9,8 @@
 	    padding: 10px;">
 		<div class="col-md-9">
 			<h2>My Schedules</h2>
-			<% for(var ipaddr in schedules){ var ipStr = ipaddr.replace(/\./g,''); %>
+			<!-- Show schedules for each relay device -->
+			<% devices.forEach(function(device){ var ipStr = device['local_ip'].replace(/\./g,''); %>
 			<div class="well">
 				<!--Setting up the add new schedule button that is used for collapsing-->
 		        <div class="text-right">
@@ -17,7 +18,7 @@
 		            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Schedules</a>
 		        </div>
 		        <!--Schedule section-->
-		        <h4><strong>Schedules for <%=ipaddr%> <i class="fa fa-calendar" aria-hidden="true"></i></strong></h4>
+		        <h4><strong>Schedules for <%=device["local_ip"]%> <i class="fa fa-calendar" aria-hidden="true"></i></strong></h4>
 	        	<div class="collapse" id="collapse<%=ipStr%>">
 	        		<div class="rTable">
 						<div class="rTableRow">
@@ -25,7 +26,8 @@
 							<div class="rTableHead"><span style="font-weight: bold;">Pin #</span></div>
 							<div class="rTableHead"><span style="font-weight: bold;">Time</div>
 						</div>
-						<% schedules[ipaddr].forEach(function(schedule){ %>
+						<!-- Do we have any schedules set up for the current device? -->
+						<% if(schedules[device["local_ip"]]) { schedules[device["local_ip"]].forEach(function(schedule){ %>
 						<div class="rTableRow">
 							<div class="rTableCell"><%=schedule.local_ip%></div>
 							<div class="rTableCell"><%=schedule.gpio%></div>
@@ -37,7 +39,9 @@
 				                </form>
 				            </div>
 						</div>
-						<% }); %>
+						<% })} else{ %>
+						<div>No schedules found!</div>
+						<% } %>
 						<br>
 						<!--Setting up the add new schedule button that is used for collapsing-->
 				        <div class="text-right">
@@ -53,15 +57,12 @@
 		                <h4>Add your new schedule <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
 		                <form id="add-comment-form" action="/schedule" method="POST">
 		                    <div class="form-group">
-		                    	<select name="local_ip">
-		                    		<option value="-1" selected="selected" disabled>Select Your Relay's IP Address:</option>
-		                    		<% devices.forEach(function(device){ %>
-		                    			<option value=<%=device.local_ip%>><%=device.local_ip%></option>
-		                    		<% }) %>
+		                    	<select name="local_ip" hidden>
+		                    		<option value=<%=device.local_ip%> selected="selected"><%=device.local_ip%></option>
 		                    	</select>
 	  							<select name="gpio">
 		                    		<option value="-1" selected="selected" disabled>Select Your GPIO:</option>
-									<% devices[0]['gpio'].forEach(function(myGpio){%>
+									<% device['gpio'].forEach(function(myGpio){%>
 										<option value=<%=myGpio%>><%=myGpio%></option>
 									<% }) %>
 	  							</select>
@@ -75,7 +76,7 @@
 		        </div>
 		        <!--Collapse Add a schedule form END-->
 			</div>
-			<% } %>
+			<% }); %>
 		</div>
 	</div>
 	</div>
