@@ -4,7 +4,7 @@ var Devices = require("../models/device"),
     fs          = require("fs"),
     path        = require("path"),
     isIp        = require('is-ip'),
-    filePath    = path.join(__dirname, 'lastIPAddr.txt');
+    filePath    = path.join("../", 'lastIPAddr.txt');
     localIP = ip.address();
     
 var outletObj = {
