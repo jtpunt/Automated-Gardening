@@ -39,30 +39,61 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
     }else{
-        // if local text file does not exist
-        fs.readFile(filePath, function(err, data){
-            if(err){
-                console.log(err);
-            }else{
-                console.log(data);
+        try{
+            if(fs.existsSync(path)){ // file exists
+                fs.readFile(filePath, function(err, data){
+                    if(err){
+                        console.log(err);
+                    }else{ // file read successful
+                        console.log(data);
+                        if(data !== localIP){ // has our devices IP address changed?
+                             
+                        }
+                    }
+                });
             }
-        });
+        }catch(err){ // file does not exist
+            console.log(err);
+            fs.writeFile(path, localIP, function(err){
+                if(err){
+                    console.log(err);
+                }else{ // file write successful
+                    console.log("No errors occured");
+                    var newDeviceObj = {
+                        local_ip: localIP,
+                        deviceName: 'New Relay Server',
+                        deviceType: 'Relay Server',
+                    }
+                    Device.create(newDeviceObj, (err, newDevice) =>{
+                        if(err) console.log(err);
+                        else{
+                            newDevice.save();
+                            console.log("Device saved!");
+                        }
+                    });
+                }
+            });
+            //    create local file
+            //    write local ip address to file
+            //    update database with new device
+        }
+        // if local text file does not exist
         //    create local file
         //    write local ip address to file
         //    update database with new device
-        console.log("No errors occured");
-        var newDeviceObj = {
-            local_ip: localIP,
-            deviceName: 'New Relay Server',
-            deviceType: 'Relay Server',
-        }
-        Device.create(newDeviceObj, (err, newDevice) =>{
-            if(err) console.log(err);
-            else{
-                newDevice.save();
-                console.log("Device saved!");
-            }
-        });
+        // console.log("No errors occured");
+        // var newDeviceObj = {
+        //     local_ip: localIP,
+        //     deviceName: 'New Relay Server',
+        //     deviceType: 'Relay Server',
+        // }
+        // Device.create(newDeviceObj, (err, newDevice) =>{
+        //     if(err) console.log(err);
+        //     else{
+        //         newDevice.save();
+        //         console.log("Device saved!");
+        //     }
+        // });
         // else // local file does exist
         //    read IP address from local text file
         //    if local_file_ip !== localIP // has the IP address changed?
