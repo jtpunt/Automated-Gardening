@@ -33,7 +33,7 @@ var outletObj = {
                         }
                     });
                 }else{ // file does not exist
-                    console.log(err);
+                    console.log("File does not exist");
                     fs.writeFile(path, localIP, function(err){
                         if(err){
                             console.log(err);
