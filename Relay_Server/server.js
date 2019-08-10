@@ -13,6 +13,7 @@ var express     = require('express'),
     ip          = require("ip"),
     fs          = require("fs"),
     path        = require("path"),
+    isIp        = require('is-ip'),
     filePath    = path.join(__dirname, 'lastIPAddr.txt');
     app         = express();
 
