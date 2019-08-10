@@ -32,28 +32,30 @@ var outletObj = {
                             }
                         }
                     });
+                }else{ // file does not exist
+                    console.log(err);
+                    fs.writeFile(path, localIP, function(err){
+                        if(err){
+                            console.log(err);
+                        }else{ // file write successful
+                            console.log("No errors occured");
+                            var newDeviceObj = {
+                                local_ip: localIP,
+                                deviceName: 'New Relay Server',
+                                deviceType: 'Relay Server',
+                            }
+                            Devices.create(newDeviceObj, (err, newDevice) =>{
+                                if(err) console.log(err);
+                                else{
+                                    newDevice.save();
+                                    console.log("Device saved!");
+                                }
+                            });
+                        }
+                    });
                 }
             }catch(err){ // file does not exist
                 console.log(err);
-                fs.writeFile(path, localIP, function(err){
-                    if(err){
-                        console.log(err);
-                    }else{ // file write successful
-                        console.log("No errors occured");
-                        var newDeviceObj = {
-                            local_ip: localIP,
-                            deviceName: 'New Relay Server',
-                            deviceType: 'Relay Server',
-                        }
-                        Devices.create(newDeviceObj, (err, newDevice) =>{
-                            if(err) console.log(err);
-                            else{
-                                newDevice.save();
-                                console.log("Device saved!");
-                            }
-                        });
-                    }
-                });
             }
         },
         getOutletSetup: function(){
