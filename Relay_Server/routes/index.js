@@ -18,11 +18,10 @@ process.on('SIGINT', () => {
 })
 try{
     outletHelper.getOutletSetup();
-    scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
 }catch(err){
     console.log(err);
 }
-
+scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
 
 router.get('/device', function(req, res) {
     Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
