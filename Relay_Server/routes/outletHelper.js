@@ -61,25 +61,18 @@ var outletObj = {
                                     });
                                 }else{
                                     console.log("IP Address has not changed!");
-                                    let filter = {local_ip: ipAddr, deviceType: "Relay Server"};
-                                    let update = {local_ip: localIP };
-                                    if(Devices.countDocuments(filter) === 0){ // device is not set up in database
-                                        console.log("Device is not set up in the database!");
-                                        var newDeviceObj = {
-                                            local_ip: localIP,
-                                            deviceName: 'New Relay Server',
-                                            deviceType: 'Relay Server',
-                                        }
-                                        Devices.create(newDeviceObj, (err, newDevice) =>{
-                                            if(err) console.log(err);
-                                            else{
-                                                newDevice.save();
-                                                console.log("Device saved!");
-                                            }
-                                        });
-                                    }else{
-                                        console.log("Device is set up in the database!");
+                                    var newDeviceObj = {
+                                        local_ip: localIP,
+                                        deviceName: 'New Relay Server',
+                                        deviceType: 'Relay Server',
                                     }
+                                    Devices.create(newDeviceObj, (err, newDevice) =>{
+                                        if(err) console.log(err);
+                                        else{
+                                            newDevice.save();
+                                            console.log("Device saved!");
+                                        }
+                                    });
                                 }
                             }
                         }
