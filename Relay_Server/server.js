@@ -23,6 +23,7 @@ var localIP = ip.address(),
     port    = config.server.port,
     connStr = config.getConnStr();
     
+var indexRoutes = require('./routes/index.js');
 /**********************************************************************
 * Setup our handlebars engine for handling file extensions that end in
 * 'handlebars'
@@ -39,6 +40,7 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
     }else{
+        console.log("Successfully Connected!");
         try{
             if(fs.existsSync(path)){ // file exists
                 fs.readFile(filePath, function(err, data){
@@ -103,7 +105,7 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         
     }
 });
-var indexRoutes = require('./routes/index.js');
+
 /**********************************************************************
 * Setup Routes For Our Server
 **********************************************************************/
