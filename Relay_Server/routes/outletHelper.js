@@ -26,7 +26,7 @@ var outletObj = {
                         if(err){
                             console.log(err);
                         }else{ // file read successful
-                            console.log(data);
+                            console.log(data.toString());
                             if(data !== localIP){ // has our devices IP address changed?
                                  
                             }
