@@ -4,7 +4,7 @@ var Devices = require("../models/device"),
     fs          = require("fs"),
     path        = require("path"),
     isIp        = require('is-ip'),
-    filePath    = path.join("../", 'lastIPAddr.txt');
+    fileName    = path.join("../'lastIPAddr.txt"),
     localIP = ip.address();
     
 var outletObj = {
@@ -20,9 +20,9 @@ var outletObj = {
         detectIPChange: function(){
             console.log("in detectIPChange");
             try{
-                if(fs.existsSync(path)){ // file exists
+                if(fs.existsSync(fileName)){ // file exists
                     console.log("File exists");
-                    fs.readFile(filePath, function(err, data){
+                    fs.readFile(fileName, function(err, data){
                         if(err){
                             console.log(err);
                         }else{ // file read successful
@@ -34,7 +34,7 @@ var outletObj = {
                     });
                 }else{ // file does not exist
                     console.log("File does not exist");
-                    fs.writeFile(path, localIP, function(err){
+                    fs.writeFile(fileName, localIP, function(err){
                         if(err){
                             console.log(err);
                         }else{ // file write successful
