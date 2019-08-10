@@ -28,10 +28,17 @@ var outletObj = {
                         }else{ // file read successful
                             console.log(data.toString());
                             let ipAddr = data.toString();
-                            if(ipAddr !== localIP){ // has our devices IP address changed?
-                                console.log("IP Needs to be updated!");
-                            }else{
-                                console.log("IP Address has not changed!");
+                            if(isIp(ipAddr)){
+                                console.log("Valid ip address found");
+                                if(ipAddr !== localIP){ // has our devices IP address changed?
+                                    console.log("IP Needs to be updated!");
+                                     Devices.findAndModify({
+                                         query: {local_ip: ipAddr, deviceType: "Relay Server"},
+                                         update: {local_ip: localIP},
+                                     });
+                                }else{
+                                    console.log("IP Address has not changed!");
+                                }
                             }
                         }
                     });
