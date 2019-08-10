@@ -32,11 +32,26 @@ var outletObj = {
                                 console.log("Valid ip address found");
                                 if(ipAddr !== localIP){ // has our devices IP address changed?
                                     console.log("IP Needs to be updated!");
-                                    let doc = Devices.findOne({
-                                        query: {local_ip: ipAddr, deviceType: "Relay Server"},
-                                        update: {local_ip: localIP},
-                                    });
-                                    console.log(doc);
+                                    let filter = {local_ip: ipAddr, deviceType: "Relay Server"};
+                                    let update = {local_ip: localIP };
+                                    if(Devices.countDocuments(filter) === 0){ // device is not set up in database
+                                        var newDeviceObj = {
+                                            local_ip: localIP,
+                                            deviceName: 'New Relay Server',
+                                            deviceType: 'Relay Server',
+                                        }
+                                        Devices.create(newDeviceObj, (err, newDevice) =>{
+                                            if(err) console.log(err);
+                                            else{
+                                                newDevice.save();
+                                                console.log("Device saved!");
+                                            }
+                                        });
+                                    }else{ // device is set up in the database and needs to be updated
+                                        console.log("Device is already set up in the database");
+                                         let doc = Devices.findOneAndUpdate(filter, update);
+                                         console.log(doc);
+                                    }
                                     fs.writeFile(fileName, localIP, function(err){
                                         if(err){
                                             console.log(err);
