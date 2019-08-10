@@ -18,6 +18,7 @@ var outletObj = {
             });
         },
         detectIPChange: function(){
+            console.log("in detectIPChange");
             try{
                 if(fs.existsSync(path)){ // file exists
                     console.log("File exists");
