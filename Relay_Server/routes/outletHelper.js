@@ -1,6 +1,10 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var Devices = require("../models/device"),
     ip      = require("ip"),
+    fs          = require("fs"),
+    path        = require("path"),
+    isIp        = require('is-ip'),
+    filePath    = path.join(__dirname, 'lastIPAddr.txt');
     localIP = ip.address();
     
 var outletObj = {
@@ -13,9 +17,47 @@ var outletObj = {
                 outlet['outlet'].unexport();
             });
         },
+        detectIPChange: function(){
+            try{
+                if(fs.existsSync(path)){ // file exists
+                    fs.readFile(filePath, function(err, data){
+                        if(err){
+                            console.log(err);
+                        }else{ // file read successful
+                            console.log(data);
+                            if(data !== localIP){ // has our devices IP address changed?
+                                 
+                            }
+                        }
+                    });
+                }
+            }catch(err){ // file does not exist
+                console.log(err);
+                fs.writeFile(path, localIP, function(err){
+                    if(err){
+                        console.log(err);
+                    }else{ // file write successful
+                        console.log("No errors occured");
+                        var newDeviceObj = {
+                            local_ip: localIP,
+                            deviceName: 'New Relay Server',
+                            deviceType: 'Relay Server',
+                        }
+                        Devices.create(newDeviceObj, (err, newDevice) =>{
+                            if(err) console.log(err);
+                            else{
+                                newDevice.save();
+                                console.log("Device saved!");
+                            }
+                        });
+                    }
+                });
+            }
+        },
         getOutletSetup: function(){
             var self = this;
             console.log("in getOutlets\n");
+            self.detectIPChange();
             Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
                 if(err){
                     console.log(err);

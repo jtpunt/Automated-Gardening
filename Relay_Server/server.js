@@ -11,10 +11,6 @@ var express     = require('express'),
     bodyParser  = require('body-parser'), // body parser middleware
     Device      = require("./models/device"),
     ip          = require("ip"),
-    fs          = require("fs"),
-    path        = require("path"),
-    isIp        = require('is-ip'),
-    filePath    = path.join(__dirname, 'lastIPAddr.txt');
     app         = express();
 
 var env = process.env.NODE_ENV || 'development';
@@ -41,44 +37,6 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
         // default schedule here
     }else{
         console.log("Successfully Connected!");
-        try{
-            if(fs.existsSync(path)){ // file exists
-                fs.readFile(filePath, function(err, data){
-                    if(err){
-                        console.log(err);
-                    }else{ // file read successful
-                        console.log(data);
-                        if(data !== localIP){ // has our devices IP address changed?
-                             
-                        }
-                    }
-                });
-            }
-        }catch(err){ // file does not exist
-            console.log(err);
-            fs.writeFile(path, localIP, function(err){
-                if(err){
-                    console.log(err);
-                }else{ // file write successful
-                    console.log("No errors occured");
-                    var newDeviceObj = {
-                        local_ip: localIP,
-                        deviceName: 'New Relay Server',
-                        deviceType: 'Relay Server',
-                    }
-                    Device.create(newDeviceObj, (err, newDevice) =>{
-                        if(err) console.log(err);
-                        else{
-                            newDevice.save();
-                            console.log("Device saved!");
-                        }
-                    });
-                }
-            });
-            //    create local file
-            //    write local ip address to file
-            //    update database with new device
-        }
         // if local text file does not exist
         //    create local file
         //    write local ip address to file
