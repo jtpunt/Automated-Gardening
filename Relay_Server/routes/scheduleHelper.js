@@ -15,6 +15,7 @@ var scheduleObj = {
             }
             else{
                 console.log(mySchedule, " created");
+                //mySchedule.device.id = 
                 mySchedule.save();
                 var newSchedule = {
                     second: mySchedule['second'],
