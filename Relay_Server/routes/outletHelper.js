@@ -50,7 +50,7 @@ var outletObj = {
                                     }else{ // device is set up in the database and needs to be updated
                                         console.log("Device is already set up in the database");
                                          let doc = Devices.findOneAndUpdate(filter, update);
-                                         console.log(doc);
+                                        doc.save();
                                     }
                                     fs.writeFile(fileName, localIP, function(err){
                                         if(err){
