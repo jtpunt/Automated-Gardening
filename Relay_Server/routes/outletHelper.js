@@ -22,18 +22,22 @@ var outletObj = {
                     throw err;
                 }
                 else{
-                    if(myDevice.length > 0){
-                        console.log("Test: ", myDevice);
-                        myDevice[0]['gpio'].forEach(function(myGpio){
-                            var myOutlet = new Gpio(myGpio, 'high');
-                            var initialState = myOutlet.readSync();
-                            console.log("Initial State:", initialState);
-                            self.setOutlet({gpio: myGpio, initialState: initialState, outlet: myOutlet});
-                            console.log("Status: ", self.getStatus(myGpio));
-                        });
-                        console.log(self.outletArr);
-                    }else{
-                        throw "No configuration found for this device!"
+                    try{
+                        if(myDevice.length > 0){
+                            console.log("Test: ", myDevice);
+                            myDevice[0]['gpio'].forEach(function(myGpio){
+                                var myOutlet = new Gpio(myGpio, 'high');
+                                var initialState = myOutlet.readSync();
+                                console.log("Initial State:", initialState);
+                                self.setOutlet({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                                console.log("Status: ", self.getStatus(myGpio));
+                            });
+                            console.log(self.outletArr);
+                        }else{
+                            throw "No configuration found for this device!"
+                        }
+                    }catch(err){
+                        throw(err);
                     }
                 }
             });
