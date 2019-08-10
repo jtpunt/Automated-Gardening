@@ -16,13 +16,13 @@ var APPROVED_GPIO = [2, 3];
 process.on('SIGINT', () => {
     outletHelper.releaseGpioMem();
 })
-outletHelper.getOutletSetup();
-scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
-// try{
-//     outlets = outletHelper();
-// }catch(err){
-//     console.log(err);
-// }
+try{
+    outletHelper.getOutletSetup();
+    scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
+}catch(err){
+    console.log(err);
+}
+
 
 router.get('/device', function(req, res) {
     Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
