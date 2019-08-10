@@ -27,8 +27,11 @@ var outletObj = {
                             console.log(err);
                         }else{ // file read successful
                             console.log(data.toString());
-                            if(data !== localIP){ // has our devices IP address changed?
-                                 
+                            let ipAddr = data.toString();
+                            if(ipAddr !== localIP){ // has our devices IP address changed?
+                                console.log("IP Needs to be updated!");
+                            }else{
+                                console.log("IP Address has not changed!");
                             }
                         }
                     });
