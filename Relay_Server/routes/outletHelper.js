@@ -4,7 +4,7 @@ var Devices = require("../models/device"),
     fs          = require("fs"),
     path        = require("path"),
     isIp        = require('is-ip'),
-    fileName    = path.join("../'lastIPAddr.txt"),
+    fileName    = path.join("../Relay_Server/lastIPAddr.txt"),
     localIP = ip.address();
     
 var outletObj = {
