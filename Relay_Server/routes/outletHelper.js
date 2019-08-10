@@ -37,7 +37,7 @@ var outletObj = {
                             throw "No configuration found for this device!"
                         }
                     }catch(err){
-                        throw(err);
+                        console.log(err);
                     }
                 }
             });
