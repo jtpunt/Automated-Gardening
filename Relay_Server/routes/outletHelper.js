@@ -20,6 +20,7 @@ var outletObj = {
         detectIPChange: function(){
             try{
                 if(fs.existsSync(path)){ // file exists
+                    console.log("File exists");
                     fs.readFile(filePath, function(err, data){
                         if(err){
                             console.log(err);
