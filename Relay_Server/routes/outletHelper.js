@@ -32,7 +32,7 @@ var outletObj = {
                                 console.log("Valid ip address found");
                                 if(ipAddr !== localIP){ // has our devices IP address changed?
                                     console.log("IP Needs to be updated!");
-                                    Devices.findAndModify({
+                                    Devices.findOneAndUpdate({
                                         query: {local_ip: ipAddr, deviceType: "Relay Server"},
                                         update: {local_ip: localIP},
                                     });
