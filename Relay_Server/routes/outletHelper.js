@@ -32,10 +32,11 @@ var outletObj = {
                                 console.log("Valid ip address found");
                                 if(ipAddr !== localIP){ // has our devices IP address changed?
                                     console.log("IP Needs to be updated!");
-                                    Devices.findOneAndUpdate({
+                                    let doc = Devices.findOne({
                                         query: {local_ip: ipAddr, deviceType: "Relay Server"},
                                         update: {local_ip: localIP},
                                     });
+                                    console.log(doc);
                                     fs.writeFile(fileName, localIP, function(err){
                                         if(err){
                                             console.log(err);
