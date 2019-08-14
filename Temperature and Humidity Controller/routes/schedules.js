@@ -6,52 +6,76 @@ var express       = require("express"),
     router        = express.Router();
 function buildSchedule(mySchedule){
     var obj = {};
+    obj.device = {};
+    var date = new Date();
+    console.log("buildSchedule: ", mySchedule);
+    if(mySchedule['_id'] !== null && mySchedule['_id'] !== undefined){
+        console.log("VALID _ID");
+        obj['device']['id'] = mySchedule['_id'];
+    }
     if(mySchedule.local_ip !== null && mySchedule.local_ip !== undefined){
         console.log("VALID IP\n");
         obj.local_ip = mySchedule.local_ip;
+        obj['device']['local_ip'] = mySchedule.local_ip;
     }
     if(mySchedule.gpio !== null && mySchedule.gpio !== undefined){
         console.log("VALID GPIO\n");
         obj.gpio = mySchedule.gpio;
     }
-    // if(mySchedule.second !== null && mySchedule.second !== undefined){
-    //     console.log("VALID SECOND\n");
-    //     obj.second = mySchedule.second;
-    // }
     if(mySchedule.time !== null && mySchedule.time !== undefined){
         console.log("VALID TIME\n");
         let splitTimeArr = mySchedule.time.split(":");
         obj.second = splitTimeArr[2];
         obj.minute = splitTimeArr[1];
         obj.hour = splitTimeArr[0];
-        // obj.second = mySchedule.time.split(":")[2];
-        // obj.minute = mySchedule.time.split(":")[1];
-        // obj.hour = mySchedule.time.split(":")[0];
     }
-    if(mySchedule.date !== null && mySchedule.date !== undefined){
-        obj.date = mySchedule.date;
+    if(mySchedule.date !== null && mySchedule.date !== undefined && mySchedule.DateCheckBox === "on"){
+        let myDate = new Date(mySchedule.date);
+        let day = myDate.getDate();
+        let month = myDate.getMonth();
+        let year = myDate.getFullYear();
+        let currYear = date.getFullYear();
+        console.log(year, currYear);
+        // date = 1 - 31
+        if(day >= 1 && day <= 31){
+            obj.date = day;
+        }else throw new Error("Invalid date input.");
+        // month = 0 - 11
+        if(month >= 0 && month <= 11){
+            obj.month = month;
+        }else throw new Error("Invalid month input.");
+        // year = current year or above
+        if(year >= currYear){
+            obj.year = mySchedule.year;
+        }else throw new Error("Invalid year input.");
     }
-    if(mySchedule.month !== null && mySchedule.month !== undefined){
-        obj.month = mySchedule.month;
-    }
-    if(mySchedule.year !== null && mySchedule.year !== undefined){
-        obj.year = mySchedule.year;
-    }
-    if(mySchedule.dayOfWeek !== null && mySchedule.dayOfWeek !== undefined){
-        obj.dayOfWeek = mySchedule.dayOfWeek;
+    // dayOfWeek = 0 - 6
+    if(mySchedule.dayOfWeek !== null && mySchedule.dayOfWeek !== undefined && mySchedule.DayOfWeekCheckBox === "on"){
+        let dayOfWeek = mySchedule.dayOfWeek.map(function(day){
+            if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
+                return parseInt(day);
+            }throw new Error("Invalid day of week input.");
+        });
+        console.log(dayOfWeek);
     }
     return obj;
 }
-// CREATE mongodb schema for devices, etc, relays, temp/humid sensors, water sensors
-// then return ip address of all relay devices. query the 1st device in that list to
-// return all schedules set by all relays
-// ALSO, set up a route on the relay to return all the schedules for that device
-// Shows all active schedules
-var groupBy = function(xs, key) {
-  return xs.reduce(function(rv, x) {
-    (rv[x[key]] = rv[x[key]] || []).push(x);
-    return rv;
-  }, {});
+var groupBy = function(data, key) { // `data` is an array of objects, `key` is the key (or property accessor) to group by
+  // reduce runs this anonymous function on each element of `data` (the `item` parameter,
+  // returning the `storage` parameter at the end
+  console.log(typeof data);
+  return data.reduce(function(storage, item) {
+    // get the first instance of the key by which we're grouping
+    var group = item["local_ip"];
+    // set `storage` for this instance of group to the outer scope (if not empty) or initialize it
+    storage[group] = storage[group] || [];
+    
+    // add this item to its group within `storage`
+    storage[group].push(item);
+    
+    // return the updated storage to the reduce function, which will then loop through the next 
+    return storage; 
+  }, {}); // {} is the initial value of the storage
 };
 router.get("/", (req, res) =>{
     Device.find({deviceType: "Relay Server"}, (err, devices) =>{
@@ -60,7 +84,7 @@ router.get("/", (req, res) =>{
             Scheduler.find({}, (err, schedule) => {
                 if(err) console.log(err);
                 else{
-                    console.log("result:", schedule, devices);
+                    // console.log("result:", schedule, devices);
                     let schedulesByIp = groupBy(schedule, 'local_ip');
                     console.log(schedulesByIp);
                     res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/sensors.css"]});
@@ -92,7 +116,13 @@ router.get("/:relay_id", (req, res) => {
     // Shows all active schedules
 });
 router.post("/", (req, resp) => {
-    const scheduleObj = buildSchedule(req.body);
+    
+    try{
+        var scheduleObj = buildSchedule(req.body);
+    }catch(err){
+        console.log(err);
+        res.status(500).end();
+    }
     const scheduleStr = querystring.stringify(scheduleObj);
     const options = {
         hostname: req.body.local_ip,

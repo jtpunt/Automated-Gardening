@@ -1,12 +1,6 @@
 var mongoose = require("mongoose");
 var scheduleSchema = new mongoose.Schema({
-    device: {
-        id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Device"
-        },
-        local_ip: String
-    }, 
+    local_ip: String,
     gpio: Number,
     second: Number,
     minute: Number,
