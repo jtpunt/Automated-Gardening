@@ -7,6 +7,7 @@ var express       = require("express"),
 function buildSchedule(mySchedule){
     var obj = {};
     obj.device = {};
+    obj.schedule = {};
     var date = new Date();
     console.log("buildSchedule: ", mySchedule);
     if(mySchedule['_id'] !== null && mySchedule['_id'] !== undefined){
@@ -20,14 +21,14 @@ function buildSchedule(mySchedule){
     }
     if(mySchedule.gpio !== null && mySchedule.gpio !== undefined){
         console.log("VALID GPIO\n");
-        obj.gpio = mySchedule.gpio;
+        obj['device']['gpio'] = mySchedule.gpio;
     }
     if(mySchedule.time !== null && mySchedule.time !== undefined){
         console.log("VALID TIME\n");
         let splitTimeArr = mySchedule.time.split(":");
-        obj.second = splitTimeArr[2];
-        obj.minute = splitTimeArr[1];
-        obj.hour = splitTimeArr[0];
+        obj['schedule']['second'] = splitTimeArr[2];
+        obj['schedule']['minute'] = splitTimeArr[1];
+        obj['schedule']['hour'] = splitTimeArr[0];
     }
     if(mySchedule.date !== null && mySchedule.date !== undefined && mySchedule.DateCheckBox === "on"){
         let myDate = new Date(mySchedule.date);
@@ -38,24 +39,25 @@ function buildSchedule(mySchedule){
         console.log(year, currYear);
         // date = 1 - 31
         if(day >= 1 && day <= 31){
-            obj.date = day;
+            obj['schedule']['date'] = day;
         }else throw new Error("Invalid date input.");
         // month = 0 - 11
         if(month >= 0 && month <= 11){
-            obj.month = month;
+            obj['schedule']['month'] = month;
         }else throw new Error("Invalid month input.");
         // year = current year or above
         if(year >= currYear){
-            obj.year = mySchedule.year;
+            obj['schedule']['year'] = mySchedule.year;
         }else throw new Error("Invalid year input.");
     }
-    // dayOfWeek = 0 - 6
     if(mySchedule.dayOfWeek !== null && mySchedule.dayOfWeek !== undefined && mySchedule.DayOfWeekCheckBox === "on"){
-        let dayOfWeek = mySchedule.dayOfWeek.map(function(day){
+        let dayOfWeek = mySchedule['dayOfWeek'].map(function(day){
+            // dayOfWeek = 0 - 6
             if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
                 return parseInt(day);
             }throw new Error("Invalid day of week input.");
         });
+        obj['schedule']['dayOfWeek'] = dayOfWeek;
         console.log(dayOfWeek);
     }
     return obj;
@@ -77,6 +79,7 @@ var groupBy = function(data, key) { // `data` is an array of objects, `key` is t
     return storage; 
   }, {}); // {} is the initial value of the storage
 };
+// NOT COMPLETE
 router.get("/", (req, res) =>{
     Device.find({deviceType: "Relay Server"}, (err, devices) =>{
         if(err) console.log(err);
@@ -90,23 +93,7 @@ router.get("/", (req, res) =>{
                     res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/sensors.css"]});
                     res.status(200).end();
                 }
-                // console.log(schedule);
-                // res.render("schedule/index", {schedules: schedule, devices: devices, stylesheets: ["/static/css/sensors.css"]});
             });
-            // http.get("http://192.168.1.12:5000/schedule", (resp) => {
-            //     // console.log(resp)
-            //     let str = '';
-            //     resp.on('data', function(chunk) {
-            //         var data = JSON.parse(chunk);
-            //         console.log(data);
-            //         res.render("schedule/index", {schedules: data, devices: devices, stylesheets: ["/static/css/sensors.css"]});
-            //         // res.status(200).end();
-            //     });
-            // }).on("error", (err) => {
-            //     console.log("Error: " + err.message);
-            //     res.render("500");
-            //     res.status(500).end();
-            // });
         }
     });
 
@@ -115,46 +102,48 @@ router.get("/:relay_id", (req, res) => {
    // return all the schedules for that relay
     // Shows all active schedules
 });
-router.post("/", (req, resp) => {
+router.post("/", (req, res) => {
     
     try{
         var scheduleObj = buildSchedule(req.body);
     }catch(err){
         console.log(err);
         res.status(500).end();
+    }finally{
+        const scheduleStr = querystring.stringify(scheduleObj);
+        const options = {
+            hostname: req.body.local_ip,
+            port: 5000,
+            path: '/schedule',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(scheduleStr)
+            }
+        };
+        const myReq = http.request(options, (res) => {
+            console.log(`STATUS: ${res.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+            res.setEncoding('utf8');
+            res.on('data', (chunk) => {
+                console.log(`BODY: ${chunk}`);
+            });
+            res.on('end', () => {
+                console.log('No more data in response.');
+                resp.redirect("/schedule");
+                resp.status(200).end();
+            });
+        });
+        
+        myReq.on('error', (e) => {
+            console.error(`problem with request: ${e.message}`);
+        });
+        
+        // Write data to request body
+        myReq.write(scheduleStr);
+        myReq.end();
     }
-    const scheduleStr = querystring.stringify(scheduleObj);
-    const options = {
-        hostname: req.body.local_ip,
-        port: 5000,
-        path: '/schedule',
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(scheduleStr)
-        }
-    };
-    const myReq = http.request(options, (res) => {
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-            console.log(`BODY: ${chunk}`);
-        });
-        res.on('end', () => {
-            console.log('No more data in response.');
-            resp.redirect("/schedule");
-            resp.status(200).end();
-        });
-    });
-    
-    myReq.on('error', (e) => {
-        console.error(`problem with request: ${e.message}`);
-    });
-    
-    // Write data to request body
-    myReq.write(scheduleStr);
-    myReq.end();
+   
 });
 //EDIT
 router.get("/:schedule_id/edit", (req, res) => {
@@ -171,41 +160,47 @@ router.get("/:schedule_id/edit", (req, res) => {
 // UPDATE
 router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
     console.log("in put route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
-    const scheduleObj = buildSchedule(req.body);
-    const scheduleStr = querystring.stringify(scheduleObj);
-    const options = {
-        hostname: req.body.local_ip,
-        port: 5000,
-        path: '/schedule/' + req.params.schedule_id,
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(scheduleStr)
-        }
-    };
-    const myReq = http.request(options, (res) => {
-        console.log(`STATUS: ${res.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
-            console.log(`BODY: ${chunk}`);
+    try{
+        var scheduleObj = buildSchedule(req.body);
+    }catch(err){
+        console.log(err);
+        res.status(500).end();
+    }finally{
+        const scheduleStr = querystring.stringify(scheduleObj);
+        const options = {
+            hostname: req.body.local_ip,
+            port: 5000,
+            path: '/schedule/' + req.params.schedule_id,
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': Buffer.byteLength(scheduleStr)
+            }
+        };
+        const myReq = http.request(options, (res) => {
+            console.log(`STATUS: ${res.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+            res.setEncoding('utf8');
+            res.on('data', (chunk) => {
+                console.log(`BODY: ${chunk}`);
+            });
+            res.on('end', () => {
+                console.log('No more data in response.');
+                console.log(res.statusCode);
+                resp.redirect("/schedule");
+                resp.status(200).end();
+            });
         });
-        res.on('end', () => {
-            console.log('No more data in response.');
-            console.log(res.statusCode);
-            resp.redirect("/schedule");
-            resp.status(200).end();
+        
+        myReq.on('error', (e) => {
+            console.error(`problem with request: ${e.message}`);
         });
-    });
-    
-    myReq.on('error', (e) => {
-        console.error(`problem with request: ${e.message}`);
-    });
-    
-    // Write data to request body
-    myReq.write(scheduleStr);
-    myReq.end();
-})
+        
+        // Write data to request body
+        myReq.write(scheduleStr);
+        myReq.end();
+    }
+});
 router.delete("/:schedule_id/local_ip/:local_ip", (req, resp) => {
     console.log("in delete route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
     const options = {
