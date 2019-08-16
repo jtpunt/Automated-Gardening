@@ -94,6 +94,8 @@ router.get('/schedule', function(req, res) {
 // add a new chedule
 router.post('/schedule', function(req, res){
     console.log(req.body);
+    console.log(req.body.devie);
+    console.log(req.body.schedule);
                     //mySchedule.device.id = 
     // var newSchedule = { 
     //     local_ip: req.body.local_ip, 
