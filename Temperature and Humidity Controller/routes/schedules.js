@@ -111,6 +111,7 @@ router.post("/", (req, res) => {
     }finally{
         console.log("finally..", scheduleObj);
         const scheduleStr = querystring.stringify(scheduleObj);
+        console.log(scheduleStr);
         const options = {
             hostname: scheduleObj['device']['local_ip'],
             port: 5000,
