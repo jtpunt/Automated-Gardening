@@ -10,28 +10,27 @@ function buildSchedule(mySchedule){
     obj.schedule = {};
     var date = new Date();
     console.log("buildSchedule: ", mySchedule);
-    if(mySchedule['_id'] !== null && mySchedule['_id'] !== undefined){
+    if(mySchedule['device']['_id'] !== null && mySchedule['device']['_id'] !== undefined){
         console.log("VALID _ID");
-        obj['device']['id'] = mySchedule['_id'];
+        obj['device']['id'] = mySchedule['device']['_id'];
     }
-    if(mySchedule.local_ip !== null && mySchedule.local_ip !== undefined){
+    if(mySchedule['device']['local_ip'] !== null && mySchedule['device']['local_ip'] !== undefined){
         console.log("VALID IP\n");
-        obj.local_ip = mySchedule.local_ip;
-        obj['device']['local_ip'] = mySchedule.local_ip;
+        obj['device']['local_ip'] = mySchedule['device']['local_ip'];
     }
-    if(mySchedule.gpio !== null && mySchedule.gpio !== undefined){
+    if(mySchedule['device']['gpio'] !== null && mySchedule['device']['gpio'] !== undefined){
         console.log("VALID GPIO\n");
-        obj['device']['gpio'] = mySchedule.gpio;
+        obj['device']['gpio'] = mySchedule['device']['gpio'];
     }
-    if(mySchedule.time !== null && mySchedule.time !== undefined){
+    if(mySchedule['schedule']['time'] !== null && mySchedule['schedule']['time'] !== undefined){
         console.log("VALID TIME\n");
-        let splitTimeArr = mySchedule.time.split(":");
+        let splitTimeArr = mySchedule['schedule']['time'].split(":");
         obj['schedule']['second'] = splitTimeArr[2];
         obj['schedule']['minute'] = splitTimeArr[1];
         obj['schedule']['hour'] = splitTimeArr[0];
     }
-    if(mySchedule.date !== null && mySchedule.date !== undefined && mySchedule.DateCheckBox === "on"){
-        let myDate = new Date(mySchedule.date);
+    if(mySchedule['schedule']['date'] !== null && mySchedule['schedule']['date'] !== undefined && mySchedule.DateCheckBox === "on"){
+        let myDate = new Date(mySchedule['schedule']['date']);
         let day = myDate.getDate();
         let month = myDate.getMonth();
         let year = myDate.getFullYear();
@@ -47,11 +46,11 @@ function buildSchedule(mySchedule){
         }else throw new Error("Invalid month input.");
         // year = current year or above
         if(year >= currYear){
-            obj['schedule']['year'] = mySchedule.year;
+            obj['schedule']['year'] = year;
         }else throw new Error("Invalid year input.");
     }
-    if(mySchedule.dayOfWeek !== null && mySchedule.dayOfWeek !== undefined && mySchedule.DayOfWeekCheckBox === "on"){
-        let dayOfWeek = mySchedule['dayOfWeek'].map(function(day){
+    if(mySchedule['schedule']['dayOfWeek'] !== null && mySchedule['schedule']['dayOfWeek'] !== undefined && mySchedule['schedule']['DayOfWeekCheckBox'] === "on"){
+        let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
             // dayOfWeek = 0 - 6
             if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
                 return parseInt(day);
@@ -110,9 +109,10 @@ router.post("/", (req, res) => {
         console.log(err);
         res.status(500).end();
     }finally{
+        console.log("finally..", scheduleObj);
         const scheduleStr = querystring.stringify(scheduleObj);
         const options = {
-            hostname: req.body.local_ip,
+            hostname: scheduleObj['device']['local_ip'],
             port: 5000,
             path: '/schedule',
             method: 'POST',
@@ -121,17 +121,17 @@ router.post("/", (req, res) => {
                 'Content-Length': Buffer.byteLength(scheduleStr)
             }
         };
-        const myReq = http.request(options, (res) => {
+        const myReq = http.request(options, (resp) => {
             console.log(`STATUS: ${res.statusCode}`);
             console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-            res.setEncoding('utf8');
-            res.on('data', (chunk) => {
+            resp.setEncoding('utf8');
+            resp.on('data', (chunk) => {
                 console.log(`BODY: ${chunk}`);
             });
-            res.on('end', () => {
+            resp.on('end', () => {
                 console.log('No more data in response.');
-                resp.redirect("/schedule");
-                resp.status(200).end();
+                res.redirect("/schedule");
+                res.status(200).end();
             });
         });
         
