@@ -95,17 +95,18 @@ router.get('/schedule', function(req, res) {
 router.post('/schedule', function(req, res){
     console.log(req.body);
                     //mySchedule.device.id = 
-    var newSchedule = { 
-        local_ip: req.body.local_ip, 
-        gpio: req.body.gpio,
-        second: req.body.second,
-        minute: req.body.minute,
-        hour: req.body.hour,
-        // date: req.body.date,
-        // month: req.body.month,
-        // year: req.body.year,
-        // dayOfWeek: req.body.dayOfWeek
-    };
+    // var newSchedule = { 
+    //     local_ip: req.body.local_ip, 
+    //     gpio: req.body.gpio,
+    //     second: req.body.second,
+    //     minute: req.body.minute,
+    //     hour: req.body.hour,
+    //     // date: req.body.date,
+    //     // month: req.body.month,
+    //     // year: req.body.year,
+    //     // dayOfWeek: req.body.dayOfWeek
+    // };
+    var newSchedule = req.body;
     try{
         scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay, outletHelper);
         console.log("Schedule successfully created!\n");
@@ -131,11 +132,12 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', function(req, res){
     console.log("in put route with ", '\n');
     var schedule_id = req.params.schedule_id;
-    var newSchedule = { 
-        second: req.body.second,
-        minute: req.body.minute,
-        hour: req.body.hour,
-    };
+    // var newSchedule = { 
+    //     second: req.body.second,
+    //     minute: req.body.minute,
+    //     hour: req.body.hour,
+    // };
+    var newSchedule = req.body;
     try{
         scheduleHelper.editSchedule(schedule_id, newSchedule);
         console.log("Successfully Updated!");

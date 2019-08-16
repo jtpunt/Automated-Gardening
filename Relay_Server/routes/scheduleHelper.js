@@ -15,19 +15,19 @@ var scheduleObj = {
             }
             else{
                 console.log(mySchedule, " created");
-                //mySchedule.device.id = 
+                // mySchedule.device.id = newSchedule['_id'];
+                // mySchedule.device.local_ip = newSchedule['local_ip'];
                 mySchedule.save();
-                var newSchedule = {
-                    second: mySchedule['second'],
-                    minute: mySchedule['minute'],
-                    hour: mySchedule['hour'],
-                };
-                console.log(newSchedule);
-                var job = schedule.scheduleJob(newSchedule, function(){
+                // var newSchedule = {
+                //     second: mySchedule['second'],
+                //     minute: mySchedule['minute'],
+                //     hour: mySchedule['hour'],
+                // };
+                console.log(newSchedule['schedule']);
+                var job = schedule.scheduleJob(newSchedule['schedule'], function(){
                     console.log('Schedule created!');
-                    activateRelay.call(context, Number(mySchedule['gpio']));
+                    activateRelay.call(context, Number(newSchedule['device']['gpio']));
                 });
-                var db_id = schedule._id;
                 var obj = {"_id": mySchedule['_id'], job};
                 self.setSchedule(obj);
             }
@@ -35,6 +35,15 @@ var scheduleObj = {
     },
     getSchedules: function(activateRelay, context){
         let self = this;
+        // Devices.find({local_ip: localIP}, function(err, myDevices){
+        //     if(err){
+        //         console.log(err);
+        //     }else{
+        //         Scheduler.find({device_id: myDevices["_id"]}, function(err, mySchedules){
+                    
+        //         });
+        //     }
+        // }
         Scheduler.find({local_ip: localIP}, function(err, mySchedules){
             if(err)
                 console.log(err);
