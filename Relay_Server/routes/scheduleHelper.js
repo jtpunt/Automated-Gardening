@@ -33,7 +33,7 @@ var scheduleObj = {
                         console.log(rule);
                         var job = schedule.scheduleJob(rule, function(){
                             console.log('Schedule created!');
-                            activateRelay.call(context, Number(newSchedule['device']['gpio']));
+                            // activateRelay.call(context, Number(newSchedule['device']['gpio']));
                         });
                         console.log("Job: ", job);
                         var obj = {"_id": mySchedule['_id'], job};
