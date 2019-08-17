@@ -26,9 +26,10 @@ var scheduleObj = {
                 // };
                 if(newSchedule['schedule']['year']){ // Date-based Scheduling
                     console.log("Date-based Scheduling");
-                    if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second'])
-                    var rule = new Date(newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'], newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
-                    
+                    if(newSchedule['schedule']['year'] && newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second']){
+                        var rule = new Date(newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'], newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
+                        console.log(rule);
+                    }else throw "Invalid Format for Date-based Scheduling!";
                     
                 }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
                     console.log("Cron-style Scheduling");
@@ -48,7 +49,7 @@ var scheduleObj = {
                     if(newSchedule['schedule']['dayOfWeek']){
                         rule += newSchedule['schedule']['dayOfWeek'] + " ";
                     }else rule += " *";
-
+                        console.log(rule);
                 }else{
                     
                 }
