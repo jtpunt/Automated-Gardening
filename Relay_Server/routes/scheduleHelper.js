@@ -24,7 +24,13 @@ var scheduleObj = {
                 //     minute: mySchedule['minute'],
                 //     hour: mySchedule['hour'],
                 // };
-                var job = schedule.scheduleJob(newSchedule['schedule'], function(){
+                var rule = new schedule.RecurrenceRule();
+                for(var key in newSchedule['schedule']){
+                    if(newSchedule['schedule'].hasOwnProperty(key)){
+                        rule[key] = newSchedule['schedule'][key];
+                    }
+                }
+                var job = schedule.scheduleJob(rule, function(){
                     console.log('Schedule created!');
                     activateRelay.call(context, Number(newSchedule['device']['gpio']));
                 });
