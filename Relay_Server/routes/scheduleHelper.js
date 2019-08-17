@@ -31,7 +31,7 @@ var scheduleObj = {
                     }
                 }
                 console.log("Rule: ", rule);
-                if(rule.dayOfWeek === null){
+                if(newSchedule['dayOfWeek'] === null){
                     rule.dayOfWeek = [0,1,2,3,4,5,6]; // execute everyday
                 }
                 var job = schedule.scheduleJob(rule, function(){
