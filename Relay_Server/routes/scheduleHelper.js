@@ -24,21 +24,43 @@ var scheduleObj = {
                 //     minute: mySchedule['minute'],
                 //     hour: mySchedule['hour'],
                 // };
-                var rule = new schedule.RecurrenceRule();
-                for(var key in newSchedule['schedule']){
-                    if(newSchedule['schedule'].hasOwnProperty(key)){
-                        rule[key] = newSchedule['schedule'][key];
-                    }
+                if(newSchedule['schedule']['year']){ // Date-based Scheduling
+                    if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second'])
+                    var rule = new Date(newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'], newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
+                    
+                    
+                }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
+                    var rule = "";
+                    if(newSchedule['schedule']['second']){
+                        rule += newSchedule['schedule']['second'] + " ";
+                    }else rule += " *";
+                    if(newSchedule['schedule']['minute']){
+                         rule += newSchedule['schedule']['minute'] + " ";
+                    }else rule += " *";
+                    if(newSchedule['schedule']['hour']){
+                        rule += newSchedule['schedule']['hour'] + " ";
+                    }else rule += " *";
+                    if(newSchedule['schedule']['month']){
+                        rule += newSchedule['schedule']['month'] + " ";
+                    }else rule += " *";
+                    if(newSchedule['schedule']['dayOfWeek']){
+                        rule += newSchedule['schedule']['dayOfWeek'] + " ";
+                    }else rule += " *";
+
+                }else{
+                    
                 }
-                console.log("Rule: ", rule);
-                if(newSchedule['dayOfWeek'] === null){
-                    rule.dayOfWeek = [0,1,2,3,4,5,6]; // execute everyday
+                if(rule !== "" || rule !== undefined){
+                    var job = schedule.scheduleJob(rule, function(){
+                        console.log('Schedule created!');
+                        activateRelay.call(context, Number(newSchedule['device']['gpio']));
+                    });
                 }
-                var job = schedule.scheduleJob(rule, function(){
-                    console.log('Schedule created!');
-                    activateRelay.call(context, Number(newSchedule['device']['gpio']));
-                });
-                console.log("Job: ", job);
+                // console.log(newSchedule['schedule']);
+                // var job = schedule.scheduleJob(newSchedule['schedule'], function(){
+                //     console.log('Schedule created!');
+                //     activateRelay.call(context, Number(newSchedule['device']['gpio']));
+                // });
                 var obj = {"_id": mySchedule['_id'], job};
                 self.setSchedule(obj);
             }
