@@ -57,7 +57,8 @@
 							<div class="rTableHead"><span style="font-weight: bold;">Time</div>
 						</div>
 						<!-- Do we have any schedules set up for the current device? -->
-						<% if(schedules[device["local_ip"]]) { schedules[device["local_ip"]].forEach(function(schedule){ %>
+						<% if(schedules['device'] !== undefined && schedules['device']['local_ip'] === device["local_ip"]) { 
+							schedules[device["local_ip"]].forEach(function(schedule){ %>
 						<div class="rTableRow">
 							<div class="rTableCell"><%=schedule['local_ip']%></div>
 							<div class="rTableCell"><%=schedule.gpio%></div>

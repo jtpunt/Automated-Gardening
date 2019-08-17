@@ -29,7 +29,7 @@ function buildSchedule(mySchedule){
         obj['schedule']['minute'] = splitTimeArr[1];
         obj['schedule']['hour'] = splitTimeArr[0];
     }
-    if(mySchedule['schedule']['date'] !== null && mySchedule['schedule']['date'] !== undefined && mySchedule.DateCheckBox === "on"){
+    if(mySchedule['schedule']['date'] !== null && mySchedule['schedule']['date'] !== undefined && mySchedule['schedule']['date'] !== '' && mySchedule.DateCheckBox === "on"){
         let myDate = new Date(mySchedule['schedule']['date']);
         let day = myDate.getDate();
         let month = myDate.getMonth();
@@ -49,7 +49,7 @@ function buildSchedule(mySchedule){
             obj['schedule']['year'] = year;
         }else throw new Error("Invalid year input.");
     }
-    if(mySchedule['schedule']['dayOfWeek'] !== null && mySchedule['schedule']['dayOfWeek'] !== undefined && mySchedule['schedule']['DayOfWeekCheckBox'] === "on"){
+    if(mySchedule['schedule']['dayOfWeek'] !== null && mySchedule['schedule']['dayOfWeek'] !== undefined &&  mySchedule['schedule']['dayOfWeek'] !== '' && mySchedule['schedule']['DayOfWeekCheckBox'] === "on"){
         let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
             // dayOfWeek = 0 - 6
             if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
@@ -110,7 +110,7 @@ router.post("/", (req, res) => {
         res.status(500).end();
     }finally{
         console.log("finally..", scheduleObj);
-        const scheduleStr = querystring.stringify(scheduleObj);
+        const scheduleStr = JSON.stringify(scheduleObj);
         console.log(scheduleStr);
         const options = {
             hostname: scheduleObj['device']['local_ip'],
@@ -118,7 +118,7 @@ router.post("/", (req, res) => {
             path: '/schedule',
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(scheduleStr)
             }
         };

@@ -24,11 +24,11 @@ var scheduleObj = {
                 //     minute: mySchedule['minute'],
                 //     hour: mySchedule['hour'],
                 // };
-                console.log(newSchedule['schedule']);
                 var job = schedule.scheduleJob(newSchedule['schedule'], function(){
                     console.log('Schedule created!');
                     activateRelay.call(context, Number(newSchedule['device']['gpio']));
                 });
+                console.log(job);
                 var obj = {"_id": mySchedule['_id'], job};
                 self.setSchedule(obj);
             }
