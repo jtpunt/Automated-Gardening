@@ -25,10 +25,10 @@ var scheduleObj = {
                 //     hour: mySchedule['hour'],
                 // };
                 console.log(mySchedule, " after save.");
-                if(mySchedule['schedule']['year']){ // Date-based Scheduling
-                    if(mySchedule['schedule']['month'] && mySchedule['schedule']['date'] && mySchedule['schedule']['hour'] && mySchedule['schedule']['minute'] && mySchedule['schedule']['second']){
+                if(newSchedule['schedule']['year']){ // Date-based Scheduling
+                    if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second']){
                         console.log("Date-based Scheduling"); 
-                        var rule = new Date(mySchedule['schedule']['year'], mySchedule['schedule']['month'], mySchedule['schedule']['date'], mySchedule['schedule']['hour'],  mySchedule['schedule']['minute'], mySchedule['schedule']['second']);
+                        var rule = new Date(newSchedule['schedule']['year'], newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'],  newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
                         console.log(rule);
                         var job = schedule.scheduleJob(rule, function(){
                             console.log('Schedule created!');
