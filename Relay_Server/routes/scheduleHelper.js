@@ -25,11 +25,13 @@ var scheduleObj = {
                 //     hour: mySchedule['hour'],
                 // };
                 if(newSchedule['schedule']['year']){ // Date-based Scheduling
+                    console.log("Date-based Scheduling");
                     if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second'])
                     var rule = new Date(newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'], newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
                     
                     
                 }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
+                    console.log("Cron-style Scheduling");
                     var rule = "";
                     if(newSchedule['schedule']['second']){
                         rule += newSchedule['schedule']['second'] + " ";
