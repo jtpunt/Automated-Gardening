@@ -59,11 +59,11 @@ var scheduleObj = {
                         rule += newSchedule['schedule']['dayOfWeek'] + " ";
                     }else rule += " *";
                         console.log(rule);
-                    var job = schedule.scheduleJob(rule, function(){
+                    var job1 = schedule.scheduleJob(rule, function(){
                         console.log('Schedule created!');
                         activateRelay.call(context, Number(newSchedule['device']['gpio']));
                     });
-                    var obj = {"_id": mySchedule['_id'], job};
+                    var obj = {"_id": mySchedule['_id'], job1};
                     self.setSchedule(obj);
                 }else{
                     
