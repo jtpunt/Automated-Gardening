@@ -33,6 +33,8 @@ var scheduleObj = {
                             console.log('Schedule created!');
                             activateRelay.call(context, Number(newSchedule['device']['gpio']));
                         });
+                        var obj = {"_id": mySchedule['_id'], job};
+                        self.setSchedule(obj);
                     }else throw "Invalid Format for Date-based Scheduling!";
                     
                 }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
@@ -58,6 +60,8 @@ var scheduleObj = {
                         console.log('Schedule created!');
                         activateRelay.call(context, Number(newSchedule['device']['gpio']));
                     });
+                    var obj = {"_id": mySchedule['_id'], job};
+                    self.setSchedule(obj);
                 }else{
                     
                 }
@@ -66,8 +70,6 @@ var scheduleObj = {
                 //     console.log('Schedule created!');
                 //     activateRelay.call(context, Number(newSchedule['device']['gpio']));
                 // });
-                var obj = {"_id": mySchedule['_id'], job};
-                self.setSchedule(obj);
             }
         });
     },
