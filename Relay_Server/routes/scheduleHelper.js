@@ -19,60 +19,60 @@ var scheduleObj = {
                 // mySchedule.device.id = newSchedule['_id'];
                 // mySchedule.device.local_ip = newSchedule['local_ip'];
                 mySchedule.save();
-                // var newSchedule = {
-                //     second: mySchedule['second'],
-                //     minute: mySchedule['minute'],
-                //     hour: mySchedule['hour'],
-                // };
-                console.log(mySchedule, " after save.");
-                if(newSchedule['schedule']['year']){ // Date-based Scheduling
-                    if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second']){
-                        console.log("Date-based Scheduling"); 
-                        // var rule = new Date(newSchedule['schedule']['year'], newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'],  newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
-                        var rule = new Date(2012, 11, 21, 5, 30, 0);
-                        console.log(rule);
-                        var job = schedule.scheduleJob(rule, function(){
-                            console.log('Schedule created!');
-                            // activateRelay.call(context, Number(newSchedule['device']['gpio']));
-                        });
-                        console.log("Job: ", job);
-                        var obj = {"_id": mySchedule['_id'], job};
-                        self.setSchedule(obj);
-                    }else throw "Invalid Format for Date-based Scheduling!";
+                var scheduleObj = {
+                    second: mySchedule['schedule']['second'],
+                    minute: mySchedule['schedule']['minute'],
+                    hour: mySchedule['schedule']['hour'],
+                };
+                console.log(scheduleObj);
+                // if(newSchedule['schedule']['year']){ // Date-based Scheduling
+                //     if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second']){
+                //         console.log("Date-based Scheduling"); 
+                //         // var rule = new Date(newSchedule['schedule']['year'], newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'],  newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
+                //         var rule = new Date(2012, 11, 21, 5, 30, 0);
+                //         console.log(rule);
+                //         var job = schedule.scheduleJob(rule, function(){
+                //             console.log('Schedule created!');
+                //             // activateRelay.call(context, Number(newSchedule['device']['gpio']));
+                //         });
+                //         console.log("Job: ", job);
+                //         var obj = {"_id": mySchedule['_id'], job};
+                //         self.setSchedule(obj);
+                //     }else throw "Invalid Format for Date-based Scheduling!";
                     
-                }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
-                    console.log("Cron-style Scheduling");
-                    var rule = "";
-                    if(newSchedule['schedule']['second']){
-                        rule += newSchedule['schedule']['second'] + " ";
-                    }else rule += " *";
-                    if(newSchedule['schedule']['minute']){
-                         rule += newSchedule['schedule']['minute'] + " ";
-                    }else rule += " *";
-                    if(newSchedule['schedule']['hour']){
-                        rule += newSchedule['schedule']['hour'] + " ";
-                    }else rule += " *";
-                    if(newSchedule['schedule']['month']){
-                        rule += newSchedule['schedule']['month'] + " ";
-                    }else rule += " *";
-                    if(newSchedule['schedule']['dayOfWeek']){
-                        rule += newSchedule['schedule']['dayOfWeek'] + " ";
-                    }else rule += " *";
-                        console.log(rule);
-                    var job1 = schedule.scheduleJob(rule, function(){
-                        console.log('Schedule created!');
-                        activateRelay.call(context, Number(newSchedule['device']['gpio']));
-                    });
-                    var obj = {"_id": mySchedule['_id'], job1};
-                    self.setSchedule(obj);
-                }else{
+                // }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
+                //     console.log("Cron-style Scheduling");
+                //     var rule = "";
+                //     if(newSchedule['schedule']['second']){
+                //         rule += newSchedule['schedule']['second'] + " ";
+                //     }else rule += " *";
+                //     if(newSchedule['schedule']['minute']){
+                //          rule += newSchedule['schedule']['minute'] + " ";
+                //     }else rule += " *";
+                //     if(newSchedule['schedule']['hour']){
+                //         rule += newSchedule['schedule']['hour'] + " ";
+                //     }else rule += " *";
+                //     if(newSchedule['schedule']['month']){
+                //         rule += newSchedule['schedule']['month'] + " ";
+                //     }else rule += " *";
+                //     if(newSchedule['schedule']['dayOfWeek']){
+                //         rule += newSchedule['schedule']['dayOfWeek'] + " ";
+                //     }else rule += " *";
+                //         console.log(rule);
+                //     var job1 = schedule.scheduleJob(rule, function(){
+                //         console.log('Schedule created!');
+                //         activateRelay.call(context, Number(newSchedule['device']['gpio']));
+                //     });
+                //     var obj = {"_id": mySchedule['_id'], job1};
+                //     self.setSchedule(obj);
+                // }else{
                     
-                }
+                // }
                 // console.log(newSchedule['schedule']);
-                // var job = schedule.scheduleJob(newSchedule['schedule'], function(){
-                //     console.log('Schedule created!');
-                //     activateRelay.call(context, Number(newSchedule['device']['gpio']));
-                // });
+                var job = schedule.scheduleJob(scheduleObj, function(){
+                    console.log('Schedule created!');
+                    activateRelay.call(context, Number(newSchedule['device']['gpio']));
+                });
             }
         });
     },
