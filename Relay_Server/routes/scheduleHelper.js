@@ -29,6 +29,10 @@ var scheduleObj = {
                     if(newSchedule['schedule']['year'] && newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second']){
                         var rule = new Date(newSchedule['schedule']['year'], newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'], newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
                         console.log(rule);
+                        var job = schedule.scheduleJob(rule, function(){
+                            console.log('Schedule created!');
+                            activateRelay.call(context, Number(newSchedule['device']['gpio']));
+                        });
                     }else throw "Invalid Format for Date-based Scheduling!";
                     
                 }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
@@ -50,14 +54,12 @@ var scheduleObj = {
                         rule += newSchedule['schedule']['dayOfWeek'] + " ";
                     }else rule += " *";
                         console.log(rule);
-                }else{
-                    
-                }
-                if(rule !== "" || rule !== undefined){
                     var job = schedule.scheduleJob(rule, function(){
                         console.log('Schedule created!');
                         activateRelay.call(context, Number(newSchedule['device']['gpio']));
                     });
+                }else{
+                    
                 }
                 // console.log(newSchedule['schedule']);
                 // var job = schedule.scheduleJob(newSchedule['schedule'], function(){
