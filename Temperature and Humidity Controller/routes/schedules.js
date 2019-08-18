@@ -68,6 +68,9 @@ var groupBy = function(data, key) { // `data` is an array of objects, `key` is t
   return data.reduce(function(storage, item) {
     // get the first instance of the key by which we're grouping
     var group = item["local_ip"];
+    console.log("Storage: ", storage);
+    console.log("Item: ", item);
+    console.log("Group: ", group);
     // set `storage` for this instance of group to the outer scope (if not empty) or initialize it
     storage[group] = storage[group] || [];
     
@@ -83,12 +86,14 @@ router.get("/", (req, res) =>{
     Device.find({deviceType: "Relay Server"}, (err, devices) =>{
         if(err) console.log(err);
         else{
-            Scheduler.find({}, (err, schedule) => {
+            Scheduler.find({}, (err, schedules) => {
                 if(err) console.log(err);
                 else{
+                    console.log("Schedule: ", schedules);
                     // console.log("result:", schedule, devices);
-                    let schedulesByIp = groupBy(schedule, 'local_ip');
+                    let schedulesByIp = groupBy(schedules, 'local_ip');
                     console.log(schedulesByIp);
+                    console.log("SchedulesbyIp: ", schedulesByIp);
                     res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/sensors.css"]});
                     res.status(200).end();
                 }
