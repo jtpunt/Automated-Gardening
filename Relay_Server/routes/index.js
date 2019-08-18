@@ -171,7 +171,7 @@ router.get('/status/:id', function(req, res){
         console.log("is a valid number!\n");
         let status = outletHelper.getStatus(gpio_input);
         console.log("Status: ", status);
-        res.write(JSON.stringify(status));
+        res.write(status);
         res.status(200).end();
     }
     // validateInput(gpio_input, res, outletHelper.getStatus, outletHelper);
