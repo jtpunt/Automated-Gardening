@@ -1,1 +1,1 @@
-# Automated-Gardening
+# Smart-Gardening
