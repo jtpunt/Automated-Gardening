@@ -16,7 +16,6 @@ var outletObj = {
         getOutletSetup: function(){
             var self = this;
             console.log("in getOutlets\n");
-            self.detectIPChange();
             Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
                 if(err){
                     console.log(err);
