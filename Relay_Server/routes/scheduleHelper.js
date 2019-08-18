@@ -96,24 +96,25 @@ var scheduleObj = {
             else{
                 console.log(mySchedules);
                 mySchedules.forEach(function(mySchedule){
-                    var newSchedule = {
-                        // commented out second below because it would cause the relay to be activated every other second
-                        second: mySchedule['schedule']['second'],
-                        minute: mySchedule['schedule']['minute'],
-                        hour: mySchedule['schedule']['hour'],
-                        // date: mySchedule['date'],
-                        // month: mySchedule['month'],
-                        // year: mySchedule['year'],
-                        // dayOfWeek: mySchedule['dayOfWeek']
-                    };
-                    // var node_schedule      = require('node-schedule');
-                    var job = schedule.scheduleJob(newSchedule, function(){
-                        console.log('Schedule created!');
-                        activateRelay.call(context, Number(mySchedule['device']['gpio']));
-                    });
-                    console.log(job);
-                    var obj = {"_id": mySchedule['_id'], job};
-                    self.setSchedule(obj);
+                    console.log(mySchedule);
+                    // var newSchedule = {
+                    //     // commented out second below because it would cause the relay to be activated every other second
+                    //     second: mySchedule['schedule']['second'],
+                    //     minute: mySchedule['schedule']['minute'],
+                    //     hour: mySchedule['schedule']['hour'],
+                    //     // date: mySchedule['date'],
+                    //     // month: mySchedule['month'],
+                    //     // year: mySchedule['year'],
+                    //     // dayOfWeek: mySchedule['dayOfWeek']
+                    // };
+                    // // var node_schedule      = require('node-schedule');
+                    // var job = schedule.scheduleJob(newSchedule, function(){
+                    //     console.log('Schedule created!');
+                    //     activateRelay.call(context, Number(mySchedule['device']['gpio']));
+                    // });
+                    // console.log(job);
+                    // var obj = {"_id": mySchedule['_id'], job};
+                    // self.setSchedule(obj);
                 });
             }
         });
