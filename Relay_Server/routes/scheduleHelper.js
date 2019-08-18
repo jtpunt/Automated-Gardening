@@ -73,6 +73,9 @@ var scheduleObj = {
                     console.log('Schedule created!');
                     activateRelay.call(context, Number(newSchedule['device']['gpio']));
                 });
+                console.log("Job: ", job);
+                var obj = {"_id": mySchedule['_id'], job};
+                self.setSchedule(obj);
             }
         });
     },
