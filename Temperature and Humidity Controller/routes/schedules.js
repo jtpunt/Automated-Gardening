@@ -61,13 +61,13 @@ function buildSchedule(mySchedule){
     }
     return obj;
 }
-var groupBy = function(data, key) { // `data` is an array of objects, `key` is the key (or property accessor) to group by
+var groupBy = function(data, key, nestedKey) { // `data` is an array of objects, `key` is the key (or property accessor) to group by
   // reduce runs this anonymous function on each element of `data` (the `item` parameter,
   // returning the `storage` parameter at the end
   console.log(typeof data);
   return data.reduce(function(storage, item) {
     // get the first instance of the key by which we're grouping
-    var group = item["local_ip"];
+    var group = item[key][nestedKey];
     console.log("Storage: ", storage);
     console.log("Item: ", item);
     console.log("Group: ", group);
@@ -91,8 +91,7 @@ router.get("/", (req, res) =>{
                 else{
                     console.log("Schedule: ", schedules);
                     // console.log("result:", schedule, devices);
-                    let schedulesByIp = groupBy(schedules, 'local_ip');
-                    console.log(schedulesByIp);
+                    let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
                     console.log("SchedulesbyIp: ", schedulesByIp);
                     res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/sensors.css"]});
                     res.status(200).end();
