@@ -97,6 +97,9 @@ var scheduleObj = {
                 console.log(mySchedules);
                 mySchedules.forEach(function(mySchedule){
                     console.log(mySchedule);
+                    console.log(mySchedule['device']);
+                    console.log(mySchedule['schedule']);
+                    console.log(mySchedule['schedule']['second']);
                     // var newSchedule = {
                     //     // commented out second below because it would cause the relay to be activated every other second
                     //     second: mySchedule['schedule']['second'],
