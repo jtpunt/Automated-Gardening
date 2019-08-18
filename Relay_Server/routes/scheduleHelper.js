@@ -90,7 +90,7 @@ var scheduleObj = {
         //         });
         //     }
         // }
-        Scheduler.find({'devices.local_ip': localIP}, function(err, mySchedules){
+        Scheduler.find({'device.local_ip': localIP}, function(err, mySchedules){
             if(err)
                 console.log(err);
             else{
