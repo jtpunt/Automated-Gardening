@@ -1,4 +1,5 @@
 var Scheduler     = require("../models/scheduler"),
+    Device        = require("../models/device"),
     schedule      = require('node-schedule'),
     ip            = require("ip"),
     localIP       = ip.address();
@@ -81,7 +82,7 @@ var scheduleObj = {
     },
     getSchedules: function(activateRelay, context){
         let self = this;
-        Devices.find({local_ip: localIP}, function(err, myDevices){
+        Device.find({local_ip: localIP}, function(err, myDevices){
             if(err){
                 console.log(err);
             }else{
