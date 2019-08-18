@@ -1,10 +1,6 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-var Devices = require("../models/device"),
+var Device = require("../models/device"),
     ip      = require("ip"),
-    fs          = require("fs"),
-    path        = require("path"),
-    isIp        = require('is-ip'),
-    fileName    = path.join("../Relay_Server/lastIPAddr.txt"),
     localIP = ip.address();
     
 var outletObj = {
@@ -17,97 +13,11 @@ var outletObj = {
                 outlet['outlet'].unexport();
             });
         },
-        detectIPChange: function(){
-            console.log("in detectIPChange");
-            try{
-                if(fs.existsSync(fileName)){ // file exists
-                    console.log("File exists");
-                    fs.readFile(fileName, function(err, data){
-                        if(err){
-                            console.log(err);
-                        }else{ // file read successful
-                            console.log(data.toString());
-                            let ipAddr = data.toString();
-                            if(isIp(ipAddr)){
-                                console.log("Valid ip address found");
-                                if(ipAddr !== localIP){ // has our devices IP address changed?
-                                    console.log("IP Needs to be updated!");
-                                    let filter = {local_ip: ipAddr, deviceType: "Relay Server"};
-                                    let update = {local_ip: localIP };
-                                    if(Devices.countDocuments(filter) === 0){ // device is not set up in database
-                                        var newDeviceObj = {
-                                            local_ip: localIP,
-                                            deviceName: 'New Relay Server',
-                                            deviceType: 'Relay Server',
-                                        }
-                                        Devices.create(newDeviceObj, (err, newDevice) =>{
-                                            if(err) console.log(err);
-                                            else{
-                                                newDevice.save();
-                                                console.log("Device saved!");
-                                            }
-                                        });
-                                    }else{ // device is set up in the database and needs to be updated
-                                        console.log("Device is already set up in the database");
-                                         let doc = Devices.findOneAndUpdate(filter, update);
-                                        doc.save();
-                                    }
-                                    fs.writeFile(fileName, localIP, function(err){
-                                        if(err){
-                                            console.log(err);
-                                        }else{ // file write successful
-                                            console.log("files ip address updated!")
-                                        }
-                                    });
-                                }else{
-                                    console.log("IP Address has not changed!");
-                                    var newDeviceObj = {
-                                        local_ip: localIP,
-                                        deviceName: 'New Relay Server',
-                                        deviceType: 'Relay Server',
-                                    }
-                                    Devices.create(newDeviceObj, (err, newDevice) =>{
-                                        if(err) console.log(err);
-                                        else{
-                                            newDevice.save();
-                                            console.log("Device saved!");
-                                        }
-                                    });
-                                }
-                            }
-                        }
-                    });
-                }else{ // file does not exist
-                    console.log("File does not exist");
-                    fs.writeFile(fileName, localIP, function(err){
-                        if(err){
-                            console.log(err);
-                        }else{ // file write successful
-                            console.log("No errors occured");
-                            var newDeviceObj = {
-                                local_ip: localIP,
-                                deviceName: 'New Relay Server',
-                                deviceType: 'Relay Server',
-                            }
-                            Devices.create(newDeviceObj, (err, newDevice) =>{
-                                if(err) console.log(err);
-                                else{
-                                    newDevice.save();
-                                    console.log("Device saved!");
-                                }
-                            });
-                        }
-                    });
-                }
-            }catch(err){ // file does not exist
-                console.log(err);
-            }
-        },
         getOutletSetup: function(){
             var self = this;
             console.log("in getOutlets\n");
             self.detectIPChange();
-            Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+            Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
                 if(err){
                     console.log(err);
                     throw err;
@@ -120,7 +30,7 @@ var outletObj = {
                                 var myOutlet = new Gpio(myGpio, 'high');
                                 var initialState = myOutlet.readSync();
                                 console.log("Initial State:", initialState);
-                                self.setOutlet({gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                                self.setOutlet({id: myDevice['_id'], gpio: myGpio, initialState: initialState, outlet: myOutlet});
                                 console.log("Status: ", self.getStatus(myGpio));
                             });
                             console.log(self.outletArr);
@@ -154,7 +64,7 @@ var outletObj = {
                     throw "Gpio not found in setup!";
                 }
             });
-            Devices.findByIdAndUpdate(device_id, {$set: updatedOutlet}, (err, myDevice) => {
+            Device.findByIdAndUpdate(device_id, {$set: updatedOutlet}, (err, myDevice) => {
                 if(err){
                     console.log(err);
                 }else{
@@ -183,17 +93,21 @@ var outletObj = {
                 }
             });
         },
-        deleteOutlet: function(outletObj){
+        deleteOutlet: function(outlet_id, gpio_input){
             let self = this;
             let index = self.findOutlet(gpio_input);
-            Devices.findByIdAndDelete(req.param.device_id, (err, myDevice) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                }else{
-                    
-                }
-            });
+            console.log("in activateRelay\n");
+            if(index !== -1){
+                Device.findByIdAndDelete(outlet_id, (err, myDevice) => {
+                    if(err){
+                        console.log(err);
+                        throw err;
+                    }else{
+                        self.outletArr[index]['outlet'].unexport();
+                        self.outletArr.splice(index, 1);
+                    }
+                });
+            }
         },
         activateRelay: function(gpio_input) { //function to start blinkingp
             let self = this;

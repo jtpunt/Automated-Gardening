@@ -5,7 +5,7 @@
 
 var express = require("express"),
     schedule = require('node-schedule'),
-    Devices = require("../models/device"),
+    Device = require("../models/device"),
     outletHelper   = require("./outletHelper.js"),
     scheduleHelper = require("./scheduleHelper.js"),
     ip = require("ip"),
@@ -24,7 +24,7 @@ try{
 scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
 
 router.get('/device', function(req, res) {
-    Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+    Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
         if(err){
             console.log(err);
         }else{
@@ -33,7 +33,7 @@ router.get('/device', function(req, res) {
     });
 });
 router.post('/device', function(req, res) {
-    Devices.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+    Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
         if(err){
             console.log(err);
         }else{
@@ -42,7 +42,7 @@ router.post('/device', function(req, res) {
     });
 });
 router.get('/device/:device_id', function(req, res) {
-    Devices.findById(req.param.device_id, (err, myDevice) => {
+    Device.findById(req.param.device_id, (err, myDevice) => {
         if(err){
             console.log(err);
         }else{
@@ -57,7 +57,7 @@ router.patch('/device/:device_id', function(req, res) {
         minute: req.body.minute,
         hour: req.body.hour,
     };
-    Devices.findByIdAndUpdate(req.param.device_id, {$set: updatedGpios}, (err, myDevice) => {
+    Device.findByIdAndUpdate(req.param.device_id, {$set: updatedGpios}, (err, myDevice) => {
         if(err){
             console.log(err);
         }else{

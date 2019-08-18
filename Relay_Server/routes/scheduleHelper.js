@@ -131,6 +131,7 @@ var scheduleObj = {
         let self = this;
         let index = this.findSchedule(schedule_id);
         console.log("Editing Schedule Function: ", index);
+        console.log("updateSchedule: ", updatedSchedule);
         if(index !== -1){
             console.log("Match found at index, ", index);
             // console.log(mySchedule._id);
@@ -141,7 +142,7 @@ var scheduleObj = {
                 } else {
                     self.scheduleArr[index]['job'].cancel();
                     console.log("Schedule canceled and removed!\n");
-                    self.scheduleArr[index]['job'].reschedule(updatedSchedule);
+                    self.scheduleArr[index]['job'].reschedule(updatedSchedule['schedule']);
                 }
             });
         }else{

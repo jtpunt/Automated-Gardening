@@ -14,10 +14,10 @@ function buildSchedule(mySchedule){
         console.log("VALID _ID");
         obj['device']['id'] = mySchedule['device']['_id'];
     }
-    if(mySchedule['device']['local_ip'] !== null && mySchedule['device']['local_ip'] !== undefined){
-        console.log("VALID IP\n");
-        obj['device']['local_ip'] = mySchedule['device']['local_ip'];
-    }
+    // if(mySchedule['device']['local_ip'] !== null && mySchedule['device']['local_ip'] !== undefined){
+    //     console.log("VALID IP\n");
+    //     obj['device']['local_ip'] = mySchedule['device']['local_ip'];
+    // }
     if(mySchedule['device']['gpio'] !== null && mySchedule['device']['gpio'] !== undefined){
         console.log("VALID GPIO\n");
         obj['device']['gpio'] = mySchedule['device']['gpio'];
@@ -68,9 +68,7 @@ var groupBy = function(data, key, nestedKey) { // `data` is an array of objects,
   return data.reduce(function(storage, item) {
     // get the first instance of the key by which we're grouping
     var group = item[key][nestedKey];
-    console.log("Storage: ", storage);
-    console.log("Item: ", item);
-    console.log("Group: ", group);
+    
     // set `storage` for this instance of group to the outer scope (if not empty) or initialize it
     storage[group] = storage[group] || [];
     
@@ -89,8 +87,16 @@ router.get("/", (req, res) =>{
             Scheduler.find({}, (err, schedules) => {
                 if(err) console.log(err);
                 else{
-                    console.log("Schedule: ", schedules);
-                    // console.log("result:", schedule, devices);
+                    // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                    schedules.forEach(function(schedule){
+                        let found = devices.find(function(device) { 
+                            return device['_id'].toString() === schedule['device']['id'].toString()
+                        });
+                        if(found !== undefined){
+                            schedule['device']['local_ip'] = found['local_ip'];
+                        }
+                    });
+                    console.log(schedules);
                     let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
                     console.log("SchedulesbyIp: ", schedulesByIp);
                     res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/sensors.css"]});
@@ -117,7 +123,7 @@ router.post("/", (req, res) => {
         const scheduleStr = JSON.stringify(scheduleObj);
         console.log(scheduleStr);
         const options = {
-            hostname: scheduleObj['device']['local_ip'],
+            hostname: req.body.device.local_ip,
             port: 5000,
             path: '/schedule',
             method: 'POST',
@@ -156,9 +162,12 @@ router.get("/:schedule_id/edit", (req, res) => {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
         if(err) console.log(err);
         else{
-                console.log(foundSchedule);
-                res.render("schedule/edit", {schedule: foundSchedule, stylesheets: ["/static/css/sensors.css"]});
+            // We need to get the GPIO setup of the device
+            Device.findById(foundSchedule['device']['id'], (err, foundDevice) => {
+                console.log("FoundSchedule: ", foundSchedule, "FoundDevice: ", foundDevice);
+                res.render("schedule/edit", {schedule: foundSchedule, device: foundDevice, stylesheets: ["/static/css/sensors.css"]});
                 res.status(200).end();
+            })
         }
     });
 });
@@ -171,14 +180,14 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
         console.log(err);
         res.status(500).end();
     }finally{
-        const scheduleStr = querystring.stringify(scheduleObj);
+        const scheduleStr = JSON.stringify(scheduleObj);
         const options = {
-            hostname: req.body.local_ip,
+            hostname: req.params.local_ip,
             port: 5000,
             path: '/schedule/' + req.params.schedule_id,
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(scheduleStr)
             }
         };
