@@ -10,9 +10,9 @@ function buildSchedule(mySchedule){
     obj.schedule = {};
     var date = new Date();
     console.log("buildSchedule: ", mySchedule);
-    if(mySchedule['device']['_id'] !== null && mySchedule['device']['_id'] !== undefined){
+    if(mySchedule['device']['id'] !== null && mySchedule['device']['id'] !== undefined){
         console.log("VALID _ID");
-        obj['device']['id'] = mySchedule['device']['_id'];
+        obj['device']['id'] = mySchedule['device']['id'];
     }
     // if(mySchedule['device']['local_ip'] !== null && mySchedule['device']['local_ip'] !== undefined){
     //     console.log("VALID IP\n");

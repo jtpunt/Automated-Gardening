@@ -4,7 +4,7 @@
         <h1 style="text-align: center;">Edit Schedule <%=schedule['device']['local_ip']%></h1>
         <div style="width: 30%; margin:25px auto;">
             <form action="/schedule/<%=schedule['_id']%>/local_ip/<%=device['local_ip']%>/?_method=PUT" method="POST" class="update-form">
-                <div class="form-group" hidden>
+                <div class="form-group">
                 	<select name="device[id]">
                 		<option value="-1" disabled>Select Your Relay's IP Address:</option>
                 		<option value=<%=device['_id']%> selected="selected"><%=device['_id']%></option>
