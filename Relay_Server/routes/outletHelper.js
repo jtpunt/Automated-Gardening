@@ -5,8 +5,20 @@ var Device = require("../models/device"),
     
 var outletObj = {
         outletArr: [],
-        createOutlet: function(newDevice){
-            
+        createOutlet: function(newOutlet){
+            let self = this;
+            Device.create(newOutlet, (err, myDevice) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                }else{
+                    var myOutlet = new Gpio(myGpio, 'high');
+                    var initialState = myOutlet.readSync();
+                    console.log("Initial State:", initialState);
+                    self.setOutlet({id: myDevice['_id'], gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                    console.log("Status: ", self.getStatus(myGpio));
+                }
+            });
         },
         releaseGpioMem: function(){
             this.outletArr.forEach((outlet) => {

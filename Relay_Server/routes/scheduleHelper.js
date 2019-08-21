@@ -3,7 +3,9 @@ var Scheduler     = require("../models/scheduler"),
     schedule      = require('node-schedule'),
     ip            = require("ip"),
     localIP       = ip.address();
-    
+function hasDuplicates(array) {
+    return (new Set(array)).size !== array.length;
+}  
 var scheduleObj = {
     scheduleArr: [],
     createSchedule: function(newSchedule, activateRelay, context){
@@ -25,6 +27,15 @@ var scheduleObj = {
                     minute: mySchedule['schedule']['minute'],
                     hour: mySchedule['schedule']['hour'],
                 };
+                if(mySchedule['schedule']['dayOfWeek'] && !hasDuplicates(mySchedule['schedule']['dayOfWeek'])){
+                    let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
+                        // dayOfWeek = 0 - 6
+                        if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
+                            return parseInt(day);
+                        }throw new Error("Invalid day of week input.");
+                    });
+                    myScheduleObj['dayOfWeek'] = mySchedule['schedule']['dayOfWeek'];
+                }
                 console.log(scheduleObj);
                 // if(newSchedule['schedule']['year']){ // Date-based Scheduling
                 //     if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second']){

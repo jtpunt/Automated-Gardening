@@ -4,6 +4,11 @@ var express       = require("express"),
     Scheduler     = require("../models/scheduler");
     querystring   = require('querystring'),
     router        = express.Router();
+    
+function hasDuplicates(array) {
+    return (new Set(array)).size !== array.length;
+}  
+
 function buildSchedule(mySchedule){
     var obj = {};
     obj.device = {};
@@ -50,14 +55,16 @@ function buildSchedule(mySchedule){
         }else throw new Error("Invalid year input.");
     }
     if(mySchedule['schedule']['dayOfWeek'] !== null && mySchedule['schedule']['dayOfWeek'] !== undefined &&  mySchedule['schedule']['dayOfWeek'] !== '' && mySchedule['schedule']['DayOfWeekCheckBox'] === "on"){
-        let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
-            // dayOfWeek = 0 - 6
-            if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
-                return parseInt(day);
-            }throw new Error("Invalid day of week input.");
-        });
-        obj['schedule']['dayOfWeek'] = dayOfWeek;
-        console.log(dayOfWeek);
+        if(!hasDuplicates(['schedule']['dayOfWeek'])){
+            let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
+                // dayOfWeek = 0 - 6
+                if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
+                    return parseInt(day);
+                }throw new Error("Invalid day of week input.");
+            });
+            obj['schedule']['dayOfWeek'] = dayOfWeek;
+            console.log(dayOfWeek);
+        }else throw new Error("Duplicate values found in dayOfWeek array.");
     }
     return obj;
 }
