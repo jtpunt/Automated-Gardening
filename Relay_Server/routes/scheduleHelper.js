@@ -33,7 +33,7 @@ var scheduleObj = {
                             return parseInt(day);
                         }throw new Error("Invalid day of week input.");
                     });
-                    myScheduleObj['schedule']['dayOfWeek'] = dayOfWeek;
+                    scheduleObj['schedule']['dayOfWeek'] = dayOfWeek;
                 }
                 console.log(scheduleObj);
                 // if(newSchedule['schedule']['year']){ // Date-based Scheduling
