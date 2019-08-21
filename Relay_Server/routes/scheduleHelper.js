@@ -30,7 +30,7 @@ var scheduleObj = {
                     let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
                         // dayOfWeek = 0 - 6
                         if(!Number.isNaN(day) && day >= 0 && day <= 6){
-                            return parseInt(day);
+                            return day;
                         }throw new Error("Invalid day of week input.");
                     });
                     myScheduleObj['dayOfWeek'] = mySchedule['schedule']['dayOfWeek'];
