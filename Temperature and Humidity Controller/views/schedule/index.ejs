@@ -1,7 +1,7 @@
 <% include ../partials/header %>
 <script type="text/javascript">
 	function myFunction(id) {
-		console.log(id);
+		console.log(id, this);
 		var x = document.getElementById(id);
 		if (x.style.display === "none") {
 			x.style.display = "block";
@@ -9,13 +9,31 @@
 			x.style.display = "none";
 		}
 	} 
+	function selectCheckbox(id){
+		console.log(id);
+		var x = document.getElementById(id);
+		console.log(x);
+		if(x.checked){
+			// myEle.setAttribute("style", "background: #2AD705;color: #ffffff;");
+			x.classList.remove("selectedCheckbox");
+			x.checked = false;
+		}else{
+			// context.nextElementSibling.className = " deselectCheckbox"
+			x.className += " selectedCheckbox";
+			x.checked = true;
+		}
+	}
 </script>
 <style>
 .weekDays-selector input {
   display: none!important;
 }
 
-.weekDays-selector input[type=checkbox] + label {
+.selectedCheckbox {
+  background: #2AD705 !important;
+  color: #ffffff !important;
+}
+.deselectedCheckbox {
   display: inline-block;
   border-radius: 6px;
   background: #dddddd;
@@ -26,11 +44,6 @@
   text-align: center;
   cursor: pointer;
 }
-
-.weekDays-selector input[type=checkbox]:checked + label {
-  background: #2AD705;
-  color: #ffffff;
-}
 </style>
 <body>
 	<div class="container">
@@ -40,7 +53,7 @@
 		<div class="col-md-9">
 			<h2>My Schedules</h2>
 			<!-- Show schedules for each relay device -->
-			<% devices.forEach(function(device){ var ipStr = device['local_ip'].replace(/\./g,''); %>
+			<% devices.forEach(function(device){ let ipStr = device['local_ip'].replace(/\./g,''); %>
 			<div class="well">
 				<!--Setting up the add new schedule button that is used for collapsing-->
 		        <div class="text-right">
@@ -122,20 +135,26 @@
 		                    <div class="form-group" id="<%=ipStr%>DayOfWeek" style="display:none">
 		                    	<label for="weekDays-selector">Select day of week: </label>
 		                    	<div class="weekDays-selector" id="weekDays-selector">
-									<input type="checkbox" id="weekday-mon" name="schedule[dayOfWeek]" class="weekday" value="0"/>
-									<label for="weekday-mon">M</label>
-									<input type="checkbox" id="weekday-tue" name="schedule[dayOfWeek]" class="weekday" value="1"/>
-									<label for="weekday-tue">T</label>
-									<input type="checkbox" id="weekday-wed" name="schedule[dayOfWeek]" class="weekday" value="2"/>
-									<label for="weekday-wed">W</label>
-									<input type="checkbox" id="weekday-thu" name="schedule[dayOfWeek]" class="weekday" value="3"/>
-									<label for="weekday-thu">T</label>
-									<input type="checkbox" id="weekday-fri" name="schedule[dayOfWeek]" class="weekday" value="4"/>
-									<label for="weekday-fri">F</label>
-									<input type="checkbox" id="weekday-sat" name="schedule[dayOfWeek]" class="weekday" value="5"/>
-									<label for="weekday-sat">S</label>
-									<input type="checkbox" id="weekday-sun" name="schedule[dayOfWeek]" class="weekday" value="6"/>
-									<label for="weekday-sun">S</label>
+		                    		<label for="<%=ipStr%>weekday-mon" id='<%=ipStr%>mon' class="deselectedCheckbox">M</label>
+									<input type="checkbox" id="<%=ipStr%>weekday-mon" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>mon')" class="weekday" value="0"/>
+									
+									<label for="<%=ipStr%>weekday-tue" id='<%=ipStr%>tue' class="deselectedCheckbox">T</label>
+									<input type="checkbox" id="<%=ipStr%>weekday-tue" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>tue')" class="weekday" value="1"/>
+									
+									<label for="<%=ipStr%>weekday-wed" id='<%=ipStr%>wed' class="deselectedCheckbox">W</label>
+									<input type="checkbox" id="<%=ipStr%>weekday-wed" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>wed')" class="weekday" value="2"/>
+							
+									<label for="<%=ipStr%>weekday-thu" id='<%=ipStr%>thu' class="deselectedCheckbox">T</label>
+									<input type="checkbox" id="<%=ipStr%>weekday-thu" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>thu')" class="weekday" value="3"/>
+									
+									<label for="<%=ipStr%>weekday-fri" id='<%=ipStr%>fri' class="deselectedCheckbox">F</label>
+									<input type="checkbox" id="<%=ipStr%>weekday-fri" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>fri')" class="weekday" value="4"/>
+									
+									<label for="<%=ipStr%>weekday-sat" id='<%=ipStr%>sat' class="deselectedCheckbox">S</label>
+									<input type="checkbox" id="<%=ipStr%>weekday-sat" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>sat')" class="weekday" value="5"/>
+									
+									<label for="<%=ipStr%>weekday-sun" id='<%=ipStr%>sun' class="deselectedCheckbox">S</label>
+									<input type="checkbox" id="<%=ipStr%>weekday-sun" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>sun')" class="weekday" value="6"/>
 								</div>
 		                    </div>
 		                    <div class="form-group">
