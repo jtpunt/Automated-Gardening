@@ -35,6 +35,7 @@ var outletObj = {
                 }
                 else{
                     try{
+                        console.log("My Device: ", myDevice);
                         if(myDevice.length > 0){
                             console.log("Test: ", myDevice);
                             myDevice['gpio'].forEach(function(myGpio){
