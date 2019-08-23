@@ -12,7 +12,7 @@ var scheduleObj = {
             minute: mySchedule['schedule']['minute'],
             hour: mySchedule['schedule']['hour'],
         };
-        if(mySchedule['schedule']['dayOfWeek']){
+        if(mySchedule['schedule']['dayOfWeek'] && Array.isArray(mySchedule['schedule']['dayOfWeek']) && mySchedule['schedule']['dayOfWeek'].length){
             console.log("dayOfWeek scheduling");
             let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
                 // dayOfWeek = 0 - 6
