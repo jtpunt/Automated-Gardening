@@ -36,7 +36,7 @@ var outletObj = {
                 else{
                     try{
                         console.log("My Device: ", myDevice);
-                        if(myDevice.length > 0){
+                        if(myDevice){
                             console.log("Test: ", myDevice);
                             myDevice['gpio'].forEach(function(myGpio){
                                 var myOutlet = new Gpio(myGpio, 'high');
