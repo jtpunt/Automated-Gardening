@@ -68,6 +68,7 @@
 							<div class="rTableHead"><strong>IP Address</strong></div>
 							<div class="rTableHead"><span style="font-weight: bold;">Pin #</span></div>
 							<div class="rTableHead"><span style="font-weight: bold;">Time</div>
+							<div class="rTableHead"><span style="font-weight: bold;">Day of Week</div>
 						</div>
 						<!-- Do we have any schedules set up for the current device? -->
 						<% if(device['local_ip'] in schedules) { 
@@ -77,6 +78,7 @@
 							<div class="rTableCell"><%=schedule['device']['local_ip']%></div>
 							<div class="rTableCell"><%=schedule['device']['gpio']%></div>
 							<div class="rTableCell"><%=schedule['schedule']['hour']%>:<%=schedule['schedule']['minute']%>:<%=schedule['schedule']['second']%></div>
+							<div class="rTableCell"><%=schedule['schedule']['dayOfWeek']%></div>
 							<div>
 								<a class="btn btn-warning" href="/schedule/<%=schedule['_id']%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
 				                <form action="/schedule/<%=schedule['_id']%>/local_ip/<%=device['local_ip']%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">

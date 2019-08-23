@@ -52,7 +52,7 @@ function buildSchedule(mySchedule){
     }
     if(mySchedule['schedule']['dayOfWeek'] && mySchedule['DayOfWeekCheckBox'] === "on"){
         console.log("VALID dayOfWeek.");
-            let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
+        let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
             // dayOfWeek = 0 - 6
             if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
                 return parseInt(day);

@@ -6,9 +6,35 @@ var Scheduler     = require("../models/scheduler"),
 
 var scheduleObj = {
     scheduleArr: [],
-    createSchedule: function(newSchedule, activateRelay, context){
+    buildJob: function(mySchedule, activateRelayFn, context, gpio_pin){
+        let scheduleObj = {
+            second: mySchedule['schedule']['second'],
+            minute: mySchedule['schedule']['minute'],
+            hour: mySchedule['schedule']['hour'],
+        };
+        if(mySchedule['schedule']['dayOfWeek']){
+            console.log("dayOfWeek scheduling");
+            let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
+                // dayOfWeek = 0 - 6
+                if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
+                    return parseInt(day);
+                }throw new Error("Invalid day of week input.");
+            });
+            scheduleObj['dayOfWeek'] = dayOfWeek;
+        }
+        console.log(scheduleObj);
+           
+        let job = schedule.scheduleJob(scheduleObj, function(){
+            console.log('Schedule created!');
+            activateRelayFn.call(context, gpio_pin);
+        });
+        console.log("Job: ", job);
+        return job;
+        // var obj = {"_id": mySchedule['_id'], job};
+    },
+    createSchedule: function(newSchedule, activateRelayFn, context){
         let self = this;
-        console.log(this, activateRelay);
+        console.log(this, activateRelayFn);
         console.log("createSchedule: ", newSchedule);
         Scheduler.create(newSchedule, (err, mySchedule) =>{
             if(err) {
@@ -17,98 +43,24 @@ var scheduleObj = {
             }
             else{
                 console.log(mySchedule, " created");
-                // mySchedule.device.id = newSchedule['_id'];
-                // mySchedule.device.local_ip = newSchedule['local_ip'];
                 mySchedule.save();
-                var scheduleObj = {
-                    second: mySchedule['schedule']['second'],
-                    minute: mySchedule['schedule']['minute'],
-                    hour: mySchedule['schedule']['hour'],
-                };
-                if(mySchedule['schedule']['dayOfWeek']){
-                    console.log("dayOfWeek scheduling");
-                    let dayOfWeek = mySchedule['schedule']['dayOfWeek'].map(function(day){
-                        // dayOfWeek = 0 - 6
-                        if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
-                            return parseInt(day);
-                        }throw new Error("Invalid day of week input.");
-                    });
-                    scheduleObj['dayOfWeek'] = dayOfWeek;
-                }
-                console.log(scheduleObj);
-                // if(newSchedule['schedule']['year']){ // Date-based Scheduling
-                //     if(newSchedule['schedule']['month'] && newSchedule['schedule']['date'] && newSchedule['schedule']['hour'] && newSchedule['schedule']['minute'] && newSchedule['schedule']['second']){
-                //         console.log("Date-based Scheduling"); 
-                //         // var rule = new Date(newSchedule['schedule']['year'], newSchedule['schedule']['month'], newSchedule['schedule']['date'], newSchedule['schedule']['hour'],  newSchedule['schedule']['minute'], newSchedule['schedule']['second']);
-                //         var rule = new Date(2012, 11, 21, 5, 30, 0);
-                //         console.log(rule);
-                //         var job = schedule.scheduleJob(rule, function(){
-                //             console.log('Schedule created!');
-                //             // activateRelay.call(context, Number(newSchedule['device']['gpio']));
-                //         });
-                //         console.log("Job: ", job);
-                //         var obj = {"_id": mySchedule['_id'], job};
-                //         self.setSchedule(obj);
-                //     }else throw "Invalid Format for Date-based Scheduling!";
-                    
-                // }else if(newSchedule['schedule']['dayOfWeek']){ // Cron-style Scheduling
-                //     console.log("Cron-style Scheduling");
-                //     var rule = "";
-                //     if(newSchedule['schedule']['second']){
-                //         rule += newSchedule['schedule']['second'] + " ";
-                //     }else rule += " *";
-                //     if(newSchedule['schedule']['minute']){
-                //          rule += newSchedule['schedule']['minute'] + " ";
-                //     }else rule += " *";
-                //     if(newSchedule['schedule']['hour']){
-                //         rule += newSchedule['schedule']['hour'] + " ";
-                //     }else rule += " *";
-                //     if(newSchedule['schedule']['month']){
-                //         rule += newSchedule['schedule']['month'] + " ";
-                //     }else rule += " *";
-                //     if(newSchedule['schedule']['dayOfWeek']){
-                //         rule += newSchedule['schedule']['dayOfWeek'] + " ";
-                //     }else rule += " *";
-                //         console.log(rule);
-                //     var job1 = schedule.scheduleJob(rule, function(){
-                //         console.log('Schedule created!');
-                //         activateRelay.call(context, Number(newSchedule['device']['gpio']));
-                //     });
-                //     var obj = {"_id": mySchedule['_id'], job1};
-                //     self.setSchedule(obj);
-                // }else{
-                    
-                // }
-                // console.log(newSchedule['schedule']);
-                var job = schedule.scheduleJob(scheduleObj, function(){
-                    console.log('Schedule created!');
-                    activateRelay.call(context, Number(newSchedule['device']['gpio']));
-                });
-                console.log("Job: ", job);
+                let job = self.buildJob(newSchedule, activateRelayFn, context, Number(mySchedule['device']['gpio']));
                 var obj = {"_id": mySchedule['_id'], job};
                 self.setSchedule(obj);
             }
         });
     },
-    getSchedules: function(activateRelay, context){
+    getSchedules: function(activateRelayFn, context){
         let self = this;
         Device.findOne({local_ip: localIP}, function(err, myDevices){
             if(err){
                 console.log(err);
             }else{
-                Scheduler.find({'device.id': myDevices["_id"]}, function(err, mySchedules){
-                    console.log(mySchedules);
-                    mySchedules.forEach(function(mySchedule){
+                Scheduler.find({'device.id': myDevices["_id"]}, function(err, savedSchedules){
+                    console.log(savedSchedules);
+                    savedSchedules.forEach(function(mySchedule){
                         console.log(mySchedule);
-                        var newSchedule = {
-                            second: mySchedule['schedule']['second'],
-                            minute: mySchedule['schedule']['minute'],
-                            hour: mySchedule['schedule']['hour'],
-                        };
-                        var job = schedule.scheduleJob(newSchedule, function(){
-                            console.log('Schedule created!');
-                            activateRelay.call(context, Number(mySchedule['device']['gpio']));
-                        });
+                        let job = self.buildJob(mySchedule, activateRelayFn, context, Number(mySchedule['device']['gpio']));
                         console.log(job);
                         var obj = {"_id": mySchedule['_id'], job};
                         self.setSchedule(obj);
@@ -130,7 +82,6 @@ var scheduleObj = {
         console.log("updateSchedule: ", updatedSchedule);
         if(index !== -1){
             console.log("Match found at index, ", index);
-            // console.log(mySchedule._id);
             Scheduler.findByIdAndUpdate(schedule_id, {$set: updatedSchedule}, (err, schedule) => {
                 if(err){
                     console.log(err);

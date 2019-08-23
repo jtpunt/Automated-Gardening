@@ -15,7 +15,7 @@ var scheduleSchema = new mongoose.Schema({
         date: Number,
         month: Number,
         year: Number,
-        dayOfWeek: Number 
+        dayOfWeek: []
     }
     
 });
