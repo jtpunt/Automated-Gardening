@@ -28,7 +28,7 @@ var outletObj = {
         getOutletSetup: function(){
             var self = this;
             console.log("in getOutlets\n");
-            Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+            Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
                 if(err){
                     console.log(err);
                     throw err;
@@ -37,7 +37,7 @@ var outletObj = {
                     try{
                         if(myDevice.length > 0){
                             console.log("Test: ", myDevice);
-                            myDevice[0]['gpio'].forEach(function(myGpio){
+                            myDevice['gpio'].forEach(function(myGpio){
                                 var myOutlet = new Gpio(myGpio, 'high');
                                 var initialState = myOutlet.readSync();
                                 console.log("Initial State:", initialState);
