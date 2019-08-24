@@ -88,26 +88,9 @@ var scheduleObj = {
         }else throw new Error("Schedule details not found!");
         return scheduleObj;
     },
-    buildJob: function(mySchedule, activateRelayFn, context, gpio_pin){
-        let myScheduleObj = this.buildSchedule(mySchedule);
+    buildJob: function(schedule_config, activateRelayFn, context, gpio_pin){
+        let myScheduleObj = this.buildSchedule(schedule_config);
         console.log("myScheduleObj: ", myScheduleObj);
-        // let scheduleObj = {
-        //     second: mySchedule['schedule']['second'],
-        //     minute: mySchedule['schedule']['minute'],
-        //     hour: mySchedule['schedule']['hour'],
-        // };
-        // if(mySchedule['schedule']['dayOfWeek'] && Array.isArray(mySchedule['schedule']['dayOfWeek']) && mySchedule['schedule']['dayOfWeek'].length){
-        //     console.log("dayOfWeek scheduling");
-        //     let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
-        //         // dayOfWeek = 0 - 6
-        //         if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
-        //             return parseInt(day);
-        //         }else throw new Error("Invalid day of week input.");
-        //     });
-        //     scheduleObj['dayOfWeek'] = dayOfWeek;
-        // }
-        // console.log(scheduleObj);
-          
         let job = schedule.scheduleJob(myScheduleObj, function(){
             console.log('Schedule created!');
             activateRelayFn.call(context, gpio_pin);
@@ -116,11 +99,11 @@ var scheduleObj = {
         return job;
         // var obj = {"_id": mySchedule['_id'], job};
     },
-    createSchedule: function(newSchedule, activateRelayFn, context){
+    createSchedule: function(new_schedule_config, activateRelayFn, context){
         let self = this;
         console.log(this, activateRelayFn);
-        console.log('createSchedule: ${newSchedule}');
-        Scheduler.create(newSchedule, (err, mySchedule) =>{
+        console.log('createSchedule: ${new_schedule_config}');
+        Scheduler.create(new_schedule_config, (err, mySchedule) =>{
             if(err) {
                 console.log(err);
                 throw err;
@@ -128,7 +111,7 @@ var scheduleObj = {
             else{
                 console.log('${mySchedule} - created.');
                 mySchedule.save();
-                let job = self.buildJob(newSchedule, activateRelayFn, context, Number(mySchedule['device']['gpio']));
+                let job = self.buildJob(new_schedule_config, activateRelayFn, context, Number(new_schedule_config['device']['gpio']));
                 var obj = {"_id": mySchedule['_id'], job};
                 self.setSchedule(obj);
             }
@@ -140,13 +123,13 @@ var scheduleObj = {
             if(err){
                 console.log(err);
             }else{
-                Scheduler.find({'device.id': myDevices["_id"]}, function(err, savedSchedules){
-                    console.log(savedSchedules);
-                    savedSchedules.forEach(function(mySchedule){
-                        console.log(mySchedule);
-                        let job = self.buildJob(mySchedule, activateRelayFn, context, Number(mySchedule['device']['gpio']));
+                Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
+                    console.log(schedule_configs);
+                    schedule_configs.forEach(function(schedule_config){
+                        console.log(schedule_config);
+                        let job = self.buildJob(schedule_config, activateRelayFn, context, Number(schedule_config['device']['gpio']));
                         console.log(job);
-                        var obj = {"_id": mySchedule['_id'], job};
+                        var obj = {"_id": schedule_config['_id'], job};
                         self.setSchedule(obj);
                     })
                     
@@ -154,26 +137,26 @@ var scheduleObj = {
             }
         });
     },
-    setSchedule: function(newScheduleObj){
+    setSchedule: function(new_schedule_config){
         console.log("Received Schedule Obj\n");
-        this.scheduleArr.push(newScheduleObj);
+        this.scheduleArr.push(new_schedule_config);
         console.log('My scheduleArr - ${this.scheduleArr}');
     },
-    editSchedule: function(schedule_id, updatedSchedule){
+    editSchedule: function(schedule_id, updated_schedule_config){
         let self = this;
         let index = this.findSchedule(schedule_id);
         console.log('Editing Schedule Function: ${index}');
         console.log('updateSchedule: ${updateSchedule}');
         if(index !== -1){
             console.log('Match found at index: ${index}');
-            Scheduler.findByIdAndUpdate(schedule_id, {$set: updatedSchedule}, (err, schedule) => {
+            Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
                 if(err){
                     console.log(err);
                     throw err;
                 } else {
                     self.scheduleArr[index]['job'].cancel();
                     console.log("Schedule canceled and removed!");
-                    self.scheduleArr[index]['job'].reschedule(updatedSchedule['schedule']);
+                    self.scheduleArr[index]['job'].reschedule(updated_schedule_config['schedule']);
                 }
             });
         }else{
@@ -204,7 +187,7 @@ var scheduleObj = {
         }
     },
     findSchedule: function(schedule_id){
-        return this.scheduleArr.findIndex((mySchedule) => mySchedule['_id'] == schedule_id);
+        return this.scheduleArr.findIndex((schedule_config) => schedule_config['_id'] === schedule_id);
     }
 }
 module.exports = scheduleObj;
