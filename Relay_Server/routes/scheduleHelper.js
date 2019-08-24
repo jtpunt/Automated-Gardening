@@ -26,12 +26,14 @@ var scheduleObj = {
         var scheduleObj = {};
         scheduleObj['schedule'] = {};
         if(mySchedule['schedule']){
+            // if we use short circuit evaluation on schedule['second'] to assign a value, and schedule['second'] is 0, then this value will be ignored
+            // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
             const schedule  = mySchedule['schedule']            || undefined,
-                  second    = (schedule['second'] === 0) ? Number(schedule['second']) : (schedule['second']) ? Number(schedule['second']) : undefined,
-                  minute    = (schedule['minute'] === 0) ? Number(schedule['minute']) : (schedule['minute']) ? Number(schedule['minute']) : undefined,
-                  hour      = (schedule['hour'] === 0)   ? Number(schedule['hour'])   : (schedule['hour'])   ? Number(schedule['hour'])   : undefined,
+                  second    = (schedule['second'] === 0) ? Number(schedule['second']) : Number(schedule['second']) || undefined,
+                  minute    = (schedule['minute'] === 0) ? Number(schedule['minute']) : Number(schedule['minute']) || undefined,
+                  hour      = (schedule['hour'] === 0)   ? Number(schedule['hour'])   : Number(schedule['hour'])   || undefined,
                   date      = Number(schedule['date'])          || undefined,
-                  month     = (schedule['month'] === 0)  ? Number(schedule['month'])  : (schedule['month'])  ? Number(schedule['month'])  : undefined,
+                  month     = (schedule['month'] === 0)  ? Number(schedule['month'])  : Number(schedule['month'])  || undefined,
                   year      = Number(schedule['year'])          || undefined,
                   dayOfWeek = Array.from(schedule['dayOfWeek']) || undefined;
             console.log("mySchedule: ", mySchedule);
