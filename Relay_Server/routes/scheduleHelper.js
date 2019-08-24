@@ -36,7 +36,7 @@ var scheduleObj = {
                   dayOfWeek = Array.from(schedule['dayOfWeek']) || [];
             console.log("mySchedule: ", mySchedule);
             console.log("schedule: ", schedule);
-            console.log("schedule: ", schedule);
+            console.log("second: ", mySchedule['schedule']['second']);
             console.log("second: ", second);
             console.log("minute: ", minute);
             console.log("hour: ", hour);
