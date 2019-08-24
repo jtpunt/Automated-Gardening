@@ -24,7 +24,6 @@ var scheduleObj = {
     scheduleArr: [],
     buildSchedule: function(mySchedule){
         var scheduleObj = {};
-        scheduleObj['schedule'] = {};
         if(mySchedule['schedule']){
             // if we use short circuit evaluation on schedule['second'] to assign a value, and schedule['second'] is 0, then this value will be ignored
             // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
@@ -48,19 +47,19 @@ var scheduleObj = {
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND){
-                    scheduleObj['schedule']['second'] = second;
+                    scheduleObj['second'] = second;
                 }else throw new Error('Second input must be >= ${MIN_SECOND} or <= ${MAX_SECOND}');
             }else throw new Error("Invalid second input!");
             // Validate minute input
             if(minute !== undefined && !minute.isNaN && Number.isInteger(minute)){
                 if(minute >= MIN_MINUTE && minute <= MAX_MINUTE){
-                    scheduleObj['schedule']['minute'] = minute;
+                    scheduleObj['minute'] = minute;
                 }else throw new Error('Minute input must be >= ${MIN_MINUTE} or <= ${MAX_MINUTE}');
             }else throw new Error("Invalid minute input!");
             // Validate hour input
             if(hour !== undefined && !hour.isNaN && Number.isInteger(hour)){
                 if(hour >= MIN_HOUR && hour <= MAX_HOUR){
-                    scheduleObj['schedule']['hour'] = hour;
+                    scheduleObj['hour'] = hour;
                 }else throw new Error('Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}')
             }else throw new Error("Invalid hour input!");
             if(dayOfWeek !== undefined && dayOfWeek.length){
@@ -71,19 +70,19 @@ var scheduleObj = {
                         return parseInt(day);
                     }else throw new Error("Invalid day of week input.");
                 });
-                scheduleObj['schedule']['dayOfWeek'] = dayOfWeekArr; 
+                scheduleObj['dayOfWeek'] = dayOfWeekArr; 
             }
             // valid date input
             else if(date !== undefined && month !== undefined && year !== undefined){
                 // DATE-BASED SCHEDULING
                 if(date >= MIN_DATE && date <= MAX_DATE){
-                    scheduleObj['schedule']['date'] = date;
+                    scheduleObj['date'] = date;
                 }else throw new Error('Date input must be >= ${MIN_DATE} or <= ${MAX_DATE}');
                 if(month >= MIN_MONTH && month <= MAX_MONTH){
-                    scheduleObj['schedule']['month'] = month;
+                    scheduleObj['month'] = month;
                 }else throw new Error('Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
                 if(year >= MIN_YEAR){
-                    scheduleObj['schedule']['year'] = year;
+                    scheduleObj['year'] = year;
                 }else throw new Error('Year input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
             }
         }else throw new Error("Schedule details not found!");
