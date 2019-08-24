@@ -26,14 +26,14 @@ var scheduleObj = {
         var scheduleObj = {};
         scheduleObj['schedule'] = {};
         if(mySchedule['schedule']){
-            const schedule  = mySchedule['schedule']            || {},
-                  second    = (schedule['second'] === 0) ? Number(schedule['second']) : (schedule['second']) ? Number(schedule['second']) : {},
-                  minute    = (schedule['minute'] === 0) ? Number(schedule['minute']) : (schedule['minute']) ? Number(schedule['minute']) : {},
-                  hour      = (schedule['hour'] === 0)   ? Number(schedule['hour'])   : (schedule['hour'])   ? Number(schedule['hour'])   : {},
-                  date      = Number(schedule['date'])          || {},
-                  month     = (schedule['month'] === 0)  ? Number(schedule['month'])  : (schedule['month'])  ? Number(schedule['month'])  : {},
-                  year      = Number(schedule['year'])          || {},
-                  dayOfWeek = Array.from(schedule['dayOfWeek']) || [];
+            const schedule  = mySchedule['schedule']            || undefined,
+                  second    = (schedule['second'] === 0) ? Number(schedule['second']) : (schedule['second']) ? Number(schedule['second']) : undefined,
+                  minute    = (schedule['minute'] === 0) ? Number(schedule['minute']) : (schedule['minute']) ? Number(schedule['minute']) : undefined,
+                  hour      = (schedule['hour'] === 0)   ? Number(schedule['hour'])   : (schedule['hour'])   ? Number(schedule['hour'])   : undefined,
+                  date      = Number(schedule['date'])          || undefined,
+                  month     = (schedule['month'] === 0)  ? Number(schedule['month'])  : (schedule['month'])  ? Number(schedule['month'])  : undefined,
+                  year      = Number(schedule['year'])          || undefined,
+                  dayOfWeek = Array.from(schedule['dayOfWeek']) || undefined;
             console.log("mySchedule: ", mySchedule);
             console.log("schedule: ", schedule);
             console.log("second: ", mySchedule['schedule']['second']);
