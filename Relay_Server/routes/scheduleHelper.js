@@ -34,7 +34,15 @@ var scheduleObj = {
                   month     = Number(schedule['month'])         || {},
                   year      = Number(schedule['year'])          || {},
                   dayOfWeek = Array.from(schedule['dayOfWeek']) || [];
+            console.log("mySchedule: ", mySchedule);
+            console.log("schedule: ", schedule);
+            console.log("schedule: ", schedule);
             console.log("second: ", second);
+            console.log("minute: ", minute);
+            console.log("hour: ", hour);
+            console.log("date: ", date);
+            console.log("month: ", month);
+            console.log("year: ", year);
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND){
