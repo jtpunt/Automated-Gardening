@@ -63,13 +63,13 @@ var scheduleObj = {
             }else throw new Error("Invalid hour input!");
             if(dayOfWeek !== undefined && dayOfWeek.length){
                 console.log("dayOfWeek scheduling");
-                let dayOfWeek = dayOfWeek.map(function(day){
+                let dayOfWeekArr = dayOfWeek.map(function(day){
                     // dayOfWeek = 0 - 6
                     if(!Number.isNaN(day) && Number(day) >= MIN_DOW && Number(day) <= MAX_DOW){
                         return parseInt(day);
                     }else throw new Error("Invalid day of week input.");
                 });
-                scheduleObj['dayOfWeek'] = dayOfWeek; 
+                scheduleObj['dayOfWeek'] = dayOfWeekArr; 
             }
             // valid date input
             else if(date !== undefined && month !== undefined && year !== undefined){
