@@ -7,39 +7,80 @@ var Scheduler     = require("../models/scheduler"),
 const MIN_SECOND = 0,
       MIN_MINUTE = 0,
       MIN_HOUR   = 0,
+      MIN_DATE   = 1,
+      MIN_MONTH  = 0,
+      MIN_YEAR   = new Date().getFullYear(),
+      MIN_DOW    = 0, // dayOfWeek
+      
       MAX_SECOND = 59,
       MAX_MINUTE = 59,
-      MAX_HOUR   = 23;
+      MAX_HOUR   = 23,
+      MAX_DATE   = 31,
+      MAX_MONTH  = 11,
+      MAX_DOW    = 6;
+      
       
 var scheduleObj = {
     scheduleArr: [],
     buildSchedule: function(mySchedule){
         var scheduleObj = {};
-        scheduleObj['device'] = {};
         scheduleObj['schedule'] = {};
-        if(mySchedule['device']){
-            
-        }else throw new Error("Device details not found!");
         if(mySchedule['schedule']){
-            let schedule = mySchedule['schedule'];
-            let second   = schedule['second'];
-            let minute   = schedule['minute'];
-            let hour     = schedule['hour'];
-            if(second && !second.isNaN && Number.isInteger(second)){
+            const schedule  = mySchedule['schedule']            || {},
+                  second    = Number(schedule['second'])        || {},
+                  minute    = Number(schedule['minute'])        || {},
+                  hour      = Number(schedule['hour'])          || {},
+                  date      = Number(schedule['date'])          || {},
+                  month     = Number(schedule['month'])         || {},
+                  year      = Number(schedule['year'])          || {},
+                  dayOfWeek = Array.from(schedule['dayOfWeek']) || [];
+            // Validate second input
+            if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND){
                     scheduleObj['schedule']['second'] = second;
                 }else throw new Error('Second input must be >= ${MIN_SECOND} or <= ${MAX_SECOND}');
+            }else throw new Error("Invalid second input!");
+            // Validate minute input
+            if(minute !== undefined && !minute.isNaN && Number.isInteger(minute)){
                 if(minute >= MIN_MINUTE && minute <= MAX_MINUTE){
                     scheduleObj['schedule']['minute'] = minute;
                 }else throw new Error('Minute input must be >= ${MIN_MINUTE} or <= ${MAX_MINUTE}');
+            }else throw new Error("Invalid minute input!");
+            // Validate hour input
+            if(hour !== undefined && !hour.isNaN && Number.isInteger(hour)){
                 if(hour >= MIN_HOUR && hour <= MAX_HOUR){
                     scheduleObj['schedule']['minute'] = minute;
-                }else throw new Error('Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}');
-            }else throw new Error("Invalid second input!");
+                }else throw new Error('Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}')
+            }else throw new Error("Invalid hour input!");
+            if(dayOfWeek !== undefined && dayOfWeek.length){
+                console.log("dayOfWeek scheduling");
+                let dayOfWeek = dayOfWeek.map(function(day){
+                    // dayOfWeek = 0 - 6
+                    if(!Number.isNaN(day) && Number(day) >= MIN_DOW && Number(day) <= MAX_DOW){
+                        return parseInt(day);
+                    }else throw new Error("Invalid day of week input.");
+                });
+                scheduleObj['dayOfWeek'] = dayOfWeek; 
+            }
+            // valid date input
+            else if(date !== undefined && month !== undefined && year !== undefined){
+                // DATE-BASED SCHEDULING
+                if(date >= MIN_DATE && date <= MAX_DATE){
+                    scheduleObj['schedule']['date'] = date;
+                }else throw new Error('Date input must be >= ${MIN_DATE} or <= ${MAX_DATE}');
+                if(month >= MIN_MONTH && month <= MAX_MONTH){
+                    scheduleObj['schedule']['month'] = month;
+                }else throw new Error('Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
+                if(year >= MIN_YEAR){
+                    scheduleObj['schedule']['year'] = year;
+                }else throw new Error('Year input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
+            }
         }else throw new Error("Schedule details not found!");
-       
+        return scheduleObj;
     },
     buildJob: function(mySchedule, activateRelayFn, context, gpio_pin){
+        let myScheduleObj = buildSchedule(mySchedule);
+        console.log("myScheduleObj: ", myScheduleObj);
         let scheduleObj = {
             second: mySchedule['schedule']['second'],
             minute: mySchedule['schedule']['minute'],
@@ -56,15 +97,11 @@ var scheduleObj = {
             scheduleObj['dayOfWeek'] = dayOfWeek;
         }
         console.log(scheduleObj);
-        var date = new Date(2019, 11, 21, 5, 30, 0);
- 
-        var job = schedule.scheduleJob(date, function(){
-          console.log('The world is going to end today.');
-        });  
-        // let job = schedule.scheduleJob(scheduleObj, function(){
-        //     console.log('Schedule created!');
-        //     activateRelayFn.call(context, gpio_pin);
-        // });
+          
+        let job = schedule.scheduleJob(scheduleObj, function(){
+            console.log('Schedule created!');
+            activateRelayFn.call(context, gpio_pin);
+        });
         console.log("Job: ", job);
         return job;
         // var obj = {"_id": mySchedule['_id'], job};
