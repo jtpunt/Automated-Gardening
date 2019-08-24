@@ -69,7 +69,7 @@ var scheduleObj = {
                         return parseInt(day);
                     }else throw new Error("Invalid day of week input.");
                 });
-                scheduleObj['dayOfWeek'] = dayOfWeekArr; 
+                scheduleObj['schedule']['dayOfWeek'] = dayOfWeekArr; 
             }
             // valid date input
             else if(date !== undefined && month !== undefined && year !== undefined){
