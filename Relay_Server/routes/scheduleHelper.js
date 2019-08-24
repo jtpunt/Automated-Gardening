@@ -56,7 +56,7 @@ var scheduleObj = {
             scheduleObj['dayOfWeek'] = dayOfWeek;
         }
         console.log(scheduleObj);
-        var date = new Date(2012, 11, 21, 5, 30, 0);
+        var date = new Date(2019, 11, 21, 5, 30, 0);
  
         var job = schedule.scheduleJob(date, function(){
           console.log('The world is going to end today.');
