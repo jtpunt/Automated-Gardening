@@ -34,8 +34,8 @@ var scheduleObj = {
                   date      = Number(schedule['date'])          || undefined,
                   month     = (schedule['month'] === 0)  ? Number(schedule['month'])  : Number(schedule['month'])  || undefined,
                   year      = Number(schedule['year'])          || undefined,
-                  dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined,
-            console.log("mySchedule: ", mySchedule);
+                  dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined;
+            // console.log("mySchedule: ", mySchedule);
             console.log("schedule: ", schedule);
             console.log("second: ", mySchedule['schedule']['second']);
             console.log("second: ", second);
