@@ -27,11 +27,11 @@ var scheduleObj = {
         scheduleObj['schedule'] = {};
         if(mySchedule['schedule']){
             const schedule  = mySchedule['schedule']            || {},
-                  second    = (schedule['second'] === 0) ? Number(schedule['second']) : (schedule['second']) ? schedule['second']: {},
-                  minute    = Number(schedule['minute'])        || {},
-                  hour      = Number(schedule['hour'])          || {},
+                  second    = (schedule['second'] === 0) ? Number(schedule['second']) : (schedule['second']) ? Number(schedule['second']) : {},
+                  minute    = (schedule['minute'] === 0) ? Number(schedule['minute']) : (schedule['minute']) ? Number(schedule['minute']) : {},
+                  hour      = (schedule['hour'] === 0)   ? Number(schedule['hour'])   : (schedule['hour'])   ? Number(schedule['hour'])   : {},
                   date      = Number(schedule['date'])          || {},
-                  month     = Number(schedule['month'])         || {},
+                  month     = (schedule['month'] === 0)  ? Number(schedule['month'])  : (schedule['month'])  ? Number(schedule['month'])  : {},
                   year      = Number(schedule['year'])          || {},
                   dayOfWeek = Array.from(schedule['dayOfWeek']) || [];
             console.log("mySchedule: ", mySchedule);
@@ -58,7 +58,7 @@ var scheduleObj = {
             // Validate hour input
             if(hour !== undefined && !hour.isNaN && Number.isInteger(hour)){
                 if(hour >= MIN_HOUR && hour <= MAX_HOUR){
-                    scheduleObj['schedule']['minute'] = minute;
+                    scheduleObj['schedule']['hour'] = hour;
                 }else throw new Error('Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}')
             }else throw new Error("Invalid hour input!");
             if(dayOfWeek !== undefined && dayOfWeek.length){
