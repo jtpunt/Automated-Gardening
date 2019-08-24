@@ -79,7 +79,7 @@ var scheduleObj = {
         return scheduleObj;
     },
     buildJob: function(mySchedule, activateRelayFn, context, gpio_pin){
-        let myScheduleObj = buildSchedule(mySchedule);
+        let myScheduleObj = this.buildSchedule(mySchedule);
         console.log("myScheduleObj: ", myScheduleObj);
         let scheduleObj = {
             second: mySchedule['schedule']['second'],
