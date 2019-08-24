@@ -144,7 +144,7 @@ router.post("/", (req, res) => {
             resp.on('end', () => {
                 console.log('No more data in response.');
                 res.redirect("/schedule");
-                res.status(200).end();
+                res.status(201).end();
             });
         });
         
@@ -177,6 +177,7 @@ router.get("/:schedule_id/edit", (req, res) => {
 router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
     console.log("in put route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
     try{
+        console.log("UPDATE ROUTE: ", req.body);
         var scheduleObj = buildSchedule(req.body);
     }catch(err){
         console.log(err);
@@ -204,7 +205,7 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
                 console.log('No more data in response.');
                 console.log(res.statusCode);
                 resp.redirect("/schedule");
-                resp.status(200).end();
+                resp.status(201).end();
             });
         });
         

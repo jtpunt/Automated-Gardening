@@ -115,7 +115,7 @@ router.post('/schedule', function(req, res){
         res.status(200).end();
     }catch(err){
         console.log(err);
-        res.status(400).end();
+        res.status(404).end();
     }
 });
 router.get('/schedule/:schedule_id', function(req, res) {
@@ -145,7 +145,7 @@ router.put('/schedule/:schedule_id', function(req, res){
         console.log("Successfully Updated!");
         res.status(200).end();
     }catch(err){
-        res.status(400).end();
+        res.status(404).end();
     }
 });
 // delete an existing schedule
@@ -159,16 +159,17 @@ router.delete('/schedule/:schedule_id', function(req, res){
     }catch(err){
         console.log("Error caught!\n");
         console.log(err);
-        res.status(400).end();
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
     }
 });
 router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
     if(Number.isNaN(gpio_input)){
+        res.write("400: ", "GPIO input given is not a number!");
         res.status(400).end();
     }else{
-        console.log("is a valid number!\n");
         let status = outletHelper.getStatus(gpio_input);
         console.log("Status: ", status);
         res.write(status.toString());
@@ -180,6 +181,7 @@ router.get('/activate/:id', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
     if(Number.isNaN(gpio_input)){
+        res.write("400: ", "GPIO input given is not a number!");
         res.status(400).end();
     }else{
         console.log("is a valid number!\n");
