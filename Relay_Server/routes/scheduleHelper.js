@@ -92,24 +92,24 @@ var scheduleObj = {
     buildJob: function(mySchedule, activateRelayFn, context, gpio_pin){
         let myScheduleObj = this.buildSchedule(mySchedule);
         console.log("myScheduleObj: ", myScheduleObj);
-        let scheduleObj = {
-            second: mySchedule['schedule']['second'],
-            minute: mySchedule['schedule']['minute'],
-            hour: mySchedule['schedule']['hour'],
-        };
-        if(mySchedule['schedule']['dayOfWeek'] && Array.isArray(mySchedule['schedule']['dayOfWeek']) && mySchedule['schedule']['dayOfWeek'].length){
-            console.log("dayOfWeek scheduling");
-            let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
-                // dayOfWeek = 0 - 6
-                if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
-                    return parseInt(day);
-                }else throw new Error("Invalid day of week input.");
-            });
-            scheduleObj['dayOfWeek'] = dayOfWeek;
-        }
-        console.log(scheduleObj);
+        // let scheduleObj = {
+        //     second: mySchedule['schedule']['second'],
+        //     minute: mySchedule['schedule']['minute'],
+        //     hour: mySchedule['schedule']['hour'],
+        // };
+        // if(mySchedule['schedule']['dayOfWeek'] && Array.isArray(mySchedule['schedule']['dayOfWeek']) && mySchedule['schedule']['dayOfWeek'].length){
+        //     console.log("dayOfWeek scheduling");
+        //     let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
+        //         // dayOfWeek = 0 - 6
+        //         if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
+        //             return parseInt(day);
+        //         }else throw new Error("Invalid day of week input.");
+        //     });
+        //     scheduleObj['dayOfWeek'] = dayOfWeek;
+        // }
+        // console.log(scheduleObj);
           
-        let job = schedule.scheduleJob(scheduleObj, function(){
+        let job = schedule.scheduleJob(myScheduleObj, function(){
             console.log('Schedule created!');
             activateRelayFn.call(context, gpio_pin);
         });
