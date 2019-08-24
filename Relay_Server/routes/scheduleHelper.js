@@ -27,7 +27,7 @@ var scheduleObj = {
         scheduleObj['schedule'] = {};
         if(mySchedule['schedule']){
             const schedule  = mySchedule['schedule']            || {},
-                  second    = schedule['second']        || {},
+                  second    = (schedule['second'] === 0) ? Number(schedule['second']) : (schedule['second']) ? schedule['second']: {},
                   minute    = Number(schedule['minute'])        || {},
                   hour      = Number(schedule['hour'])          || {},
                   date      = Number(schedule['date'])          || {},
