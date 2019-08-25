@@ -93,23 +93,13 @@ router.get('/schedule', function(req, res) {
 });
 // add a new chedule
 router.post('/schedule', function(req, res){
-    console.log(req.body);
-    console.log(req.body.devie);
-    console.log(req.body.schedule);
-                    //mySchedule.device.id = 
-    // var newSchedule = { 
-    //     local_ip: req.body.local_ip, 
-    //     gpio: req.body.gpio,
-    //     second: req.body.second,
-    //     minute: req.body.minute,
-    //     hour: req.body.hour,
-    //     // date: req.body.date,
-    //     // month: req.body.month,
-    //     // year: req.body.year,
-    //     // dayOfWeek: req.body.dayOfWeek
-    // };
     var newSchedule = req.body;
     try{
+        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
+        if(outletHelper.findOutlet(newSchedule['device']['gpio']) === -1)
+            throw new Error("Invalid GPIO input");
+        // let newSchedule = req.body;
+        //     newSchedule['schedule'] = scheduleHelper.buildSchedule(newSchedule);
         scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay, outletHelper);
         console.log("Schedule successfully created!\n");
         res.status(200).end();
@@ -134,13 +124,12 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', function(req, res){
     console.log("in put route with ", '\n');
     var schedule_id = req.params.schedule_id;
-    // var newSchedule = { 
-    //     second: req.body.second,
-    //     minute: req.body.minute,
-    //     hour: req.body.hour,
-    // };
     var newSchedule = req.body;
     try{
+        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
+        if(outletHelper.findOutlet(newSchedule['device']['gpio']) === -1)
+            throw new Error("Invalid GPIO input");
+        
         scheduleHelper.editSchedule(schedule_id, newSchedule);
         console.log("Successfully Updated!");
         res.status(200).end();

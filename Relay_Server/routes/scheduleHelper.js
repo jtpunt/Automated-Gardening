@@ -22,22 +22,24 @@ const MIN_SECOND = 0,
       
 var scheduleObj = {
     scheduleArr: [],
-    buildSchedule: function(mySchedule){
+    buildSchedule: function(schedule_config){
         var scheduleObj = {};
-        if(mySchedule['schedule']){
-            // if we use short circuit evaluation on schedule['second'] to assign a value, and schedule['second'] is 0, then this value will be ignored
+        if(schedule_config['schedule']){
+            // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
             // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
-            const schedule  = mySchedule['schedule']            || undefined,
-                  second    = (Number(schedule['second']) === 0) ? Number(schedule['second']) : Number(schedule['second']) || undefined,
-                  minute    = (Number(schedule['minute']) === 0) ? Number(schedule['minute']) : Number(schedule['minute']) || undefined,
-                  hour      = (Number(schedule['hour']) === 0)   ? Number(schedule['hour'])   : Number(schedule['hour'])   || undefined,
-                  date      = Number(schedule['date'])          || undefined,
-                  month     = (Number(schedule['month']) === 0)  ? Number(schedule['month'])  : Number(schedule['month'])  || undefined,
-                  year      = Number(schedule['year'])          || undefined,
+            let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+            
+            const schedule  = schedule_config['schedule'] || undefined,
+                  second    = sanitize_input(schedule['second']),
+                  minute    = sanitize_input(schedule['minute']),
+                  hour      = sanitize_input(schedule['hour']),
+                  date      = Number(schedule['date'])  || undefined,
+                  month     = sanitize_input(schedule['month']),
+                  year      = Number(schedule['year']) || undefined,
                   dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined;
             // console.log("mySchedule: ", mySchedule);
             console.log("schedule: ", schedule);
-            console.log("second: ", mySchedule['schedule']['second']);
+            console.log("second: ",schedule_config['schedule']['second']);
             console.log("second: ", second);
             console.log("minute: ", minute);
             console.log("hour: ", hour);
@@ -91,6 +93,7 @@ var scheduleObj = {
     buildJob: function(schedule_config, activateRelayFn, context, gpio_pin){
         let myScheduleObj = this.buildSchedule(schedule_config);
         console.log("myScheduleObj: ", myScheduleObj);
+        // let job = schedule.scheduleJob(myScheduleObj['schedule'], function(){
         let job = schedule.scheduleJob(myScheduleObj, function(){
             console.log('Schedule created!');
             activateRelayFn.call(context, gpio_pin);
