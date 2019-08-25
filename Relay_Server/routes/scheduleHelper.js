@@ -86,7 +86,7 @@ var scheduleObj = {
                 }else throw new Error('Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
-                    scheduleObj = new Date(year, month - 1, date, hour, minute, second);
+                    scheduleObj = new Date(year, month, date, hour, minute, second);
                     console.log("Date Obj: ", scheduleObj);
                 }else throw new Error('Year input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
             }
