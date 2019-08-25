@@ -96,6 +96,7 @@ router.post('/schedule', function(req, res){
     var newSchedule = req.body;
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
+        console.log("newSchedule: ", newSchedule);
         if(outletHelper.findOutlet(newSchedule['device']['gpio']) === -1)
             throw new Error("Invalid GPIO input");
         // let newSchedule = req.body;
