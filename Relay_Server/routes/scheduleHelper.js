@@ -76,6 +76,7 @@ var scheduleObj = {
             }
             // valid date input
             else if(date !== undefined && month !== undefined && year !== undefined){
+                console.log("DATE BASED SCHEDULING");
                 // DATE-BASED SCHEDULING
                 if(date >= MIN_DATE && date <= MAX_DATE){
                     scheduleObj['date'] = date;
@@ -85,6 +86,8 @@ var scheduleObj = {
                 }else throw new Error('Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
+                    scheduleObj = new Date(year, --month, date, hour, minute, second);
+                    console.log("Date Obj: ", scheduleObj);
                 }else throw new Error('Year input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
             }
         }else throw new Error("Schedule details not found!");
