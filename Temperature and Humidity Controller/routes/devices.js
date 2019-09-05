@@ -30,7 +30,7 @@ router.get("/", (req, res) =>{
                 }
             })
             console.log(dht11Arr, dht22Arr, relayArr, soilArr, waterArr);
-            res.render("device/index", {dht11Arr: dht11Arr, dht22Arr: dht22Arr, relayArr: relayArr, soilArr: soilArr, waterArr: waterArr,  stylesheets: ["/static/css/sensors.css"]});
+            res.render("device/index", {dht11Arr: dht11Arr, dht22Arr: dht22Arr, relayArr: relayArr, soilArr: soilArr, waterArr: waterArr,  stylesheets: ["/static/css/table.css"]});
             res.status(200).end();
         }
     })

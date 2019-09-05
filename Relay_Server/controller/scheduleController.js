@@ -88,6 +88,7 @@ var scheduleObj = {
                     scheduleObj['year'] = year;
                     scheduleObj = new Date(year, month, date, hour, minute, second);
                     console.log("Date Obj: ", scheduleObj);
+                    if(scheduleObj < new Date()) throw new Error("Schedule must occur in the future!");
                 }else throw new Error('Year input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
             }
         }else throw new Error("Schedule details not found!");

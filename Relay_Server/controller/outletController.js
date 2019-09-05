@@ -147,7 +147,7 @@ var outletObj = {
                 return curState;
             }
         },
-        findOutlet: function(gpio_input){
+        findOutletByGpio: function(gpio_input){
             return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
         },
         findOutletId: function(outlet_id){

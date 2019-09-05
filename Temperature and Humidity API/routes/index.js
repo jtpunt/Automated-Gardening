@@ -27,7 +27,7 @@ router.get("/", (req, res) => {
         console.log(device);
         (async(() => { // Perform asynchronous calls to ensure we get each temp/humid reading before rendering the HTML page
              let sensorData = []; // store each
-             device[0]['gpio'].forEach((mySensor) => { // for each sensor in the database, use the sensor type (DHT11 or DHT22) and GPIO pin to get the temp/humid reading
+             device['gpio'].forEach((mySensor) => { // for each sensor in the database, use the sensor type (DHT11 or DHT22) and GPIO pin to get the temp/humid reading
                  sensorData.push(await (readSensor(11, mySensor))); // push the temp/humid reading into an array that holds sensor data
              });
              res.write(JSON.stringify(sensorData));
@@ -64,7 +64,7 @@ function readSensor(sensor, pin) {
 }
 
 function getDeviceConfig(_callback) {
-    Device.find({local_ip: localIP, deviceType: 'DHT11 Sensor'}, (err, device) => {
+    Device.findOne({local_ip: localIP, deviceType: 'DHT11 Sensor'}, (err, device) => {
         if (err) console.log(err);
         else {
             _callback(device);

@@ -4,7 +4,19 @@ var express       = require("express"),
     Scheduler     = require("../models/scheduler");
     querystring   = require('querystring'),
     router        = express.Router();
-    
+function buildOptions(hostname, port, path, method, json){
+    let options = {
+        hostname: hostname,
+        port: port,
+        path: path,
+        method: method,
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(json)
+        }
+    }
+    return options;
+}
 function buildSchedule(mySchedule){
     var obj = {};
     obj.device = {};
@@ -49,6 +61,7 @@ function buildSchedule(mySchedule){
         if(year >= currYear){
             obj['schedule']['year'] = year;
         }else throw new Error("Invalid year input.");
+        if(myDate < new Date()) throw new Error("Schedule must occur in the future!");
     }
     if(mySchedule['schedule']['dayOfWeek'] && mySchedule['DayOfWeekCheckBox'] === "on"){
         console.log("VALID dayOfWeek.");
@@ -63,6 +76,11 @@ function buildSchedule(mySchedule){
     }
     return obj;
 }
+
+// data = array of schedule configurations
+// data = [{ device: {}, schedule: {}]},..n]
+// key = 'device'
+// nestedKey = 'local_ip'
 var groupBy = function(data, key, nestedKey) { // `data` is an array of objects, `key` is the key (or property accessor) to group by
   // reduce runs this anonymous function on each element of `data` (the `item` parameter,
   // returning the `storage` parameter at the end
@@ -72,6 +90,7 @@ var groupBy = function(data, key, nestedKey) { // `data` is an array of objects,
     var group = item[key][nestedKey];
     
     // set `storage` for this instance of group to the outer scope (if not empty) or initialize it
+    // group in this case is our local ip address
     storage[group] = storage[group] || [];
     
     // add this item to its group within `storage`
@@ -100,8 +119,9 @@ router.get("/", (req, res) =>{
                     });
                     console.log(schedules);
                     let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                    devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
                     console.log("SchedulesbyIp: ", schedulesByIp);
-                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/sensors.css"]});
+                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/table.css"]});
                     res.status(200).end();
                 }
             });
@@ -124,16 +144,17 @@ router.post("/", (req, res) => {
         console.log("finally..", scheduleObj);
         const scheduleStr = JSON.stringify(scheduleObj);
         console.log(scheduleStr);
-        const options = {
-            hostname: req.body.device.local_ip,
-            port: 5000,
-            path: '/schedule',
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(scheduleStr)
-            }
-        };
+        const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
+        // {
+        //     hostname: req.body.device.local_ip,
+        //     port: 5000,
+        //     path: '/schedule',
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Content-Length': Buffer.byteLength(scheduleStr)
+        //     }
+        // };
         const myReq = http.request(options, (resp) => {
             console.log(`STATUS: ${res.statusCode}`);
             console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
@@ -167,7 +188,7 @@ router.get("/:schedule_id/edit", (req, res) => {
             // We need to get the GPIO setup of the device
             Device.findById(foundSchedule['device']['id'], (err, foundDevice) => {
                 console.log("FoundSchedule: ", foundSchedule, "FoundDevice: ", foundDevice);
-                res.render("schedule/edit", {schedule: foundSchedule, device: foundDevice, stylesheets: ["/static/css/sensors.css"]});
+                res.render("schedule/edit", {schedule: foundSchedule, device: foundDevice, stylesheets: ["/static/css/table.css"]});
                 res.status(200).end();
             })
         }
@@ -184,16 +205,17 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
         res.status(500).end();
     }finally{
         const scheduleStr = JSON.stringify(scheduleObj);
-        const options = {
-            hostname: req.params.local_ip,
-            port: 5000,
-            path: '/schedule/' + req.params.schedule_id,
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(scheduleStr)
-            }
-        };
+        const options = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'PUT', scheduleStr);
+        // {
+        //     hostname: req.params.local_ip,
+        //     port: 5000,
+        //     path: '/schedule/' + req.params.schedule_id,
+        //     method: 'PUT',
+        //     headers: {
+        //         'Content-Type': 'application/json',
+        //         'Content-Length': Buffer.byteLength(scheduleStr)
+        //     }
+        // };
         const myReq = http.request(options, (res) => {
             console.log(`STATUS: ${res.statusCode}`);
             console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
@@ -220,7 +242,9 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
 });
 router.delete("/:schedule_id/local_ip/:local_ip", (req, resp) => {
     console.log("in delete route with ", req.params.schedule_id, ', ', req.params.local_ip, '\n');
-    const options = {
+    // buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'DELETE', scheduleStr, undefined);
+    const options = 
+    {
         hostname: req.params.local_ip,
         port: 5000,
         path: '/schedule/' + req.params.schedule_id,

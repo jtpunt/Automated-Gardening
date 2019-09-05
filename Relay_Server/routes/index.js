@@ -6,22 +6,22 @@
 var express = require("express"),
     schedule = require('node-schedule'),
     Device = require("../models/device"),
-    outletHelper   = require("./outletHelper.js"),
-    scheduleHelper = require("./scheduleHelper.js"),
+    outletController   = require("../controller/outletController.js"),
+    scheduleController = require("../controller/scheduleController.js"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
 var APPROVED_GPIO = [2, 3];
 
 process.on('SIGINT', () => {
-    outletHelper.releaseGpioMem();
+    outletController.releaseGpioMem();
 })
 try{
-    outletHelper.getOutletSetup();
+    outletController.getOutletSetup();
 }catch(err){
     console.log(err);
 }
-scheduleHelper.getSchedules(outletHelper.activateRelay, outletHelper);
+scheduleController.getSchedules(outletController.activateRelay, outletController);
 
 router.get('/device', function(req, res) {
     Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
@@ -68,7 +68,7 @@ router.patch('/device/:device_id', function(req, res) {
     });
 });
 router.delete('/device/:device_id', function(req, res) {
-    Devices.findByIdAndDelete(req.param.device_id, (err, myDevice) => {
+    Device.findByIdAndDelete(req.param.device_id, (err, myDevice) => {
         if(err){
             console.log(err);
         }else{
@@ -97,11 +97,11 @@ router.post('/schedule', function(req, res){
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
         console.log("newSchedule: ", newSchedule);
-        if(outletHelper.findOutlet(Number(newSchedule['device']['gpio'])) === -1)
+        if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1)
             throw new Error("Invalid GPIO input");
         // let newSchedule = req.body;
-        //     newSchedule['schedule'] = scheduleHelper.buildSchedule(newSchedule);
-        scheduleHelper.createSchedule(newSchedule, outletHelper.activateRelay, outletHelper);
+        //     newSchedule['schedule'] = scheduleController.buildSchedule(newSchedule);
+        scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
         console.log("Schedule successfully created!\n");
         res.status(200).end();
     }catch(err){
@@ -128,10 +128,10 @@ router.put('/schedule/:schedule_id', function(req, res){
     var newSchedule = req.body;
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-        if(outletHelper.findOutlet(Number(newSchedule['device']['gpio'])) === -1)
+        if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1)
             throw new Error("Invalid GPIO input");
         
-        scheduleHelper.editSchedule(schedule_id, newSchedule);
+        scheduleController.editSchedule(schedule_id, newSchedule);
         console.log("Successfully Updated!");
         res.status(200).end();
     }catch(err){
@@ -143,7 +143,7 @@ router.delete('/schedule/:schedule_id', function(req, res){
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     try{
-        scheduleHelper.deleteSchedule(schedule_id);
+        scheduleController.deleteSchedule(schedule_id);
         console.log("Successfully Deleted!");
         res.status(200).end();
     }catch(err){
@@ -160,7 +160,7 @@ router.get('/status/:id', function(req, res){
         res.write("400: ", "GPIO input given is not a number!");
         res.status(400).end();
     }else{
-        let status = outletHelper.getStatus(gpio_input);
+        let status = outletController.getStatus(gpio_input);
         console.log("Status: ", status);
         res.write(status.toString());
         res.status(200).end();
@@ -175,7 +175,7 @@ router.get('/activate/:id', function(req, res){
         res.status(400).end();
     }else{
         console.log("is a valid number!\n");
-        outletHelper.activateRelay(gpio_input);
+        outletController.activateRelay(gpio_input);
         res.status(200).end();
     }
 });
