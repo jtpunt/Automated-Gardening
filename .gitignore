@@ -5,4 +5,5 @@ Temperature\ and\ Humidity\ API/config.js
 Relay_Server/node_modules/
 Temperature\ and\ Humidity\ Controller/node_modules/
 Temperature\ and\ Humidity\ API/node_modules/
+Temperature\ and\ Humidity\ API/bcm2835-1.56/
 Soil\ Sensor\ API/node_modules/ 
