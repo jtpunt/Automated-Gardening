@@ -28,7 +28,10 @@ router.get("/", (req, res) => {
         (async(() => { // Perform asynchronous calls to ensure we get each temp/humid reading before rendering the HTML page
              let sensorData = []; // store each
              device['gpio'].forEach((mySensor) => { // for each sensor in the database, use the sensor type (DHT11 or DHT22) and GPIO pin to get the temp/humid reading
-                sensorData.push(await (readSensor(11, mySensor))); // push the temp/humid reading into an array that holds sensor data
+                let mySensorData = await(readSensor(11, mySensor));
+                mySensorData['_id'] = device['_id'];
+                mySensorData['deviceName'] = device['deviceName'];
+                sensorData.push(sensorData); // push the temp/humid reading into an array that holds sensor data
                 console.log(sensorData);
              });
              res.write(JSON.stringify(sensorData));
