@@ -31,7 +31,7 @@ router.get("/", (req, res) => {
                 let mySensorData = await(readSensor(11, mySensor));
                 mySensorData['_id'] = device['_id'];
                 mySensorData['deviceName'] = device['deviceName'];
-                sensorData.push(sensorData); // push the temp/humid reading into an array that holds sensor data
+                sensorData.push(mySensorData); // push the temp/humid reading into an array that holds sensor data
                 console.log(sensorData);
              });
              res.write(JSON.stringify(sensorData));
