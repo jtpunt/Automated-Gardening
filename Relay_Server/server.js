@@ -41,6 +41,9 @@ do{
         if(err){
             console.log("Error connecting to mongodb", err);
             // default schedule here
+            setTimeout(function() {
+                console.log('Connection failed. Retrying in 30 seconds.');
+            }, 30000);
         }else{
             console.log("Successfully Connected!");
             connFailed = false;
