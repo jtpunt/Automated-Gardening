@@ -35,23 +35,26 @@ var indexRoutes = require('./routes/index.js');
 **********************************************************************/
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
-var connFailed = true;
-do{
-    mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
-        if(err){
-            console.log("Error connecting to mongodb", err);
-            // default schedule here
-            setTimeout(function() {
-                console.log('Connection failed. Retrying in 30 seconds.');
-            }, 30000);
-        }else{
-            console.log("Successfully Connected!");
-            connFailed = false;
-            // idea: pause execution for 5-30 seconds before retrying
-        }
-    });
-}while(connFailed);
-
+let options = {
+  server : {
+    useNewUrlParser: true,
+    reconnectTries : 300,
+    reconnectInterval: 10000,
+    autoReconnect : true
+  }
+}
+mongoose.connect(connStr, options, function(err){
+    if(err){
+        console.log("Error connecting to mongodb", err);
+        // default schedule here
+        setTimeout(function() {
+            console.log('Connection failed. Retrying in 30 seconds.');
+        }, 30000);
+    }else{
+        console.log("Successfully Connected!");
+        // idea: pause execution for 5-30 seconds before retrying
+    }
+});
 /**********************************************************************
 * Setup Routes For Our Server
 **********************************************************************/
