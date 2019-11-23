@@ -53,16 +53,17 @@ mongoose.connect(connStr, options, function(err){
     }else{
         console.log("Successfully Connected!");
         // idea: pause execution for 5-30 seconds before retrying
+        /**********************************************************************
+        * Setup Routes For Our Server
+        **********************************************************************/
+        //app.use("/schedule", schedRoutes);
+        app.use("/", indexRoutes);
+        /**********************************************************************
+        * Start The Server
+        **********************************************************************/
+        app.listen(port, function() {
+          	console.log('Express started on http://localhost:' + port + '; press Ctrl-C to terminate.');
+        });
     }
 });
-/**********************************************************************
-* Setup Routes For Our Server
-**********************************************************************/
-//app.use("/schedule", schedRoutes);
-app.use("/", indexRoutes);
-/**********************************************************************
-* Start The Server
-**********************************************************************/
-app.listen(port, function() {
-  	console.log('Express started on http://localhost:' + port + '; press Ctrl-C to terminate.');
-});
+
