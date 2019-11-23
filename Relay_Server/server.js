@@ -39,7 +39,7 @@ let options = {
   server : {
     useNewUrlParser: true,
     reconnectTries : 300,
-    reconnectInterval: 10000,
+    reconnectInterval: 60000,
     autoReconnect : true
   }
 }
