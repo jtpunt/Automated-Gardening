@@ -56,7 +56,12 @@ router.get("/:device_id/edit", (req, res) => {
 router.put("/:device_id", (req, res) => {
     console.log("in put request!");
     console.log(req.body);
-    let newData = { deviceName: req.body.deviceName, gpio: req.body.gpio};
+     
+    let newData = {
+        local_ip: req.body.local_ip, 
+        deviceName: req.body.deviceName, 
+        gpio: req.body.gpio
+    };
     Device.findByIdAndUpdate(req.params.device_id, {$set: newData}, (err, device) => {
         if(err){
             res.redirect("back");
