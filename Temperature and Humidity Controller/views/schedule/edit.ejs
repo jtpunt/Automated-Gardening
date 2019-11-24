@@ -82,18 +82,17 @@
   					</select>
   				</div>
   				 <div class="form-group">
-  				     <% if(schedule['schedule']['minute'] < 10){ %>
-    					<input type="time" id="time" name="schedule[time]" value="<%=schedule['schedule']['hour']%>:0<%=schedule['schedule']['minute']%>:
-    					<% if(schedule['schedule']['second'] < 10){ %>
-    					    <%=schedule['schedule']['second']%>" step="1" required>
-    					 <% }else { %>
-    					    <%=schedule['schedule']['second']%>" step="1" required>
-    					 <% } %>
-    				<% }else if(schedule['schedule']['second'] < 10){ %>
-    				    <input type="time" id="time" name="schedule[time]" value="<%=schedule['schedule']['hour']%>:<%=schedule['schedule']['minute']%>:0<%=schedule['schedule']['second']%>" step="1" required>
-    				<% } else { %>
-    				     <input type="time" id="time" name="schedule[time]" value="<%=schedule['schedule']['hour']%>:<%=schedule['schedule']['minute']%>:<%=schedule['schedule']['second']%>" step="1" required>
-    				<% } %>
+  				     <% 
+                        let minute = schedule['schedule']['minute'];
+                        let second = schedule['schedule']['second'];
+                        if(schedule['schedule']['minute'] < 10){ 
+                          minute = "0" + schedule['schedule']['minute'];
+                        }
+                        if(schedule['schedule']['second'] < 10){
+                          second = "0" + schedule['schedule']['second'];
+                        }
+      				 %>
+    					<input type="time" id="time" name="schedule[time]" value="<%=schedule['schedule']['hour']%>:<%=minute%>:<%=second%>" step="1" required>
                 </div>
                 <div class="form-group">
                 	<label for="DateCheckBox">Set Date?</label>

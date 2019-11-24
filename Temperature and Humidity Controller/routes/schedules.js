@@ -35,6 +35,13 @@ function buildSchedule(mySchedule){
         console.log("VALID GPIO\n");
         obj['device']['gpio'] = mySchedule['device']['gpio'];
     }
+    if(mySchedule['device']['state'] !== null && mySchedule['device']['state'] !== undefined){
+        console.log("VALID GPIO\n");
+        if(typeof mySchedule['device']['state'] === "boolean"){
+             obj['device']['state'] = mySchedule['device']['state'];
+        }
+       
+    }
     if(mySchedule['schedule']['time'] !== null && mySchedule['schedule']['time'] !== undefined){
         console.log("VALID TIME\n");
         let splitTimeArr = mySchedule['schedule']['time'].split(":");
