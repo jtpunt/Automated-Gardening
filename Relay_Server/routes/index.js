@@ -97,7 +97,7 @@ router.post('/schedule', function(req, res){
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
         console.log("newSchedule: ", newSchedule);
-        if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1)
+        if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1)
             throw new Error("Invalid GPIO input");
         // let newSchedule = req.body;
         //     newSchedule['schedule'] = scheduleController.buildSchedule(newSchedule);
@@ -123,12 +123,12 @@ router.get('/schedule/:schedule_id', function(req, res) {
 });
 // edit an existing schedule
 router.put('/schedule/:schedule_id', function(req, res){
-    console.log("in put route with ", '\n');
+    console.log("in put route with ", req.body);
     var schedule_id = req.params.schedule_id;
     var newSchedule = req.body;
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-        if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1)
+        if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1)
             throw new Error("Invalid GPIO input");
         
         scheduleController.editSchedule(schedule_id, newSchedule);

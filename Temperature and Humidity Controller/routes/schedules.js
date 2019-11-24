@@ -205,7 +205,9 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
         res.status(500).end();
     }finally{
         const scheduleStr = JSON.stringify(scheduleObj);
+        console.log("scheduleStr", scheduleStr);
         const options = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'PUT', scheduleStr);
+        console.log("options", options);
         // {
         //     hostname: req.params.local_ip,
         //     port: 5000,
