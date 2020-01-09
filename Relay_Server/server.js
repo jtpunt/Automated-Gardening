@@ -33,6 +33,7 @@ var indexRoutes = require('./routes/index.js');
 /**********************************************************************
 * Setup what type of data the server can receive via GET/POST requests
 **********************************************************************/
+// test comment for git
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
 let options = {
