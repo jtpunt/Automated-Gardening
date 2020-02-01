@@ -7,7 +7,7 @@ var Device = require("../models/device"),
     localIP = ip.address();
 
 console.log("Local IP: " + localIP + "\n");
-const GPIO_EXPORT = (localIp === "192.168.254.202") ? 'out' : 'high';
+const GPIO_EXPORT = (localIP === "192.168.254.202") ? 'out' : 'high';
 var outletObj = {
         outletArr: [],
         createOutlet: function(newOutlet){
