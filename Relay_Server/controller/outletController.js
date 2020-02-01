@@ -6,7 +6,7 @@ var Device = require("../models/device"),
     fileName    = path.join("../Relay_Server/device_id.txt"),
     localIP = ip.address();
 
-    
+const GPIO_EXPORT = (local_ip === "192.168.254.202")? 'out' : 'high';
 var outletObj = {
         outletArr: [],
         createOutlet: function(newOutlet){
@@ -16,7 +16,7 @@ var outletObj = {
                     console.log(err);
                     throw err;
                 }else{
-                    var myOutlet = new Gpio(myGpio, 'high');
+                    var myOutlet = new Gpio(myGpio, GPIO_EXPORT);
                     var initialState = myOutlet.readSync();
                     console.log("Initial State:", initialState);
                     self.setOutlet({id: myDevice['_id'], gpio: myGpio, initialState: initialState, outlet: myOutlet});
@@ -162,7 +162,7 @@ var outletObj = {
                         if(myDevice){
                             console.log("Test: ", myDevice);
                             myDevice['gpio'].forEach(function(myGpio){
-                                var myOutlet = new Gpio(myGpio, 'high');
+                                var myOutlet = new Gpio(myGpio, GPIO_EXPORT);
                                 var initialState = myOutlet.readSync();
                                 console.log("Initial State:", initialState);
                                 self.setOutlet({id: myDevice['_id'], gpio: myGpio, initialState: initialState, outlet: myOutlet});
@@ -208,7 +208,7 @@ var outletObj = {
                        if(gpio['prevGpio'] !== gpio['updatedGpio']){
                            self.outletArr[index]['outlet'].unexport();
                            if(updatedGpio['newGpio'] !== undefined && updatedGpio['newGpio'] !== null){
-                               self.outletArr[index]['outlet'] = new Gpio(gpio['newGpio'], 'high');
+                               self.outletArr[index]['outlet'] = new Gpio(gpio['newGpio'], GPIO_EXPORT);
                            }else{ // case 2: gpio['newGpio'] is undefined or null
                                 self.outletArr.splice(index, 1); // delete 
                            }
