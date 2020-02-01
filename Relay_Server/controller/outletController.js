@@ -6,7 +6,8 @@ var Device = require("../models/device"),
     fileName    = path.join("../Relay_Server/device_id.txt"),
     localIP = ip.address();
 
-const GPIO_EXPORT = (localIp === "192.168.254.202")? 'out' : 'high';
+console.log("Local IP: " + localIP + "\n");
+const GPIO_EXPORT = (localIp === "192.168.254.202") ? 'out' : 'high';
 var outletObj = {
         outletArr: [],
         createOutlet: function(newOutlet){
