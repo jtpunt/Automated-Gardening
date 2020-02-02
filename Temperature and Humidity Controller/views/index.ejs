@@ -1,0 +1,30 @@
+<% include ./partials/header %>
+<% console.log("EJS sensors", sensors);
+
+sensors.forEach(function(sensor){ console.log("Hello!", sensor); %>
+	<script type="text/javascript">
+		var tempId = "temp<%=sensor.pin%><%=sensor._id%>";
+		var humidId = "humid<%=sensor.pin%><%=sensor._id%>";
+		drawGauge(<%=sensor.temperature%> * 9/5 + 32, 0, tempId);
+		drawGauge(<%=sensor.humidity%>, 1, humidId);
+	</script>
+<% }); %>
+<body>
+	<div id="load"></div>
+	<div class="container"  id="contents">
+		<h3>CURRENT CONDITIONS</h3>
+		<% sensors.forEach(function(sensor){ %>
+			<div class="row">
+				<h3><%=sensor.deviceName%></h3>
+				<div class="col-sm-3">
+					<div id="temp<%=sensor.pin%><%=sensor._id%>"></div>
+				</div>
+				<div class="col-sm-3">
+					<div id="humid<%=sensor.pin%><%=sensor._id%>"></div>
+				</div>
+			</div>
+		<% 
+		}); %>
+	</div>
+</body>
+<% include ./partials/footer %>

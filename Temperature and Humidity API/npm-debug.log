@@ -1,0 +1,520 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', 'node-dht-sensor' ]
+2 info using npm@1.4.21
+3 info using node@v8.11.1
+4 warn package.json Temp_Humidity_API@0.0.0 No description
+5 warn package.json Temp_Humidity_API@0.0.0 No repository field.
+6 warn package.json Temp_Humidity_API@0.0.0 No README data
+7 verbose readDependencies using package.json deps
+8 verbose cache add [ 'node-dht-sensor', null ]
+9 verbose cache add name=undefined spec="node-dht-sensor" args=["node-dht-sensor",null]
+10 verbose parsed url Url {
+10 verbose parsed url   protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: 'node-dht-sensor',
+10 verbose parsed url   path: 'node-dht-sensor',
+10 verbose parsed url   href: 'node-dht-sensor' }
+11 silly lockFile d77f8d31-node-dht-sensor node-dht-sensor
+12 verbose lock node-dht-sensor /home/pi/.npm/d77f8d31-node-dht-sensor.lock
+13 silly lockFile d77f8d31-node-dht-sensor node-dht-sensor
+14 silly lockFile d77f8d31-node-dht-sensor node-dht-sensor
+15 verbose addNamed [ 'node-dht-sensor', '' ]
+16 verbose addNamed [ null, '*' ]
+17 silly lockFile 7f74b14a-node-dht-sensor node-dht-sensor@
+18 verbose lock node-dht-sensor@ /home/pi/.npm/7f74b14a-node-dht-sensor.lock
+19 silly addNameRange { name: 'node-dht-sensor', range: '*', hasData: false }
+20 verbose request where is /node-dht-sensor
+21 verbose request registry https://registry.npmjs.org/
+22 verbose request id 06ae8ac0b3b9c683
+23 verbose url raw /node-dht-sensor
+24 verbose url resolving [ 'https://registry.npmjs.org/', './node-dht-sensor' ]
+25 verbose url resolved https://registry.npmjs.org/node-dht-sensor
+26 verbose request where is https://registry.npmjs.org/node-dht-sensor
+27 info trying registry request attempt 1 at 1:28:05 PM
+28 verbose etag W/"0a74e3d4ebf8f9c6d5b96c0caed67294"
+29 http GET https://registry.npmjs.org/node-dht-sensor
+30 http 304 https://registry.npmjs.org/node-dht-sensor
+31 silly registry.get cb [ 304,
+31 silly registry.get   { date: 'Thu, 05 Sep 2019 18:28:05 GMT',
+31 silly registry.get     connection: 'close',
+31 silly registry.get     'set-cookie':
+31 silly registry.get      [ '__cfduid=d784f673f0050493d5d4c886754a2d2eb1567708085; expires=Fri, 04-Sep-20 18:28:05 GMT; path=/; domain=.npmjs.org; HttpOnly' ],
+31 silly registry.get     'cf-cache-status': 'HIT',
+31 silly registry.get     'cache-control': 'max-age=300',
+31 silly registry.get     'cf-ray': '511a42d04aa4c7fa-DFW',
+31 silly registry.get     age: '1943',
+31 silly registry.get     etag: '"0a74e3d4ebf8f9c6d5b96c0caed67294"',
+31 silly registry.get     'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+31 silly registry.get     'last-modified': 'Sat, 11 May 2019 12:06:53 GMT',
+31 silly registry.get     vary: 'accept-encoding, accept',
+31 silly registry.get     'x-amz-meta-rev': '55-87f7204b9e90659b9ef9348e7b566434',
+31 silly registry.get     server: 'cloudflare' } ]
+32 verbose etag https://registry.npmjs.org/node-dht-sensor from cache
+33 silly addNameRange number 2 { name: 'node-dht-sensor', range: '*', hasData: true }
+34 silly addNameRange versions [ 'node-dht-sensor',
+34 silly addNameRange   [ '0.0.1',
+34 silly addNameRange     '0.0.2',
+34 silly addNameRange     '0.0.3',
+34 silly addNameRange     '0.0.4',
+34 silly addNameRange     '0.0.5',
+34 silly addNameRange     '0.0.6',
+34 silly addNameRange     '0.0.7',
+34 silly addNameRange     '0.0.8',
+34 silly addNameRange     '0.0.9',
+34 silly addNameRange     '0.0.10',
+34 silly addNameRange     '0.0.11',
+34 silly addNameRange     '0.0.12',
+34 silly addNameRange     '0.0.13',
+34 silly addNameRange     '0.0.14',
+34 silly addNameRange     '0.0.15',
+34 silly addNameRange     '0.0.16',
+34 silly addNameRange     '0.0.17',
+34 silly addNameRange     '0.0.18',
+34 silly addNameRange     '0.0.19',
+34 silly addNameRange     '0.0.23',
+34 silly addNameRange     '0.0.24',
+34 silly addNameRange     '0.0.25',
+34 silly addNameRange     '0.0.26',
+34 silly addNameRange     '0.0.27',
+34 silly addNameRange     '0.0.28',
+34 silly addNameRange     '0.0.29',
+34 silly addNameRange     '0.0.31',
+34 silly addNameRange     '0.0.32',
+34 silly addNameRange     '0.0.33',
+34 silly addNameRange     '0.0.34',
+34 silly addNameRange     '0.0.35',
+34 silly addNameRange     '0.0.36',
+34 silly addNameRange     '0.1.0',
+34 silly addNameRange     '0.2.0',
+34 silly addNameRange     '0.3.0' ] ]
+35 verbose addNamed [ 'node-dht-sensor', '0.3.0' ]
+36 verbose addNamed [ '0.3.0', '0.3.0' ]
+37 silly lockFile 3a3f3572-node-dht-sensor-0-3-0 node-dht-sensor@0.3.0
+38 verbose lock node-dht-sensor@0.3.0 /home/pi/.npm/3a3f3572-node-dht-sensor-0-3-0.lock
+39 silly lockFile 3a3f3572-node-dht-sensor-0-3-0 node-dht-sensor@0.3.0
+40 silly lockFile 3a3f3572-node-dht-sensor-0-3-0 node-dht-sensor@0.3.0
+41 silly lockFile 7f74b14a-node-dht-sensor node-dht-sensor@
+42 silly lockFile 7f74b14a-node-dht-sensor node-dht-sensor@
+43 silly resolved [ { author: { name: 'David Momenso' },
+43 silly resolved     name: 'node-dht-sensor',
+43 silly resolved     description: 'Reads data from DHT sensors on Raspberry Pi',
+43 silly resolved     version: '0.3.0',
+43 silly resolved     repository: { url: 'git+https://github.com/momenso/node-dht-sensor.git' },
+43 silly resolved     scripts:
+43 silly resolved      { install: 'node-gyp configure',
+43 silly resolved        postinstall: 'node-gyp build',
+43 silly resolved        test: 'mocha' },
+43 silly resolved     main: './lib',
+43 silly resolved     dependencies: { 'node-addon-api': '^1.6.3' },
+43 silly resolved     devDependencies: { chai: '^4.2.0', mocha: '^6.1.4' },
+43 silly resolved     license: 'LGPL-3.0',
+43 silly resolved     keywords:
+43 silly resolved      [ 'DHT',
+43 silly resolved        'DHT11',
+43 silly resolved        'DHT22',
+43 silly resolved        'AM2302',
+43 silly resolved        'sensor',
+43 silly resolved        'temperature',
+43 silly resolved        'humidity',
+43 silly resolved        'raspberry',
+43 silly resolved        'raspberry pi',
+43 silly resolved        'rpi' ],
+43 silly resolved     gitHead: '3c4af328f4bbddeb8f13eea3ce78c994fa533c95',
+43 silly resolved     bugs: { url: 'https://github.com/momenso/node-dht-sensor/issues' },
+43 silly resolved     homepage: 'https://github.com/momenso/node-dht-sensor#readme',
+43 silly resolved     _id: 'node-dht-sensor@0.3.0',
+43 silly resolved     _nodeVersion: '10.15.3',
+43 silly resolved     _npmVersion: '6.9.0',
+43 silly resolved     dist:
+43 silly resolved      { integrity: 'sha512-8TRtRTaemgFI4fWZ17erRcPn1/Y/DQGzarwuDBQq2XJc46emhr0t6/Iiu0tcjOloz6osHucFjCRPpQk+Uuxi6w==',
+43 silly resolved        shasum: '5d1a068325240d8f7f7791a38403858d8a673348',
+43 silly resolved        tarball: 'https://registry.npmjs.org/node-dht-sensor/-/node-dht-sensor-0.3.0.tgz',
+43 silly resolved        fileCount: 12,
+43 silly resolved        unpackedSize: 180041,
+43 silly resolved        'npm-signature': '-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJc1rraCRA9TVsSAnZWagAAIZwP/23Qpiws/fUA6gpRkS8U\n4pgVnkFXiQrDBAIPA3Dr2Zh7ADKiIwS42dSETC2PzrVIE80D2leDjP+npNNr\nDRuOP12yaAp80pynWkZb/ztzoDr055w/AOHj/o432gNgFalFyrBppCws6egH\nQSBEY0rTYDtsQLGXYM5t9MBwhS2q2nCNqH3mc7nbk8SqMIdARHUAC8QjNlBq\nPIfLun7zxLH4dK1VF3Vpfv+CSYlEhJiHafj1nzM6ThKj2UR1lq2rkmLXo/8K\njsUUmN6zJvpZ9Eiw35nUEQEiB2AvD3b1Lz272MjHtD55y1A7Y7IG99rFVYAJ\nE8BjI+WbJYrckAr056CaV1rVwkjqy1lXMYuttG8c8/SwZyiF1UcWXfmT8eil\no46ZjIwu0kF1BgkRzqYOuGqb5Ixfw6qhDQ5iURm2egbEkSRDQ51U3C5bzYQB\naoMKzFo3SLG1jglHjSNBlBKh782BKLf6111X22YpxR61y2hcHfNIExk7Q0mr\nvYn3GeuVEIBRPs2eBYrDtThr9PYU8ndlT7sM9cSdTVApJDRSe5Mo7d8DrhXN\np+OUR4/jz4grZaklrxkNEHSeSYMeDhLI+Z0nV4KZpbv3c1P5eDEuFd0516Vp\nyIuN6+erDSmSxiZh5mtuM65zTjNu5mxo9hccwZzSVnO3GUWHNtlBT00a263C\ns2Sn\r\n=S872\r\n-----END PGP SIGNATURE-----\r\n' },
+43 silly resolved     maintainers: [ [Object] ],
+43 silly resolved     _npmUser: { name: 'momenso', email: 'momenso@gmail.com' },
+43 silly resolved     directories: {},
+43 silly resolved     _npmOperationalInternal:
+43 silly resolved      { host: 's3://npm-registry-packages',
+43 silly resolved        tmp: 'tmp/node-dht-sensor_0.3.0_1557576409344_0.09560742645720754' },
+43 silly resolved     _hasShrinkwrap: false,
+43 silly resolved     _shasum: '5d1a068325240d8f7f7791a38403858d8a673348',
+43 silly resolved     _from: 'node-dht-sensor@',
+43 silly resolved     _resolved: 'https://registry.npmjs.org/node-dht-sensor/-/node-dht-sensor-0.3.0.tgz',
+43 silly resolved     readme: 'ERROR: No README data found!' } ]
+44 info install node-dht-sensor@0.3.0 into /home/pi/Documents/Smart-Gardening/Temperature and Humidity API
+45 info installOne node-dht-sensor@0.3.0
+46 verbose node_modules/node-dht-sensor unbuild
+47 verbose tar unpack /home/pi/.npm/node-dht-sensor/0.3.0/package.tgz
+48 silly lockFile 4d23940d-API-node-modules-node-dht-sensor tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor
+49 verbose lock tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor /home/pi/.npm/4d23940d-API-node-modules-node-dht-sensor.lock
+50 silly lockFile df87d112-ode-dht-sensor-0-3-0-package-tgz tar:///home/pi/.npm/node-dht-sensor/0.3.0/package.tgz
+51 verbose lock tar:///home/pi/.npm/node-dht-sensor/0.3.0/package.tgz /home/pi/.npm/df87d112-ode-dht-sensor-0-3-0-package-tgz.lock
+52 silly gunzTarPerm modes [ '755', '644' ]
+53 silly gunzTarPerm extractEntry package.json
+54 silly gunzTarPerm modified mode [ 'package.json', 448, 484 ]
+55 silly gunzTarPerm extractEntry binding.gyp
+56 silly gunzTarPerm extractEntry LICENSE
+57 silly gunzTarPerm extractEntry README.md
+58 silly gunzTarPerm extractEntry lib/index.js
+59 silly gunzTarPerm extractEntry src/bcm2835/bcm2835.c
+60 silly gunzTarPerm extractEntry src/bcm2835/bcm2835.h
+61 silly gunzTarPerm extractEntry src/dht-sensor.cpp
+62 silly gunzTarPerm extractEntry src/dht-sensor.h
+63 silly gunzTarPerm extractEntry src/node-dht-sensor.cpp
+64 silly gunzTarPerm extractEntry src/util.cpp
+65 silly gunzTarPerm extractEntry src/util.h
+66 silly lockFile 4d23940d-API-node-modules-node-dht-sensor tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor
+67 silly lockFile 4d23940d-API-node-modules-node-dht-sensor tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor
+68 silly lockFile df87d112-ode-dht-sensor-0-3-0-package-tgz tar:///home/pi/.npm/node-dht-sensor/0.3.0/package.tgz
+69 silly lockFile df87d112-ode-dht-sensor-0-3-0-package-tgz tar:///home/pi/.npm/node-dht-sensor/0.3.0/package.tgz
+70 info preinstall node-dht-sensor@0.3.0
+71 verbose readDependencies using package.json deps
+72 verbose readDependencies using package.json deps
+73 verbose cache add [ 'node-addon-api@^1.6.3', null ]
+74 verbose cache add name=undefined spec="node-addon-api@^1.6.3" args=["node-addon-api@^1.6.3",null]
+75 verbose parsed url Url {
+75 verbose parsed url   protocol: null,
+75 verbose parsed url   slashes: null,
+75 verbose parsed url   auth: null,
+75 verbose parsed url   host: null,
+75 verbose parsed url   port: null,
+75 verbose parsed url   hostname: null,
+75 verbose parsed url   hash: null,
+75 verbose parsed url   search: null,
+75 verbose parsed url   query: null,
+75 verbose parsed url   pathname: 'node-addon-api@%5E1.6.3',
+75 verbose parsed url   path: 'node-addon-api@%5E1.6.3',
+75 verbose parsed url   href: 'node-addon-api@%5E1.6.3' }
+76 verbose cache add name="node-addon-api" spec="^1.6.3" args=["node-addon-api","^1.6.3"]
+77 verbose parsed url Url {
+77 verbose parsed url   protocol: null,
+77 verbose parsed url   slashes: null,
+77 verbose parsed url   auth: null,
+77 verbose parsed url   host: null,
+77 verbose parsed url   port: null,
+77 verbose parsed url   hostname: null,
+77 verbose parsed url   hash: null,
+77 verbose parsed url   search: null,
+77 verbose parsed url   query: null,
+77 verbose parsed url   pathname: '%5E1.6.3',
+77 verbose parsed url   path: '%5E1.6.3',
+77 verbose parsed url   href: '%5E1.6.3' }
+78 verbose addNamed [ 'node-addon-api', '^1.6.3' ]
+79 verbose addNamed [ null, '>=1.6.3 <2.0.0' ]
+80 silly lockFile 292df7b8-node-addon-api-1-6-3 node-addon-api@^1.6.3
+81 verbose lock node-addon-api@^1.6.3 /home/pi/.npm/292df7b8-node-addon-api-1-6-3.lock
+82 silly addNameRange { name: 'node-addon-api',
+82 silly addNameRange   range: '>=1.6.3 <2.0.0',
+82 silly addNameRange   hasData: false }
+83 verbose request where is /node-addon-api
+84 verbose request registry https://registry.npmjs.org/
+85 verbose url raw /node-addon-api
+86 verbose url resolving [ 'https://registry.npmjs.org/', './node-addon-api' ]
+87 verbose url resolved https://registry.npmjs.org/node-addon-api
+88 verbose request where is https://registry.npmjs.org/node-addon-api
+89 info trying registry request attempt 1 at 1:28:06 PM
+90 verbose etag W/"2172fce896b3d5bb9b2d353a0b360cf5"
+91 http GET https://registry.npmjs.org/node-addon-api
+92 http 304 https://registry.npmjs.org/node-addon-api
+93 silly registry.get cb [ 304,
+93 silly registry.get   { date: 'Thu, 05 Sep 2019 18:28:06 GMT',
+93 silly registry.get     connection: 'close',
+93 silly registry.get     'set-cookie':
+93 silly registry.get      [ '__cfduid=df98155bcf18a5a15c1fed7721e0819721567708086; expires=Fri, 04-Sep-20 18:28:06 GMT; path=/; domain=.npmjs.org; HttpOnly' ],
+93 silly registry.get     'cf-cache-status': 'HIT',
+93 silly registry.get     'cache-control': 'max-age=300',
+93 silly registry.get     'cf-ray': '511a42d2e8a4d29e-DFW',
+93 silly registry.get     age: '6340',
+93 silly registry.get     etag: '"2172fce896b3d5bb9b2d353a0b360cf5"',
+93 silly registry.get     'expect-ct': 'max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"',
+93 silly registry.get     'last-modified': 'Tue, 23 Jul 2019 22:07:50 GMT',
+93 silly registry.get     vary: 'accept-encoding, accept',
+93 silly registry.get     'x-amz-meta-rev': '33-0f2b48bc200da37ca9afabd0ef26e41c',
+93 silly registry.get     server: 'cloudflare' } ]
+94 verbose etag https://registry.npmjs.org/node-addon-api from cache
+95 silly addNameRange number 2 { name: 'node-addon-api',
+95 silly addNameRange   range: '>=1.6.3 <2.0.0',
+95 silly addNameRange   hasData: true }
+96 silly addNameRange versions [ 'node-addon-api',
+96 silly addNameRange   [ '0.1.0',
+96 silly addNameRange     '0.2.0',
+96 silly addNameRange     '0.3.0',
+96 silly addNameRange     '0.3.1',
+96 silly addNameRange     '0.3.4',
+96 silly addNameRange     '0.3.5',
+96 silly addNameRange     '0.4.0',
+96 silly addNameRange     '0.5.0',
+96 silly addNameRange     '0.5.1',
+96 silly addNameRange     '0.6.2',
+96 silly addNameRange     '0.6.3',
+96 silly addNameRange     '1.0.0',
+96 silly addNameRange     '1.1.0',
+96 silly addNameRange     '1.2.0',
+96 silly addNameRange     '1.3.0',
+96 silly addNameRange     '1.4.0',
+96 silly addNameRange     '1.5.0',
+96 silly addNameRange     '1.6.0',
+96 silly addNameRange     '1.6.1',
+96 silly addNameRange     '1.6.2',
+96 silly addNameRange     '1.6.3',
+96 silly addNameRange     '1.7.0',
+96 silly addNameRange     '1.7.1' ] ]
+97 verbose addNamed [ 'node-addon-api', '1.7.1' ]
+98 verbose addNamed [ '1.7.1', '1.7.1' ]
+99 silly lockFile 93c3b204-node-addon-api-1-7-1 node-addon-api@1.7.1
+100 verbose lock node-addon-api@1.7.1 /home/pi/.npm/93c3b204-node-addon-api-1-7-1.lock
+101 silly lockFile 93c3b204-node-addon-api-1-7-1 node-addon-api@1.7.1
+102 silly lockFile 93c3b204-node-addon-api-1-7-1 node-addon-api@1.7.1
+103 silly lockFile 292df7b8-node-addon-api-1-6-3 node-addon-api@^1.6.3
+104 silly lockFile 292df7b8-node-addon-api-1-6-3 node-addon-api@^1.6.3
+105 silly resolved [ { bugs: { url: 'https://github.com/nodejs/node-addon-api/issues' },
+105 silly resolved     contributors:
+105 silly resolved      [ [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object],
+105 silly resolved        [Object] ],
+105 silly resolved     dependencies: {},
+105 silly resolved     description: 'Node.js API (N-API)',
+105 silly resolved     devDependencies: { 'safe-buffer': '^5.1.1' },
+105 silly resolved     directories: {},
+105 silly resolved     homepage: 'https://github.com/nodejs/node-addon-api',
+105 silly resolved     keywords:
+105 silly resolved      [ 'n-api',
+105 silly resolved        'napi',
+105 silly resolved        'addon',
+105 silly resolved        'native',
+105 silly resolved        'bindings',
+105 silly resolved        'c',
+105 silly resolved        'c++',
+105 silly resolved        'nan',
+105 silly resolved        'node-addon-api' ],
+105 silly resolved     license: 'MIT',
+105 silly resolved     main: 'index.js',
+105 silly resolved     name: 'node-addon-api',
+105 silly resolved     optionalDependencies: {},
+105 silly resolved     repository:
+105 silly resolved      { type: 'git',
+105 silly resolved        url: 'git://github.com/nodejs/node-addon-api.git' },
+105 silly resolved     scripts:
+105 silly resolved      { pretest: 'node-gyp rebuild -C test',
+105 silly resolved        test: 'node test',
+105 silly resolved        predev: 'node-gyp rebuild -C test --debug',
+105 silly resolved        dev: 'node test',
+105 silly resolved        'predev:incremental': 'node-gyp configure build -C test --debug',
+105 silly resolved        'dev:incremental': 'node test',
+105 silly resolved        doc: 'doxygen doc/Doxyfile' },
+105 silly resolved     version: '1.7.1',
+105 silly resolved     gitHead: '5a7f8b2c7daae0ed898c198e13e56332169b3571',
+105 silly resolved     _id: 'node-addon-api@1.7.1',
+105 silly resolved     _nodeVersion: '10.16.0',
+105 silly resolved     _npmVersion: '6.9.0',
+105 silly resolved     dist:
+105 silly resolved      { integrity: 'sha512-2+DuKodWvwRTrCfKOeR24KIc5unKjOh8mz17NCzVnHWfjAdDqbfbjqh7gUT+BkXBRQM52+xCHciKWonJ3CbJMQ==',
+105 silly resolved        shasum: 'cf813cd69bb8d9100f6bdca6755fc268f54ac492',
+105 silly resolved        tarball: 'https://registry.npmjs.org/node-addon-api/-/node-addon-api-1.7.1.tgz',
+105 silly resolved        fileCount: 74,
+105 silly resolved        unpackedSize: 754629,
+105 silly resolved        'npm-signature': '-----BEGIN PGP SIGNATURE-----\r\nVersion: OpenPGP.js v3.0.4\r\nComment: https://openpgpjs.org\r\n\r\nwsFcBAEBCAAQBQJdN4UzCRA9TVsSAnZWagAAmqIQAIMD3nkIpsL9LDmXNExo\nayAeld/BoyuOVJY1meVpgBL7DaTp4ovjFgjH27m2pc4fScsVuB+01AuU+E1J\nkI8bmIf93+oiIP4qqhRBxnXoBqxnAVrZ2sAbxhhR+2SouDY5d2gqtfDSHOTD\nx6XVbLe3AMddhN+0h3tvi+LlmJb7gp6x2ZF0Ox4Vpb9Sykrd/U50ksbSuR2G\nAdJY/UxDkbUlONwgEgfYJo6oILYGZ6NzMp/dLmeU8AFUpYBrM/onDmak36RU\n3pq8pMqXxO9TwJrq0c0OW8bdn9PegQUwQ3uCLKEMcuAXvBa6JIsnsSkrSmVA\nMW5Ojc/yG5kzJ+rV28WDNCvb/MGOnHHBQgov70IE6U4F4DJOuLgZNyoP9EaU\nF34YI15lZ1GzA1sgPhvQUPKvYieYuP+GSPqfZy8VZgU7OEYTa6no7A2n9s8S\n670pPuh2E9/sn2t9fu9ZMgY5QxSKYzEqvatVEXiwKpcCxyhrnsGBq/2CNN7s\nVY2Oth9qq5DlAqhEuQGl5hIAwKF78I0SZX1xLkbCYyNbg+NfXB3fo9l5x5aD\nanmMPbcfoBlvI4snGhXeUUeRqmHKC9F3ToUO63glCO4VgQIHgsigkqoICUgy\nlyUDinkYjuBLNcFRmoGlLQJARnwYWXiT9+eysqlepHxTQaatuxaz9iVBKstu\nLgj+\r\n=XkqK\r\n-----END PGP SIGNATURE-----\r\n' },
+105 silly resolved     maintainers: [ [Object], [Object], [Object], [Object], [Object] ],
+105 silly resolved     _npmUser: { name: 'nicknaso', email: 'nicoladelgobbo@gmail.com' },
+105 silly resolved     _npmOperationalInternal:
+105 silly resolved      { host: 's3://npm-registry-packages',
+105 silly resolved        tmp: 'tmp/node-addon-api_1.7.1_1563919666527_0.4381203217246479' },
+105 silly resolved     _hasShrinkwrap: false,
+105 silly resolved     _shasum: 'cf813cd69bb8d9100f6bdca6755fc268f54ac492',
+105 silly resolved     _from: 'node-addon-api@^1.6.3',
+105 silly resolved     _resolved: 'https://registry.npmjs.org/node-addon-api/-/node-addon-api-1.7.1.tgz',
+105 silly resolved     readme: 'ERROR: No README data found!' } ]
+106 info install node-addon-api@1.7.1 into /home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor
+107 info installOne node-addon-api@1.7.1
+108 verbose node_modules/node-dht-sensor/node_modules/node-addon-api unbuild
+109 verbose tar unpack /home/pi/.npm/node-addon-api/1.7.1/package.tgz
+110 silly lockFile 2c0cc97b-nsor-node-modules-node-addon-api tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor/node_modules/node-addon-api
+111 verbose lock tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor/node_modules/node-addon-api /home/pi/.npm/2c0cc97b-nsor-node-modules-node-addon-api.lock
+112 silly lockFile 8a77fd7c-node-addon-api-1-7-1-package-tgz tar:///home/pi/.npm/node-addon-api/1.7.1/package.tgz
+113 verbose lock tar:///home/pi/.npm/node-addon-api/1.7.1/package.tgz /home/pi/.npm/8a77fd7c-node-addon-api-1-7-1-package-tgz.lock
+114 silly gunzTarPerm modes [ '755', '644' ]
+115 silly gunzTarPerm extractEntry package.json
+116 silly gunzTarPerm extractEntry .editorconfig
+117 silly gunzTarPerm extractEntry .travis.yml
+118 silly gunzTarPerm extractEntry appveyor.yml
+119 silly gunzTarPerm extractEntry CHANGELOG.md
+120 silly gunzTarPerm extractEntry CODE_OF_CONDUCT.md
+121 silly gunzTarPerm extractEntry CONTRIBUTING.md
+122 silly gunzTarPerm extractEntry index.js
+123 silly gunzTarPerm extractEntry LICENSE.md
+124 silly gunzTarPerm extractEntry napi-inl.deprecated.h
+125 silly gunzTarPerm extractEntry napi-inl.h
+126 silly gunzTarPerm extractEntry napi.h
+127 silly gunzTarPerm extractEntry README.md
+128 silly gunzTarPerm extractEntry doc/array_buffer.md
+129 silly gunzTarPerm extractEntry doc/async_context.md
+130 silly gunzTarPerm extractEntry doc/async_operations.md
+131 silly gunzTarPerm extractEntry doc/async_worker.md
+132 silly gunzTarPerm extractEntry doc/basic_types.md
+133 silly gunzTarPerm extractEntry doc/bigint.md
+134 silly gunzTarPerm extractEntry doc/boolean.md
+135 silly gunzTarPerm extractEntry doc/buffer.md
+136 silly gunzTarPerm extractEntry doc/callback_scope.md
+137 silly gunzTarPerm extractEntry doc/callbackinfo.md
+138 silly gunzTarPerm extractEntry doc/checker-tool.md
+139 silly gunzTarPerm extractEntry doc/class_property_descriptor.md
+140 silly gunzTarPerm extractEntry doc/cmake-js.md
+141 silly gunzTarPerm extractEntry doc/conversion-tool.md
+142 silly gunzTarPerm extractEntry doc/creating_a_release.md
+143 silly gunzTarPerm extractEntry doc/dataview.md
+144 silly gunzTarPerm extractEntry doc/Doxyfile
+145 silly gunzTarPerm extractEntry doc/env.md
+146 silly gunzTarPerm extractEntry doc/error_handling.md
+147 silly gunzTarPerm extractEntry doc/error.md
+148 silly gunzTarPerm extractEntry doc/escapable_handle_scope.md
+149 silly gunzTarPerm extractEntry doc/external.md
+150 silly gunzTarPerm extractEntry doc/function_reference.md
+151 silly gunzTarPerm extractEntry doc/function.md
+152 silly gunzTarPerm extractEntry doc/generator.md
+153 silly gunzTarPerm extractEntry doc/handle_scope.md
+154 silly gunzTarPerm extractEntry doc/memory_management.md
+155 silly gunzTarPerm extractEntry doc/node-gyp.md
+156 silly gunzTarPerm extractEntry doc/number.md
+157 silly gunzTarPerm extractEntry doc/object_lifetime_management.md
+158 silly gunzTarPerm extractEntry doc/object_reference.md
+159 silly gunzTarPerm extractEntry doc/object_wrap.md
+160 silly gunzTarPerm extractEntry doc/object.md
+161 silly gunzTarPerm extractEntry doc/prebuild_tools.md
+162 silly gunzTarPerm extractEntry doc/promises.md
+163 silly gunzTarPerm extractEntry doc/property_descriptor.md
+164 silly gunzTarPerm extractEntry doc/range_error.md
+165 silly gunzTarPerm extractEntry doc/reference.md
+166 silly gunzTarPerm extractEntry doc/setup.md
+167 silly gunzTarPerm extractEntry doc/string.md
+168 silly gunzTarPerm extractEntry doc/symbol.md
+169 silly gunzTarPerm extractEntry doc/threadsafe_function.md
+170 silly gunzTarPerm extractEntry doc/type_error.md
+171 silly gunzTarPerm extractEntry doc/typed_array_of.md
+172 silly gunzTarPerm extractEntry doc/typed_array.md
+173 silly gunzTarPerm extractEntry doc/value.md
+174 silly gunzTarPerm extractEntry doc/version_management.md
+175 silly gunzTarPerm extractEntry doc/working_with_javascript_values.md
+176 silly gunzTarPerm extractEntry external-napi/node_api.h
+177 silly gunzTarPerm extractEntry src/node_api_types.h
+178 silly gunzTarPerm extractEntry src/node_api.cc
+179 silly gunzTarPerm extractEntry src/node_api.gyp
+180 silly gunzTarPerm extractEntry src/node_api.h
+181 silly gunzTarPerm extractEntry src/node_internals.cc
+182 silly gunzTarPerm extractEntry src/node_internals.h
+183 silly gunzTarPerm extractEntry src/nothing.c
+184 silly gunzTarPerm extractEntry src/util-inl.h
+185 silly gunzTarPerm extractEntry src/util.h
+186 silly gunzTarPerm extractEntry tools/check-napi.js
+187 silly gunzTarPerm extractEntry tools/conversion.js
+188 silly gunzTarPerm extractEntry tools/README.md
+189 silly lockFile 2c0cc97b-nsor-node-modules-node-addon-api tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor/node_modules/node-addon-api
+190 silly lockFile 2c0cc97b-nsor-node-modules-node-addon-api tar:///home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor/node_modules/node-addon-api
+191 silly lockFile 8a77fd7c-node-addon-api-1-7-1-package-tgz tar:///home/pi/.npm/node-addon-api/1.7.1/package.tgz
+192 silly lockFile 8a77fd7c-node-addon-api-1-7-1-package-tgz tar:///home/pi/.npm/node-addon-api/1.7.1/package.tgz
+193 info preinstall node-addon-api@1.7.1
+194 verbose readDependencies using package.json deps
+195 verbose readDependencies using package.json deps
+196 silly resolved []
+197 verbose about to build /home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor/node_modules/node-addon-api
+198 info build /home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor/node_modules/node-addon-api
+199 verbose linkStuff [ false,
+199 verbose linkStuff   false,
+199 verbose linkStuff   false,
+199 verbose linkStuff   '/home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor/node_modules' ]
+200 info linkStuff node-addon-api@1.7.1
+201 verbose linkBins node-addon-api@1.7.1
+202 verbose linkMans node-addon-api@1.7.1
+203 verbose rebuildBundles node-addon-api@1.7.1
+204 info install node-addon-api@1.7.1
+205 info postinstall node-addon-api@1.7.1
+206 verbose about to build /home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor
+207 info build /home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules/node-dht-sensor
+208 verbose linkStuff [ false,
+208 verbose linkStuff   false,
+208 verbose linkStuff   false,
+208 verbose linkStuff   '/home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules' ]
+209 info linkStuff node-dht-sensor@0.3.0
+210 verbose linkBins node-dht-sensor@0.3.0
+211 verbose linkMans node-dht-sensor@0.3.0
+212 verbose rebuildBundles node-dht-sensor@0.3.0
+213 verbose rebuildBundles [ 'node-addon-api' ]
+214 info install node-dht-sensor@0.3.0
+215 verbose unsafe-perm in lifecycle true
+216 info postinstall node-dht-sensor@0.3.0
+217 verbose unsafe-perm in lifecycle true
+218 info node-dht-sensor@0.3.0 Failed to exec postinstall script
+219 verbose node_modules/node-dht-sensor unbuild
+220 warn This failure might be due to the use of legacy binary "node"
+221 warn For further explanations, please read
+/usr/share/doc/nodejs/README.Debian
+222 info preuninstall node-dht-sensor@0.3.0
+223 info uninstall node-dht-sensor@0.3.0
+224 verbose true,/home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules,/home/pi/Documents/Smart-Gardening/Temperature and Humidity API/node_modules unbuild node-dht-sensor@0.3.0
+225 info postuninstall node-dht-sensor@0.3.0
+226 error node-dht-sensor@0.3.0 postinstall: `node-gyp build`
+226 error Exit status 1
+227 error Failed at the node-dht-sensor@0.3.0 postinstall script.
+227 error This is most likely a problem with the node-dht-sensor package,
+227 error not with npm itself.
+227 error Tell the author that this fails on your system:
+227 error     node-gyp build
+227 error You can get their info via:
+227 error     npm owner ls node-dht-sensor
+227 error There is likely additional logging output above.
+228 error System Linux 4.14.69-v7+
+229 error command "/usr/bin/node" "/usr/bin/npm" "install" "node-dht-sensor"
+230 error cwd /home/pi/Documents/Smart-Gardening/Temperature and Humidity API
+231 error node -v v8.11.1
+232 error npm -v 1.4.21
+233 error code ELIFECYCLE
+234 verbose exit [ 1, true ]

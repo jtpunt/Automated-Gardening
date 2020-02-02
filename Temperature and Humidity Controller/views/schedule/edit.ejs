@@ -1,0 +1,143 @@
+<% include ../partials/header %>
+<script type="text/javascript">
+	function myFunction(id) {
+		console.log(id, this);
+		var x = document.getElementById(id);
+		if (x.style.display === "none") {
+			x.style.display = "block";
+		} else {
+			x.style.display = "none";
+		}
+	} 
+	function selectCheckbox(id){
+		console.log(id);
+		var x = document.getElementById(id);
+		console.log(x);
+		if(x.checked){
+			// myEle.setAttribute("style", "background: #2AD705;color: #ffffff;");
+			x.classList.remove("selectedCheckbox");
+			x.checked = false;
+		}else{
+			// context.nextElementSibling.className = " deselectCheckbox"
+			x.className += " selectedCheckbox";
+			x.checked = true;
+		}
+	}
+</script>
+<style>
+.weekDays-selector input {
+  display: none!important;
+}
+
+.selectedCheckbox {
+  background: #2AD705 !important;
+  color: #ffffff !important;
+}
+.deselectedCheckbox {
+  display: inline-block;
+  border-radius: 6px;
+  background: #dddddd;
+  height: 40px;
+  width: 30px;
+  margin-right: 3px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+</style>
+<% let ipStr = device['local_ip'].replace(/\./g,'')
+   let foundSun = schedule['schedule']['dayOfWeek'].indexOf("0")
+   let foundMon = schedule['schedule']['dayOfWeek'].indexOf("1")
+   let foundTues = schedule['schedule']['dayOfWeek'].indexOf("2")
+   let foundWed = schedule['schedule']['dayOfWeek'].indexOf("3")
+   let foundThur = schedule['schedule']['dayOfWeek'].indexOf("4")
+   let foundFri = schedule['schedule']['dayOfWeek'].indexOf("5")
+   let foundSat = schedule['schedule']['dayOfWeek'].indexOf("6") %>
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center;">Edit Schedule <%=schedule['device']['local_ip']%></h1>
+        <div style="width: 30%; margin:25px auto;">
+            <form action="/schedule/<%=schedule['_id']%>/local_ip/<%=device['local_ip']%>/?_method=PUT" method="POST" class="update-form">
+                <div class="form-group">
+                	<select name="device[id]">
+                		<option value="-1" disabled>Select Your Relay's IP Address:</option>
+                		<option value=<%=device['_id']%> selected="selected"><%=device['_id']%></option>
+                	</select>
+                </div>
+                <div class="form-group" hidden>
+                	<select name="device[local_ip]">
+                		<option value="-1" disabled>Select Your Relay's IP Address:</option>
+                		<option value=<%=device['local_ip']%> selected="selected"><%=device['local_ip']%></option>
+                	</select>
+                </div>
+                <div class="form-group">
+  					<select name="device[gpio]">
+                		<option value="-1" disabled>Select Your GPIO:</option>
+                		<% device['gpio'].forEach(function(myGpio){ 
+                		    if(schedule['device']['gpio'] === myGpio){ %>
+                		        <option value="<%=myGpio%>" selected="selected"><%=myGpio%></option>
+                		  <%  } else {%>
+                		        <option value="<%=myGpio%>"><%=myGpio%></option>
+                		<% }}) %>
+  					</select>
+  				</div>
+  				 <div class="form-group">
+  				     <% 
+                        let minute = schedule['schedule']['minute'];
+                        let second = schedule['schedule']['second'];
+                        if(schedule['schedule']['minute'] < 10){ 
+                          minute = "0" + schedule['schedule']['minute'];
+                        }
+                        if(schedule['schedule']['second'] < 10){
+                          second = "0" + schedule['schedule']['second'];
+                        }
+      				 %>
+    					<input type="time" id="time" name="schedule[time]" value="<%=schedule['schedule']['hour']%>:<%=minute%>:<%=second%>" step="1" required>
+                </div>
+                <div class="form-group">
+                	<label for="DateCheckBox">Set Date?</label>
+                    <input type="checkbox" name="DateCheckBox" onclick="myFunction('<%=ipStr%>Date')" unchecked>
+                </div>
+                <div class="form-group">
+                	<label for="DayOfWeekCheckBox">Set Day of Week?</label>
+                    <input type="checkbox" name="DayOfWeekCheckBox" onclick="myFunction('<%=ipStr%>DayOfWeek')" unchecked>
+                </div>
+                <div class="form-group" id="<%=ipStr%>Date" style="display:none">
+                	<label for="date">Set Date: </label>
+                	<input type="date" name="schedule[date]">
+                </div>
+                <div class="form-group" id="<%=ipStr%>DayOfWeek" style="display:none">
+                	<label for="weekDays-selector">Select day of week: </label>
+                	<div class="weekDays-selector" id="weekDays-selector">
+                		<label for="<%=ipStr%>weekday-sun" id='<%=ipStr%>sun' class="<%= foundSun !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">S</label>
+						<input type="checkbox" id="<%=ipStr%>weekday-sun" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>sun')" class="weekday" value="0" <% if(foundSun !== -1){ %>checked="true" <% }%>/>
+                		
+                		<label for="<%=ipStr%>weekday-mon" id='<%=ipStr%>mon' class="<%= foundMon !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">M</label>
+						<input type="checkbox" id="<%=ipStr%>weekday-mon" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>mon')" class="weekday" value="1" <% if(foundMon !== -1){ %>checked="true" <% }%>/>
+						
+						<label for="<%=ipStr%>weekday-tue" id='<%=ipStr%>tue' class="<%= foundTues !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">T</label>
+						<input type="checkbox" id="<%=ipStr%>weekday-tue" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>tue')" class="weekday" value="2" <% if(foundTues !== -1){ %>checked="true" <% }%>/>
+						
+						<label for="<%=ipStr%>weekday-wed" id='<%=ipStr%>wed' class="<%= foundWed !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">W</label>
+						<input type="checkbox" id="<%=ipStr%>weekday-wed" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>wed')" class="weekday" value="3" <% if(foundWed !== -1){ %>checked="true" <% }%>/>
+				
+						<label for="<%=ipStr%>weekday-thu" id='<%=ipStr%>thu' class="<%= foundThur !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">T</label>
+						<input type="checkbox" id="<%=ipStr%>weekday-thu" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>thu')" class="weekday" value="4" <% if(foundThur !== -1){ %>checked="true" <% }%>/>
+						
+						<label for="<%=ipStr%>weekday-fri" id='<%=ipStr%>fri' class="<%= foundFri !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">F</label>
+						<input type="checkbox" id="<%=ipStr%>weekday-fri" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>fri')" class="weekday" value="5" <% if(foundFri !== -1){ %>checked="true" <% }%>/>
+						
+						<label for="<%=ipStr%>weekday-sat" id='<%=ipStr%>sat' class="<%= foundSat !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">S</label>
+						<input type="checkbox" id="<%=ipStr%>weekday-sat" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>sat')" class="weekday" value="6" <% if(foundSat !== -1){ %>checked="true" <% }%>/>
+						
+					</div>
+		          </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                </div>
+            </form>
+            <a href="/schedule">Go Back</a>
+        </div>
+    </div>
+</div>
+<% include ../partials/footer %>

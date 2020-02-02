@@ -1,0 +1,40 @@
+<!-- Do we have any schedules set up for the current device? -->
+<% if(device['local_ip'] in schedules) { 
+	schedules[device['local_ip']].forEach(function(schedule){
+%>
+<div class="rTableRow">
+	<div class="rTableCell"><%=schedule['device']['gpio']%></div>
+	<div class="rTableCell"><%=schedule['schedule']['hour']%>:<%=schedule['schedule']['minute']%>:<%=schedule['schedule']['second']%></div>
+	<% if(schedule['schedule']['dayOfWeek'] && schedule['schedule']['dayOfWeek'].length) { 
+		schedule['schedule']['dayOfWeek'] = schedule['schedule']['dayOfWeek'].map(function(day){
+			switch(day){
+				case 0: return "S ";
+				case 1: return "M ";
+				case 2: return "T";
+				case 3: return "W ";
+				case 4: return "Th ";
+				case 5: return "F ";
+				case 6: return "S ";
+			}
+		})
+		%>
+		<div class="rTableCell"><%=schedule['schedule']['dayOfWeek']%></div>
+	<% }else { %>
+		<div class="rTableCell">N/A</div>
+	<% } %>
+	<% if(schedule['schedule']['month'] && schedule['schedule']['date'] && schedule['schedule']['year']) { %>
+		<div class="rTableCell"><%=schedule['schedule']['month']%>/<%=schedule['schedule']['date']%>/<%=schedule['schedule']['year']%></div>
+	<% } else { %>
+		<div class="rTableCell">N/A</div>
+	<% } %>
+	<div>
+		<a class="btn btn-warning" href="/schedule/<%=schedule['_id']%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
+        <form action="/schedule/<%=schedule['_id']%>/local_ip/<%=device['local_ip']%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">
+            <button class="btn btn-danger">Delete</button>
+        </form>
+    </div>
+</div>
+<% })} else{ %>
+	<div>No schedules found!</div>
+<% } %>
+<br>
