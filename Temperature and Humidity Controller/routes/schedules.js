@@ -36,11 +36,15 @@ function buildSchedule(mySchedule){
         obj['device']['gpio'] = mySchedule['device']['gpio'];
     }
     if(mySchedule['device']['OnOff'] !== null && mySchedule['device']['OnOff'] !== undefined){
-        if(typeof mySchedule['device']['OnOff'] === "boolean"){
-            console.log("VALID On/Off\n");
-            obj['device']['OnOff'] = mySchedule['device']['OnOff'];
+        console.log("VALID On/Off\n");
+        if(mySchedule['device']['OnOff'] === "on" || mySchedule['device']['OnOff'] === "off"){
+            if(mySchedule['device']['OnOff'] === "on"){
+                 obj['device']['OnOff'] = true;
+            }else{
+                 obj['device']['OnOff'] = false;
+            }
         }
-       
+        
     }
     if(mySchedule['schedule']['time'] !== null && mySchedule['schedule']['time'] !== undefined){
         console.log("VALID TIME\n");
@@ -118,7 +122,7 @@ router.get("/", (req, res) =>{
                     // Loop through each schedule, find the device it is associated with and grab the devices local ip address
                     schedules.forEach(function(schedule){
                         let found = devices.find(function(device) { 
-                            return device['_id'].toString() === schedule['device']['id']
+                            return device['_id'].toString() == schedule['device']['id'].toString()
                         });
                         if(found !== undefined){
                             schedule['device']['local_ip'] = found['local_ip'];

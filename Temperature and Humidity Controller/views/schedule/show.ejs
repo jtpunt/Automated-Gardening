@@ -27,9 +27,13 @@
 	<% } else { %>
 		<div class="rTableCell">N/A</div>
 	<% } %>
-	<div class="rTableCell">
-		<%=schedule['device']['OnOff']%>
-	</div>
+	<% if(schedule['device']['OnOff'] === true){ %>
+		<div class="rTableCell">on</div>
+	<% }else if(schedule['device']['OnOff'] === false) { %>
+		<div class="rTableCell">off</div>
+	<% }else { %>
+		<div class="rTableCell">unknown</div>
+	<% } %>
 	<div>
 		<a class="btn btn-warning" href="/schedule/<%=schedule['_id']%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
         <form action="/schedule/<%=schedule['_id']%>/local_ip/<%=device['local_ip']%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">
