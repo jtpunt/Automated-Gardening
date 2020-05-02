@@ -265,9 +265,9 @@ var outletObj = {
             if(index !== -1){
                 console.log("Outlet Found!\n");
                 let curState = self.outletArr[index]['outlet'].readSync();
-                // if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
-                //     curState ^= 1;
-                // }
+                if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
+                    curState ^= 1;
+                }
                 return curState;
             }
         },
