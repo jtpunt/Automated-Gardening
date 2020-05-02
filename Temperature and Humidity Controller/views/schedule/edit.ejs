@@ -44,6 +44,68 @@
   text-align: center;
   cursor: pointer;
 }
+ /* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+} 
 </style>
 <% let ipStr = device['local_ip'].replace(/\./g,'')
    let foundSun = schedule['schedule']['dayOfWeek'].indexOf("0")
@@ -56,10 +118,11 @@
 <div class="container">
     <div class="row">
         <h1 style="text-align: center;">Edit Schedule <%=schedule['device']['local_ip']%></h1>
-        <div style="width: 30%; margin:25px auto;">
+        <div style="width: 50%; margin:25px auto;">
             <form action="/schedule/<%=schedule['_id']%>/local_ip/<%=device['local_ip']%>/?_method=PUT" method="POST" class="update-form">
-                <div class="form-group">
-                	<select name="device[id]">
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Set Device ID</label>
+                	<select class="col-sm-20"> name="device[id]">
                 		<option value="-1" disabled>Select Your Relay's IP Address:</option>
                 		<option value=<%=device['_id']%> selected="selected"><%=device['_id']%></option>
                 	</select>
@@ -70,8 +133,9 @@
                 		<option value=<%=device['local_ip']%> selected="selected"><%=device['local_ip']%></option>
                 	</select>
                 </div>
-                <div class="form-group">
-  					<select name="device[gpio]">
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Set Device GPIO</label>
+  					<select class="col-sm-20" name="device[gpio]">
                 		<option value="-1" disabled>Select Your GPIO:</option>
                 		<% device['gpio'].forEach(function(myGpio){ 
                 		    if(schedule['device']['gpio'] === myGpio){ %>
@@ -81,7 +145,9 @@
                 		<% }}) %>
   					</select>
   				</div>
-  				 <div class="form-group">
+
+  				<div class="form-group row">
+  				     <label class="col-sm-6 col-form-label">Set Device GPIO</label>
   				     <% 
                         let minute = schedule['schedule']['minute'];
                         let second = schedule['schedule']['second'];
@@ -92,19 +158,31 @@
                           second = "0" + schedule['schedule']['second'];
                         }
       				 %>
-    					<input type="time" id="time" name="schedule[time]" value="<%=schedule['schedule']['hour']%>:<%=minute%>:<%=second%>" step="1" required>
+    					<input type="time" id="time" class="col-sm-20" name="schedule[time]" value="<%=schedule['schedule']['hour']%>:<%=minute%>:<%=second%>" step="1" required>
                 </div>
-                <div class="form-group">
-                	<label for="DateCheckBox">Set Date?</label>
-                    <input type="checkbox" name="DateCheckBox" onclick="myFunction('<%=ipStr%>Date')" unchecked>
+                <div class="form-group row">
+		            <label for="weekDays-selector" class="col-sm-6 col-form-label">On or Off? </label>
+		            <div class="col-sm-20">
+		                <input type="checkbox" name="OnOrOff" >
+		            </div>
+		        </div>
+                <div class="form-group row">
+                	<label for="DateCheckBox" class="col-sm-6 col-form-label">Set Date?</label>
+                	<div class="col-sm-20">
+                        <input type="checkbox" name="DateCheckBox" onclick="myFunction('<%=ipStr%>Date')" unchecked>
+                    </div>
                 </div>
-                <div class="form-group">
-                	<label for="DayOfWeekCheckBox">Set Day of Week?</label>
-                    <input type="checkbox" name="DayOfWeekCheckBox" onclick="myFunction('<%=ipStr%>DayOfWeek')" unchecked>
+                <div class="form-group row">
+                	<label for="DayOfWeekCheckBox" class="col-sm-6 col-form-label">Set Day of Week?</label>
+                    <div class="col-sm-20">
+                        <input type="checkbox" name="DayOfWeekCheckBox" onclick="myFunction('<%=ipStr%>DayOfWeek')" unchecked>
+                    </div>
                 </div>
-                <div class="form-group" id="<%=ipStr%>Date" style="display:none">
-                	<label for="date">Set Date: </label>
+                <div class="form-group row" id="<%=ipStr%>Date" style="display:none">
+                	<label for="date" class="col-sm-10 col-form-label">Set Date: </label>
+                	<div class="col-sm-20">
                 	<input type="date" name="schedule[date]">
+                	</div>
                 </div>
                 <div class="form-group" id="<%=ipStr%>DayOfWeek" style="display:none">
                 	<label for="weekDays-selector">Select day of week: </label>
@@ -131,7 +209,8 @@
 						<input type="checkbox" id="<%=ipStr%>weekday-sat" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>sat')" class="weekday" value="6" <% if(foundSat !== -1){ %>checked="true" <% }%>/>
 						
 					</div>
-		          </div>
+		        </div>
+	
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit!</button>
                 </div>
