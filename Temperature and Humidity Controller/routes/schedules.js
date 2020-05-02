@@ -118,7 +118,7 @@ router.get("/", (req, res) =>{
                     // Loop through each schedule, find the device it is associated with and grab the devices local ip address
                     schedules.forEach(function(schedule){
                         let found = devices.find(function(device) { 
-                            return device['_id'].toString() === schedule['device']['id'].toString()
+                            return device['_id'].toString() === schedule['device']['id']
                         });
                         if(found !== undefined){
                             schedule['device']['local_ip'] = found['local_ip'];
