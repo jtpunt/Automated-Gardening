@@ -7,7 +7,7 @@ var scheduleSchema = new mongoose.Schema({
         },
         local_ip: String,
         gpio: Number,
-        state: Boolean // should it be on or off?
+        OnOff: Boolean
     }, 
     schedule: {
         second: Number,
