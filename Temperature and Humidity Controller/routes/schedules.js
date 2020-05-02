@@ -35,10 +35,10 @@ function buildSchedule(mySchedule){
         console.log("VALID GPIO\n");
         obj['device']['gpio'] = mySchedule['device']['gpio'];
     }
-    if(mySchedule['device']['state'] !== null && mySchedule['device']['state'] !== undefined){
-        console.log("VALID GPIO\n");
-        if(typeof mySchedule['device']['state'] === "boolean"){
-             obj['device']['state'] = mySchedule['device']['state'];
+    if(mySchedule['device']['OnOff'] !== null && mySchedule['device']['OnOff'] !== undefined){
+        if(typeof mySchedule['device']['OnOff'] === "boolean"){
+            console.log("VALID On/Off\n");
+            obj['device']['OnOff'] = mySchedule['device']['OnOff'];
         }
        
     }
