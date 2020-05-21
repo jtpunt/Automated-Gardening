@@ -85,6 +85,10 @@ function buildSchedule(mySchedule){
         obj['schedule']['dayOfWeek'] = dayOfWeek;
         console.log(dayOfWeek);
     }
+    if(mySchedule['schedule']['prevScheduleId'] !== null && mySchedule['schedule']['prevScheduleId'] !== undefined){
+        console.log("VALID prevScheduleId");
+        obj['schedule']['prevScheduleId'] = mySchedule['schedule']['prevScheduleId'];
+    }
     return obj;
 }
 
@@ -196,12 +200,27 @@ router.get("/:schedule_id/edit", (req, res) => {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
         if(err) console.log(err);
         else{
-            // We need to get the GPIO setup of the device
-            Device.findById(foundSchedule['device']['id'], (err, foundDevice) => {
-                console.log("FoundSchedule: ", foundSchedule, "FoundDevice: ", foundDevice);
-                res.render("schedule/edit", {schedule: foundSchedule, device: foundDevice, stylesheets: ["/static/css/table.css"]});
-                res.status(200).end();
-            })
+            Scheduler.find({"device.id": foundSchedule['device']['id']}, (err, foundSchedules) => {
+               if(err) console.log(err);
+               else{
+                   console.log("Schedule associated with: " + foundSchedule['device']['id']);
+                   console.log("Assocaited schedules: " + foundSchedules);
+               }
+               // We need to get the GPIO setup of the device
+                Device.findById(foundSchedule['device']['id'], (err, foundDevice) => {
+                    console.log("FoundSchedule: ", foundSchedule, "FoundDevice: ", foundDevice);
+                    // We need to get a list of all schedules assocaited with the device we found
+                    
+                    res.render("schedule/edit", {
+                        schedule: foundSchedule, 
+                        device: foundDevice, 
+                        deviceSchedules: foundSchedules,  
+                        stylesheets: ["/static/css/table.css"]
+                    });
+                    res.status(200).end();
+                    })
+                });
+            
         }
     });
 });

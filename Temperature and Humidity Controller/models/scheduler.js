@@ -16,7 +16,15 @@ var scheduleSchema = new mongoose.Schema({
         date: Number,
         month: Number,
         year: Number,
-        dayOfWeek: []
+        dayOfWeek: [],
+        prevScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scheduler"
+        },
+        nextScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scheduler"
+        }
     }
     
 });
