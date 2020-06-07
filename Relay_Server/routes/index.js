@@ -167,6 +167,7 @@ router.get('/status/:id', function(req, res){
     }
     // validateInput(gpio_input, res, outletHelper.getStatus, outletHelper);
 });
+// really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
 router.get('/activate/:id', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
@@ -175,7 +176,24 @@ router.get('/activate/:id', function(req, res){
         res.status(400).end();
     }else{
         console.log("is a valid number!\n");
-        outletController.activateRelay(gpio_input);
+        outletController.toggleRelay(gpio_input);
+        res.status(200).end();
+    }
+});
+router.get('/activate/:id/:desired_state', function(req, res){
+    console.log("in /:id route\n");
+    var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
+    var desired_state = Boolean(req.params.desired_state);
+    if(Number.isNaN(gpio_input)){
+        res.write("400: ", "GPIO input given is not a number!");
+        res.status(400).end();
+    }else if(typeof desired_state === "boolean"){
+        res.write("400: ", "Input given must be 'on' or 'off'");
+        res.status(400).end();
+    }
+    else{
+        console.log("is a valid number!\n");
+        outletController.activateRelay(gpio_input, desired_state);
         res.status(200).end();
     }
 });

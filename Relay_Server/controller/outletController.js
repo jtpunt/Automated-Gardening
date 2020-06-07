@@ -10,6 +10,7 @@ console.log("Local IP: " + localIP + "\n");
 const GPIO_EXPORT = (localIP === "192.168.254.202") ? 'out' : 'high';
 var outletObj = {
         outletArr: [],
+        // NOT COMPLETE - myGpio is not set
         createOutlet: function(newOutlet){
             let self = this;
             Device.create(newOutlet, (err, myDevice) => {
@@ -245,17 +246,35 @@ var outletObj = {
                 });
             }
         },
-        activateRelay: function(gpio_input) { //function to start blinkingp
+        toggleRelay: function(gpio_input) {
             let self = this;
             let index = self.findOutlet(gpio_input);
             console.log("in activateRelay\n");
             if(index !== -1){
                 console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");
+                //if(self.getStatus(gpio_input))
+                
+                //self.outletArr[index]['outlet'].writeSync(self.outletArr[index]['outlet'].readSync());
                 if(self.outletArr[index]['outlet'].readSync() === 0){ //check the pin state, if the state is 0 (or off)
                     self.outletArr[index]['outlet'].writeSync(1); //set pin state to 1 (turn LED on)
                 }else{
                     self.outletArr[index]['outlet'].writeSync(0); //set pin state to 0 (turn LED off)
                 }
+            }
+        },
+        activateRelay: function(gpio_input, desired_state) {
+            let self = this;
+            let index = self.findOutlet(gpio_input);
+            console.log("in activateRelay\n");
+            if(index !== -1){
+                console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");
+                let desired_state = desired_state === true ? 1 : 0;
+                if(self.getStatus(gpio_input) === desired_state){
+                    console.log("Device is already in the desired state!");
+                    return;
+                }
+                self.outletArr[index]['outlet'].writeSync(desired_state);
+                
             }
         },
         getStatus: function(gpio_input){
@@ -265,6 +284,8 @@ var outletObj = {
             if(index !== -1){
                 console.log("Outlet Found!\n");
                 let curState = self.outletArr[index]['outlet'].readSync();
+                // different relay brand that I'm using has an initial output setting of 'out', which causes the status read here to be opposite
+                // the other relay brand has an initial output setting of 'high' when initializing the device setup and requires no adjustment for returning the current status
                 if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
                     curState ^= 1;
                 }

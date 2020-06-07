@@ -7,7 +7,7 @@ var scheduleSchema = new mongoose.Schema({
         },
         local_ip: String,
         gpio: Number,
-        OnOff: Boolean
+        desired_state: Boolean
     }, 
     schedule: {
         second: Number,
@@ -16,7 +16,15 @@ var scheduleSchema = new mongoose.Schema({
         date: Number,
         month: Number,
         year: Number,
-        dayOfWeek: []
+        dayOfWeek: [],
+        prevScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scheduler"
+        },
+        nextScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scheduler"
+        }
     }
     
 });
