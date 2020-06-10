@@ -45,6 +45,8 @@ function buildSchedule(mySchedule){
             }
         }
         
+    }else{
+        console.log("no desired state posted");
     }
     if(mySchedule['schedule']['time'] !== null && mySchedule['schedule']['time'] !== undefined){
         console.log("VALID TIME\n");
