@@ -272,7 +272,12 @@ var outletObj = {
                     console.log("Device is already in the desired state!");
                     return;
                 }
-                self.outletArr[index]['outlet'].writeSync(1);
+                if(self.outletArr[index]['outlet'].readSync() === 0){ //check the pin state, if the state is 0 (or off)
+                    self.outletArr[index]['outlet'].writeSync(1); //set pin state to 1 (turn LED on)
+                }else{
+                    self.outletArr[index]['outlet'].writeSync(0); //set pin state to 0 (turn LED off)
+                }
+                //self.outletArr[index]['outlet'].writeSync(1);
                 console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");
                 
             }
