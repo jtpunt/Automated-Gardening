@@ -165,7 +165,7 @@ var scheduleObj = {
         this.scheduleArr.push(new_schedule_config);
         console.log('My scheduleArr - ${this.scheduleArr}');
     },
-    editSchedule: function(schedule_id, updated_schedule_config){
+    editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
         let self = this;
         let index = this.findSchedule(schedule_id);
         console.log('updateSchedule: ' + updated_schedule_config);
@@ -178,7 +178,17 @@ var scheduleObj = {
                 } else {
                     self.scheduleArr[index]['job'].cancel();
                     console.log("Schedule canceled and removed!");
-                    self.scheduleArr[index]['job'].reschedule(updated_schedule_config['schedule']);
+                    let job = self.buildJob(
+                        updated_schedule_config, 
+                        activateRelayFn, 
+                        context, 
+                        Number(updated_schedule_config['device']['gpio']), 
+                        Boolean(updated_schedule_config['device']['desired_state'])
+                    );
+                    
+                    var obj = {"_id": updated_schedule_config['_id'], job};
+                    self.scheduleArr[index] = null;
+                    self.scheduleArr[index] = obj;
                 }
             });
         }else{
