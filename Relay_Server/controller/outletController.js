@@ -268,7 +268,7 @@ var outletObj = {
             console.log("in activateRelay\n");
             if(index !== -1){
                 console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");
-                let desired_state = desired_state === true ? 1 : 0;
+                console.log(desired_state);
                 if(self.getStatus(gpio_input) === desired_state){
                     console.log("Device is already in the desired state!");
                     return;
