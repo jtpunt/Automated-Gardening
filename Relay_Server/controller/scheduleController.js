@@ -50,19 +50,19 @@ var scheduleObj = {
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND){
                     scheduleObj['second'] = second;
-                }else throw new Error('Second input must be >= ${MIN_SECOND} or <= ${MAX_SECOND}');
+                }else throw new Error('Second input must be >= ' + MIN_SECOND + 'or <= ' +  MAX_SECOND);
             }else throw new Error("Invalid second input!");
             // Validate minute input
             if(minute !== undefined && !minute.isNaN && Number.isInteger(minute)){
                 if(minute >= MIN_MINUTE && minute <= MAX_MINUTE){
                     scheduleObj['minute'] = minute;
-                }else throw new Error('Minute input must be >= ${MIN_MINUTE} or <= ${MAX_MINUTE}');
+                }else throw new Error('Minute input must be >= ' + MIN_MINUTE + ' or <= ' + MAX_MINUTE);
             }else throw new Error("Invalid minute input!");
             // Validate hour input
             if(hour !== undefined && !hour.isNaN && Number.isInteger(hour)){
                 if(hour >= MIN_HOUR && hour <= MAX_HOUR){
                     scheduleObj['hour'] = hour;
-                }else throw new Error('Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}')
+                }else throw new Error('Minute input must be >= ' + MIN_HOUR + ' or <= ' + MAX_HOUR)
             }else throw new Error("Invalid hour input!");
             if(dayOfWeek !== undefined && dayOfWeek.length){
                 console.log("dayOfWeek scheduling");
@@ -80,16 +80,16 @@ var scheduleObj = {
                 // DATE-BASED SCHEDULING
                 if(date >= MIN_DATE && date <= MAX_DATE){
                     scheduleObj['date'] = date;
-                }else throw new Error('Date input must be >= ${MIN_DATE} or <= ${MAX_DATE}');
+                }else throw new Error('Date input must be >= ' + MIN_DATE + ' or <= ' + MAX_DATE);
                 if(month >= MIN_MONTH && month <= MAX_MONTH){
                     scheduleObj['month'] = month;
-                }else throw new Error('Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
+                }else throw new Error('Month input must be >= ' + MIN_MONTH + ' or <= ' + MAX_MONTH);
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
                     scheduleObj = new Date(year, month, date, hour, minute, second);
                     console.log("Date Obj: ", scheduleObj);
                     if(scheduleObj < new Date()) throw new Error("Schedule must occur in the future!");
-                }else throw new Error('Year input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}');
+                }else throw new Error('Year input must be >= ' + MIN_MONTH + ' or <= ' + MAX_MONTH);
             }
         }else throw new Error("Schedule details not found!");
         return scheduleObj;
@@ -113,14 +113,14 @@ var scheduleObj = {
     createSchedule: function(new_schedule_config, activateRelayFn, context){
         let self = this;
         console.log(this, activateRelayFn);
-        console.log('createSchedule: ${new_schedule_config}');
+        console.log('createSchedule: ' + new_schedule_config);
         Scheduler.create(new_schedule_config, (err, mySchedule) =>{
             if(err) {
                 console.log(err);
                 throw err;
             }
             else{
-                console.log('${mySchedule} - created.');
+                console.log(mySchedule + ' created.');
                 mySchedule.save();
                 let job = self.buildJob(
                     new_schedule_config, 
@@ -163,7 +163,7 @@ var scheduleObj = {
     setSchedule: function(new_schedule_config){
         console.log("Received Schedule Obj\n");
         this.scheduleArr.push(new_schedule_config);
-        console.log('My scheduleArr - ${this.scheduleArr}');
+        console.log('My scheduleArr - ' + this.scheduleArr);
     },
     editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
         let self = this;
@@ -171,7 +171,7 @@ var scheduleObj = {
         console.log("schedule_id: " + schedule_id);
         console.log('updateSchedule: ' + updated_schedule_config);
         if(index !== -1){
-            console.log('Match found at index: ${index}');
+            console.log('Match found at index: ' + index);
             Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
                 if(err){
                     console.log(err);
@@ -200,9 +200,9 @@ var scheduleObj = {
     deleteSchedule: function(schedule_id){
         let self = this;
         let index = this.findSchedule(schedule_id);
-        console.log('Deleting Schedule Function: ${index}');
+        console.log('Deleting Schedule Function: ' + index);
         if(index !== -1){
-            console.log('Match found at index: ${index}');
+            console.log('Match found at index: ' + index);
             Scheduler.findByIdAndRemove(schedule_id, (err) => {
                 if(err){
                     console.log(err);
