@@ -46,6 +46,7 @@ function buildSchedule(mySchedule){
         }
         
     }else{
+        obj['device']['desired_state'] = 0;
         console.log("no desired state posted");
     }
     if(mySchedule['schedule']['time'] !== null && mySchedule['schedule']['time'] !== undefined){

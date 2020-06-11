@@ -168,6 +168,7 @@ var scheduleObj = {
     editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
         let self = this;
         let index = this.findSchedule(schedule_id);
+        console.log("schedule_id: " + schedule_id);
         console.log('updateSchedule: ' + updated_schedule_config);
         if(index !== -1){
             console.log('Match found at index: ${index}');
@@ -192,6 +193,7 @@ var scheduleObj = {
                 }
             });
         }else{
+            console.log("Schedule not found!");
             throw "Schedule not found!";
         }
     },
