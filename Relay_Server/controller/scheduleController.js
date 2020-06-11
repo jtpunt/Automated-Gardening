@@ -170,6 +170,7 @@ var scheduleObj = {
         let index = this.findSchedule(schedule_id);
         console.log("schedule_id: " + schedule_id);
         console.log('updateSchedule: ' + updated_schedule_config);
+        console.log(self.scheduleArr);
         if(index !== -1){
             console.log('Match found at index: ' + index);
             Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
@@ -188,7 +189,6 @@ var scheduleObj = {
                     );
                     
                     var obj = {"_id": updated_schedule_config['_id'], job};
-                    self.scheduleArr[index] = null;
                     self.scheduleArr[index] = obj;
                 }
             });
