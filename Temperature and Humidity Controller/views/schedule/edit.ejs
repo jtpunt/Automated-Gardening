@@ -168,38 +168,52 @@ input:checked + .slider:before {
                     <label class="col-sm-6 col-form-label">Set Associated Previous Schedule</label>
                 	<select class="col-sm-20" name="schedule[prevScheduleId]">
                 		<option value="-1" disabled>Select Your Previous Schedule</option>
-                            <% deviceSchedules.forEach(function(deviceSchedule){ 
-                                let onOff = deviceSchedule['device']['OnOff'] === true ? "On" : "Off";
+                		<option value="0">None</option>
+                        <% deviceSchedules.forEach(function(deviceSchedule){ 
+                            // we need to prevent associating a schedule with itself
+                            if(deviceSchedule['_id'].toString() !== schedule['_id'].toString()){
+                                let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
                                 let minute = deviceSchedule['schedule']['minute'];
                                 let second = deviceSchedule['schedule']['second'];
                                 if(deviceSchedule['schedule']['minute'] < 10){ 
-                                  minute = "0" + deviceSchedule['schedule']['minute'];
+                                    minute = "0" + deviceSchedule['schedule']['minute'];
                                 }
                                 if(deviceSchedule['schedule']['second'] < 10){
-                                  second = "0" + deviceSchedule['schedule']['second'];
+                                    second = "0" + deviceSchedule['schedule']['second'];
                                 }
-                            %>
-                		<option value="<%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=onOff%></option>
-                		<% }) %>
+                        %>
+                                <!-- '_id' refers to the mongo id of our schedule -->
+                                <option value="<%=deviceSchedule['_id']%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                        <%
+                            }
+                        %>
+            		<% }) %>
                 	</select>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-6 col-form-label">Set Associated Next Schedule</label>
                 	<select class="col-sm-20" name="schedule[nextScheduleId]">
-                		<option value="-1" disabled>Select Your Next Schedule</option>
-                    		<% deviceSchedules.forEach(function(deviceSchedule){ 
-                    		    let onOff = deviceSchedule['device']['OnOff'] === true ? "On" : "Off";
+                		<option value="-1" disabled>Select Your Previous Schedule</option>
+                		<option value="0">None</option>
+                        <% deviceSchedules.forEach(function(deviceSchedule){ 
+                            // we need to prevent associating a schedule with itself
+                            if(deviceSchedule['_id'].toString() !== schedule['_id'].toString()){
+                                let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
                                 let minute = deviceSchedule['schedule']['minute'];
                                 let second = deviceSchedule['schedule']['second'];
                                 if(deviceSchedule['schedule']['minute'] < 10){ 
-                                  minute = "0" + deviceSchedule['schedule']['minute'];
+                                    minute = "0" + deviceSchedule['schedule']['minute'];
                                 }
                                 if(deviceSchedule['schedule']['second'] < 10){
-                                  second = "0" + deviceSchedule['schedule']['second'];
+                                    second = "0" + deviceSchedule['schedule']['second'];
                                 }
-                            %>
-                		<option value="<%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=onOff%></option>
-                		<% }) %>
+                        %>
+                                <!-- '_id' refers to the mongo id of our schedule -->
+                                <option value="<%=deviceSchedule['_id']%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                        <%
+                            }
+                        %>
+            		<% }) %>
                 	</select>
                 </div>
                 <div class="form-group row">

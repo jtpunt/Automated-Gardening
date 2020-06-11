@@ -168,8 +168,7 @@ var scheduleObj = {
     editSchedule: function(schedule_id, updated_schedule_config){
         let self = this;
         let index = this.findSchedule(schedule_id);
-        console.log('Editing Schedule Function: ${index}');
-        console.log('updateSchedule: ${updateSchedule}');
+        console.log('updateSchedule: ' + updated_schedule_config);
         if(index !== -1){
             console.log('Match found at index: ${index}');
             Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {

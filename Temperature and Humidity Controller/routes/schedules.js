@@ -88,8 +88,16 @@ function buildSchedule(mySchedule){
         console.log(dayOfWeek);
     }
     if(mySchedule['schedule']['prevScheduleId'] !== null && mySchedule['schedule']['prevScheduleId'] !== undefined){
-        console.log("VALID prevScheduleId");
-        obj['schedule']['prevScheduleId'] = mySchedule['schedule']['prevScheduleId'];
+        if(Number(mySchedule['schedule']['prevScheduleId']) !== 0){ // 'none' was selected, which has a value of 0
+            console.log("VALID prevScheduleId");
+            obj['schedule']['prevScheduleId'] = mySchedule['schedule']['prevScheduleId'];
+        }
+    }
+    if(mySchedule['schedule']['nextScheduleId'] !== null && mySchedule['schedule']['nextScheduleId'] !== undefined){
+        if(Number(mySchedule['schedule']['nextScheduleId']) !== 0){ // 'none' was selected, which has a value of 0
+            console.log("VALID nextScheduleId");
+            obj['schedule']['nextScheduleId'] = mySchedule['schedule']['nextScheduleId'];
+        }
     }
     return obj;
 }
