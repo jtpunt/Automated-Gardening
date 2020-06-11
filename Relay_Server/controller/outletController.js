@@ -267,13 +267,13 @@ var outletObj = {
             let index = self.findOutlet(gpio_input);
             console.log("in activateRelay\n");
             if(index !== -1){
-                console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");
                 console.log(Number(desired_state))
                 if(self.getStatus(gpio_input) === Number(desired_state)){
                     console.log("Device is already in the desired state!");
                     return;
                 }
-                self.outletArr[index]['outlet'].writeSync(Number(desired_state));
+                self.outletArr[index]['outlet'].writeSync(1);
+                console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");
                 
             }
         },
