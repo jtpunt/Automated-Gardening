@@ -170,8 +170,8 @@ var scheduleObj = {
                         // RECURRENCE BASED SCHEDULING
                         if(dayOfWeek !== undefined && dayOfWeek.length){
                             if(dayOfWeek.includes(today.getDay())){ // does our dayofweek array 
-                                let prevScheduleId =  sanitize_input(scheduleObj['schedule']['prevScheduleId']),
-                                    nextScheduleId =  sanitize_input(scheduleObj['schedule']['nextScheduleId']);
+                                let prevScheduleId =  schedule_config['schedule']['prevScheduleId'],
+                                    nextScheduleId =  schedule_config['schedule']['nextScheduleId'];
                                 // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
                                 if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
                                     // have we already processed the 'off' schedule?
@@ -238,8 +238,8 @@ var scheduleObj = {
                                 if(month === today.getMonth()){
                                     // is the date correct? 0 - 31, etc
                                     if(date === today.getDate()){
-                                        let prevScheduleId = scheduleObj['schedule']['prevScheduleId'],
-                                        nextScheduleId = scheduleObj['schedule']['nextScheduleId'];
+                                        let prevScheduleId = schedule_config['schedule']['prevScheduleId'],
+                                            nextScheduleId = schedule_config['schedule']['nextScheduleId'];
                                         // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
                                         if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
                                             // have we already processed the 'off' schedule?
@@ -303,8 +303,8 @@ var scheduleObj = {
                             }
                             
                         }else{ // regular scheduling
-                            let prevScheduleId =  scheduleObj['schedule'].hasOwnProperty('prevScheduleId') ? sanitize_input(scheduleObj['schedule']['prevScheduleId']) : undefined,
-                                nextScheduleId =  scheduleObj['schedule'].hasOwnProperty('nextScheduleId') ? sanitize_input(scheduleObj['schedule']['nextScheduleId']) : undefined;
+                            let prevScheduleId =  schedule_config['schedule'].hasOwnProperty('prevScheduleId') ? schedule_config['schedule']['prevScheduleId']) : undefined,
+                                nextScheduleId =  schedule_config['schedule'].hasOwnProperty('nextScheduleId') ? schedule_config['schedule']['nextScheduleId']) : undefined;
                             // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
                             if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
                                 // have we already processed the 'off' schedule?
