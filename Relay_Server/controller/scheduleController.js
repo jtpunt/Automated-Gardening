@@ -317,7 +317,7 @@ var scheduleObj = {
                                         if(err){
                                             console.log("schedule not found: " + err);
                                         }else{
-                                           
+                                            console.log("nextScheduleId found in database");
                                             let now_hour = today.getHours(),
                                                 now_min  = today.getMinutes(),
                                                 now_second = today.getSeconds();
@@ -336,7 +336,7 @@ var scheduleObj = {
                                     });
                                 }
                             }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined && prevScheduleId !== undefined){ // 'off' schedule
-                                console.log("Processing 'on' schedule");
+                                console.log("Processing 'off' schedule");
                                 // have we already processed the schedule?
                                 if(processed_ids.includes(prevScheduleId)){
                                     console.log("prevScheduleId has already been processed");
@@ -345,7 +345,7 @@ var scheduleObj = {
                                         if(err){
                                             console.log("schedule not found: " + err);
                                         }else{
-                                           
+                                            console.log("prevScheduleId found in database");
                                             let now_hour = today.getHours(),
                                                 now_min  = today.getMinutes(),
                                                 now_second = today.getSeconds();
