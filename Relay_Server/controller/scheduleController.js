@@ -303,8 +303,8 @@ var scheduleObj = {
                             }
                             
                         }else{ // regular scheduling
-                            let prevScheduleId =  sanitize_input(scheduleObj['schedule']['prevScheduleId']),
-                                nextScheduleId =  sanitize_input(scheduleObj['schedule']['nextScheduleId']);
+                            let prevScheduleId =  'prevScheduleId' in scheduleObj['schedule'] ? sanitize_input(scheduleObj['schedule']['prevScheduleId']) : undefined,
+                                nextScheduleId =  'nextcheduleId' in scheduleObj['schedule'] ? sanitize_input(scheduleObj['schedule']['nextScheduleId']) : undefined;
                             // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
                             if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
                                 // have we already processed the 'off' schedule?
