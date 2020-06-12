@@ -321,12 +321,18 @@ var scheduleObj = {
                                             let now_hour = today.getHours(),
                                                 now_min  = today.getMinutes(),
                                                 now_second = today.getSeconds();
+                                            console.log("prevScheduleHour: " + now_hour + " - " + "nextScheduleHour: " + next_schedule_config['schedule']['hour']);
+                                            console.log("prevScheduleMin: " + now_min + " - " + "nextScheduleMin: " + next_schedule_config['schedule']['minute']);
+                                            console.log("prevScheduleSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
                                             // check hour
                                             if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
+                                                console.log("hour is okay");
                                                 // check minute
                                                 if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
+                                                    console.log("minute is okay");
                                                      // check second
                                                     if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
+                                                        console.log("second is okay");
                                                         activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
                                                         processed_ids.push(prevScheduleId);
                                                     }
