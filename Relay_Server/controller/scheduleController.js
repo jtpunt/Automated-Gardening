@@ -305,6 +305,7 @@ var scheduleObj = {
                         }else{ // regular scheduling
                             let prevScheduleId = schedule_config['schedule']['prevScheduleId'],
                                 nextScheduleId = schedule_config['schedule']['nextScheduleId'];
+                            console.log("undefined? : " + prevScheduleId, nextScheduleId);
                             if(prevScheduleId !== undefined && nextScheduleId !== undefined){
                                     // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
                                 if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
