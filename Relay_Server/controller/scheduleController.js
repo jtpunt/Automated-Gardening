@@ -193,7 +193,6 @@ var scheduleObj = {
                                                          // check second
                                                         if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
                                                             activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                            processed_ids.push(prevScheduleId);
                                                             processed_ids.push(nextScheduleId);
                                                         }
                                                     }
@@ -222,7 +221,6 @@ var scheduleObj = {
                                                         if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
                                                             activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
                                                             processed_ids.push(prevScheduleId);
-                                                            processed_ids.push(nextScheduleId);
                                                         }
                                                     }
                                                 }
@@ -329,7 +327,6 @@ var scheduleObj = {
                                                     if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
                                                         activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
                                                         processed_ids.push(prevScheduleId);
-                                                        processed_ids.push(nextScheduleId);
                                                     }
                                                 }
                                             }
@@ -357,7 +354,6 @@ var scheduleObj = {
                                                     if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
                                                         activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
                                                         processed_ids.push(prevScheduleId);
-                                                        processed_ids.push(nextScheduleId);
                                                     }
                                                 }
                                             }
