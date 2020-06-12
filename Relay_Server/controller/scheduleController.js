@@ -327,7 +327,19 @@ var scheduleObj = {
                                             // check hour
                                             if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
                                                 console.log("hour is okay");
-                                                // check minute
+                                                if(now_hour < next_schedule_config['schedule']['hour']){
+                                                    if(now_min >= minute && now_second >= second){
+                                                        activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                        processed_ids.push(prevScheduleId);
+                                                    }
+                                                }else if(now_hour === next_schedule_config['schedule']['hour']){
+                                                    if(now_min <= next_schedule_config['schedule']['minute'] && now_second <= next_schedule_config['schedule']['second']){
+                                                        console.log("second is okay");
+                                                        activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                        processed_ids.push(prevScheduleId);
+                                                    }
+                                                }
+                                                /*// check minute
                                                 if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
                                                     console.log("minute is okay");
                                                      // check second
@@ -336,7 +348,7 @@ var scheduleObj = {
                                                         activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
                                                         processed_ids.push(prevScheduleId);
                                                     }
-                                                }
+                                                }*/
                                             }
                                         }
                                     });
