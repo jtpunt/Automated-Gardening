@@ -308,9 +308,10 @@ var scheduleObj = {
                             if(prevScheduleId !== undefined && nextScheduleId !== undefined){
                                     // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
                                 if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
+                                    console.log("Processing 'on' schedule");
                                     // have we already processed the 'off' schedule?
                                     if(processed_ids.includes(nextScheduleId)){
-                                        
+                                        console.log("nextScheduleId has already been processed");
                                     }else{ // we need to get the 'off' schedule first
                                         Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
                                             if(err){
@@ -335,9 +336,10 @@ var scheduleObj = {
                                         });
                                     }
                                 }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined){ // 'off' schedule
+                                    console.log("Processing 'on' schedule");
                                     // have we already processed the schedule?
                                     if(processed_ids.includes(prevScheduleId)){
-                                        
+                                        console.log("prevScheduleId has already been processed");
                                     }else{ // we need to get the 'on' schedule first
                                         Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
                                             if(err){
@@ -362,6 +364,8 @@ var scheduleObj = {
                                         });
                                     }
                                 }
+                            }else{
+                                console.log("prevScheduleId and nextScheduleId are undefined");
                             }
                             
                         }
