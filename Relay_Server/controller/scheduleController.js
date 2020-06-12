@@ -136,12 +136,14 @@ var scheduleObj = {
     },
     getSchedules: function(activateRelayFn, context){
         let self = this;
+        let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
         Device.findOne({local_ip: localIP}, function(err, myDevices){
             if(err){
                 console.log(err);
             }else{
                 Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                     console.log(schedule_configs);
+                    let processed_ids = [];
                     schedule_configs.forEach(function(schedule_config){
                         console.log(schedule_config);
                         let job = self.buildJob(
@@ -154,6 +156,217 @@ var scheduleObj = {
                         console.log(job);
                         var obj = {"_id": schedule_config['_id'], job};
                         self.setSchedule(obj);
+                        
+                        // check to see if 1 of the schedules is active right now.
+                        let second    = sanitize_input(schedule_config['schedule']['second']),
+                            minute    = sanitize_input(schedule_config['schedule']['minute']),
+                            hour      = sanitize_input(schedule_config['schedule']['hour']),
+                            date      = Number(schedule_config['schedule']['date'])  || undefined,
+                            month     = sanitize_input(schedule_config['schedule']['month']),
+                            year      = Number(schedule_config['schedule']['year']) || undefined,
+                            dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
+                            today = new Date(),
+                            desired_state = Boolean(schedule_config['device']['desired_state']);
+                        // RECURRENCE BASED SCHEDULING
+                        if(dayOfWeek !== undefined && dayOfWeek.length){
+                            if(dayOfWeek.includes(today.getDay())){ // does our dayofweek array 
+                                let prevScheduleId = scheduleObj['schedule']['prevScheduleId'],
+                                    nextScheduleId = scheduleObj['schedule']['nextScheduleId'];
+                                // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
+                                if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
+                                    // have we already processed the 'off' schedule?
+                                    if(processed_ids.includes(nextScheduleId)){
+                                        
+                                    }else{ // we need to get the 'off' schedule first
+                                        Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
+                                            if(err){
+                                                console.log("schedule not found: " + err);
+                                            }else{
+                                               
+                                                let now_hour = today.getHours(),
+                                                    now_min  = today.getMinutes(),
+                                                    now_second = today.getSeconds();
+                                                // check hour
+                                                if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
+                                                    // check minute
+                                                    if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
+                                                         // check second
+                                                        if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
+                                                            activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                            processed_ids.push(prevScheduleId);
+                                                            processed_ids.push(nextScheduleId);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined){ // 'off' schedule
+                                    // have we already processed the schedule?
+                                    if(processed_ids.includes(prevScheduleId)){
+                                        
+                                    }else{ // we need to get the 'on' schedule first
+                                        Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
+                                            if(err){
+                                                console.log("schedule not found: " + err);
+                                            }else{
+                                               
+                                                let now_hour = today.getHours(),
+                                                    now_min  = today.getMinutes(),
+                                                    now_second = today.getSeconds();
+                                                // check hour
+                                                if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
+                                                    // check minute
+                                                    if(now_min >= prev_schedule_config['schedule']['minute'] && now_min <= minute){
+                                                         // check second
+                                                        if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
+                                                            activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                            processed_ids.push(prevScheduleId);
+                                                            processed_ids.push(nextScheduleId);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        // CHECK LATER: i am not sure if you can associate date based scheduling together - though you probably can
+                        else if(date !== undefined && month !== undefined && year !== undefined){ // DATE BASED SCHEDULING
+                            // are we in the right year?
+                            if(year === today.getYear()){
+                                // are we in the right month?
+                                if(month === today.getMonth()){
+                                    // is the date correct? 0 - 31, etc
+                                    if(date === today.getDate()){
+                                        let prevScheduleId = scheduleObj['schedule']['prevScheduleId'],
+                                        nextScheduleId = scheduleObj['schedule']['nextScheduleId'];
+                                        // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
+                                        if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
+                                            // have we already processed the 'off' schedule?
+                                            if(processed_ids.includes(nextScheduleId)){
+                                                
+                                            }else{ // we need to get the 'off' schedule first
+                                                Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
+                                                    if(err){
+                                                        console.log("schedule not found: " + err);
+                                                    }else{
+                                                       
+                                                        let now_hour = today.getHours(),
+                                                            now_min  = today.getMinutes(),
+                                                            now_second = today.getSeconds();
+                                                        // check hour
+                                                        if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
+                                                            // check minute
+                                                            if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
+                                                                 // check second
+                                                                if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
+                                                                    activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                                    processed_ids.push(prevScheduleId);
+                                                                    processed_ids.push(nextScheduleId);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined){ // 'off' schedule
+                                            // have we already processed the schedule?
+                                            if(processed_ids.includes(prevScheduleId)){
+                                                
+                                            }else{ // we need to get the 'on' schedule first
+                                                Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
+                                                    if(err){
+                                                        console.log("schedule not found: " + err);
+                                                    }else{
+                                                       
+                                                        let now_hour = today.getHours(),
+                                                            now_min  = today.getMinutes(),
+                                                            now_second = today.getSeconds();
+                                                        // check hour
+                                                        if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
+                                                            // check minute
+                                                            if(now_min >= prev_schedule_config['schedule']['minute'] && now_min <= minute){
+                                                                 // check second
+                                                                if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
+                                                                    activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                                    processed_ids.push(prevScheduleId);
+                                                                    processed_ids.push(nextScheduleId);
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            
+                        }else{ // regular scheduling
+                            let prevScheduleId = scheduleObj['schedule']['prevScheduleId'],
+                                nextScheduleId = scheduleObj['schedule']['nextScheduleId'];
+                            // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
+                            if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
+                                // have we already processed the 'off' schedule?
+                                if(processed_ids.includes(nextScheduleId)){
+                                    
+                                }else{ // we need to get the 'off' schedule first
+                                    Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
+                                        if(err){
+                                            console.log("schedule not found: " + err);
+                                        }else{
+                                           
+                                            let now_hour = today.getHours(),
+                                                now_min  = today.getMinutes(),
+                                                now_second = today.getSeconds();
+                                            // check hour
+                                            if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
+                                                // check minute
+                                                if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
+                                                     // check second
+                                                    if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
+                                                        activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                        processed_ids.push(prevScheduleId);
+                                                        processed_ids.push(nextScheduleId);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined){ // 'off' schedule
+                                // have we already processed the schedule?
+                                if(processed_ids.includes(prevScheduleId)){
+                                    
+                                }else{ // we need to get the 'on' schedule first
+                                    Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
+                                        if(err){
+                                            console.log("schedule not found: " + err);
+                                        }else{
+                                           
+                                            let now_hour = today.getHours(),
+                                                now_min  = today.getMinutes(),
+                                                now_second = today.getSeconds();
+                                            // check hour
+                                            if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
+                                                // check minute
+                                                if(now_min >= prev_schedule_config['schedule']['minute'] && now_min <= minute){
+                                                     // check second
+                                                    if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
+                                                        activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                        processed_ids.push(prevScheduleId);
+                                                        processed_ids.push(nextScheduleId);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        
                     })
                     
                 });
