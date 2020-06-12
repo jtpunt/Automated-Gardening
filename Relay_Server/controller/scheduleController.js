@@ -335,35 +335,36 @@ var scheduleObj = {
                                         }
                                     });
                                 }
-                            }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined && prevScheduleId !== undefined){ // 'off' schedule
-                                console.log("Processing 'off' schedule");
-                                // have we already processed the schedule?
-                                if(processed_ids.includes(prevScheduleId)){
-                                    console.log("prevScheduleId has already been processed");
-                                }else{ // we need to get the 'on' schedule first
-                                    Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
-                                        if(err){
-                                            console.log("schedule not found: " + err);
-                                        }else{
-                                            console.log("prevScheduleId found in database");
-                                            let now_hour = today.getHours(),
-                                                now_min  = today.getMinutes(),
-                                                now_second = today.getSeconds();
-                                            // check hour
-                                            if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
-                                                // check minute
-                                                if(now_min >= prev_schedule_config['schedule']['minute'] && now_min <= minute){
-                                                     // check second
-                                                    if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
-                                                        activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                        processed_ids.push(prevScheduleId);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
                             }
+                            //else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined && prevScheduleId !== undefined){ // 'off' schedule
+                            //     console.log("Processing 'off' schedule");
+                            //     // have we already processed the schedule?
+                            //     if(processed_ids.includes(prevScheduleId)){
+                            //         console.log("prevScheduleId has already been processed");
+                            //     }else{ // we need to get the 'on' schedule first
+                            //         Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
+                            //             if(err){
+                            //                 console.log("schedule not found: " + err);
+                            //             }else{
+                            //                 console.log("prevScheduleId found in database");
+                            //                 let now_hour = today.getHours(),
+                            //                     now_min  = today.getMinutes(),
+                            //                     now_second = today.getSeconds();
+                            //                 // check hour
+                            //                 if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
+                            //                     // check minute
+                            //                     if(now_min >= prev_schedule_config['schedule']['minute'] && now_min <= minute){
+                            //                          // check second
+                            //                         if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
+                            //                             activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
+                            //                             processed_ids.push(prevScheduleId);
+                            //                         }
+                            //                     }
+                            //                 }
+                            //             }
+                            //         });
+                            //     }
+                            // }
 
                         }
                         
