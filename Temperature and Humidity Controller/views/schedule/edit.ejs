@@ -175,15 +175,37 @@ input:checked + .slider:before {
                                 let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
                                 let minute = deviceSchedule['schedule']['minute'];
                                 let second = deviceSchedule['schedule']['second'];
+                                let selected = false;
                                 if(deviceSchedule['schedule']['minute'] < 10){ 
                                     minute = "0" + deviceSchedule['schedule']['minute'];
                                 }
                                 if(deviceSchedule['schedule']['second'] < 10){
                                     second = "0" + deviceSchedule['schedule']['second'];
                                 }
+                                
+                                if(schedule['schedule']['prevScheduleId'] &&  deviceSchedule['_id'].toString() === schedule['schedule']['prevScheduleId'].toString()){
+                                    console.log("prevScheduleId matched");
+                                    selected = true;
+                                }
+                                console.log("selected? - " + selected);
+                        %>
+                        <%
+                            if(selected === true){
+                                
+                        %> 
+                              <!-- '_id' refers to the mongo id of our schedule -->
+                                <option value="<%=deviceSchedule['_id']%>" selected='selected'><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                        <%
+                            }else{
                         %>
                                 <!-- '_id' refers to the mongo id of our schedule -->
                                 <option value="<%=deviceSchedule['_id']%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                        <%   
+                        
+                            }
+                        %>
+                        
+                                
                         <%
                             }
                         %>
@@ -201,15 +223,35 @@ input:checked + .slider:before {
                                 let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
                                 let minute = deviceSchedule['schedule']['minute'];
                                 let second = deviceSchedule['schedule']['second'];
+                                let selected = false;
                                 if(deviceSchedule['schedule']['minute'] < 10){ 
                                     minute = "0" + deviceSchedule['schedule']['minute'];
                                 }
                                 if(deviceSchedule['schedule']['second'] < 10){
                                     second = "0" + deviceSchedule['schedule']['second'];
                                 }
+                                if(schedule['schedule']['nextScheduleId'] && deviceSchedule['_id'].toString() === schedule['schedule']['nextScheduleId'].toString()){
+                                    console.log("nextScheduleId matched");
+                                    selected = true;
+                                }
                         %>
-                                <!-- '_id' refers to the mongo id of our schedule -->
-                                <option value="<%=deviceSchedule['_id']%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                            <%
+                            if(selected === true){
+                                
+                            %> 
+                                  <!-- '_id' refers to the mongo id of our schedule -->
+                                    <option value="<%=deviceSchedule['_id']%>" selected='selected'><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                            <%
+                                }else{
+                            %>
+                                    <!-- '_id' refers to the mongo id of our schedule -->
+                                    <option value="<%=deviceSchedule['_id']%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                            <%   
+                            
+                                }
+                            %>
+                        
+                                    
                         <%
                             }
                         %>
@@ -219,7 +261,20 @@ input:checked + .slider:before {
                 <div class="form-group row">
       	            <label for="weekDays-selector" class="col-sm-6 col-form-label">On or Off? </label>
       	            <div class="col-sm-20">
-      	                <input type="checkbox" name="device[desired_state]">
+      	                <%
+      	                    if(schedule['device']['desired_state'] === true){
+      	                        
+      	                %>
+      	                 <input type="checkbox" name="device[desired_state]" checked>
+      	                <%
+      	                    }else{
+      	                      
+      	                 %>
+      	                 <input type="checkbox" name="device[desired_state]">   
+      	                 <%
+      	                    }
+      	                %>
+      	               
       	            </div>
       	        </div>
                 <div class="form-group row">
