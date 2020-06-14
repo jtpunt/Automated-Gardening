@@ -346,7 +346,9 @@ var scheduleObj = {
                                                 processed_ids.push(prevScheduleId);
                                             }else{
                                                 console.log("timestamp is not okay");
-                                                console.log("")
+                                                console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
+                                                console.log("now: " + today);
+                                                console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                                             }
                                             // // check hour
                                             // if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
