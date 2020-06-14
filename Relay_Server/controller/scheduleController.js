@@ -337,13 +337,16 @@ var scheduleObj = {
                                             let prev_schedule_timestamp = today,
                                                 next_schedule_timestamp = today;
                                                 
-                                            prev_schedule_timestamp.setHours(hour, second, minute);
+                                            prev_schedule_timestamp.setHours(hour, minute, second);
                                             next_schedule_timestamp.setHours(next_schedule_config['schedule']['hour'], next_schedule_config['schedule']['minute'], next_schedule_config['schedule']['second']);
                                             
                                             if(today >= prev_schedule_timestamp && today < next_schedule_config){
                                                 console.log("timestamp is okay");
                                                 activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
                                                 processed_ids.push(prevScheduleId);
+                                            }else{
+                                                console.log("timestamp is not okay");
+                                                console.log("")
                                             }
                                             // // check hour
                                             // if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
