@@ -330,14 +330,14 @@ var scheduleObj = {
                                             let now_hour = Number(today.getHours()),
                                                 now_min  = Number(today.getMinutes()),
                                                 now_second = Number(today.getSeconds());
-                                            console.log("prevScheduleHour: " + now_hour + " - " + "nextScheduleHour: " + next_schedule_config['schedule']['hour']);
-                                            console.log("prevScheduleMin: " + now_min + " - " + "nextScheduleMin: " + next_schedule_config['schedule']['minute']);
-                                            console.log("prevScheduleSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
+                                            console.log("nowHour: " + now_hour + " - " + "nextScheduleHour: " + next_schedule_config['schedule']['hour']);
+                                            console.log("nowMin: " + now_min + " - " + "nextScheduleMin: " + next_schedule_config['schedule']['minute']);
+                                            console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
                                             
                                             let prev_schedule_timestamp = today,
                                                 next_schedule_timestamp = today;
                                                 
-                                            prev_schedule_timestamp.setHours(Number(hour), Number(minute), Number(second));
+                                            prev_schedule_timestamp.setHours(Number(schedule_config['schedule']['hour']), Number(schedule_config['schedule']['minute']), Number(schedule_config['schedule']['second']));
                                             next_schedule_timestamp.setHours(Number(next_schedule_config['schedule']['hour']), Number(next_schedule_config['schedule']['minute']), Number(next_schedule_config['schedule']['second']));
                                             
                                             if(today >= prev_schedule_timestamp && today < next_schedule_config){
