@@ -327,9 +327,9 @@ var scheduleObj = {
                                             console.log("schedule not found: " + err);
                                         }else{
                                             console.log("nextScheduleId found in database");
-                                            let now_hour = today.getHours(),
-                                                now_min  = today.getMinutes(),
-                                                now_second = today.getSeconds();
+                                            let now_hour = Number(today.getHours()),
+                                                now_min  = Number(today.getMinutes()),
+                                                now_second = Number(today.getSeconds());
                                             console.log("prevScheduleHour: " + now_hour + " - " + "nextScheduleHour: " + next_schedule_config['schedule']['hour']);
                                             console.log("prevScheduleMin: " + now_min + " - " + "nextScheduleMin: " + next_schedule_config['schedule']['minute']);
                                             console.log("prevScheduleSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
@@ -337,8 +337,8 @@ var scheduleObj = {
                                             let prev_schedule_timestamp = today,
                                                 next_schedule_timestamp = today;
                                                 
-                                            prev_schedule_timestamp.setHours(hour, minute, second);
-                                            next_schedule_timestamp.setHours(next_schedule_config['schedule']['hour'], next_schedule_config['schedule']['minute'], next_schedule_config['schedule']['second']);
+                                            prev_schedule_timestamp.setHours(Number(hour), Number(minute), Number(second));
+                                            next_schedule_timestamp.setHours(Number(next_schedule_config['schedule']['hour']), Number(next_schedule_config['schedule']['minute']), Number(next_schedule_config['schedule']['second']));
                                             
                                             if(today >= prev_schedule_timestamp && today < next_schedule_config){
                                                 console.log("timestamp is okay");
