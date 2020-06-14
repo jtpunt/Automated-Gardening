@@ -186,8 +186,15 @@ var scheduleObj = {
                                                 let now_hour = today.getHours(),
                                                     now_min  = today.getMinutes(),
                                                     now_second = today.getSeconds();
-                                                // check hour
+                                                    
+                              
+                                                
+                                                // check hour. 
+                                                // schedule starts: 4:30pm
+                                                // current time: 5:45
+                                                // schedule ends : 6:30
                                                 if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
+                        
                                                     // check minute
                                                     if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
                                                          // check second
@@ -282,6 +289,8 @@ var scheduleObj = {
                                                         let now_hour = today.getHours(),
                                                             now_min  = today.getMinutes(),
                                                             now_second = today.getSeconds();
+                                                            
+                                    
                                                         // check hour
                                                         if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
                                                             // check minute
@@ -324,6 +333,14 @@ var scheduleObj = {
                                             console.log("prevScheduleHour: " + now_hour + " - " + "nextScheduleHour: " + next_schedule_config['schedule']['hour']);
                                             console.log("prevScheduleMin: " + now_min + " - " + "nextScheduleMin: " + next_schedule_config['schedule']['minute']);
                                             console.log("prevScheduleSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
+                                            
+                                            let prev_schedule_timestamp = today,
+                                                next_schedule_timestamp = today;
+                                                
+                                            prev_schedule_timestamp.setHours(hour, second, minute);
+                                            next_schedule_timestamp.setHours(next_schedule_config['schedule']['hour'], next_schedule_config['schedule']['minute'], next_schedule_config['schedule']['second']);
+                                            
+                                            
                                             // check hour
                                             if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
                                                 console.log("hour is okay");
@@ -339,16 +356,6 @@ var scheduleObj = {
                                                         processed_ids.push(prevScheduleId);
                                                     }
                                                 }
-                                                /*// check minute
-                                                if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
-                                                    console.log("minute is okay");
-                                                     // check second
-                                                    if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
-                                                        console.log("second is okay");
-                                                        activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                        processed_ids.push(prevScheduleId);
-                                                    }
-                                                }*/
                                             }
                                         }
                                     });
