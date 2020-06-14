@@ -340,23 +340,27 @@ var scheduleObj = {
                                             prev_schedule_timestamp.setHours(hour, second, minute);
                                             next_schedule_timestamp.setHours(next_schedule_config['schedule']['hour'], next_schedule_config['schedule']['minute'], next_schedule_config['schedule']['second']);
                                             
-                                            
-                                            // check hour
-                                            if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
-                                                console.log("hour is okay");
-                                                if(now_hour < next_schedule_config['schedule']['hour']){
-                                                    if(now_min >= minute && now_second >= second){
-                                                        activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                        processed_ids.push(prevScheduleId);
-                                                    }
-                                                }else if(now_hour === next_schedule_config['schedule']['hour']){
-                                                    if(now_min <= next_schedule_config['schedule']['minute'] && now_second <= next_schedule_config['schedule']['second']){
-                                                        console.log("second is okay");
-                                                        activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                        processed_ids.push(prevScheduleId);
-                                                    }
-                                                }
+                                            if(today >= prev_schedule_timestamp && today < next_schedule_config){
+                                                console.log("timestamp is okay");
+                                                activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                                processed_ids.push(prevScheduleId);
                                             }
+                                            // // check hour
+                                            // if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
+                                            //     console.log("hour is okay");
+                                            //     if(now_hour < next_schedule_config['schedule']['hour']){
+                                            //         if(now_min >= minute && now_second >= second){
+                                            //             activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                            //             processed_ids.push(prevScheduleId);
+                                            //         }
+                                            //     }else if(now_hour === next_schedule_config['schedule']['hour']){
+                                            //         if(now_min <= next_schedule_config['schedule']['minute'] && now_second <= next_schedule_config['schedule']['second']){
+                                            //             console.log("second is okay");
+                                            //             activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
+                                            //             processed_ids.push(prevScheduleId);
+                                            //         }
+                                            //     }
+                                            // }
                                         }
                                     });
                                 }
