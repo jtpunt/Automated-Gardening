@@ -327,15 +327,16 @@ var scheduleObj = {
                                             console.log("schedule not found: " + err);
                                         }else{
                                             console.log("nextScheduleId found in database");
-                                            let now_hour = Number(today.getHours()),
+                                            let today = new Date(),
+                                                now_hour = Number(today.getHours()),
                                                 now_min  = Number(today.getMinutes()),
                                                 now_second = Number(today.getSeconds());
                                             console.log("nowHour: " + now_hour + " - " + "nextScheduleHour: " + next_schedule_config['schedule']['hour']);
                                             console.log("nowMin: " + now_min + " - " + "nextScheduleMin: " + next_schedule_config['schedule']['minute']);
                                             console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
                                             
-                                            let prev_schedule_timestamp = today,
-                                                next_schedule_timestamp = today;
+                                            let prev_schedule_timestamp = new Date(),
+                                                next_schedule_timestamp = new Date();
                                                 
                                             prev_schedule_timestamp.setHours(Number(schedule_config['schedule']['hour']), Number(schedule_config['schedule']['minute']), Number(schedule_config['schedule']['second']));
                                             next_schedule_timestamp.setHours(Number(next_schedule_config['schedule']['hour']), Number(next_schedule_config['schedule']['minute']), Number(next_schedule_config['schedule']['second']));
