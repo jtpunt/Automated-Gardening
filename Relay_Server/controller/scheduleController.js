@@ -38,14 +38,14 @@ var scheduleObj = {
                   year      = Number(schedule['year']) || undefined,
                   dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined;
             // console.log("mySchedule: ", mySchedule);
-            console.log("schedule: ", schedule);
+/*            console.log("schedule: ", schedule);
             console.log("second: ",schedule_config['schedule']['second']);
             console.log("second: ", second);
             console.log("minute: ", minute);
             console.log("hour: ", hour);
             console.log("date: ", date);
             console.log("month: ", month);
-            console.log("year: ", year);
+            console.log("year: ", year);*/
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND){
