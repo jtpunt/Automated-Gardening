@@ -153,7 +153,7 @@ var scheduleObj = {
         if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined && nextScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
             let result = false;
-
+            // should change this to check what's stored in memory
             Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
                 if(err){
                     console.log("schedule not found: " + err);
@@ -239,6 +239,9 @@ var scheduleObj = {
                         
                         
                         // check to see if 1 of the schedules is active right now.
+                        
+                        
+                        // should just check the schedules stored in memory instead of making additional calls to the mongo database
                         let date      = Number(schedule_config['schedule']['date'])  || undefined,
                             month     = sanitize_input(schedule_config['schedule']['month']),
                             year      = Number(schedule_config['schedule']['year']) || undefined,
@@ -297,7 +300,7 @@ var scheduleObj = {
                                 console.log("nextScheduleId is undefined");
                             }else{
 
-
+                                
                                 let isScheduleActive = self.scheduleIsActive(schedule_config, activateRelayFn, context);
                                 console.log(isScheduleActive);
                                 if(isScheduleActive === true){
