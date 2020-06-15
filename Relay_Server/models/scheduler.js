@@ -17,11 +17,11 @@ var scheduleSchema = new mongoose.Schema({
         month: Number,
         year: Number,
         dayOfWeek: [],
-        prevScheduleId: {
+        prevScheduleId: { // associated with desired_state === true. Turn the relay on
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
         },
-        nextScheduleId: {
+        nextScheduleId: { // associated with desired_state === false. Turn the relay off
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
         }

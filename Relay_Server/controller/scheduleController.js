@@ -134,6 +134,70 @@ var scheduleObj = {
             }
         });
     },
+    scheduleIsActive: function(prev_schedule_config){
+        let self = this;
+        let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+        // check to see if 1 of the schedules is active right now.
+        if(prev_schedule_config === undefined || prev_schedule_config === null){
+            return false;
+        }
+        let prev_schedule_second = sanitize_input(prev_schedule_config['schedule']['second']),
+            prev_schedule_minute = sanitize_input(prev_schedule_config['schedule']['minute']),
+            prev_schedule_hour   = sanitize_input(prev_schedule_config['schedule']['hour']),
+            desired_state        = Boolean(prev_schedule_config['device']['desired_state']),
+            prevScheduleId       = prev_schedule_config['schedule']['prevScheduleId'],
+            nextScheduleId       = prev_schedule_config['schedule']['nextScheduleId'],
+            isScheduleActive     = false;
+            
+        console.log("undefined? : " + prevScheduleId, nextScheduleId);
+            // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
+        if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined && nextScheduleId !== undefined){ // 'on' schedule
+            console.log("Processing 'on' schedule");
+
+
+            Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
+                if(err){
+                    console.log("schedule not found: " + err);
+                }else{
+                    console.log("nextScheduleId found in database");
+                    let today                = new Date(),
+                        now_hour             = Number(today.getHours()),
+                        now_min              = Number(today.getMinutes()),
+                        now_second           = Number(today.getSeconds()),
+                        next_schedule_second = sanitize_input(prev_schedule_config['schedule']['second']),
+                        next_schedule_minute = sanitize_input(prev_schedule_config['schedule']['minute']),
+                        next_schedule_hour   = sanitize_input(prev_schedule_config['schedule']['hour']);
+                        
+                        
+                    console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_config['schedule']['hour']);
+                    console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_config['schedule']['minute']);
+                    console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
+                    
+                    let prev_schedule_timestamp = new Date(),
+                        next_schedule_timestamp = new Date();
+                        
+                    prev_schedule_timestamp.setHours(prev_schedule_hour, prev_schedule_minute, prev_schedule_second);
+                    next_schedule_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
+                    
+                    if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
+                        isScheduleActive = true;
+                    }else{
+                        console.log("timestamp is not okay");
+                        console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
+                        console.log("now: " + today);
+                        console.log("next_schedule_timestamp: " + next_schedule_timestamp);
+                        console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
+                        console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
+                    }
+                  
+                }
+            });
+            
+        }else{
+            console.log("There is a problem with the inputs given.")
+        }
+        return isScheduleActive;
+    },
     getSchedules: function(activateRelayFn, context){
         let self = this;
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -157,11 +221,14 @@ var scheduleObj = {
                         var obj = {"_id": schedule_config['_id'], job};
                         self.setSchedule(obj);
                         
+                        // API can handle single (standalone) schedule configurations - prevScheduleId and nextScheduleId can both be undefined
+                        // for example, this is a smart gardening app, but it can also be used as a smart home application
+                        // i.e., I have a smart outlet set up to turn my living room lights on from 7:00pm - 8:00pm, but I can also use my smart home android app to toggle my lights on or off at any given time
+                        // I may want a schedule set up to turn my lights off past 2:00am in case I forgot to turn them off. This way, I am not wasting electricity by my lights being on all night long
+                        
+                        
                         // check to see if 1 of the schedules is active right now.
-                        let second    = sanitize_input(schedule_config['schedule']['second']),
-                            minute    = sanitize_input(schedule_config['schedule']['minute']),
-                            hour      = sanitize_input(schedule_config['schedule']['hour']),
-                            date      = Number(schedule_config['schedule']['date'])  || undefined,
+                        let date      = Number(schedule_config['schedule']['date'])  || undefined,
                             month     = sanitize_input(schedule_config['schedule']['month']),
                             year      = Number(schedule_config['schedule']['year']) || undefined,
                             dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
@@ -170,71 +237,22 @@ var scheduleObj = {
                         // RECURRENCE BASED SCHEDULING
                         if(dayOfWeek !== undefined && dayOfWeek.length){
                             if(dayOfWeek.includes(today.getDay())){ // does our dayofweek array 
-                                let prevScheduleId =  schedule_config['schedule']['prevScheduleId'],
-                                    nextScheduleId =  schedule_config['schedule']['nextScheduleId'];
-                                // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
-                                if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
-                                    // have we already processed the 'off' schedule?
-                                    if(processed_ids.includes(nextScheduleId)){
-                                        
-                                    }else{ // we need to get the 'off' schedule first
-                                        Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
-                                            if(err){
-                                                console.log("schedule not found: " + err);
-                                            }else{
-                                               
-                                                let now_hour = today.getHours(),
-                                                    now_min  = today.getMinutes(),
-                                                    now_second = today.getSeconds();
-                                                    
-                              
-                                                
-                                                // check hour. 
-                                                // schedule starts: 4:30pm
-                                                // current time: 5:45
-                                                // schedule ends : 6:30
-                                                if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
-                        
-                                                    // check minute
-                                                    if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
-                                                         // check second
-                                                        if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
-                                                            activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                            processed_ids.push(nextScheduleId);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined){ // 'off' schedule
-                                    // have we already processed the schedule?
-                                    if(processed_ids.includes(prevScheduleId)){
-                                        
-                                    }else{ // we need to get the 'on' schedule first
-                                        Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
-                                            if(err){
-                                                console.log("schedule not found: " + err);
-                                            }else{
-                                               
-                                                let now_hour = today.getHours(),
-                                                    now_min  = today.getMinutes(),
-                                                    now_second = today.getSeconds();
-                                                // check hour
-                                                if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
-                                                    // check minute
-                                                    if(now_min >= prev_schedule_config['schedule']['minute'] && now_min <= minute){
-                                                         // check second
-                                                        if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
-                                                            activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                            processed_ids.push(prevScheduleId);
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        });
+                                let nextScheduleId =  schedule_config['schedule']['nextScheduleId'];
+                                    
+                                // have we already processed the 'off' schedule?
+                                if(processed_ids.includes(nextScheduleId)){
+                                    console.log("This schedule has already been processed.");
+                                    
+                                    
+                                }else{
+                                    if(self.scheduleIsActive(schedule_config)){
+                                        activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
+                                        processed_ids.push(schedule_config["_id"]);
+                                        processed_ids.push(nextScheduleId);
                                     }
                                 }
+
+                                
                             }
                         }
                         // CHECK LATER: i am not sure if you can associate date based scheduling together - though you probably can
@@ -245,122 +263,31 @@ var scheduleObj = {
                                 if(month === today.getMonth()){
                                     // is the date correct? 0 - 31, etc
                                     if(date === today.getDate()){
-                                        let prevScheduleId = schedule_config['schedule']['prevScheduleId'],
-                                            nextScheduleId = schedule_config['schedule']['nextScheduleId'];
-                                        // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
-                                        if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined){ // 'on' schedule
-                                            // have we already processed the 'off' schedule?
-                                            if(processed_ids.includes(nextScheduleId)){
-                                                
-                                            }else{ // we need to get the 'off' schedule first
-                                                Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
-                                                    if(err){
-                                                        console.log("schedule not found: " + err);
-                                                    }else{
-                                                       
-                                                        let now_hour = today.getHours(),
-                                                            now_min  = today.getMinutes(),
-                                                            now_second = today.getSeconds();
-                                                        // check hour
-                                                        if(now_hour >= hour && now_hour <= next_schedule_config['schedule']['hour']){
-                                                            // check minute
-                                                            if(now_min >= minute && now_min <= next_schedule_config['schedule']['minute']){
-                                                                 // check second
-                                                                if(now_second >= second && now_second <= next_schedule_config['schedule']['second']){
-                                                                    activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                                    processed_ids.push(prevScheduleId);
-                                                                    processed_ids.push(nextScheduleId);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        }else if(desired_state !== undefined && desired_state === false && nextScheduleId === undefined){ // 'off' schedule
-                                            // have we already processed the schedule?
-                                            if(processed_ids.includes(prevScheduleId)){
-                                                
-                                            }else{ // we need to get the 'on' schedule first
-                                                Scheduler.findById(prevScheduleId, (err, prev_schedule_config) => {
-                                                    if(err){
-                                                        console.log("schedule not found: " + err);
-                                                    }else{
-                                                       
-                                                        let now_hour = today.getHours(),
-                                                            now_min  = today.getMinutes(),
-                                                            now_second = today.getSeconds();
-                                                            
-                                    
-                                                        // check hour
-                                                        if(now_hour >= prev_schedule_config['schedule']['hour'] && now_hour <= hour){
-                                                            // check minute
-                                                            if(now_min >= prev_schedule_config['schedule']['minute'] && now_min <= minute){
-                                                                 // check second
-                                                                if(now_second >= prev_schedule_config['schedule']['second'] && now_second <= second){
-                                                                    activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                                    processed_ids.push(prevScheduleId);
-                                                                    processed_ids.push(nextScheduleId);
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            }
+                                        let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
+                                            
+                                        // have we already processed the 'off' schedule?
+                                        if(processed_ids.includes(nextScheduleId)){
+                                            
+                                        }else{ 
+                                            activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
+                                            processed_ids.push(schedule_config["_id"]);
+                                            processed_ids.push(nextScheduleId);
                                         }
                                     }
                                 }
                             }
                             
                         }else{ // regular scheduling
-                            let prevScheduleId = schedule_config['schedule']['prevScheduleId'],
-                                nextScheduleId = schedule_config['schedule']['nextScheduleId'];
-                            console.log("undefined? : " + prevScheduleId, nextScheduleId);
-                                // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
-                            if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined && nextScheduleId !== undefined){ // 'on' schedule
-                                console.log("Processing 'on' schedule");
-                                // have we already processed the 'off' schedule?
-                                if(processed_ids.includes(nextScheduleId)){
-                                    console.log("nextScheduleId has already been processed");
-                                }else{ // we need to get the 'off' schedule first
-                                    Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
-                                        if(err){
-                                            console.log("schedule not found: " + err);
-                                        }else{
-                                            console.log("nextScheduleId found in database");
-                                            let today = new Date(),
-                                                now_hour = Number(today.getHours()),
-                                                now_min  = Number(today.getMinutes()),
-                                                now_second = Number(today.getSeconds());
-                                            console.log("nowHour: " + now_hour + " - " + "nextScheduleHour: " + next_schedule_config['schedule']['hour']);
-                                            console.log("nowMin: " + now_min + " - " + "nextScheduleMin: " + next_schedule_config['schedule']['minute']);
-                                            console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
-                                            
-                                            let prev_schedule_timestamp = new Date(),
-                                                next_schedule_timestamp = new Date();
-                                                
-                                            prev_schedule_timestamp.setHours(Number(schedule_config['schedule']['hour']), Number(schedule_config['schedule']['minute']), Number(schedule_config['schedule']['second']));
-                                            next_schedule_timestamp.setHours(Number(next_schedule_config['schedule']['hour']), Number(next_schedule_config['schedule']['minute']), Number(next_schedule_config['schedule']['second']));
-                                            
-                                            if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
-                                                console.log("timestamp is okay");
-                                                activateRelayFn.call(context,  Number(next_schedule_config['device']['gpio']), Boolean(desired_state));
-                                                processed_ids.push(prevScheduleId);
-                                            }else{
-                                                console.log("timestamp is not okay");
-                                                console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
-                                                console.log("now: " + today);
-                                                console.log("next_schedule_timestamp: " + next_schedule_timestamp);
-                                                console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
-                                                console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
-                                            }
-                                          
-                                        }
-                                    });
-                                }
+                            let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
+                            // have we already processed the 'off' schedule?
+                            if(processed_ids.includes(nextScheduleId)){
+                                console.log("nextScheduleId has already been processed");
+                            }else{ // we need to get the 'off' schedule first
+                                
                             }
                         }
                         
-                    })
+                    });
                     
                 });
             }
