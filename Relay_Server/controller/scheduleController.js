@@ -293,10 +293,11 @@ var scheduleObj = {
                         }else{ // regular scheduling
                             console.log("REGULAR SCHEDULING");
                             let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
-                            // have we already processed the 'off' schedule?
-                            if(processed_ids.includes(nextScheduleId)){
-                                console.log("nextScheduleId has already been processed");
-                            }else{ // we need to get the 'off' schedule first
+                            if(nextScheduleId === undefined){
+                                console.log("nextScheduleId is undefined");
+                            }else{
+
+
                                 let isScheduleActive = self.scheduleIsActive(schedule_config);
                                 console.log(isScheduleActive);
                                 if(isScheduleActive === true){
@@ -308,7 +309,9 @@ var scheduleObj = {
                                     console.log("Schedule is not active");
                                     
                                 }
+                                
                             }
+                            
                         }
                         
                     });
