@@ -195,19 +195,22 @@ var scheduleObj = {
             
         }else{
             console.log("There is a problem with the inputs given.")
+            console.log("desired_state: " + desired_state)
+            console.log("prevScheduleId: " + prevScheduleId);
+            console.log("nextScheduleId: " + nextScheduleId);
         }
         return isScheduleActive;
     },
     getSchedules: function(activateRelayFn, context){
         let self = this;
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+        let processed_ids = [];
         Device.findOne({local_ip: localIP}, function(err, myDevices){
             if(err){
                 console.log(err);
             }else{
                 Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                     console.log(schedule_configs);
-                    let processed_ids = [];
                     schedule_configs.forEach(function(schedule_config){
                         console.log(schedule_config);
                         let job = self.buildJob(
