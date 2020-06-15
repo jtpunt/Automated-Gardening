@@ -204,7 +204,6 @@ var scheduleObj = {
             console.log("prevScheduleId: " + prevScheduleId);
             console.log("nextScheduleId: " + nextScheduleId);
         }
-        return false;
     },
     getSchedules: function(activateRelayFn, context){
         let self = this;
