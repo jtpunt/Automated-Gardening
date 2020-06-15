@@ -100,13 +100,13 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     buildJob: function(schedule_config, activateRelayFn, context, gpio_pin, desired_state){
         let myScheduleObj = this.buildSchedule(schedule_config);
-        console.log("myScheduleObj: ", myScheduleObj);
+        //console.log("myScheduleObj: ", myScheduleObj);
         // let job = schedule.scheduleJob(myScheduleObj['schedule'], function(){
         let job = schedule.scheduleJob(myScheduleObj, function(){
             console.log('Schedule created!');
             activateRelayFn.call(context, gpio_pin, desired_state);
         });
-        console.log("Job: ", job);
+        //console.log("Job: ", job);
         return job;
         // var obj = {"_id": mySchedule['_id'], job};
     },
@@ -216,7 +216,7 @@ var scheduleObj = {
                 Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                     //console.log(schedule_configs);
                     schedule_configs.forEach(function(schedule_config){
-                        console.log(schedule_config);
+                        //console.log(schedule_config);
                         let job = self.buildJob(
                             schedule_config, 
                             activateRelayFn, 
