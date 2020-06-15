@@ -214,7 +214,7 @@ var scheduleObj = {
                 console.log(err);
             }else{
                 Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
-                    console.log(schedule_configs);
+                    //console.log(schedule_configs);
                     schedule_configs.forEach(function(schedule_config){
                         console.log(schedule_config);
                         let job = self.buildJob(
@@ -224,7 +224,7 @@ var scheduleObj = {
                             Number(schedule_config['device']['gpio']), 
                             Boolean(schedule_config['device']['desired_state'])
                         );
-                        console.log(job);
+                        //console.log(job);
                         var obj = {"_id": schedule_config['_id'], job};
                         self.setSchedule(obj);
                         
