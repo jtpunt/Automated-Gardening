@@ -179,7 +179,11 @@ var scheduleObj = {
                     prev_schedule_timestamp.setHours(prev_schedule_hour, prev_schedule_minute, prev_schedule_second);
                     next_schedule_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
                     
+                    console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
+                    console.log("today timestamp: " + today);
+                    console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                     if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
+                        console.log("timestamp is okay");
                         isScheduleActive = true;
                     }else{
                         console.log("timestamp is not okay");
@@ -298,6 +302,8 @@ var scheduleObj = {
                                     activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
                                     processed_ids.push(schedule_config["_id"]);
                                     processed_ids.push(nextScheduleId);
+                                }else{
+                                    console.log("Schedule is not active");
                                 }
                             }
                         }
