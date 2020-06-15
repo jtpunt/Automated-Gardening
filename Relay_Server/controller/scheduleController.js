@@ -134,7 +134,7 @@ var scheduleObj = {
             }
         });
     },
-    scheduleIsActive: function(prev_schedule_config){
+    scheduleIsActive: function(prev_schedule_config, activateRelayFn, context){
         let self = this;
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
         // check to see if 1 of the schedules is active right now.
@@ -183,7 +183,7 @@ var scheduleObj = {
                     console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                     if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
                         console.log("timestamp is okay");
-                        result = true;
+                        activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
                     }else{
                         console.log("timestamp is not okay");
                         console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
@@ -298,7 +298,7 @@ var scheduleObj = {
                             }else{
 
 
-                                let isScheduleActive = self.scheduleIsActive(schedule_config);
+                                let isScheduleActive = self.scheduleIsActive(schedule_config, activateRelayFn, context);
                                 console.log(isScheduleActive);
                                 if(isScheduleActive === true){
                                     console.log("Schedule is active");
