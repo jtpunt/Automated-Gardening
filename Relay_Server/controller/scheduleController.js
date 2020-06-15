@@ -226,6 +226,10 @@ var scheduleObj = {
                         // i.e., I have a smart outlet set up to turn my living room lights on from 7:00pm - 8:00pm, but I can also use my smart home android app to toggle my lights on or off at any given time
                         // I may want a schedule set up to turn my lights off past 2:00am in case I forgot to turn them off. This way, I am not wasting electricity by my lights being on all night long
                         
+                        // API definition - a single standalone schedule must not interfere with two schedules that are associated with each other
+                        // i.e., two schedules that run from 6:00pm - 7:00pm,
+                        //       one schedule cannot be setup between 6:00pm, more specifically, you cannot set up an 'off' schedule at 6:30pm. However, a single 'on' schedule would be appropriate
+                        
                         
                         // check to see if 1 of the schedules is active right now.
                         let date      = Number(schedule_config['schedule']['date'])  || undefined,
@@ -283,7 +287,9 @@ var scheduleObj = {
                             if(processed_ids.includes(nextScheduleId)){
                                 console.log("nextScheduleId has already been processed");
                             }else{ // we need to get the 'off' schedule first
-                                
+                                activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
+                                processed_ids.push(schedule_config["_id"]);
+                                processed_ids.push(nextScheduleId);
                             }
                         }
                         
