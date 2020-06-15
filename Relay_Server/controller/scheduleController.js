@@ -318,9 +318,9 @@ var scheduleObj = {
         });
     },
     setSchedule: function(new_schedule_config){
-        console.log("Received Schedule Obj\n");
+       // console.log("Received Schedule Obj\n");
         this.scheduleArr.push(new_schedule_config);
-        console.log('My scheduleArr - ' + this.scheduleArr);
+        //console.log('My scheduleArr - ' + this.scheduleArr);
     },
     editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
         let self = this;
