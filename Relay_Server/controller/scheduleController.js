@@ -146,8 +146,7 @@ var scheduleObj = {
             prev_schedule_hour   = sanitize_input(prev_schedule_config['schedule']['hour']),
             desired_state        = Boolean(prev_schedule_config['device']['desired_state']),
             prevScheduleId       = prev_schedule_config['schedule']['prevScheduleId'],
-            nextScheduleId       = prev_schedule_config['schedule']['nextScheduleId'],
-            isScheduleActive     = false;
+            nextScheduleId       = prev_schedule_config['schedule']['nextScheduleId'];
             
         console.log("undefined? : " + prevScheduleId, nextScheduleId);
             // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
@@ -184,7 +183,7 @@ var scheduleObj = {
                     console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                     if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
                         console.log("timestamp is okay");
-                        isScheduleActive = true;
+                        return true;
                     }else{
                         console.log("timestamp is not okay");
                         console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
@@ -203,7 +202,7 @@ var scheduleObj = {
             console.log("prevScheduleId: " + prevScheduleId);
             console.log("nextScheduleId: " + nextScheduleId);
         }
-        return isScheduleActive;
+        return false;
     },
     getSchedules: function(activateRelayFn, context){
         let self = this;
