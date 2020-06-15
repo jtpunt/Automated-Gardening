@@ -152,7 +152,7 @@ var scheduleObj = {
             // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
         if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined && nextScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
-
+            let result = false;
 
             Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
                 if(err){
@@ -183,7 +183,7 @@ var scheduleObj = {
                     console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                     if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
                         console.log("timestamp is okay");
-                        return true;
+                        result = true;
                     }else{
                         console.log("timestamp is not okay");
                         console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
@@ -195,6 +195,8 @@ var scheduleObj = {
                   
                 }
             });
+            console.log("back from mongodb");
+            return result;
             
         }else{
             console.log("There is a problem with the inputs given.")
