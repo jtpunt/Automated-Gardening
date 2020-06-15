@@ -298,6 +298,7 @@ var scheduleObj = {
                                 console.log("nextScheduleId has already been processed");
                             }else{ // we need to get the 'off' schedule first
                                 let isScheduleActive = self.scheduleIsActive(schedule_config);
+                                console.log(isScheduleActive);
                                 if(isScheduleActive === true){
                                     console.log("Schedule is active");
                                     activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
@@ -305,7 +306,7 @@ var scheduleObj = {
                                     processed_ids.push(nextScheduleId);
                                 }else{
                                     console.log("Schedule is not active");
-                                    console.log(isScheduleActive);
+                                    
                                 }
                             }
                         }
