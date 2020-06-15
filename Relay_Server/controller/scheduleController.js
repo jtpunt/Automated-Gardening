@@ -240,27 +240,26 @@ var scheduleObj = {
                             desired_state = Boolean(schedule_config['device']['desired_state']);
                         // RECURRENCE BASED SCHEDULING
                         if(dayOfWeek !== undefined && dayOfWeek.length){
+                            console.log("RECURRENCE BASED SCHEDULING");
                             if(dayOfWeek.includes(today.getDay())){ // does our dayofweek array 
                                 let nextScheduleId =  schedule_config['schedule']['nextScheduleId'];
                                     
                                 // have we already processed the 'off' schedule?
                                 if(processed_ids.includes(nextScheduleId)){
                                     console.log("This schedule has already been processed.");
-                                    
-                                    
                                 }else{
                                     if(self.scheduleIsActive(schedule_config)){
+                                        console.log("Schedule is active");
                                         activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
                                         processed_ids.push(schedule_config["_id"]);
                                         processed_ids.push(nextScheduleId);
                                     }
                                 }
-
-                                
                             }
                         }
                         // CHECK LATER: i am not sure if you can associate date based scheduling together - though you probably can
                         else if(date !== undefined && month !== undefined && year !== undefined){ // DATE BASED SCHEDULING
+                            console.log("DATE BASED SCHEDULING");
                             // are we in the right year?
                             if(year === today.getYear()){
                                 // are we in the right month?
@@ -271,25 +270,32 @@ var scheduleObj = {
                                             
                                         // have we already processed the 'off' schedule?
                                         if(processed_ids.includes(nextScheduleId)){
-                                            
+                                            console.log("This schedule has already been processed.");
                                         }else{ 
-                                            activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
-                                            processed_ids.push(schedule_config["_id"]);
-                                            processed_ids.push(nextScheduleId);
+                                            console.log("Schedule is active");
+                                            if(self.scheduleIsActive(schedule_config)){
+                                                activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
+                                                processed_ids.push(schedule_config["_id"]);
+                                                processed_ids.push(nextScheduleId);
+                                            }
                                         }
                                     }
                                 }
                             }
                             
                         }else{ // regular scheduling
+                            console.log("REGULAR SCHEDULING");
                             let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
                             // have we already processed the 'off' schedule?
                             if(processed_ids.includes(nextScheduleId)){
                                 console.log("nextScheduleId has already been processed");
                             }else{ // we need to get the 'off' schedule first
-                                activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
-                                processed_ids.push(schedule_config["_id"]);
-                                processed_ids.push(nextScheduleId);
+                                if(self.scheduleIsActive(schedule_config)){
+                                    console.log("Schedule is active");
+                                    activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
+                                    processed_ids.push(schedule_config["_id"]);
+                                    processed_ids.push(nextScheduleId);
+                                }
                             }
                         }
                         
