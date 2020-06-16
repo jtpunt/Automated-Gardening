@@ -72,6 +72,11 @@ router.put("/:device_id", (req, res) => {
         }
     });
 })
+// router.get("/:device_id/avg");
+// router.get("/:device_id/start_date/:start_date/avg");
+// router.get("/:device_id/start_date/:start_date/end_date/:end_date");
+// router.get("/:device_id/start_date/:start_date/end_date/:end_date/average");
+
 router.delete("/:device_id", (req, res) => {
 
 });

@@ -134,6 +134,9 @@ var scheduleObj = {
             }
         });
     },
+    isScheduleActive: function(){
+        let self = this;
+    },
     scheduleIsActive: function(prev_schedule_config, activateRelayFn, context){
         let self = this;
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -226,6 +229,7 @@ var scheduleObj = {
                         );
                         //console.log(job);
                         var obj = {"_id": schedule_config['_id'], job};
+                        console.log(obj);
                         self.setSchedule(obj);
                         
                         // API can handle single (standalone) schedule configurations - prevScheduleId and nextScheduleId can both be undefined
