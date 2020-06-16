@@ -334,7 +334,7 @@ var scheduleObj = {
     },
     editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
         let self = this;
-        let index = this.findSchedule(schedule_id);
+        let index = this.findScheduleIndex(schedule_id);
         console.log("schedule_id: " + schedule_id);
         console.log('updateSchedule: ' + updated_schedule_config);
         console.log(self.scheduleArr);
@@ -367,7 +367,7 @@ var scheduleObj = {
     },
     deleteSchedule: function(schedule_id){
         let self = this;
-        let index = this.findSchedule(schedule_id);
+        let index = this.findScheduleIndex(schedule_id);
         console.log('Deleting Schedule Function: ' + index);
         if(index !== -1){
             console.log('Match found at index: ' + index);
@@ -388,7 +388,7 @@ var scheduleObj = {
             throw "Schedule not found!";
         }
     },
-    findSchedule: function(schedule_id){
+    findScheduleIndex: function(schedule_id){
         return this.scheduleArr.findIndex((schedule_config) => schedule_config['schedule']['_id'] == schedule_id);
     }
 }
