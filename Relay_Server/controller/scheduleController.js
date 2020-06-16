@@ -129,7 +129,7 @@ var scheduleObj = {
                     Number(new_schedule_config['device']['gpio']), 
                     Boolean(new_schedule_config['device']['desired_state'])
                 );
-                var obj = {"_id": mySchedule['_id'], job};
+                var obj = {"_id": mySchedule['_id'], "schedule_config": mySchedule, job};
                 self.setSchedule(obj);
             }
         });
@@ -228,7 +228,7 @@ var scheduleObj = {
                             Boolean(schedule_config['device']['desired_state'])
                         );
                         //console.log(job);
-                        var obj = {"_id": schedule_config['_id'], job};
+                        var obj = {"_id": schedule_config['_id'], "schedule_config": schedule_config, job};
                         console.log(obj);
                         self.setSchedule(obj);
                         
