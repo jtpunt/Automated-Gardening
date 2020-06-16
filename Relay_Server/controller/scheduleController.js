@@ -138,6 +138,7 @@ var scheduleObj = {
         let self = this;
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
         self.scheduleArr.forEach(function(schedule_config){
+            console.log("in isScheduleActive with schedule_config: " + schedule_config);
             let prevScheduleId = schedule_config['schedule']['prevScheduleId'],
                 nextScheduleId = schedule_config['schedule']['nextScheduleId'];
             if(prevScheduleId !== undefined && nextScheduleId === undefined){ // end schedule
