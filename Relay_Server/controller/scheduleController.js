@@ -412,6 +412,7 @@ var scheduleObj = {
                     console.log(err);
                     throw err;
                 } else {
+                    
                     self.scheduleArr[index]['job'].cancel();
                     console.log("Schedule canceled and removed!");
                     let job = self.buildJob(
@@ -456,7 +457,7 @@ var scheduleObj = {
         }
     },
     findScheduleIndex: function(schedule_id){
-        return this.scheduleArr.findIndex((schedule_config) => schedule_config['schedule']['_id'] == schedule_id);
+        return this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['schedule']['_id'] == schedule_id);
     }
 }
 module.exports = scheduleObj;
