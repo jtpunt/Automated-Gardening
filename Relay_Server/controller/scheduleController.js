@@ -160,48 +160,82 @@ var scheduleObj = {
             console.log("nextScheduleId: " + prev_schedule_config['schedule']['nextScheduleId']);
             let nextScheduleIndex = self.findScheduleIndex(prev_schedule_config['schedule']['nextScheduleId'].toString());
             console.log("NEXT SCHEDULE INDEX: " + nextScheduleIndex);
-            Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
-                if(err){
-                    console.log("schedule not found: " + err);
-                }else{
-                    console.log("nextScheduleId found in database");
-                    let today                = new Date(),
-                        now_hour             = Number(today.getHours()),
-                        now_min              = Number(today.getMinutes()),
-                        now_second           = Number(today.getSeconds()),
-                        next_schedule_second = sanitize_input(next_schedule_config['schedule']['second']),
-                        next_schedule_minute = sanitize_input(next_schedule_config['schedule']['minute']),
-                        next_schedule_hour   = sanitize_input(next_schedule_config['schedule']['hour']);
+            let next_schedule_config = self.scheduleArr[nextScheduleIndex];
+            let today                = new Date(),
+                now_hour             = Number(today.getHours()),
+                now_min              = Number(today.getMinutes()),
+                now_second           = Number(today.getSeconds()),
+                next_schedule_second = sanitize_input(next_schedule_config['schedule_config']['schedule']['second']),
+                next_schedule_minute = sanitize_input(next_schedule_config['schedule_config']['schedule']['minute']),
+                next_schedule_hour   = sanitize_input(next_schedule_config['schedule_config']['schedule']['hour']);
+                
+                
+            console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_config['schedule_config']['schedule']['hour']);
+            console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_config['schedule_config']['schedule']['minute']);
+            console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule_config']['schedule']['second']);
+            
+            let prev_schedule_timestamp = new Date(),
+                next_schedule_timestamp = new Date();
+                
+            prev_schedule_timestamp.setHours(prev_schedule_hour, prev_schedule_minute, prev_schedule_second);
+            next_schedule_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
+            
+            console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
+            console.log("today timestamp: " + today);
+            console.log("next_schedule_timestamp: " + next_schedule_timestamp);
+            if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
+                console.log("timestamp is okay");
+                activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
+            }else{
+                console.log("timestamp is not okay");
+                console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
+                console.log("now: " + today);
+                console.log("next_schedule_timestamp: " + next_schedule_timestamp);
+                console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
+                console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
+            }
+            // Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
+            //     if(err){
+            //         console.log("schedule not found: " + err);
+            //     }else{
+            //         console.log("nextScheduleId found in database");
+            //         let today                = new Date(),
+            //             now_hour             = Number(today.getHours()),
+            //             now_min              = Number(today.getMinutes()),
+            //             now_second           = Number(today.getSeconds()),
+            //             next_schedule_second = sanitize_input(next_schedule_config['schedule']['second']),
+            //             next_schedule_minute = sanitize_input(next_schedule_config['schedule']['minute']),
+            //             next_schedule_hour   = sanitize_input(next_schedule_config['schedule']['hour']);
                         
                         
-                    console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_config['schedule']['hour']);
-                    console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_config['schedule']['minute']);
-                    console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
+            //         console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_config['schedule']['hour']);
+            //         console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_config['schedule']['minute']);
+            //         console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule']['second']);
                     
-                    let prev_schedule_timestamp = new Date(),
-                        next_schedule_timestamp = new Date();
+            //         let prev_schedule_timestamp = new Date(),
+            //             next_schedule_timestamp = new Date();
                         
-                    prev_schedule_timestamp.setHours(prev_schedule_hour, prev_schedule_minute, prev_schedule_second);
-                    next_schedule_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
+            //         prev_schedule_timestamp.setHours(prev_schedule_hour, prev_schedule_minute, prev_schedule_second);
+            //         next_schedule_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
                     
-                    console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
-                    console.log("today timestamp: " + today);
-                    console.log("next_schedule_timestamp: " + next_schedule_timestamp);
-                    if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
-                        console.log("timestamp is okay");
-                        activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
-                    }else{
-                        console.log("timestamp is not okay");
-                        console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
-                        console.log("now: " + today);
-                        console.log("next_schedule_timestamp: " + next_schedule_timestamp);
-                        console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
-                        console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
-                    }
+            //         console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
+            //         console.log("today timestamp: " + today);
+            //         console.log("next_schedule_timestamp: " + next_schedule_timestamp);
+            //         if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
+            //             console.log("timestamp is okay");
+            //             activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
+            //         }else{
+            //             console.log("timestamp is not okay");
+            //             console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
+            //             console.log("now: " + today);
+            //             console.log("next_schedule_timestamp: " + next_schedule_timestamp);
+            //             console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
+            //             console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
+            //         }
                   
-                }
-            });
-            console.log("back from mongodb");
+            //     }
+            // });
+            // console.log("back from mongodb");
             return result;
             
         }else{
