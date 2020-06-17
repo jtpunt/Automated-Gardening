@@ -139,7 +139,7 @@ var scheduleObj = {
     isScheduleActive: function(activateRelayFn, context){
         let self = this;
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
-        console.log("in isScheduleActive");
+        console.log("in isScheduleActive: " + self.scheduleArr.length);
         self.scheduleArr.forEach(function(schedule_config){
             console.log("in isScheduleActive with schedule_config: " + schedule_config);
             let prevScheduleId = schedule_config['schedule']['prevScheduleId'],
@@ -191,6 +191,8 @@ var scheduleObj = {
                     }
                 }
                     
+            }else{
+                
             }
         });
     },
@@ -300,8 +302,7 @@ var scheduleObj = {
                             self.setSchedule(obj);
                         });
                         console.log("Done processing schedules: " + self.scheduleArr.length);
-                    })
-                    .catch(function(err){
+                    }).catch(function(err){
                         console.log("Error caught: " + err);
                     })
                    
