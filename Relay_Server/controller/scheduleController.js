@@ -274,21 +274,40 @@ var scheduleObj = {
                 console.log(err);
             }else{
                 
-
-                let myPromise = async function() {
+                let getData = async function(){
                     return new Promise((resolve, reject) => {
                         Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
-                            //console.log(schedule_configs);
-                            if(err) reject(err);
-                            else{
-                                resolve(schedule_configs);
-                            }
-          
+                            resolve(schedule_configs);
                         });
                     });
                 }
-                let result = await (myPromise());
-                console.log("result: " + result);
+                (async(() => {
+                    let myData = await(getData);
+                    console.log("mydata: " + myData);
+                    
+                }))();
+                // let myPromise = async function() {
+                //     return new Promise((resolve, reject) => {
+                //         Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
+                //             //console.log(schedule_configs);
+                //             schedule_configs.forEach(function(schedule_config){
+                //                 //console.log(schedule_config);
+                //                 let job = self.buildJob(
+                //                     schedule_config, 
+                //                     activateRelayFn, 
+                //                     context, 
+                //                     Number(schedule_config['device']['gpio']), 
+                //                     Boolean(schedule_config['device']['desired_state'])
+                //                 );
+                //                 //console.log(job);
+                //                 var obj = {"schedule_config": schedule_config, job};
+                //                 console.log(obj);
+                //                 self.setSchedule(obj);
+                //             });
+                //         });
+                //     });
+                // }
+                // let result = await (myPromise());
                 // Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                 //     //console.log(schedule_configs);
                 //     schedule_configs.forEach(function(schedule_config){
