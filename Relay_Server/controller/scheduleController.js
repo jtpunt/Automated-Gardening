@@ -156,6 +156,7 @@ var scheduleObj = {
             console.log("Processing 'on' schedule");
             let result = false;
             // should change this to check what's stored in memory
+            console.log("prev_schedule_config: " + prev_schedule_config);
             let nextScheduleIndex = self.findScheduleIndex(prev_schedule_config['schedule']['nextScheduleId']);
             console.log("NEXT SCHEDULE INDEX: " + nextScheduleIndex);
             Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
