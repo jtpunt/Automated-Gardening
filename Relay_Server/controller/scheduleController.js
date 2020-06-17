@@ -297,7 +297,7 @@ var scheduleObj = {
                         console.log("Done processing schedules: " + self.scheduleArr.length);
                         self.scheduleArr.forEach((schedule_config) =>{
                            console.log(typeof schedule_config);
-                           console.log("schedule_config: " + schedule_config);
+                           console.log("schedule_config: " + JSON.stringify(schedule_config, null, 4));
                         });
                         //self.isScheduleActive(activateRelayFn, context)
                     }).catch(function(){
