@@ -279,8 +279,13 @@ var scheduleObj = {
                         const result =  await Scheduler.find({'device.id': myDevices["_id"]});     
                         return result;
                    }
-                    deviceSchedulePromise().then(function(schedule_configs){
-                        //console.log("schedule_configs: " + schedule_configs);
+                    deviceSchedulePromise().then(function(result){
+                        console.log("result: " + result);
+                        return result;
+                    }, function(err){
+                        console.log("err: " + err);
+                    }).then(function(schedule_configs){
+                        console.log("schedule_configs: " + schedule_configs);
                         schedule_configs.forEach(function(schedule_config){
                             console.log("schedule_config: " + schedule_config);
                             let job = self.buildJob(
@@ -299,8 +304,8 @@ var scheduleObj = {
                            console.log(typeof schedule_config);
                            console.log("schedule_config: " + JSON.stringify(schedule_config, null, 4));
                         });
-                        //self.isScheduleActive(activateRelayFn, context)
-                    }).catch(function(){
+                    })
+                    .catch(function(){
                         console.log("Error caught");
                     })
                    
