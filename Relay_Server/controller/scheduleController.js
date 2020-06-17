@@ -295,16 +295,14 @@ var scheduleObj = {
                             self.setSchedule(obj);
                         });
                         console.log("Done processing schedules: " + self.scheduleArr.length);
-                        console.log("Calling isScheduleActive");
+                        self.scheduleArr.forEach((schedule_config) =>{
+                           console.log(typeof schedule_config);
+                           console.log("schedule_config: " + schedule_config);
+                        });
                         //self.isScheduleActive(activateRelayFn, context)
                     }).catch(function(){
                         console.log("Error caught");
-                    }).finally(function(){
-                       self.scheduleArr.forEach((schedule_config) =>{
-                           console.log(typeof schedule_config);
-                           console.log("schedule_config: " + schedule_config);
-                       });
-                    });
+                    })
                    
                 }catch(err){
                     console.log(err);
