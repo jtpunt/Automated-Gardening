@@ -457,7 +457,7 @@ var scheduleObj = {
         }
     },
     findScheduleIndex: function(schedule_id){
-        return this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['schedule']['_id'] == schedule_id);
+        return this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
     }
 }
 module.exports = scheduleObj;
