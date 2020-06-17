@@ -280,7 +280,7 @@ var scheduleObj = {
                         return result;
                    }
                     deviceSchedulePromise().then(function(schedule_configs){
-                        console.log("schedule_configs: " + schedule_configs);
+                        //console.log("schedule_configs: " + schedule_configs);
                         schedule_configs.forEach(function(schedule_config){
                             console.log("schedule_config: " + schedule_config);
                             let job = self.buildJob(
@@ -299,7 +299,12 @@ var scheduleObj = {
                         //self.isScheduleActive(activateRelayFn, context)
                     }).catch(function(){
                         console.log("Error caught");
-                    })
+                    }).finally(function(){
+                       self.scheduleArr.forEach((schedule_config) =>{
+                           console.log(typeof schedule_config);
+                           console.log("schedule_config: " + schedule_config);
+                       });
+                    });
                    
                 }catch(err){
                     console.log(err);
