@@ -308,6 +308,7 @@ var scheduleObj = {
                 }catch(err){
                     console.log(err);
                 }finally{
+                    console.log("Finally...");
                     self.scheduleArr.forEach((schedule_config) =>{
                        console.log(typeof schedule_config);
                        console.log("schedule_config: " + schedule_config);
