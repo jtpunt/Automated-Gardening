@@ -274,19 +274,21 @@ var scheduleObj = {
                 console.log(err);
             }else{
                 
-                let getData = function(){
+
+                let myPromise = async function() {
                     return new Promise((resolve, reject) => {
                         Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
-                            resolve(schedule_configs);
+                            //console.log(schedule_configs);
+                            if(err) reject(err);
+                            else{
+                                resolve(schedule_configs);
+                            }
+          
                         });
                     });
                 }
-                (async(() => {
-     
-                    let myData = await(getData());
-                    console.log("await call complete: " + myData);
-                }))();
-
+                let result = await (myPromise());
+                console.log("result: " + result);
                 // Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                 //     //console.log(schedule_configs);
                 //     schedule_configs.forEach(function(schedule_config){
