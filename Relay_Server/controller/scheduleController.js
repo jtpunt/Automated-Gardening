@@ -295,6 +295,8 @@ var scheduleObj = {
                             self.setSchedule(obj);
                         });
                         console.log("Done processing schedules: " + self.scheduleArr);
+                        console.log("Calling isScheduleActive");
+                        self.isScheduleActive(activateRelayFn, context)
                     }, function(err){
                       console.log(err);
                     })
@@ -409,9 +411,7 @@ var scheduleObj = {
                         
                 //     });
                     
-                // });
-                console.log("Calling isScheduleActive");
-                //self.isScheduleActive(activateRelayFn, context);
+                // });;
             }
         });
     },
