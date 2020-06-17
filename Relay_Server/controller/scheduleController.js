@@ -273,40 +273,7 @@ var scheduleObj = {
             if(err){
                 console.log(err);
             }else{
-                
-                let getData = async function(){
-                    return new Promise((resolve, reject) => {
-                        Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
-                            resolve(schedule_configs);
-                        });
-                    });
-                }
-                (async () => { let myData = await getData();
-                    console.log("mydata: " + myData);
-                    
-                });
-                // let myPromise = async function() {
-                //     return new Promise((resolve, reject) => {
-                //         Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
-                //             //console.log(schedule_configs);
-                //             schedule_configs.forEach(function(schedule_config){
-                //                 //console.log(schedule_config);
-                //                 let job = self.buildJob(
-                //                     schedule_config, 
-                //                     activateRelayFn, 
-                //                     context, 
-                //                     Number(schedule_config['device']['gpio']), 
-                //                     Boolean(schedule_config['device']['desired_state'])
-                //                 );
-                //                 //console.log(job);
-                //                 var obj = {"schedule_config": schedule_config, job};
-                //                 console.log(obj);
-                //                 self.setSchedule(obj);
-                //             });
-                //         });
-                //     });
-                // }
-                // let result = await (myPromise());
+                const result = await Scheduler.find({'device.id': myDevices["_id"]}).toArray();
                 // Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                 //     //console.log(schedule_configs);
                 //     schedule_configs.forEach(function(schedule_config){
