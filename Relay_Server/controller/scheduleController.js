@@ -136,66 +136,6 @@ var scheduleObj = {
             }
         });
     },
-    isScheduleActive: function(activateRelayFn, context){
-        let self = this;
-        let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
-        console.log("in isScheduleActive: " + self.scheduleArr.length);
-        self.scheduleArr.forEach(function(schedule_obj){
-            console.log("in isScheduleActive with schedule_config: " + schedule_obj);
-            let prevScheduleId = scheduleObj['schedule_config']['schedule']['prevScheduleId'],
-                nextScheduleId = scheduleObj['schedule_config']['schedule']['nextScheduleId'];
-            if(prevScheduleId !== undefined && nextScheduleId === undefined){ // end schedule
-                console.log("end schedule detected");
-            }else if(prevScheduleId === undefined && nextScheduleId !== undefined){ // start schedule 
-                let prev_schedule_second = sanitize_input(scheduleObj['schedule_config']['schedule']['second']),
-                    prev_schedule_minute = sanitize_input(scheduleObj['schedule_config']['schedule']['minute']),
-                    prev_schedule_hour   = sanitize_input(scheduleObj['schedule_config']['schedule']['hour']),
-                    desired_state        = Boolean(scheduleObj['schedule_config']['device']['desired_state']);
-                    
-                if(desired_state !== undefined && desired_state === true && prevScheduleId === undefined && nextScheduleId !== undefined){ // 'on' schedule
-                    let next_schedule_config_index = self.findScheduleIndex("nextScheduleId");
-                    if(next_schedule_config_index !== -1){ // vald index returned?
-                        let next_schedule_config = self.scheduleArr[next_schedule_config_index],
-                            today                = new Date(),
-                            now_hour             = Number(today.getHours()),
-                            now_min              = Number(today.getMinutes()),
-                            now_second           = Number(today.getSeconds()),
-                            next_schedule_second = sanitize_input(next_schedule_config['schedule_config']['schedule']['second']),
-                            next_schedule_minute = sanitize_input(next_schedule_config['schedule_config']['schedule']['minute']),
-                            next_schedule_hour   = sanitize_input(next_schedule_config['schedule_config']['schedule']['hour']);
-                            
-                        console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_config['schedule_config']['schedule']['hour']);
-                        console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_config['schedule_config']['schedule']['minute']);
-                        console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_config['schedule_config']['schedule']['second']);
-                        
-                        let prev_schedule_timestamp = new Date(),
-                            next_schedule_timestamp = new Date();
-                            
-                        prev_schedule_timestamp.setHours(prev_schedule_hour, prev_schedule_minute, prev_schedule_second);
-                        next_schedule_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
-                        
-                        console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
-                        console.log("today timestamp: " + today);
-                        console.log("next_schedule_timestamp: " + next_schedule_timestamp);
-                        if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
-                            console.log("timestamp is okay");
-                            activateRelayFn.call(context,  Number(scheduleObj['schedule_config']['device']['gpio']), Boolean(desired_state));
-                        }else{
-                            console.log("timestamp is not okay");
-                            console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
-                            console.log("now: " + today);
-                            console.log("next_schedule_timestamp: " + next_schedule_timestamp);
-                            console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
-                            console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
-                        }
-                    }
-                }
-                    
-            }else{
-                
-            }
-        });
-    },
     scheduleIsActive: function(prev_schedule_config, activateRelayFn, context){
         let self = this;
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -303,32 +243,31 @@ var scheduleObj = {
                             
                         });
                         console.log("Done processing schedules: " + self.scheduleArr.length);
-                        self.isScheduleActive(activateRelayFn, context);
-                        // self.scheduleArr.forEach(function(schedule_obj){
-                        //     console.log("my schedule config: " + JSON.stringify(schedule_obj));
-                        //     let desired_state = Boolean(schedule_obj['schedule_config']['device']['desired_state']);
+                        self.scheduleArr.forEach(function(schedule_obj){
+                            console.log("my schedule config: " + JSON.stringify(schedule_obj));
+                            let desired_state = Boolean(schedule_obj['schedule_config']['device']['desired_state']);
                             
-                        //     console.log("REGULAR SCHEDULING");
-                        //     let nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
-                        //     if(nextScheduleId === undefined){
-                        //         console.log("nextScheduleId is undefined");
-                        //     }else{
+                            console.log("REGULAR SCHEDULING");
+                            let nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
+                            if(nextScheduleId === undefined){
+                                console.log("nextScheduleId is undefined");
+                            }else{
     
                                 
-                        //         let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
-                        //         console.log(isScheduleActive);
-                        //         if(isScheduleActive === true){
-                        //             console.log("Schedule is active");
-                        //             activateRelayFn.call(context,  Number(schedule_obj['schedule_config']['device']['gpio']), Boolean(desired_state));
-                        //             //processed_ids.push(schedule_config["_id"]);
-                        //             //processed_ids.push(nextScheduleId);
-                        //         }else{
-                        //             console.log("Schedule is not active");
+                                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
+                                console.log(isScheduleActive);
+                                if(isScheduleActive === true){
+                                    console.log("Schedule is active");
+                                    activateRelayFn.call(context,  Number(schedule_obj['schedule_config']['device']['gpio']), Boolean(desired_state));
+                                    //processed_ids.push(schedule_config["_id"]);
+                                    //processed_ids.push(nextScheduleId);
+                                }else{
+                                    console.log("Schedule is not active");
                                     
-                        //         }
+                                }
                                 
-                        //     }
-                        // });
+                            }
+                        });
                         
                     }).catch(function(err){
                         console.log("Error caught: " + err);
