@@ -304,7 +304,7 @@ var scheduleObj = {
                         });
                         console.log("Done processing schedules: " + self.scheduleArr.length);
                         self.scheduleArr.forEach(function(schedule_config){
-                            console.log("my schedule config: " + schedule_config);
+                            console.log("my schedule config: " + JSON.stringify(schedule_config));
                             // let desired_state = Boolean(schedule_config['device']['desired_state']);
                             
                             // console.log("REGULAR SCHEDULING");
