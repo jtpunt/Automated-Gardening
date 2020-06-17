@@ -296,7 +296,7 @@ var scheduleObj = {
                         });
                         console.log("Done processing schedules: " + self.scheduleArr.length);
                         console.log("Calling isScheduleActive");
-                        self.isScheduleActive(activateRelayFn, context)
+                        //self.isScheduleActive(activateRelayFn, context)
                     }).catch(function(){
                         console.log("Error caught");
                     })
