@@ -281,7 +281,7 @@ var scheduleObj = {
                         });
                     });
                 }
-                (async () => { let myData = await getData;
+                (async () => { let myData = await getData();
                     console.log("mydata: " + myData);
                     
                 })();
