@@ -274,28 +274,18 @@ var scheduleObj = {
                 console.log(err);
             }else{
                 
-                let myPromise = async function() {
+                let getData = function(){
                     return new Promise((resolve, reject) => {
                         Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
-                            //console.log(schedule_configs);
-                            schedule_configs.forEach(function(schedule_config){
-                                //console.log(schedule_config);
-                                let job = self.buildJob(
-                                    schedule_config, 
-                                    activateRelayFn, 
-                                    context, 
-                                    Number(schedule_config['device']['gpio']), 
-                                    Boolean(schedule_config['device']['desired_state'])
-                                );
-                                //console.log(job);
-                                var obj = {"schedule_config": schedule_config, job};
-                                console.log(obj);
-                                self.setSchedule(obj);
-                            });
+                            resolve(schedule_configs);
                         });
                     });
                 }
-                let result = await (myPromise());
+                (async(() => {
+     
+                    let myData = await(getData());
+                }));
+
                 // Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                 //     //console.log(schedule_configs);
                 //     schedule_configs.forEach(function(schedule_config){
