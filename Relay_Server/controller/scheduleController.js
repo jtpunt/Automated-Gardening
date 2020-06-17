@@ -304,28 +304,29 @@ var scheduleObj = {
                         });
                         console.log("Done processing schedules: " + self.scheduleArr.length);
                         self.scheduleArr.forEach(function(schedule_config){
-                            let desired_state = Boolean(schedule_config['device']['desired_state']);
+                            console.log("my schedule config: " + schedule_config);
+                            // let desired_state = Boolean(schedule_config['device']['desired_state']);
                             
-                            console.log("REGULAR SCHEDULING");
-                            let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
-                            if(nextScheduleId === undefined){
-                                console.log("nextScheduleId is undefined");
-                            }else{
+                            // console.log("REGULAR SCHEDULING");
+                            // let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
+                            // if(nextScheduleId === undefined){
+                            //     console.log("nextScheduleId is undefined");
+                            // }else{
     
                                 
-                                let isScheduleActive = self.scheduleIsActive(schedule_config, activateRelayFn, context);
-                                console.log(isScheduleActive);
-                                if(isScheduleActive === true){
-                                    console.log("Schedule is active");
-                                    activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
-                                    //processed_ids.push(schedule_config["_id"]);
-                                    //processed_ids.push(nextScheduleId);
-                                }else{
-                                    console.log("Schedule is not active");
+                            //     let isScheduleActive = self.scheduleIsActive(schedule_config, activateRelayFn, context);
+                            //     console.log(isScheduleActive);
+                            //     if(isScheduleActive === true){
+                            //         console.log("Schedule is active");
+                            //         activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
+                            //         //processed_ids.push(schedule_config["_id"]);
+                            //         //processed_ids.push(nextScheduleId);
+                            //     }else{
+                            //         console.log("Schedule is not active");
                                     
-                                }
+                            //     }
                                 
-                            }
+                            // }
                         });
                         
                     }).catch(function(err){
