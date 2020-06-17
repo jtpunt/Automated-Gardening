@@ -273,7 +273,18 @@ var scheduleObj = {
             if(err){
                 console.log(err);
             }else{
-                const result = await Scheduler.find({'device.id': myDevices["_id"]}).toArray();
+                
+                try{
+                   let result = async () => {
+                        const result =  await Scheduler.find({'device.id': myDevices["_id"]});     
+                        return result;
+                   }
+                   console.log(result);
+                  
+                   
+                }catch(err){
+                    console.log(err);
+                }
                 // Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                 //     //console.log(schedule_configs);
                 //     schedule_configs.forEach(function(schedule_config){
