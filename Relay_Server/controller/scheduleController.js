@@ -280,8 +280,9 @@ var scheduleObj = {
                         return result;
                    }
                     deviceSchedulePromise().then(function(schedule_configs){
+                        console.log("schedule_configs: " + schedule_configs);
                         schedule_configs.forEach(function(schedule_config){
-                            //console.log(schedule_config);
+                            console.log("schedule_config: " + schedule_config);
                             let job = self.buildJob(
                                 schedule_config, 
                                 activateRelayFn, 
@@ -289,14 +290,13 @@ var scheduleObj = {
                                 Number(schedule_config['device']['gpio']), 
                                 Boolean(schedule_config['device']['desired_state'])
                             );
-                            //console.log(job);
                             var obj = {"schedule_config": schedule_config, job};
-                            console.log(obj);
+                            //console.log(obj);
                             self.setSchedule(obj);
                         });
                         console.log("Done processing schedules: " + self.scheduleArr);
-                        console.log("Calling isScheduleActive");
-                        self.isScheduleActive(activateRelayFn, context)
+                        //console.log("Calling isScheduleActive");
+                        //self.isScheduleActive(activateRelayFn, context)
                     }, function(err){
                       console.log(err);
                     })
