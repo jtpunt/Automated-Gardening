@@ -294,9 +294,9 @@ var scheduleObj = {
                             //console.log(obj);
                             self.setSchedule(obj);
                         });
-                        console.log("Done processing schedules: " + self.scheduleArr);
-                        //console.log("Calling isScheduleActive");
-                        //self.isScheduleActive(activateRelayFn, context)
+                        console.log("Done processing schedules: " + self.scheduleArr.length);
+                        console.log("Calling isScheduleActive");
+                        self.isScheduleActive(activateRelayFn, context)
                     }, function(err){
                       console.log(err);
                     })
