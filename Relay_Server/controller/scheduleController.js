@@ -300,19 +300,23 @@ var scheduleObj = {
                             var obj = {"schedule_config": schedule_config, job};
                             //console.log(obj);
                             self.setSchedule(obj);
+                            
+                        });
+                        console.log("Done processing schedules: " + self.scheduleArr.length);
+                        self.scheduleArr.forEach(function(schedule_config){
                             let date      = Number(schedule_config['schedule']['date'])  || undefined,
                                 month     = sanitize_input(schedule_config['schedule']['month']),
                                 year      = Number(schedule_config['schedule']['year']) || undefined,
                                 dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
                                 today = new Date(),
                                 desired_state = Boolean(schedule_config['device']['desired_state']);
-                                
+                            
                             console.log("REGULAR SCHEDULING");
                             let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
                             if(nextScheduleId === undefined){
                                 console.log("nextScheduleId is undefined");
                             }else{
-
+    
                                 
                                 let isScheduleActive = self.scheduleIsActive(schedule_config, activateRelayFn, context);
                                 console.log(isScheduleActive);
@@ -328,7 +332,7 @@ var scheduleObj = {
                                 
                             }
                         });
-                        console.log("Done processing schedules: " + self.scheduleArr.length);
+                        
                     }).catch(function(err){
                         console.log("Error caught: " + err);
                     })
