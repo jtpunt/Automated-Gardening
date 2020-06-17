@@ -304,6 +304,7 @@ var scheduleObj = {
                            console.log(typeof schedule_config);
                            console.log("schedule_config: " + JSON.stringify(schedule_config, null, 4));
                         });
+                        self.isScheduleActive(activateRelayFn, context);
                     })
                     .catch(function(){
                         console.log("Error caught");
