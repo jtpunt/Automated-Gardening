@@ -300,18 +300,19 @@ var scheduleObj = {
                             self.setSchedule(obj);
                         });
                         console.log("Done processing schedules: " + self.scheduleArr.length);
-                        self.scheduleArr.forEach((schedule_config) =>{
-                           console.log(typeof schedule_config);
-                           console.log("schedule_config: " + JSON.stringify(schedule_config, null, 4));
-                        });
-                        self.isScheduleActive(activateRelayFn, context);
                     })
-                    .catch(function(){
-                        console.log("Error caught");
+                    .catch(function(err){
+                        console.log("Error caught: " + err);
                     })
                    
                 }catch(err){
                     console.log(err);
+                }finally{
+                    self.scheduleArr.forEach((schedule_config) =>{
+                       console.log(typeof schedule_config);
+                       console.log("schedule_config: " + schedule_config);
+                    });
+                    self.isScheduleActive(activateRelayFn, context);
                 }
                 // Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                 //     //console.log(schedule_configs);
