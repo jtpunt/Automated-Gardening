@@ -422,7 +422,7 @@ var scheduleObj = {
                         Boolean(updated_schedule_config['device']['desired_state'])
                     );
                     
-                    var obj = {"_id": schedule_id, job};
+                    var obj = {"schedule_config": schedule, job};
                     self.scheduleArr[index] = null;
                     self.scheduleArr[index] = obj;
                 }
