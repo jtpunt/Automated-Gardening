@@ -281,11 +281,11 @@ var scheduleObj = {
                         });
                     });
                 }
-                (async(() => {
+                (async () => {
                     let myData = await(getData);
                     console.log("mydata: " + myData);
                     
-                }))();
+                })();
                 // let myPromise = async function() {
                 //     return new Promise((resolve, reject) => {
                 //         Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
