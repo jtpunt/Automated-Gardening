@@ -2,6 +2,7 @@ var Scheduler     = require("../models/scheduler"),
     Device        = require("../models/device"),
     schedule      = require('node-schedule'),
     ip            = require("ip"),
+    async         = require("asyncawait/async"),
     await         = require("asyncawait/await"),
     localIP       = ip.address();
 
@@ -273,7 +274,7 @@ var scheduleObj = {
                 console.log(err);
             }else{
                 
-                let myPromise = () => {
+                let myPromise = async function() {
                     return new Promise((resolve, reject) => {
                         Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                             //console.log(schedule_configs);
