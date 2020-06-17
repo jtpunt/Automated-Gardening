@@ -284,8 +284,8 @@ var scheduleObj = {
                 (async(() => {
      
                     let myData = await(getData());
-                    console.log(myData);
-                }));
+                    console.log("await call complete: " + myData);
+                }))();
 
                 // Scheduler.find({'device.id': myDevices["_id"]}, function(err, schedule_configs){
                 //     //console.log(schedule_configs);
