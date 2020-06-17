@@ -279,7 +279,7 @@ var scheduleObj = {
                         const result =  await Scheduler.find({'device.id': myDevices["_id"]});     
                         return result;
                    }
-                   console.log(result);
+                   console.log(result());
                   
                    
                 }catch(err){
