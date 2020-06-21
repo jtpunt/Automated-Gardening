@@ -159,8 +159,16 @@ var scheduleObj = {
             console.log("prev_schedule_config: " + prev_schedule_config);
             console.log("nextScheduleId: " + prev_schedule_config['schedule']['nextScheduleId']);
             let nextScheduleIndex = self.findScheduleIndex(prev_schedule_config['schedule']['nextScheduleId'].toString());
-            console.log("NEXT SCHEDULE INDEX: " + nextScheduleIndex);
-            let next_schedule_config = self.scheduleArr[nextScheduleIndex];
+            
+            if(nextScheduleIndex !== -1){
+                console.log("NEXT SCHEDULE INDEX: " + nextScheduleIndex);
+                let next_schedule_config = self.scheduleArr[nextScheduleIndex];
+                console.log("NEXT SCHEDULE CONFIG: " + next_schedule_config);
+            }else{ // schedule not found
+                console.log("Schedule not found!!");
+            }
+            
+            
             Scheduler.findById(nextScheduleId, (err, next_schedule_config) => {
                 if(err){
                     console.log("schedule not found: " + err);
