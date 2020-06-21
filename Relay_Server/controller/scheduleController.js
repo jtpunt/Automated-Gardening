@@ -187,7 +187,8 @@ var scheduleObj = {
                     console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                     if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
                         console.log("timestamp is okay");
-                        activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
+                        return true;
+                        //activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
                     }else{
                         console.log("timestamp is not okay");
                         console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
@@ -195,6 +196,7 @@ var scheduleObj = {
                         console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                         console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
                         console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
+                        return false;
                     }
                     
             }else{ // schedule not found
