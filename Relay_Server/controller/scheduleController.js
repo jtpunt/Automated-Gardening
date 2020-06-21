@@ -162,15 +162,15 @@ var scheduleObj = {
             
             if(nextScheduleIndex !== -1){
                 console.log("NEXT SCHEDULE INDEX: " + nextScheduleIndex);
-                let next_schedule_config = self.scheduleArr[nextScheduleIndex];
+                let next_schedule_config = self.scheduleArr[nextScheduleIndex]['schedule_config'];
                 console.log("NEXT SCHEDULE CONFIG: " + next_schedule_config.toString());
                 let today                = new Date(),
                     now_hour             = Number(today.getHours()),
                     now_min              = Number(today.getMinutes()),
                     now_second           = Number(today.getSeconds()),
-                    next_schedule_second = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['second']),
-                    next_schedule_minute = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['minute']),
-                    next_schedule_hour   = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['hour']);
+                    next_schedule_second = sanitize_input(next_schedule_config['schedule']['second']),
+                    next_schedule_minute = sanitize_input(next_schedule_config['schedule']['minute']),
+                    next_schedule_hour   = sanitize_input(next_schedule_config['schedule']['hour']);
                     
                     console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_hour);
                     console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_minute);
@@ -186,18 +186,7 @@ var scheduleObj = {
                     console.log("today timestamp: " + today);
                     console.log("next_schedule_timestamp: " + next_schedule_timestamp);
                     if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
-                        console.log("timestamp is okay");
                         result = true;
-                        //return true;
-                        //activateRelayFn.call(context,  Number(prev_schedule_config['device']['gpio']), Boolean(desired_state));
-                    }else{
-                        console.log("timestamp is not okay");
-                        console.log("prev_schedule_timestamp: " + prev_schedule_timestamp);
-                        console.log("now: " + today);
-                        console.log("next_schedule_timestamp: " + next_schedule_timestamp);
-                        console.log("now > prev_schedule_timestamp", today > prev_schedule_timestamp);
-                        console.log("now < next_schedule_timestamp", today < next_schedule_timestamp);
-                        //return false;
                     }
                     
             }else{ // schedule not found
