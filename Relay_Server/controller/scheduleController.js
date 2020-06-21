@@ -354,8 +354,9 @@ var scheduleObj = {
                         Number(updated_schedule_config['device']['gpio']), 
                         Boolean(updated_schedule_config['device']['desired_state'])
                     );
-                    
-                    var obj = {"schedule_config": schedule, job};
+                    console.log("updated_schedule_config: " + updated_schedule_config.toString());
+                    console.log("schedule: " + schedule.toString());
+                    var obj = {"schedule_config": updated_schedule_config, job};
                     self.scheduleArr[index] = null;
                     self.scheduleArr[index] = obj;
                     console.log("updated scheduleArr: " + self.scheduleArr[index]['schedule_config'].toString());
