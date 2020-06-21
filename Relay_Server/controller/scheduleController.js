@@ -358,7 +358,7 @@ var scheduleObj = {
                     var obj = {"schedule_config": schedule, job};
                     self.scheduleArr[index] = null;
                     self.scheduleArr[index] = obj;
-                    console.log("schedule returned from mongo: " + schedule['schedule_config'].toString());
+                    console.log("schedule returned from mongo: " + schedule['schedule'].toString());
                     console.log("updated scheduleArr: " + self.scheduleArr[index]['schedule_config'].toString());
                     // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
                     self.scheduleArr.forEach(function(schedule_obj){
