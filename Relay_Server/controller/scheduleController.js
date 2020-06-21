@@ -354,11 +354,17 @@ var scheduleObj = {
                         Number(updated_schedule_config['device']['gpio']), 
                         Boolean(updated_schedule_config['device']['desired_state'])
                     );
+                    let updated_schedule_device = updated_schedule_config['device'],
+                        updated_schedule_schedule = updated_schedule_config['schedule'];
                     
-                    var obj = {"schedule_config": schedule, job};
+                    let schedule_config = {
+                        "device": updated_schedule_device,
+                        "schedule": updated_schedule_schedule,
+                        "_id": schedule['_id']
+                    };
+                    var obj = {"schedule_config": schedule_config, job};
                     self.scheduleArr[index] = null;
                     self.scheduleArr[index] = obj;
-                    console.log("schedule returned from mongo: " + schedule['schedule'].toString());
                     console.log("updated scheduleArr: " + self.scheduleArr[index]['schedule_config'].toString());
                     // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
                     self.scheduleArr.forEach(function(schedule_obj){
