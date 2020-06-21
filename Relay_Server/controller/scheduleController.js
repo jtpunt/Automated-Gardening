@@ -164,17 +164,17 @@ var scheduleObj = {
                 console.log("NEXT SCHEDULE INDEX: " + nextScheduleIndex);
                 let next_schedule_config = self.scheduleArr[nextScheduleIndex];
                 console.log("NEXT SCHEDULE CONFIG: " + next_schedule_config.toString());
-                // let today                = new Date(),
-                //     now_hour             = Number(today.getHours()),
-                //     now_min              = Number(today.getMinutes()),
-                //     now_second           = Number(today.getSeconds()),
-                //     next_schedule_second = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule']['second']),
-                //     next_schedule_minute = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule']['minute']),
-                //     next_schedule_hour   = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule']['hour']);
+                let today                = new Date(),
+                    now_hour             = Number(today.getHours()),
+                    now_min              = Number(today.getMinutes()),
+                    now_second           = Number(today.getSeconds()),
+                    next_schedule_second = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['second']),
+                    next_schedule_minute = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['minute']),
+                    next_schedule_hour   = sanitize_input(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['hour']);
                     
-                //     console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_hour);
-                //     console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_minute);
-                //     console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_second);
+                    console.log("nowHour: "   + now_hour   + " - " + "nextScheduleHour: "   + next_schedule_hour);
+                    console.log("nowMin: "    + now_min    + " - " + "nextScheduleMin: "    + next_schedule_minute);
+                    console.log("nowSecond: " + now_second + " - " + "nextScheduleSecond: " + next_schedule_second);
             }else{ // schedule not found
                 console.log("Schedule not found!!");
             }
