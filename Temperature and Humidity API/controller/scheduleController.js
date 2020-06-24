@@ -101,12 +101,17 @@ var scheduleObj = {
     buildJob: function(schedule_config, activateRelayFn, context, gpio_pin, desired_state){
         let myScheduleObj = this.buildSchedule(schedule_config);
 
-        let job = schedule.scheduleJob(myScheduleObj, function(){ activateRelayFn.call(context, gpio_pin, desired_state); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){
+            console.log('Schedule created!');
+            activateRelayFn.call(context, gpio_pin, desired_state);
+        });
         
         return job;
     },
     createSchedule: function(new_schedule_config, activateRelayFn, context){
         let self = this;
+        console.log(this, activateRelayFn);
+        console.log('createSchedule: ' + new_schedule_config);
         Scheduler.create(new_schedule_config, (err, mySchedule) =>{
             if(err) {
                 console.log(err);
@@ -126,18 +131,6 @@ var scheduleObj = {
                 self.setSchedule(obj);
             }
         });
-    },
-    isScheduleOverlapping: function(prev_schedule_config, next_schedule_config){
-        // CASE 1: "RECURRENCE BASED SCHEDULING"
-            // check for overlapping with other recurrence based schedules
-                // BASE-CASE - both schedules must have the same dayofweek/time values. they must match if they're associated with each other
-            // check for overlapping with date-based schedules
-                // BASE-CASE - both schedules must have the same date/time values. they must match if they're associated with each other
-            // check for overlapping with 1 time schedules
-                // next_schedule_config should be undefined
-        // CASE 2: DATE BASED SCHEDULING"
-        
-        // CASE 3: 1 time schedules
     },
     scheduleIsActive: function(prev_schedule_config, activateRelayFn, context){
         let self = this,
