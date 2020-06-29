@@ -147,7 +147,7 @@ router.get("/", (req, res) =>{
                     let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
                     devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
                     console.log(`SchedulesbyIp: ${schedulesByIp}`);
-                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, stylesheets: ["/static/css/table.css"]});
+                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: [], stylesheets: ["/static/css/table.css"]});
                     res.status(200).end();
                 }
             });
@@ -196,11 +196,34 @@ router.post("/", (req, res) => {
         });
         
         myReq.on('error', (e) => {
-            console.error(`problem with request: ${e.message}`);
+            let errorMessage = e.message;
+            console.error(`problem with request: ${errorMessage}`);
+            Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+                if(err) console.log(err);
+                else{
+                    Scheduler.find({}, (err, schedules) => {
+                        if(err) console.log(err);
+                        else{
+                            // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                            schedules.forEach(function(schedule){
+                                let found = devices.find(function(device) { 
+                                    return device['_id'].toString() == schedule['device']['id'].toString()
+                                });
+                                if(found !== undefined){
+                                    schedule['device']['local_ip'] = found['local_ip'];
+                                }
+                            });
+                            console.log(schedules);
+                            let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                            devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+                            console.log(`SchedulesbyIp: ${schedulesByIp}`);
+                            res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: errorMessage, stylesheets: ["/static/css/table.css"]});
+                            res.status(200).end();
+                        }
+                    });
+                }
+            });
         });
-        
-        // Write data to request body
-        myReq.write(scheduleStr);
         myReq.end();
     }
    
@@ -229,14 +252,13 @@ router.get("/:schedule_id/edit", (req, res) => {
                         stylesheets: ["/static/css/table.css"]
                     });
                     res.status(200).end();
-                    })
                 });
-            
+            });
         }
     });
 });
 // UPDATE
-router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
+router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
     console.log(`in put route with ${req.params.schedule_id}, ${req.params.local_ip}`);
     try{
         console.log(`UPDATE ROUTE: ${req.body}`);
@@ -259,31 +281,57 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, resp) => {
         //         'Content-Length': Buffer.byteLength(scheduleStr)
         //     }
         // };
-        const myReq = http.request(options, (res) => {
+        const myReq = http.request(options, (resp) => {
             console.log(`STATUS: ${res.statusCode}`);
-            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-            res.setEncoding('utf8');
-            res.on('data', (chunk) => {
+            console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
+            resp.setEncoding('utf8');
+            resp.on('data', (chunk) => {
                 console.log(`BODY: ${chunk}`);
             });
-            res.on('end', () => {
+            resp.on('end', () => {
                 console.log('No more data in response.');
-                console.log(res.statusCode);
-                resp.redirect("/schedule");
-                resp.status(201).end();
+                console.log(resp.statusCode);
+                res.redirect("/schedule");
+                res.status(201).end();
             });
         });
         
         myReq.on('error', (e) => {
-            console.error(`problem with request: ${e.message}`);
+            let errorMessage = e.message;
+            console.error(`problem with request: ${errorMessage}`);
+            Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+                if(err) console.log(err);
+                else{
+                    Scheduler.find({}, (err, schedules) => {
+                        if(err) console.log(err);
+                        else{
+                            // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                            schedules.forEach(function(schedule){
+                                let found = devices.find(function(device) { 
+                                    return device['_id'].toString() == schedule['device']['id'].toString()
+                                });
+                                if(found !== undefined){
+                                    schedule['device']['local_ip'] = found['local_ip'];
+                                }
+                            });
+                            console.log(schedules);
+                            let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                            devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+                            console.log(`SchedulesbyIp: ${schedulesByIp}`);
+                            res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: errorMessage, stylesheets: ["/static/css/table.css"]});
+                            res.status(200).end();
+                        }
+                    });
+                }
+            });
         });
         
         // Write data to request body
-        myReq.write(scheduleStr);
+        //myReq.write(scheduleStr);
         myReq.end();
     }
 });
-router.delete("/:schedule_id/local_ip/:local_ip", (req, resp) => {
+router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
     console.log(`in delete route with ${req.params.schedule_id}, ${req.params.local_ip}`);
     // buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'DELETE', scheduleStr, undefined);
     const options = 
@@ -297,23 +345,49 @@ router.delete("/:schedule_id/local_ip/:local_ip", (req, resp) => {
             // 'Content-Length': Buffer.byteLength(newSchedule)
         }
     };
-    const myReq = http.request(options, (res) => {
+    const myReq = http.request(options, (resp) => {
         console.log(`STATUS: ${res.statusCode}`);
-        console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
-        res.setEncoding('utf8');
-        res.on('data', (chunk) => {
+        console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
+        resp.setEncoding('utf8');
+        resp.on('data', (chunk) => {
             console.log(`BODY: ${chunk}`);
         });
-        res.on('end', () => {
+        resp.on('end', () => {
             console.log('No more data in response.');
             console.log(res.statusCode);
-            resp.redirect("/schedule");
-            resp.status(200).end();
+            res.redirect("/schedule");
+            res.status(200).end();
         });
     });
     
     myReq.on('error', (e) => {
-        console.error(`problem with request: ${e.message}`);
+        let errorMessage = e.message;
+        console.error(`problem with request: ${errorMessage}`);
+        Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+            if(err) console.log(err);
+            else{
+                Scheduler.find({}, (err, schedules) => {
+                    if(err) console.log(err);
+                    else{
+                        // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                        schedules.forEach(function(schedule){
+                            let found = devices.find(function(device) { 
+                                return device['_id'].toString() == schedule['device']['id'].toString()
+                            });
+                            if(found !== undefined){
+                                schedule['device']['local_ip'] = found['local_ip'];
+                            }
+                        });
+                        console.log(schedules);
+                        let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                        devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+                        console.log(`SchedulesbyIp: ${schedulesByIp}`);
+                        res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: errorMessage, stylesheets: ["/static/css/table.css"]});
+                        res.status(200).end();
+                    }
+                });
+            }
+        });
     });
     myReq.end();
 });

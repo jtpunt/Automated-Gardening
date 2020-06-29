@@ -51,6 +51,10 @@
 	    width: 100%;
 	    padding: 10px;">
 		<div class="col-md-12">
+			<% if (errors && errors.length > 1){ %>
+				<span class="alert alert-danger" role="alert" style="display: inline-block;position: relative;z-index: 1;padding: 1em;margin: 0em;"><%=errors%></span>
+			<% } %> 
+			
 			<h2>My Schedules</h2>
 			<!-- Show schedules for each relay device - sorted by local ip address -->
 			<% devices.forEach(function(device){ let ipStr = device['local_ip'].replace(/\./g,''); %>
