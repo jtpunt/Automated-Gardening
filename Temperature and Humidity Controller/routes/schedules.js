@@ -182,41 +182,70 @@ router.post("/", (req, res) => {
         //     }
         // };
         const myReq = http.request(options, (resp) => {
+            let myChunk = '';
             resp.setEncoding('utf8');
             resp.on('data', (chunk) => {
                 console.log(`BODY: ${chunk}`);
+                myChunk += chunk;
             });
             resp.on('end', () => {
                 console.log('No more data in response.');
                 console.log(`STATUS: ${resp.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
-                // res.redirect("/schedule");
-                // res.status(201).end();
-                Device.find({deviceType: "Relay Server"}, (err, devices) =>{
-                    if(err) console.log(err);
-                    else{
-                        Scheduler.find({}, (err, schedules) => {
-                            if(err) console.log(err);
-                            else{
-                                // Loop through each schedule, find the device it is associated with and grab the devices local ip address
-                                schedules.forEach(function(schedule){
-                                    let found = devices.find(function(device) { 
-                                        return device['_id'].toString() == schedule['device']['id'].toString()
+                if(resp.statusCode !== 200){
+                    Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+                        if(err) console.log(err);
+                        else{
+                            Scheduler.find({}, (err, schedules) => {
+                                if(err) console.log(err);
+                                else{
+                                    // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                                    schedules.forEach(function(schedule){
+                                        let found = devices.find(function(device) { 
+                                            return device['_id'].toString() == schedule['device']['id'].toString()
+                                        });
+                                        if(found !== undefined){
+                                            schedule['device']['local_ip'] = found['local_ip'];
+                                        }
                                     });
-                                    if(found !== undefined){
-                                        schedule['device']['local_ip'] = found['local_ip'];
-                                    }
-                                });
-                                console.log(schedules);
-                                let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
-                                devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
-                                console.log(`SchedulesbyIp: ${schedulesByIp}`);
-                                res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: [], success: [], stylesheets: ["/static/css/table.css"]});
-                                res.status(200).end();
-                            }
-                        });
-                    }
-                });
+                                    console.log(schedules);
+                                    let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                                    devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+                                    console.log(`SchedulesbyIp: ${schedulesByIp}`);
+                                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: myChunk, success: [], stylesheets: ["/static/css/table.css"]});
+                                    res.status(200).end();
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+                        if(err) console.log(err);
+                        else{
+                            Scheduler.find({}, (err, schedules) => {
+                                if(err) console.log(err);
+                                else{
+                                    // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                                    schedules.forEach(function(schedule){
+                                        let found = devices.find(function(device) { 
+                                            return device['_id'].toString() == schedule['device']['id'].toString()
+                                        });
+                                        if(found !== undefined){
+                                            schedule['device']['local_ip'] = found['local_ip'];
+                                        }
+                                    });
+                                    console.log(schedules);
+                                    let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                                    devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+                                    console.log(`SchedulesbyIp: ${schedulesByIp}`);
+                                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: [], success: [], stylesheets: ["/static/css/table.css"]});
+                                    res.status(200).end();
+                                }
+                            });
+                        }
+                    });
+                }
+                
             });
         });
         
