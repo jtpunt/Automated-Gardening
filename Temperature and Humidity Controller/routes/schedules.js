@@ -182,14 +182,14 @@ router.post("/", (req, res) => {
         //     }
         // };
         const myReq = http.request(options, (resp) => {
-            console.log(`STATUS: ${resp.statusCode}`);
-            console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
             resp.setEncoding('utf8');
             resp.on('data', (chunk) => {
                 console.log(`BODY: ${chunk}`);
             });
             resp.on('end', () => {
                 console.log('No more data in response.');
+                console.log(`STATUS: ${resp.statusCode}`);
+                console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
                 // res.redirect("/schedule");
                 // res.status(201).end();
                 Device.find({deviceType: "Relay Server"}, (err, devices) =>{
