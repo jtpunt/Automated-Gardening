@@ -106,8 +106,8 @@ router.post('/schedule', function(req, res){
         }
     }catch(err){
         console.log(`err: ${err}`);
-        res.write(err.toString());
-        res.status(500).end();
+        //res.write(err.toString());
+        res.status(404).send(err.toString());
     }
 });
 router.get('/schedule/:schedule_id', function(req, res) {
