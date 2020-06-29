@@ -147,7 +147,7 @@ router.get("/", (req, res) =>{
                     let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
                     devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
                     console.log(`SchedulesbyIp: ${schedulesByIp}`);
-                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: [], stylesheets: ["/static/css/table.css"]});
+                    res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: [], success: [], stylesheets: ["/static/css/table.css"]});
                     res.status(200).end();
                 }
             });
@@ -190,8 +190,33 @@ router.post("/", (req, res) => {
             });
             resp.on('end', () => {
                 console.log('No more data in response.');
-                res.redirect("/schedule");
-                res.status(201).end();
+                // res.redirect("/schedule");
+                // res.status(201).end();
+                Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+                    if(err) console.log(err);
+                    else{
+                        Scheduler.find({}, (err, schedules) => {
+                            if(err) console.log(err);
+                            else{
+                                // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                                schedules.forEach(function(schedule){
+                                    let found = devices.find(function(device) { 
+                                        return device['_id'].toString() == schedule['device']['id'].toString()
+                                    });
+                                    if(found !== undefined){
+                                        schedule['device']['local_ip'] = found['local_ip'];
+                                    }
+                                });
+                                console.log(schedules);
+                                let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                                devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+                                console.log(`SchedulesbyIp: ${schedulesByIp}`);
+                                res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: [], success: [], stylesheets: ["/static/css/table.css"]});
+                                res.status(200).end();
+                            }
+                        });
+                    }
+                });
             });
         });
         
@@ -217,13 +242,14 @@ router.post("/", (req, res) => {
                             let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
                             devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
                             console.log(`SchedulesbyIp: ${schedulesByIp}`);
-                            res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: errorMessage, stylesheets: ["/static/css/table.css"]});
+                            res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: errorMessage, success: [], stylesheets: ["/static/css/table.css"]});
                             res.status(200).end();
                         }
                     });
                 }
             });
         });
+        myReq.write(scheduleStr);
         myReq.end();
     }
    
@@ -291,8 +317,33 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
             resp.on('end', () => {
                 console.log('No more data in response.');
                 console.log(resp.statusCode);
-                res.redirect("/schedule");
-                res.status(201).end();
+                // res.redirect("/schedule");
+                // res.status(201).end();
+                Device.find({deviceType: "Relay Server"}, (err, devices) =>{
+                    if(err) console.log(err);
+                    else{
+                        Scheduler.find({}, (err, schedules) => {
+                            if(err) console.log(err);
+                            else{
+                                // Loop through each schedule, find the device it is associated with and grab the devices local ip address
+                                schedules.forEach(function(schedule){
+                                    let found = devices.find(function(device) { 
+                                        return device['_id'].toString() == schedule['device']['id'].toString()
+                                    });
+                                    if(found !== undefined){
+                                        schedule['device']['local_ip'] = found['local_ip'];
+                                    }
+                                });
+                                console.log(schedules);
+                                let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+                                devices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+                                console.log(`SchedulesbyIp: ${schedulesByIp}`);
+                                res.render("schedule/index", {schedules: schedulesByIp, devices: devices, errors: [], success: "Schedule successfully updated", stylesheets: ["/static/css/table.css"]});
+                                res.status(201).end();
+                            }
+                        });
+                    }
+                });
             });
         });
         
@@ -327,7 +378,7 @@ router.put("/:schedule_id/local_ip/:local_ip", (req, res) => {
         });
         
         // Write data to request body
-        //myReq.write(scheduleStr);
+        myReq.write(scheduleStr);
         myReq.end();
     }
 });
@@ -389,6 +440,7 @@ router.delete("/:schedule_id/local_ip/:local_ip", (req, res) => {
             }
         });
     });
+    
     myReq.end();
 });
 
