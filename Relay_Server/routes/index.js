@@ -105,7 +105,8 @@ router.post('/schedule', function(req, res){
         console.log("Schedule successfully created!\n");
         res.status(200).end();
     }catch(err){
-        console.log(err);
+        console.log(`err: ${err}`);
+        res.write(err.toString());
         res.status(404).end();
     }
 });

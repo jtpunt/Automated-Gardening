@@ -162,15 +162,15 @@ var scheduleObj = {
             
             if(nextScheduleIndex !== -1){
                 let today                   = new Date(),
+                    prev_schedule_timestamp = new Date(),
+                    next_schedule_timestamp = new Date(),
                     now_hour                = Number(today.getHours()),
                     now_min                 = Number(today.getMinutes()),
                     now_second              = Number(today.getSeconds()),
                     next_schedule_config    = self.scheduleArr[nextScheduleIndex]['schedule_config'],
                     next_schedule_second    = sanitize_input(next_schedule_config['schedule']['second']),
                     next_schedule_minute    = sanitize_input(next_schedule_config['schedule']['minute']),
-                    next_schedule_hour      = sanitize_input(next_schedule_config['schedule']['hour']),
-                    prev_schedule_timestamp = new Date(),
-                    next_schedule_timestamp = new Date();
+                    next_schedule_hour      = sanitize_input(next_schedule_config['schedule']['hour']);
                         
                     console.log(`nowHour:      ${now_hour}     -      nextScheduleHour:      ${next_schedule_hour}`);
                     console.log(`nowMin: "     ${now_min}      -      nextScheduleMin:       ${next_schedule_minute}`);
