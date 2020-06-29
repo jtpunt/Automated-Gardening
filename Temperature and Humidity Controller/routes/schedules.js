@@ -182,8 +182,8 @@ router.post("/", (req, res) => {
         //     }
         // };
         const myReq = http.request(options, (resp) => {
-            console.log(`STATUS: ${res.statusCode}`);
-            console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+            console.log(`STATUS: ${resp.statusCode}`);
+            console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
             resp.setEncoding('utf8');
             resp.on('data', (chunk) => {
                 console.log(`BODY: ${chunk}`);

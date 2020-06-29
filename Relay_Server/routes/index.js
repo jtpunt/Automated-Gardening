@@ -97,17 +97,17 @@ router.post('/schedule', function(req, res){
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
         console.log("newSchedule: ", newSchedule);
-        if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1)
+        if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
-        // let newSchedule = req.body;
-        //     newSchedule['schedule'] = scheduleController.buildSchedule(newSchedule);
-        scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
-        console.log("Schedule successfully created!\n");
-        res.status(200).end();
+        }else{
+            scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
+            console.log("Schedule successfully created!\n");
+            res.status(200).end();
+        }
     }catch(err){
         console.log(`err: ${err}`);
         res.write(err.toString());
-        res.status(500).end();
+        res.status(404).end();
     }
 });
 router.get('/schedule/:schedule_id', function(req, res) {
