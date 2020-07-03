@@ -49,12 +49,19 @@ function buildSchedule(mySchedule){
         obj['device']['desired_state'] = 0;
         console.log("no desired state posted");
     }
-    if(mySchedule['schedule']['time'] !== null && mySchedule['schedule']['time'] !== undefined){
+    if(mySchedule['schedule']['start_time'] !== null && mySchedule['schedule']['start_time'] !== undefined){
         console.log("VALID TIME\n");
-        let splitTimeArr = mySchedule['schedule']['time'].split(":");
-        obj['schedule']['second'] = splitTimeArr[2];
-        obj['schedule']['minute'] = splitTimeArr[1];
-        obj['schedule']['hour'] = splitTimeArr[0];
+        let splitTimeArr = mySchedule['schedule']['start_time'].split(":");
+        obj['schedule']['start_time']['second'] = splitTimeArr[2];
+        obj['schedule']['start_time']['minute'] = splitTimeArr[1];
+        obj['schedule']['start_time']['hour'] = splitTimeArr[0];
+    }
+    if(mySchedule['schedule']['end_time'] !== null && mySchedule['schedule']['end_time'] !== undefined){
+        console.log("VALID TIME\n");
+        let splitTimeArr = mySchedule['schedule']['end_time'].split(":");
+        obj['schedule']['end_time']['second'] = splitTimeArr[2];
+        obj['schedule']['end_time']['minute'] = splitTimeArr[1];
+        obj['schedule']['end_time']['hour'] = splitTimeArr[0];
     }
     if(mySchedule['schedule']['date'] !== null && mySchedule['schedule']['date'] !== undefined && mySchedule['schedule']['date'] !== '' && mySchedule.DateCheckBox === "on"){
         let myDate = new Date(mySchedule['schedule']['date']);
