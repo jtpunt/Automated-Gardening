@@ -21,52 +21,7 @@ const MIN_SECOND = 0,
       MAX_MONTH  = 11,
       MAX_DOW    = 6;
 
-class Schedule_Config {
-    // _id refers to the schedule's _id (mongo)
-    device;
-    schedule; 
-    _id = String;
-    job;
-    constructor(device, schedule, _id, job){
-        this.device   = device;
-        this.schedule = schedule;
-        this._id      = _id;
-        this.job      = job;
-    }
-    updateSchedule(updated_device, updated_schedule, updated_job){
-        this.job.cancel();
-        this.device = updated_device;
-        this.schedule = updated_schedule;
-        this.job = updated_job;
-    }
-}      
-class Schedule {
-    second         = Number; 
-    minute         = Number; 
-    hour           = Number; 
-    date           = Date;
-    month          = Number; 
-    year           = Number;
-    dayOfWeek      = Array;
-    prevScheduleId = String;
-    nextScheduleId = String;
-    constructor(second, minute, hour, date, month, year, dayOfWeek, prevScheduleId, nextScheduleId){
-        this.second         = second;
-        this.minute         = minute;
-        this.hour           = hour;
-        this.date           = date;
-        this.month          = month;
-        this.dayOfWeek      = dayOfWeek;
-        this.prevScheduleId = prevScheduleId;
-        this.nextScheduleId = nextScheduleId;
-    }
-}
-class Job {
-    job;
-    constructor(job){
-        this.job = job;
-    }
-}
+
 var scheduleObj = {
     scheduleArr: [],
     // schedule_config: {
