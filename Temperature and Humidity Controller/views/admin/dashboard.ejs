@@ -1,13 +1,18 @@
 <% include ../partials/header %>
 <div class="container1">
 	<div class="box box-1">
-		<ul id="myUl">
-			<li class="mybtn"><i class="fas fa-info-circle"></i><a id="a_emp_awards" onclick="updatePage(event)"> Show Employee Awards</a><li>
-			<li class="mybtn"><i class="fas fa-chart-pie"></i><a id="a_dept_chart" onclick="updatePage(event)"> Show Dept Pie Chart</a><li>
-            <li class="mybtn"><i class="fas fa-chart-pie"></i><a id="a_loc_chart" onclick="updatePage(event)"> Show Location Pie Chart</a><li>
-	      	<li class="mybtn"><i class="fas fa-user"></i><a id="a_add_user"onclick="updatePage(event)"> Add User</a></li>
-	      	<li class="mybtn"><i class="fas fa-search"></i><a id="a_search" onclick="updatePage(event)"> Search Users</a></li>
+		<ul >
+			<li class="mybtn"><i class="fas fa-thermometer"></i><a id="a_temp_humid" onclick="updatePage(event)"> Temp/Humidity</a><li>
+			<li class="mybtn"><i class="fas fa-leaf"></i><a id="a_soil" onclick="updatePage(event)"> Soil</a><li>
+            <li class="mybtn"><i class="fas fa-chart-pie"></i><a id="a_graph" onclick="updatePage(event)"> Graphs</a><li>
+	      	<li class="mybtn"><i class="fas fa-file"></i><a id="a_report"onclick="updatePage(event)"> Reports</a></li>
+	      	<li class="mybtn"><i class="fas fa-image"></i><a id="a_image" onclick="updatePage(event)"> Images</a></li>
+	        <li class="mybtn"><i class="fas fa-video"></i><a id="a_video" onclick="updatePage(event)"> Live Video</a></li>
     	</ul>
+		<ul sttyle='align-content: flex-end'>
+	      	<li class="mybtn"><i class="fas fa-user"></i><a id="a_image" onclick="updatePage(event)"> Images</a></li>
+	        <li class="mybtn"><i class="fas fa-cog"></i><a id="a_settings" onclick="updatePage(event)"> Settings</a></li>
+    	</ul> 
 	</div>
 	<div class="box box-2">
 		<select id="dept_select" hidden>
@@ -16,14 +21,13 @@
 		<select id="loc_select" hidden>
 			<option value="all">Show All</option>
 		</select>
-		<!--<% include ./employee/show %>-->
+
 		<div class="flex-container charts" id="deptpiechart" hidden></div>
         <div class="flex-container charts" id="locpiechart" hidden></div>
 		<form id="search"  hidden>First Name: 
 			<input type="text" onkeyup="obj.showHint(this.value)"/ placeholder="Enter Employee's First Name">
 		</form>
 		<div class="flex-container" id="search_res" hidden></div>
-		<!--<% include ./user/new %>-->
 	</div>
 </div>
 <% include ../partials/footer %>
