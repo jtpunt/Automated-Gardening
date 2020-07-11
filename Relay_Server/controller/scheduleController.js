@@ -20,8 +20,53 @@ const MIN_SECOND = 0,
       MAX_DATE   = 31,
       MAX_MONTH  = 11,
       MAX_DOW    = 6;
-      
-      
+
+class Schedule_Config {
+    // _id refers to the schedule's _id (mongo)
+    device;
+    schedule; 
+    _id = String;
+    job;
+    constructor(device, schedule, _id, job){
+        this.device   = device;
+        this.schedule = schedule;
+        this._id      = _id;
+        this.job      = job;
+    }
+    updateSchedule(updated_device, updated_schedule, updated_job){
+        this.job.cancel();
+        this.device = updated_device;
+        this.schedule = updated_schedule;
+        this.job = updated_job;
+    }
+}      
+class Schedule {
+    second         = Number; 
+    minute         = Number; 
+    hour           = Number; 
+    date           = Date;
+    month          = Number; 
+    year           = Number;
+    dayOfWeek      = Array;
+    prevScheduleId = String;
+    nextScheduleId = String;
+    constructor(second, minute, hour, date, month, year, dayOfWeek, prevScheduleId, nextScheduleId){
+        this.second         = second;
+        this.minute         = minute;
+        this.hour           = hour;
+        this.date           = date;
+        this.month          = month;
+        this.dayOfWeek      = dayOfWeek;
+        this.prevScheduleId = prevScheduleId;
+        this.nextScheduleId = nextScheduleId;
+    }
+}
+class Job {
+    job;
+    constructor(job){
+        this.job = job;
+    }
+}
 var scheduleObj = {
     scheduleArr: [],
     // schedule_config: {
@@ -124,6 +169,7 @@ var scheduleObj = {
                 );
                 var obj = { "schedule_config": mySchedule, job };
                 self.setSchedule(obj);
+                return mySchedule["_id"];
             }
         });
     },
@@ -238,7 +284,8 @@ var scheduleObj = {
                                 year          = Number(schedule_obj['schedule_config']['schedule']['year']) || undefined,
                                 dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
                                 today         = new Date(),
-                                desired_state = Boolean(schedule_obj['schedule_config']['device']['desired_state']);
+                                desired_state = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+                                device_gpio   = Number(schedule_obj['schedule_config']['device']['gpio']);
                             // if(dayOfWeek !== undefined && dayOfWeek.length){
                             //     console.log("RECURRENCE BASED SCHEDULING");
                             //     if(dayOfWeek.includes(today.getDay())){ // does our dayofweek array 
@@ -291,15 +338,9 @@ var scheduleObj = {
                                 console.log("nextScheduleId is undefined");
                             }else{
                                 let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
-                                console.log(isScheduleActive);
-                                if(isScheduleActive === true){
-                                    console.log("Schedule is active");
-                                    activateRelayFn.call(context,  Number(schedule_obj['schedule_config']['device']['gpio']), Boolean(desired_state));
-                                }else{
-                                    console.log("Schedule is not active");
-                                    activateRelayFn.call(context,  Number(schedule_obj['schedule_config']['device']['gpio']), Boolean(isScheduleActive));
-                                }
-                                
+                                desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
+                                console.log("schedule is " (desired_state === true) ? " active" : " not active" );
+                                activateRelayFn.call(context,  device_gpio, desired_state);
                             }
                         });
                     }).catch(function(err){
@@ -320,6 +361,7 @@ var scheduleObj = {
             }else if(index > self.scheduleArr.length){
                 throw new Error("index provided is not valid!")
             }else{
+                self.scheduleArr[index] = null;
                 self.scheduleArr[index] = new_schedule_config;
             }
         }else{
@@ -356,28 +398,28 @@ var scheduleObj = {
                         "schedule": updated_schedule_schedule,
                         "_id": schedule['_id']
                     };
+                    // self.scheduleArr[index].updateSchedule(updated_schedule_device, updated_schedule_schedule, job);
+                    // let schedule_config1 = new Schedule_Config(updated_schedule_device, updated_schedule_schedule, schedule["_id"]);
                     var obj = {"schedule_config": schedule_config, job};
                     self.scheduleArr[index] = null;
                     self.scheduleArr[index] = obj;
+                    //self.setSchedule(obj, index);
                     // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
                     self.scheduleArr.forEach(function(schedule_obj){
                         console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                         let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                            nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
+                            nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                            device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
                         
                         console.log("REGULAR SCHEDULING");
                         if(nextScheduleId === undefined){
                             console.log("nextScheduleId is undefined");
                         }else{
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
-                            if(isScheduleActive === true){
-                                console.log("Schedule is active");
-                                activateRelayFn.call(context,  Number(schedule_obj['schedule_config']['device']['gpio']), Boolean(desired_state));
-                            }else{
-                                console.log("Schedule is not active");
-                                activateRelayFn.call(context,  Number(schedule_obj['schedule_config']['device']['gpio']), Boolean(isScheduleActive));
-                                
-                            }
+                            
+                            desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
+                            console.log("schedule is " (desired_state === true) ? " active" : " not active" );
+                            activateRelayFn.call(context,  device_gpio, desired_state);
                             
                         }
                     });
