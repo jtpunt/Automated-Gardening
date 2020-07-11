@@ -4,7 +4,8 @@ var express = require("express"),
     router = express.Router();
     
 router.get("/", (req, res) => {
-    
+    res.render("admin/dashboard");
+    res.status(200).end();
 });
 
 module.exports = router;
