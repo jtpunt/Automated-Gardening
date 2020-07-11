@@ -18,7 +18,8 @@ var indexRoutes   = require("./routes/index"),
     deviceRoutes  = require("./routes/devices"),
     sensorRoutes  = require("./routes/sensors"),
     chartRoutes   = require("./routes/charts"),
-    schedRoutes   = require("./routes/schedules");
+    schedRoutes   = require("./routes/schedules"),
+    adminRoutes   = require("./routes/admin");
     
 var localIP = ip.address(),
     port    = config.server.port,
@@ -61,10 +62,12 @@ app.use(function(req, res, next){
 });
 // Shortens the route declarations
 app.use("/", indexRoutes);
+app.use("/admin", adminRoutes);
 app.use("/devices", deviceRoutes);
 app.use("/sensors", sensorRoutes);
 app.use("/charts", chartRoutes);
 app.use("/schedule", schedRoutes);
+
 app.use(function(req,res){
     res.status(404);
     res.render('404');

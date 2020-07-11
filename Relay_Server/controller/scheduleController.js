@@ -169,7 +169,9 @@ var scheduleObj = {
                 );
                 var obj = { "schedule_config": mySchedule, job };
                 self.setSchedule(obj);
-                return mySchedule["_id"];
+                // will need to return the mongo _id reference so that we can link schedule together through storing id's in mongo (prevScheduleId and nextScheduleId)
+                // this will be needed when a schedule is posted that references a start and end time
+                // return mySchedule["_id"];
             }
         });
     },
