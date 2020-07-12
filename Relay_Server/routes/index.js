@@ -92,7 +92,7 @@ router.get('/schedule', function(req, res) {
     });
 });
 // add a new chedule
-router.post('/schedule', function(req, res){
+router.post('/schedule', async function(req, res){
     var newSchedule = req.body;
     try{
         console.log("newSchedule: ", newSchedule);
@@ -126,9 +126,9 @@ router.post('/schedule', function(req, res){
             // adjust end schedule's prevScheduleId
             
             
-            let value = scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
+            let value = await scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
             console.log(`value returned: ${value}`);
-            value.then((value) => console.log(value));
+            //value.then((value) => console.log(value));
             console.log("Schedule successfully created!\n");
             res.status(200).end();
         }
