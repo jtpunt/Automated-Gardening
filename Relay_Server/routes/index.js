@@ -95,8 +95,9 @@ router.get('/schedule', function(req, res) {
 router.post('/schedule', function(req, res){
     var newSchedule = req.body;
     try{
-        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
         console.log("newSchedule: ", newSchedule);
+        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
+
         if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
         }else{
@@ -123,7 +124,7 @@ router.post('/schedule', function(req, res){
                // retrieve schedule id = our nextScheduleId
             // adjust start shedule's nextScheduleId
             // adjust end schedule's prevScheduleId
-            scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
+            let mongo_id = scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
             console.log("Schedule successfully created!\n");
             res.status(200).end();
         }
