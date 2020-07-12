@@ -105,7 +105,7 @@ var scheduleObj = {
         
         return job;
     },
-    createSchedule: async function(new_schedule_config, activateRelayFn, context){
+    createSchedule: function(new_schedule_config, activateRelayFn, context){
         let self = this;
         let newSchedulePromise = async () => { return await Scheduler.create(new_schedule_config); }
         newSchedulePromise().then(function(result){
