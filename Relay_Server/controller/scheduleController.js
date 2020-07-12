@@ -120,7 +120,7 @@ var scheduleObj = {
             Number(newScheduleResponse['device']['gpio']), 
             Boolean(newScheduleResponse['device']['desired_state'])
         );
-        var obj = { "schedule_config": new_schedule_config, job };
+        var obj = { "schedule_config": newScheduleResponse, job };
         self.setSchedule(obj);
         return newScheduleResponse["_id"];
         // newSchedulePromise().then(function(result){
