@@ -128,6 +128,7 @@ router.post('/schedule', function(req, res){
             
             let value = scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
             console.log(`value returned: ${value}`);
+            value.then((value) => console.log(value));
             console.log("Schedule successfully created!\n");
             res.status(200).end();
         }
