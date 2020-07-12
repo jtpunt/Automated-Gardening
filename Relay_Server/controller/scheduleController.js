@@ -144,7 +144,7 @@ var scheduleObj = {
         //         // this will be needed when a schedule is posted that references a start and end time
         //         return mySchedule["_id"];
         //     }
-        });
+        // });
     },
     isScheduleOverlapping: function(prev_schedule_config, next_schedule_config){
         // CASE 1: "RECURRENCE BASED SCHEDULING"
