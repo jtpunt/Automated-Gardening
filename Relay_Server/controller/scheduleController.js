@@ -126,6 +126,7 @@ var scheduleObj = {
             );
             var obj = { "schedule_config": schedule_config, job };
             self.setSchedule(obj);
+            return schedule_config["_id"];
 
         }).catch(function(err){
             console.log(`Error caught: ${err}`);
