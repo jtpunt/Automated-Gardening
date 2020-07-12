@@ -107,31 +107,36 @@ var scheduleObj = {
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
         let self = this;
-        let newSchedulePromise = async () => { return await Scheduler.create(new_schedule_config); }
-        newSchedulePromise().then(function(result){
-            console.log(`result: ${result}`);
-            return result;
-        }, function(err){
-            console.log(`err: ${err}`);
-        }).then(function(schedule_config){
-            console.log(`schedule_config: ${schedule_config}`)
-             console.log(`${schedule_config} created.`);
+        
+        //let newSchedulePromise = async () => { return await Scheduler.create(new_schedule_config); }
+        
+        let newScheduleResponse = await Scheduler.create(new_schedule_config);
+        console.log(newScheduleResponse);
+        // newSchedulePromise().then(function(result){
+        //     console.log(`result: ${result}`);
+        //     return result;
+        // }, function(err){
+        //     console.log(`err: ${err}`);
+        // }).then(function(schedule_config){
+        //     console.log(`schedule_config: ${schedule_config}`)
+        //      console.log(`${schedule_config} created.`);
 
-            let job = self.buildJob(
-                new_schedule_config, 
-                activateRelayFn, 
-                context, 
-                Number(schedule_config['device']['gpio']), 
-                Boolean(schedule_config['device']['desired_state'])
-            );
-            var obj = { "schedule_config": schedule_config, job };
-            self.setSchedule(obj);
-            console.log(`returning _id ${schedule_config["_id"]}`)
-            return schedule_config["_id"];
-
-        }).catch(function(err){
-            console.log(`Error caught: ${err}`);
-        })
+        //     let job = self.buildJob(
+        //         new_schedule_config, 
+        //         activateRelayFn, 
+        //         context, 
+        //         Number(schedule_config['device']['gpio']), 
+        //         Boolean(schedule_config['device']['desired_state'])
+        //     );
+        //     var obj = { "schedule_config": schedule_config, job };
+        //     self.setSchedule(obj);
+        //     console.log(`returning _id ${schedule_config["_id"]}`);
+        //     let promise = new Promise((resolve, reject) => {
+        //       resolve(schedule_config["_id"]) 
+        //     });
+        // }).catch(function(err){
+        //     console.log(`Error caught: ${err}`);
+        // })
         
         
         
