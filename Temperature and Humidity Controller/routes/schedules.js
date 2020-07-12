@@ -54,9 +54,9 @@ function buildSchedule(mySchedule){
         let splitTimeArr = mySchedule['schedule']['start_time'].split(":");
         console.log(`splitTimeArr: ${splitTimeArr}`);
         console.log(splitTimeArr);
-        obj['schedule']['second'] = splitTimeArr[2];
-        obj['schedule']['minute'] = splitTimeArr[1];
-        obj['schedule']['hour'] = splitTimeArr[0];
+        obj['schedule']['start_time']['second'] = splitTimeArr[2];
+        obj['schedule']['start_time']['minute'] = splitTimeArr[1];
+        obj['schedule']['start_time']['hour']   = splitTimeArr[0];
         console.log(obj['schedule']);
     }
     // if(mySchedule['schedule']['end_time'] !== null && mySchedule['schedule']['end_time'] !== undefined){

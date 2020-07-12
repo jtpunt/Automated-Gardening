@@ -101,23 +101,36 @@ router.post('/schedule', async function(req, res){
         if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
         }else{
-            // if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
-            //     let start_time = newSchedule['schedule']['start_time'],
-            //         end_time   = newSchedule['schedule']['end_time'],
-            //         start_schedule = newSchedule,
-            //         end_schedule   = newSchedule;
+            if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
+                let start_time = newSchedule['schedule']['start_time'],
+                    end_time   = newSchedule['schedule']['end_time'],
+                    start_schedule = newSchedule,
+                    end_schedule   = newSchedule;
                 
-            //     start_schedule['schedule'] = start_time,
-            //     end_schedule['schedule']   = end_time;
+                start_schedule['schedule'] = start_time,
+                end_schedule['schedule']   = end_time;
                 
-            //     let prevScheduleId = scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController),
-            //         nextScheduleId = scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
+                let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController),
+                    nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
                     
-            //     start_schedule['schedule']['nextScheduleId'] = nextScheduleId;
-            //     end_schedule['schedule']['prevScheduleId']   = prevScheduleId;
-            //     scheduleController.editSchedule(prevScheduleId, start_schedule, outletController.activateRelay, outletController);    
-            //     scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
-            // }
+                start_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+                end_schedule['schedule']['prevScheduleId']   = prevScheduleId;
+                scheduleController.editSchedule(prevScheduleId, start_schedule, outletController.activateRelay, outletController);    
+                scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
+            }else if(newSchedule['schedule']['start_time'] !== undefined){
+                console.log("in else with start_time");
+                let start_time = newSchedule['schedule']['start_time'],
+                    start_schedule = newSchedule;
+                
+                start_schedule['schedule'] = start_time;
+                
+                let value = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
+                console.log(`value returned: ${value}`);
+                //value.then((value) => console.log(value));
+                console.log("Schedule successfully created!\n");
+            }else {
+                console.log("in else... no start_time or end_times in object");
+            }
             // create start schedule with schedule['start_time']
                 // retrieve schedule id - our prevSheduleId
             // create end schedule with schedule['end_time']
@@ -126,10 +139,6 @@ router.post('/schedule', async function(req, res){
             // adjust end schedule's prevScheduleId
             
             
-            let value = await scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
-            console.log(`value returned: ${value}`);
-            //value.then((value) => console.log(value));
-            console.log("Schedule successfully created!\n");
             res.status(200).end();
         }
     }catch(err){
