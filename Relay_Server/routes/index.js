@@ -109,8 +109,8 @@ router.post('/schedule', async function(req, res){
                 
                 start_schedule['schedule'] = start_time;
                 end_schedule['schedule']   = end_time;
-                start_schedule['device']['desired_state'] = 1;
-                end_schedule['device']['desired_state'] = 0;
+                start_schedule['device']['desired_state'] = true;
+                end_schedule['device']['desired_state'] = false;
                 
                 console.log(`start_schedule: ${start_schedule}`);
                 console.log(`end_schedule: ${end_schedule}`);
