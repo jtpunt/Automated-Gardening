@@ -125,6 +125,7 @@ router.post('/schedule', function(req, res){
             // adjust start shedule's nextScheduleId
             // adjust end schedule's prevScheduleId
             let mongo_id = scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
+            console.log(`mongo_id returned... ${mongo_id}` )
             console.log("Schedule successfully created!\n");
             res.status(200).end();
         }
