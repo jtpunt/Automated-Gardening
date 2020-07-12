@@ -112,8 +112,8 @@ router.post('/schedule', async function(req, res){
                 start_schedule['device']['desired_state'] = true;
                 end_schedule['device']['desired_state'] = false;
                 
-                console.log(`start_schedule: ${start_schedule}`);
-                console.log(`end_schedule: ${end_schedule}`);
+                console.log("start_schedule: " + start_schedule);
+                console.log("end_schedule: " + end_schedule);
                 
                 let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController),
                     nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
