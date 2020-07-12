@@ -112,6 +112,17 @@ var scheduleObj = {
         
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
         console.log(`await result: ${newScheduleResponse}`);
+        
+        let job = self.buildJob(
+            new_schedule_config, 
+            activateRelayFn, 
+            context, 
+            Number(newScheduleResponse['device']['gpio']), 
+            Boolean(newScheduleResponse['device']['desired_state'])
+        );
+        var obj = { "schedule_config": new_schedule_config, job };
+        self.setSchedule(obj);
+        return newScheduleResponse["_id"];
         // newSchedulePromise().then(function(result){
         //     console.log(`result: ${result}`);
         //     return result;
