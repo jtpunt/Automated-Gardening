@@ -102,21 +102,16 @@ router.post('/schedule', async function(req, res){
             throw new Error("Invalid GPIO input");
         }else{
             if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
-                let start_schedule = newSchedule,
-                    end_schedule   = newSchedule;
+                let start_time = Object.assign({}, newSchedule['schedule']['start_time']),
+                    end_time   = Object.assign({}, newSchedule['schedule']['end_time']),
+                    start_schedule = Object.assign({}, newSchedule),
+                    end_schedule   = Object.assign({}, newSchedule);
                 
-                start_schedule['schedule'] =  {
-                    second: newSchedule['schedule']['start_time']['second'],
-                    minute: newSchedule['schedule']['start_time']['minute'],
-                    hour: newSchedule['schedule']['start_time']['hour'],
-                }
-                end_schedule['schedule']   =  {
-                    second: newSchedule['schedule']['end_time']['second'],
-                    minute: newSchedule['schedule']['end_time']['minute'],
-                    hour: newSchedule['schedule']['end_time']['hour'],
-                }
-                console.log("start_schedule: " + start_schedule);
-                console.log("end_schedule: " + end_schedule);
+                start_schedule['schedule'] = start_time,
+                end_schedule['schedule']   = end_time;
+                
+                console.log(`start_schedule: ${start_schedule}`);
+                console.log(`end_schedule: ${end_schedule}`);
                 
                 let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController),
                     nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
