@@ -109,71 +109,19 @@ var scheduleObj = {
         let self = this;
         
         //let newSchedulePromise = async () => { return await Scheduler.create(new_schedule_config); }
-        
-        let newScheduleResponse = await Scheduler.create(new_schedule_config);
+        let newScheduleResponse = await Scheduler.create('');
         console.log(`await result: ${newScheduleResponse}`);
         
-        let job = self.buildJob(
-            new_schedule_config, 
-            activateRelayFn, 
-            context, 
-            Number(newScheduleResponse['device']['gpio']), 
-            Boolean(newScheduleResponse['device']['desired_state'])
-        );
-        var obj = { "schedule_config": newScheduleResponse, job };
-        self.setSchedule(obj);
-        return newScheduleResponse["_id"];
-        // newSchedulePromise().then(function(result){
-        //     console.log(`result: ${result}`);
-        //     return result;
-        // }, function(err){
-        //     console.log(`err: ${err}`);
-        // }).then(function(schedule_config){
-        //     console.log(`schedule_config: ${schedule_config}`)
-        //      console.log(`${schedule_config} created.`);
-
-        //     let job = self.buildJob(
-        //         new_schedule_config, 
-        //         activateRelayFn, 
-        //         context, 
-        //         Number(schedule_config['device']['gpio']), 
-        //         Boolean(schedule_config['device']['desired_state'])
-        //     );
-        //     var obj = { "schedule_config": schedule_config, job };
-        //     self.setSchedule(obj);
-        //     console.log(`returning _id ${schedule_config["_id"]}`);
-        //     let promise = new Promise((resolve, reject) => {
-        //       resolve(schedule_config["_id"]) 
-        //     });
-        // }).catch(function(err){
-        //     console.log(`Error caught: ${err}`);
-        // })
-        
-        
-        
-        
-        // Scheduler.create(new_schedule_config, (err, mySchedule) =>{
-        //     if(err) {
-        //         console.log(err);
-        //         throw err;
-        //     }
-        //     else{
-        //         console.log(`${mySchedule} created.`);
-        //         mySchedule.save();
-        //         let job = self.buildJob(
-        //             new_schedule_config, 
-        //             activateRelayFn, 
-        //             context, 
-        //             Number(new_schedule_config['device']['gpio']), 
-        //             Boolean(new_schedule_config['device']['desired_state'])
-        //         );
-        //         var obj = { "schedule_config": mySchedule, job };
-        //         self.setSchedule(obj);
-        //         // will need to return the mongo _id reference so that we can link schedule together through storing id's in mongo (prevScheduleId and nextScheduleId)
-        //         // this will be needed when a schedule is posted that references a start and end time
-        //         return mySchedule["_id"];
-        //     }
-        // });
+        // let job = self.buildJob(
+        //     new_schedule_config, 
+        //     activateRelayFn, 
+        //     context, 
+        //     Number(newScheduleResponse['device']['gpio']), 
+        //     Boolean(newScheduleResponse['device']['desired_state'])
+        // );
+        // var obj = { "schedule_config": newScheduleResponse, job };
+        // self.setSchedule(obj);
+        // return newScheduleResponse["_id"];
     },
     isScheduleOverlapping: function(prev_schedule_config, next_schedule_config){
         // CASE 1: "RECURRENCE BASED SCHEDULING"
