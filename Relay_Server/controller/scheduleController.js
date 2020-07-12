@@ -109,19 +109,23 @@ var scheduleObj = {
         let self = this;
         
         //let newSchedulePromise = async () => { return await Scheduler.create(new_schedule_config); }
-        let newScheduleResponse = await Scheduler.create('');
-        console.log(`await result: ${newScheduleResponse}`);
+        let newScheduleResponse = await Scheduler.create(new_schedule_config);
+        if(newScheduleResponse === undefined){
+            return newScheduleResponse;
+        }else{
+            console.log(`await result: ${newScheduleResponse}`);
         
-        // let job = self.buildJob(
-        //     new_schedule_config, 
-        //     activateRelayFn, 
-        //     context, 
-        //     Number(newScheduleResponse['device']['gpio']), 
-        //     Boolean(newScheduleResponse['device']['desired_state'])
-        // );
-        // var obj = { "schedule_config": newScheduleResponse, job };
-        // self.setSchedule(obj);
-        // return newScheduleResponse["_id"];
+            let job = self.buildJob(
+                new_schedule_config, 
+                activateRelayFn, 
+                context, 
+                Number(newScheduleResponse['device']['gpio']), 
+                Boolean(newScheduleResponse['device']['desired_state'])
+            );
+            var obj = { "schedule_config": newScheduleResponse, job };
+            self.setSchedule(obj);
+            return newScheduleResponse["_id"];
+        }
     },
     isScheduleOverlapping: function(prev_schedule_config, next_schedule_config){
         // CASE 1: "RECURRENCE BASED SCHEDULING"
