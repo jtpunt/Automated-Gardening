@@ -107,27 +107,43 @@ var scheduleObj = {
     },
     createSchedule: function(new_schedule_config, activateRelayFn, context){
         let self = this;
-        Scheduler.create(new_schedule_config, (err, mySchedule) =>{
-            if(err) {
-                console.log(err);
-                throw err;
-            }
-            else{
-                console.log(`${mySchedule} created.`);
-                mySchedule.save();
-                let job = self.buildJob(
-                    new_schedule_config, 
-                    activateRelayFn, 
-                    context, 
-                    Number(new_schedule_config['device']['gpio']), 
-                    Boolean(new_schedule_config['device']['desired_state'])
-                );
-                var obj = { "schedule_config": mySchedule, job };
-                self.setSchedule(obj);
-                // will need to return the mongo _id reference so that we can link schedule together through storing id's in mongo (prevScheduleId and nextScheduleId)
-                // this will be needed when a schedule is posted that references a start and end time
-                return mySchedule["_id"];
-            }
+        let newSchedulePromise = async () => { return await Scheduler.create({new_schedule_config}); }
+        newSchedulePromise().then(function(result){
+            console.log(`result: ${result}`);
+            return result;
+        }, function(err){
+            console.log(`err: ${err}`);
+        }).then(function(schedule_config){
+            console.log(`schedule_config: ${schedule_config}`)
+
+        }).catch(function(err){
+            console.log(`Error caught: ${err}`);
+        })
+        
+        
+        
+        
+        // Scheduler.create(new_schedule_config, (err, mySchedule) =>{
+        //     if(err) {
+        //         console.log(err);
+        //         throw err;
+        //     }
+        //     else{
+        //         console.log(`${mySchedule} created.`);
+        //         mySchedule.save();
+        //         let job = self.buildJob(
+        //             new_schedule_config, 
+        //             activateRelayFn, 
+        //             context, 
+        //             Number(new_schedule_config['device']['gpio']), 
+        //             Boolean(new_schedule_config['device']['desired_state'])
+        //         );
+        //         var obj = { "schedule_config": mySchedule, job };
+        //         self.setSchedule(obj);
+        //         // will need to return the mongo _id reference so that we can link schedule together through storing id's in mongo (prevScheduleId and nextScheduleId)
+        //         // this will be needed when a schedule is posted that references a start and end time
+        //         return mySchedule["_id"];
+        //     }
         });
     },
     isScheduleOverlapping: function(prev_schedule_config, next_schedule_config){
