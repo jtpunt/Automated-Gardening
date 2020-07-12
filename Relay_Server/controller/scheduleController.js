@@ -115,6 +115,17 @@ var scheduleObj = {
             console.log(`err: ${err}`);
         }).then(function(schedule_config){
             console.log(`schedule_config: ${schedule_config}`)
+             console.log(`${schedule_config} created.`);
+
+            let job = self.buildJob(
+                new_schedule_config, 
+                activateRelayFn, 
+                context, 
+                Number(schedule_config['device']['gpio']), 
+                Boolean(schedule_config['device']['desired_state'])
+            );
+            var obj = { "schedule_config": schedule_config, job };
+            self.setSchedule(obj);
 
         }).catch(function(err){
             console.log(`Error caught: ${err}`);
