@@ -111,7 +111,7 @@ var scheduleObj = {
         //let newSchedulePromise = async () => { return await Scheduler.create(new_schedule_config); }
         
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
-        console.log(newScheduleResponse);
+        console.log(`await result: ${newScheduleResponse}`);
         // newSchedulePromise().then(function(result){
         //     console.log(`result: ${result}`);
         //     return result;

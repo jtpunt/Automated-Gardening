@@ -126,8 +126,7 @@ router.post('/schedule', function(req, res){
             // adjust end schedule's prevScheduleId
             
             
-            scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController).then(console.log);
-            console.log("value: " + value);
+            scheduleController.createSchedule(newSchedule, outletController.activateRelay, outletController);
             console.log("Schedule successfully created!\n");
             res.status(200).end();
         }
