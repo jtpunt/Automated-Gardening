@@ -139,7 +139,7 @@ router.post('/schedule', async function(req, res){
                 start_schedule['schedule']['nextScheduleId'] = nextScheduleId;
                 end_schedule['schedule']['prevScheduleId']   = prevScheduleId;
                 scheduleController.editSchedule(prevScheduleId, start_schedule, outletController.activateRelay, outletController);    
-                scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
+                //scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
                 console.log("Done adding schedule set");
             }else if(newSchedule['schedule']['start_time'] !== undefined){
                 console.log("in else with start_time");
