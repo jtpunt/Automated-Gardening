@@ -102,19 +102,33 @@ router.post('/schedule', async function(req, res){
             throw new Error("Invalid GPIO input");
         }else{
             if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
+                let device_start = { 
+                    ... newSchedule['device'],
+                    desired_state: true
+                    
+                }
+                let device_end = {
+                    ... newSchedule['device'],
+                    desired_state: false
+                }
                 let start_time = {... newSchedule['schedule']['start_time'] },
                     end_time   = {... newSchedule['schedule']['end_time'] },
                     start_schedule = {
                         ... newSchedule,
-                        schedule: start_time
+                        schedule: start_time,
+                        device: device_start
                         
                     },
-                    end_schedule   = {... newSchedule, schedule: end_time };
+                    end_schedule   = {
+                        ... newSchedule, 
+                        schedule: end_time,
+                        device: device_end
+                    };
                 
                 // start_schedule['schedule'] = start_time;
                 // end_schedule['schedule']   = end_time;
-                start_schedule['device']['desired_state'] = true;
-                end_schedule['device']['desired_state'] = false;
+                // start_schedule['device']['desired_state'] = true;
+                // end_schedule['device']['desired_state'] = false;
                 
                 console.log("start_schedule: " + start_schedule['device']['desired_state']);
                 console.log("end_schedule: " + end_schedule['device']['desired_state']);
