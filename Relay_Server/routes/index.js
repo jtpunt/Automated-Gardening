@@ -191,10 +191,28 @@ router.put('/schedule/:schedule_id', function(req, res){
         if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
         }else{
-            let my_time = newSchedule['schedule']['start_time'] || newSchedule['schedule']['end_time'],
-            my_schedule = {... newSchedule };
+            let prevScheduleId = newSchedule['schedule']['prevScheduleId'],
+                nextScheduleId = newSchedule['schedule']['nextScheduleId'],
+                my_time = newSchedule['schedule']['start_time'] || newSchedule['schedule']['end_time'],
+                my_schedule = {... newSchedule };
+            
             my_schedule['schedule'] = my_time;
-            console.log("My schedule: " + my_schedule);
+                
+            if(prevScheduleId !== undefined){
+                my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
+                console.log("My schedule if: " + my_schedule);
+            }else if(nextScheduleId !== undefined){
+                my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+                console.log("My schedule else if: " + my_schedule);
+            }else {
+
+                
+                console.log("My schedule else:" + my_schedule);
+            } 
+   
+            
+        
+            
             scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
             console.log("Successfully Updated!");
             res.status(200).end();
