@@ -104,11 +104,15 @@ router.post('/schedule', async function(req, res){
             if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
                 let start_time = {... newSchedule['schedule']['start_time'] },
                     end_time   = {... newSchedule['schedule']['end_time'] },
-                    start_schedule = {... newSchedule },
-                    end_schedule   = {... newSchedule };
+                    start_schedule = {
+                        ... newSchedule,
+                        schedule: start_time
+                        
+                    },
+                    end_schedule   = {... newSchedule, schedule: start_time };
                 
-                start_schedule['schedule'] = start_time;
-                end_schedule['schedule']   = end_time;
+                // start_schedule['schedule'] = start_time;
+                // end_schedule['schedule']   = end_time;
                 start_schedule['device']['desired_state'] = true;
                 end_schedule['device']['desired_state'] = false;
                 
