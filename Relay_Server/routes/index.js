@@ -102,10 +102,10 @@ router.post('/schedule', async function(req, res){
             throw new Error("Invalid GPIO input");
         }else{
             if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
-                let start_time = Object.assign({}, newSchedule['schedule']['start_time']),
-                    end_time   = Object.assign({}, newSchedule['schedule']['end_time']),
-                    start_schedule = Object.assign({}, newSchedule),
-                    end_schedule   = Object.assign({}, newSchedule);
+                let start_time = {... newSchedule['schedule']['start_time'] },
+                    end_time   = {... newSchedule['schedule']['end_time'] },
+                    start_schedule = {... newSchedule },
+                    end_schedule   = {... newSchedule };
                 
                 start_schedule['schedule'] = start_time;
                 end_schedule['schedule']   = end_time;
