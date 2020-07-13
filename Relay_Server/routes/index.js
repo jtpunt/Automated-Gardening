@@ -133,13 +133,15 @@ router.post('/schedule', async function(req, res){
                 console.log("start_schedule: " + start_schedule['device']['desired_state']);
                 console.log("end_schedule: " + end_schedule['device']['desired_state']);
                 
-                let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController),
-                    nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
-                    
+                let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
                 start_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+                
+                let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
+                    
+                    
                 end_schedule['schedule']['prevScheduleId']   = prevScheduleId;
-                scheduleController.editSchedule(prevScheduleId, start_schedule, outletController.activateRelay, outletController);    
-                //scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
+                //scheduleController.editSchedule(prevScheduleId, start_schedule, outletController.activateRelay, outletController);    
+                scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
                 console.log("Done adding schedule set");
             }else if(newSchedule['schedule']['start_time'] !== undefined){
                 console.log("in else with start_time");
