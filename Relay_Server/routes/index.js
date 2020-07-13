@@ -192,8 +192,9 @@ router.put('/schedule/:schedule_id', function(req, res){
             throw new Error("Invalid GPIO input");
         }else{
             let my_time = newSchedule['schedule']['start_time'] || newSchedule['schedule']['end_time'],
-            my_schedule = newSchedule;
+            my_schedule = {... newSchedule };
             my_schedule['schedule'] = my_time;
+            console.log("My schedule: " + my_schedule);
             scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
             console.log("Successfully Updated!");
             res.status(200).end();
