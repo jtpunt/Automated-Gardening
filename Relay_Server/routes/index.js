@@ -109,7 +109,7 @@ router.post('/schedule', async function(req, res){
                         schedule: start_time
                         
                     },
-                    end_schedule   = {... newSchedule, schedule: start_time };
+                    end_schedule   = {... newSchedule, schedule: end_time };
                 
                 // start_schedule['schedule'] = start_time;
                 // end_schedule['schedule']   = end_time;
