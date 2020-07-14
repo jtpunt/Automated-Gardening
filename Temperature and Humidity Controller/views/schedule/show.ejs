@@ -27,9 +27,9 @@
 	<% } else { %>
 		<div class="rTableCell">N/A</div>
 	<% } %>
-	<% if(schedule['device']['OnOff'] === true){ %>
+	<% if(schedule['device']['desired_state'] === true){ %>
 		<div class="rTableCell">on</div>
-	<% }else if(schedule['device']['OnOff'] === false) { %>
+	<% }else if(schedule['device']['desired_state'] === false) { %>
 		<div class="rTableCell">off</div>
 	<% }else { %>
 		<div class="rTableCell">unknown</div>
