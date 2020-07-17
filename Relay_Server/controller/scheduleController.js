@@ -153,6 +153,27 @@ var scheduleObj = {
             self.scheduleArr[index]['job'] = job;
             console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
             console.log("Have been resumed");
+            
+            self.scheduleArr.forEach(function(schedule_obj){
+                console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+                    nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                    device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
+                
+                console.log("REGULAR SCHEDULING");
+                if(nextScheduleId === undefined){
+                    console.log("nextScheduleId is undefined");
+                }else{
+                    let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
+                    
+                    desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
+                    //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
+                    activateRelayFn.call(context,  device_gpio, desired_state);
+                    
+                }
+            });
+            
+            
         }else{
             console.log("Schedule not found!");
             throw "Schedule not found!";
