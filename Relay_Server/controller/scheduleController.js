@@ -146,8 +146,8 @@ var scheduleObj = {
                 schedule_config['schedule'], 
                 activateRelayFn, 
                 context, 
-                Number(schedule_config['schedule']['device']['gpio']), 
-                Boolean(schedule_config['schedule']['device']['desired_state'])
+                Number(schedule_config['device']['gpio']), 
+                Boolean(schedule_config['device']['desired_state'])
             );
 
             self.scheduleArr[index]['job'] = job;
