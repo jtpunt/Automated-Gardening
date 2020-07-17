@@ -276,7 +276,7 @@ var outletObj = {
                         desired_state ^= 1;
                     }
                     self.outletArr[index]['outlet'].writeSync(desired_state);
-                    console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");                    
+                    console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + " to " + desired_state + "\n");                    
                 }
 
                 
