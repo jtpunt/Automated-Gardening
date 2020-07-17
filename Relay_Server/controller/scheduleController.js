@@ -141,6 +141,7 @@ var scheduleObj = {
         if(index !== -1){   
             console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
             self.scheduleArr[index]['job'].cancel(reschedule);
+            console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
             console.log("Have been resumed");
         }else{
             console.log("Schedule not found!");
