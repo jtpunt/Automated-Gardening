@@ -143,7 +143,7 @@ var scheduleObj = {
             let schedule_config = self.scheduleArr[index]['schedule_config'];
             
             let job = self.buildJob(
-                schedule_config['schedule'], 
+                schedule_config, 
                 activateRelayFn, 
                 context, 
                 Number(schedule_config['device']['gpio']), 
