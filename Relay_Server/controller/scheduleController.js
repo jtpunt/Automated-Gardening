@@ -105,6 +105,48 @@ var scheduleObj = {
         
         return job;
     },
+    // invalidates any job. All  planned invocations will be canceled
+    cancelSchedule: function(schedule_id){
+        let self  = this,
+            index = self.findScheduleIndex(schedule_id);
+        if(index !== -1){   
+        // cancel(reschedule) - when you set reschedule to true then the Job is newly scheduled afterwards
+            console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
+            self.scheduleArr[index]['job'].cancel();
+            console.log("Have been successfully canceled");
+        }else{
+            console.log("Schedule not found!");
+            throw "Schedule not found!";
+        }
+            
+    },
+    // invalidates the next planned invocation or the job
+    cancelNextSchedule: function(schedule_id){
+        let self  = this,
+            index = self.findScheduleIndex(schedule_id);
+        if(index !== -1){   
+            // cancelNext(reschedule) - when you set reschedule to true then the Job is newly scheduled afterwards
+            console.log(`Next Schedule for ${self.scheduleArr[index]['job'].nextInvocation()}`)
+            self.scheduleArr[index]['job'].cancelNext();
+            console.log("Has been successfully canceled");
+        }else{
+            console.log("Schedule not found!");
+            throw "Schedule not found!";
+        }
+    },
+    resumeSchedule: function(schedule_id){
+        let self  = this,
+            reschedule = true,
+            index = self.findScheduleIndex(schedule_id);
+        if(index !== -1){   
+            console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
+            self.scheduleArr[index]['job'].cancel(reschedule);
+            console.log("Have been resumed");
+        }else{
+            console.log("Schedule not found!");
+            throw "Schedule not found!";
+        }
+    },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
         let self = this;
         

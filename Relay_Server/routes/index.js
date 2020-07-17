@@ -101,15 +101,16 @@ router.post('/schedule', async function(req, res){
         if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
         }else{
+            // you can set a schedule with a start and end time
             if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
-                let device_start = { 
-                    ... newSchedule['device'],
-                    desired_state: true
+                let device_start = { // we need to rewrite our device values for our start schedule
+                    ... newSchedule['device'], // take every key: value stored in the 'device' key
+                    desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
                     
                 }
-                let device_end = {
+                let device_end = { // // we need to rewrite our device values for our end schedule
                     ... newSchedule['device'],
-                    desired_state: false
+                    desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'ff'
                 }
                 let start_time = {... newSchedule['schedule']['start_time'] },
                     end_time   = {... newSchedule['schedule']['end_time'] },
@@ -129,17 +130,20 @@ router.post('/schedule', async function(req, res){
                 console.log("start_schedule: " + start_schedule['device']['desired_state']);
                 console.log("end_schedule: " + end_schedule['device']['desired_state']);
                 
+                // create the off schedule and grab the id
                 let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
-                start_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+                start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
                 
+                // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                 let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
                     
                     
-                end_schedule['schedule']['prevScheduleId']   = prevScheduleId;
+                end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
                 console.log("Done adding schedule set");
-            }else if(newSchedule['schedule']['start_time'] !== undefined){
+            }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
+            // example usage: we want to make sure the lights are off by 2am
                 console.log("in else with start_time");
                 let start_time = newSchedule['schedule']['start_time'],
                     start_schedule = newSchedule;
@@ -209,10 +213,6 @@ router.put('/schedule/:schedule_id', function(req, res){
                 
                 console.log("My schedule else:" + my_schedule);
             } 
-   
-            
-        
-            
             scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
             console.log("Successfully Updated!");
             res.status(200).end();
@@ -228,6 +228,54 @@ router.delete('/schedule/:schedule_id', function(req, res){
     try{
         scheduleController.deleteSchedule(schedule_id);
         console.log("Successfully Deleted!");
+        res.status(200).end();
+    }catch(err){
+        console.log("Error caught!\n");
+        console.log(err);
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
+    }
+});
+
+
+
+router.get('/schedule/:schedule_id/date', function(req, res) {
+    
+});
+router.get('/schedule/:schedule_id/cancel', function(req, res) {
+    var schedule_id = req.params.schedule_id;
+    console.log(typeof schedule_id);
+    try{
+        scheduleController.cancelSchedule(schedule_id);
+        console.log("Successfully Pausex!");
+        res.status(200).end();
+    }catch(err){
+        console.log("Error caught!\n");
+        console.log(err);
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
+    }
+});
+router.get('/schedule/:schedule_id/cancel/next', function(req, res) {
+    var schedule_id = req.params.schedule_id;
+    console.log(typeof schedule_id);
+    try{
+        scheduleController.cancelNextSchedule(schedule_id);
+        console.log("Successfully Pausex!");
+        res.status(200).end();
+    }catch(err){
+        console.log("Error caught!\n");
+        console.log(err);
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
+    }
+});
+router.get('/schedule/:schedule_id/resume', function(req, res) {
+        var schedule_id = req.params.schedule_id;
+    console.log(typeof schedule_id);
+    try{
+        scheduleController.resumeSchedule(schedule_id);
+        console.log("Successfully Pausex!");
         res.status(200).end();
     }catch(err){
         console.log("Error caught!\n");

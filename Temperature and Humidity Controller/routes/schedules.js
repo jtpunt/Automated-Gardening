@@ -10,7 +10,7 @@ var express       = require("express"),
  
 function buildOptions(hostname, port, path, method, json){
     let options;
-    if(method === 'DELETE' && json === undefined){ // method === 'DELETE'
+    if(method === 'DELETE' && json === undefined){ // no data is sent with a delete request
         options = {
             hostname: hostname,
             port: port,
@@ -205,7 +205,10 @@ router.get("/", async (req, res) =>{
         
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
-        relayDevices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
+        relayDevices.sort(
+            (a, b) => 
+            (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1)
+        );
         //console.log(`SchedulesbyIp: ${schedulesByIp}`);
         res.render("schedule/index", {
             schedules: schedulesByIp, 
@@ -305,10 +308,6 @@ router.post("/", async (req, res) => {
         });
         myReq.write(scheduleStr);
         myReq.end();
-        
-        
-        
-        
         
     }catch(err){
         console.log(err);
