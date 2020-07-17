@@ -134,13 +134,23 @@ var scheduleObj = {
             throw "Schedule not found!";
         }
     },
-    resumeSchedule: function(schedule_id){
+    resumeSchedule: function(schedule_id, activateRelayFn, context){
         let self  = this,
             reschedule = true,
             index = self.findScheduleIndex(schedule_id);
         if(index !== -1){   
             console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
-            self.scheduleArr[index]['job'].cancel(true);
+            let schedule_config = self.scheduleArr[index]['schedule_config'];
+            
+            let job = self.buildJob(
+                schedule_config['schedule'], 
+                activateRelayFn, 
+                context, 
+                Number(schedule_config['schedule']['device']['gpio']), 
+                Boolean(schedule_config['schedule']['device']['desired_state'])
+            );
+
+            self.scheduleArr[index]['job'] = job;
             console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
             console.log("Have been resumed");
         }else{

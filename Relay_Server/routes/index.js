@@ -274,7 +274,7 @@ router.get('/schedule/:schedule_id/resume', function(req, res) {
         var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     try{
-        scheduleController.resumeSchedule(schedule_id);
+        scheduleController.resumeSchedule(schedule_id, outletController.activateRelay, outletController);
         console.log("Successfully Pausex!");
         res.status(200).end();
     }catch(err){
