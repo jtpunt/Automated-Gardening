@@ -114,7 +114,7 @@ var scheduleObj = {
             console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
             self.scheduleArr[index]['job'].cancel();
             let device_gpio = self.scheduleArr[index]['schedule_config']['device']['gpio'],
-                desired_state = 0;
+                desired_state = false;
                 
             activateRelayFn.call(context,  device_gpio, desired_state);
             console.log("Have been successfully canceled");
