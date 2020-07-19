@@ -168,7 +168,8 @@ var scheduleObj = {
                 if(nextScheduleId === undefined){
                     console.log("nextScheduleId is undefined");
                 }else{
-                    let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
+                    let today                   = new Date();
+                    let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today, activateRelayFn, context);
                     
                     desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
                     //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
@@ -217,7 +218,7 @@ var scheduleObj = {
         
         // CASE 3: 1 time schedules
     },
-    scheduleIsActive: function(prev_schedule_config, activateRelayFn, context){
+    scheduleIsActive: function(prev_schedule_config, timestamp, activateRelayFn, context){
         let self = this,
             result = false,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -260,7 +261,7 @@ var scheduleObj = {
                     console.log(`prev_schedule_timestamp: ${prev_schedule_timestamp}`);
                     console.log(`today timestamp:  ${today}`);
                     console.log(`next_schedule_timestamp: ${next_schedule_timestamp}`);
-                    if(today >= prev_schedule_timestamp && today < next_schedule_timestamp){
+                    if(timestamp >= prev_schedule_timestamp && timestamp < next_schedule_timestamp){
                         result = true;
                     }
                     
@@ -369,7 +370,8 @@ var scheduleObj = {
                             if(nextScheduleId === undefined){
                                 console.log("nextScheduleId is undefined");
                             }else{
-                                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
+                                let today = new Date()
+                                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today, activateRelayFn, context);
                                 desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
                                 //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
                                 activateRelayFn.call(context,  device_gpio, desired_state);
@@ -447,7 +449,8 @@ var scheduleObj = {
                         if(nextScheduleId === undefined){
                             console.log("nextScheduleId is undefined");
                         }else{
-                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], activateRelayFn, context);
+                            let today                   = new Date();
+                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today, activateRelayFn, context);
                             
                             desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
                             //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
