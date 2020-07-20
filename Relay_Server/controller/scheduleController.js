@@ -189,9 +189,9 @@ var scheduleObj = {
         let self              = this,
             schedule_conflict = false;
         
-        schedule_conflict = Boolean(self.isScheduleConflicting(new_schedule_config)); // true - there is a schedule conflict
+        schedule_conflict = self.isScheduleConflicting(new_schedule_config); // true - there is a schedule conflict
         console.log("Back in createSchedule: " + schedule_conflict);
-        if(schedule_conflict === false){
+        if(schedule_conflict == false){
             let newScheduleResponse = await Scheduler.create(new_schedule_config);
             if(newScheduleResponse === undefined){
                 return newScheduleResponse;
