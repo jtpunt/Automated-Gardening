@@ -354,20 +354,16 @@ var scheduleObj = {
         // otherwise, everyday 1 time - off schedules
         else{
             self.scheduleArr.forEach(function(schedule_obj){
-                let arr_second        = Number(schedule_obj['schedule_config']['schedule']['second'])|| undefined,
-                    arr_minute        = Number(schedule_obj['schedule_config']['schedule']['minute'])|| undefined,
-                    arr_hour          = Number(schedule_obj['schedule_config']['schedule']['hour'])  || undefined,
-                    arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
+                let arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                     arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
                     arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
                     arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
                     timestamp         = new Date();
-                    
-                timestamp.setHours(hour, minute, second);  
+                if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined){
+                    timestamp.setHours(hour, minute, second);  
                 //if(schedule_obj["_id"] !== schedule_id){
                     // everyday 1 time - off schedules compared to recurrence based scheduling
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
-                        
                         let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
                         schedule_conflict ^= isScheduleConflicting;  
                         console.log("372 - everyday 1 time - off schedules compared to recurrence based scheduling - IF");
@@ -387,6 +383,8 @@ var scheduleObj = {
                         console.log("386 - otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules - ELSE");
                         console.log(`387 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
                     }
+                }
+                
                 //}else{
                   //  console.log("390 - otherwise, everyday 1 time - off schedules - ELSE");
                   //  console.log("391 - schedule_obj['_id'] !== prev_schedule_config['_id']");
