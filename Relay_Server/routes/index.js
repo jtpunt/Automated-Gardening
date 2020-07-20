@@ -103,6 +103,7 @@ router.post('/schedule', async function(req, res){
         }else{
             // you can set a schedule with a start and end time
             if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
+                
                 let device_start = { // we need to rewrite our device values for our start schedule
                     ... newSchedule['device'], // take every key: value stored in the 'device' key
                     desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
@@ -125,23 +126,38 @@ router.post('/schedule', async function(req, res){
                         schedule: end_time,
                         device: device_end
                     };
+                let start_time_timestamp = new Date(),
+                    end_time_timestamp = new Date();
                 
+                start_time_timestamp.setHours(start_time['hour'], start_time['minute'], start_time['second']); 
+                end_time_timestamp.setHours(end_time['hour'], end_time['minute'], end_time['second']); 
                 
-                console.log("start_schedule: " + start_schedule['device']['desired_state']);
-                console.log("end_schedule: " + end_schedule['device']['desired_state']);
+                if(start_time_timestamp > end_time_timestamp){
+                    let errMsg = "start_time must be less than end_time";
+                    console.log(errMsg);
+                    throw new Error(errMsg)
+                }else if(start_time_timestamp === end_time_timestamp){
+                    let errMsg = "start_time must not be equal to the end_time";
+                    console.log(errMsg);
+                    throw new Error(errMsg)
+                }else{
+                    console.log("start_schedule: " + start_schedule['device']['desired_state']);
+                    console.log("end_schedule: " + end_schedule['device']['desired_state']);
                 
-                // create the off schedule and grab the id
-                let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
-                start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                    // create the off schedule and grab the id
+                    let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
+                    start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
                 
-                // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
+                    // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
+                    let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
                     
                     
-                end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                    end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
-                console.log("Done adding schedule set");
+                    scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
+                    console.log("Done adding schedule set");
+                }
+
             }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
             // example usage: we want to make sure the lights are off by 2am
                 console.log("in else with start_time");
@@ -157,14 +173,6 @@ router.post('/schedule', async function(req, res){
             }else {
                 console.log("in else... no start_time or end_times in object");
             }
-            // create start schedule with schedule['start_time']
-                // retrieve schedule id - our prevSheduleId
-            // create end schedule with schedule['end_time']
-               // retrieve schedule id = our nextScheduleId
-            // adjust start shedule's nextScheduleId
-            // adjust end schedule's prevScheduleId
-            
-            
             res.status(200).end();
         }
     }catch(err){
@@ -200,6 +208,7 @@ router.put('/schedule/:schedule_id', function(req, res){
                 my_time = newSchedule['schedule']['start_time'] || newSchedule['schedule']['end_time'],
                 my_schedule = {... newSchedule };
             
+      
             my_schedule['schedule'] = my_time;
                 
             if(prevScheduleId !== undefined){

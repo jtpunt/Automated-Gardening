@@ -83,9 +83,10 @@ var scheduleObj = {
                 }else throw new Error(`Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}`);
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
-                    scheduleObj = new Date(year, month, date, hour, minute, second);
-                    console.log("Date Obj: ", scheduleObj);
-                    if(scheduleObj < new Date()) 
+                    
+                    let scheduleTestObj = new Date(year, month, date, hour, minute, second);
+                    console.log("Date Obj: ", scheduleTestObj);
+                    if(scheduleTestObj < new Date()) 
                         throw new Error("Schedule must occur in the future!");
                 }else throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
@@ -169,7 +170,7 @@ var scheduleObj = {
                     console.log("nextScheduleId is undefined");
                 }else{
                     let today                   = new Date();
-                    let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today, activateRelayFn, context);
+                    let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                     
                     desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
                     //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
@@ -185,40 +186,192 @@ var scheduleObj = {
         }
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
-        let self = this;
+        let self              = this,
+            schedule_conflict = false;
         
-        //let newSchedulePromise = async () => { return await Scheduler.create(new_schedule_config); }
-        let newScheduleResponse = await Scheduler.create(new_schedule_config);
-        if(newScheduleResponse === undefined){
-            return newScheduleResponse;
-        }else{
-            console.log(`await result: ${newScheduleResponse}`);
-        
-            let job = self.buildJob(
-                new_schedule_config, 
-                activateRelayFn, 
-                context, 
-                Number(newScheduleResponse['device']['gpio']), 
-                Boolean(newScheduleResponse['device']['desired_state'])
-            );
-            var obj = { "schedule_config": newScheduleResponse, job };
-            self.setSchedule(obj);
-            return newScheduleResponse["_id"];
+        schedule_conflict ^= self.isScheduleConflicting(new_schedule_config); // true - there is a schedule conflict
+
+        if(schedule_conflict === false){
+            let newScheduleResponse = await Scheduler.create(new_schedule_config);
+            if(newScheduleResponse === undefined){
+                return newScheduleResponse;
+            }else{
+                console.log(`await result: ${newScheduleResponse}`);
+                let job = self.buildJob(
+                    new_schedule_config, 
+                    activateRelayFn, 
+                    context, 
+                    Number(newScheduleResponse['device']['gpio']), 
+                    Boolean(newScheduleResponse['device']['desired_state'])
+                );
+                var obj = { "schedule_config": newScheduleResponse, job };
+                self.setSchedule(obj);
+                return newScheduleResponse["_id"];
+            }
+        }else{ // there is a schedule conflict
+            throw new Error("Schedules are conflicting");
         }
-    },
-    isScheduleOverlapping: function(prev_schedule_config, next_schedule_config){
-        // CASE 1: "RECURRENCE BASED SCHEDULING"
-            // check for overlapping with other recurrence based schedules
-                // BASE-CASE - both schedules must have the same dayofweek/time values. they must match if they're associated with each other
-            // check for overlapping with date-based schedules
-                // BASE-CASE - both schedules must have the same date/time values. they must match if they're associated with each other
-            // check for overlapping with 1 time schedules
-                // next_schedule_config should be undefined
-        // CASE 2: DATE BASED SCHEDULING"
         
-        // CASE 3: 1 time schedules
     },
-    scheduleIsActive: function(prev_schedule_config, timestamp, activateRelayFn, context){
+    isScheduleConflicting: function(prev_schedule_config, schedule_id){
+        let self      = this,
+            second    = Number(prev_schedule_config['schedule']['second'])|| undefined,
+            minute    = Number(prev_schedule_config['schedule']['minute'])|| undefined,
+            hour      = Number(prev_schedule_config['schedule']['hour'])  || undefined,
+            date      = Number(prev_schedule_config['schedule']['date'])  || undefined,
+            month     = Number(prev_schedule_config['schedule']['month']) || undefined,
+            year      = Number(prev_schedule_config['schedule']['year'])  || undefined,
+            dayOfWeek = (prev_schedule_config['schedule']['dayOfWeek']) ? Array.from(prev_schedule_config['schedule']['dayOfWeek']) : undefined,
+            schedule_conflict = false;
+            
+            
+        let intersect = function(a, b){
+            return a.filter(Set.prototype.has, new Set(b));
+        }
+        // **
+        if(dayOfWeek !== undefined && dayOfWeek.length){ // recurrence based scheduling
+            console.log("Recurrence Based Scheduling");
+            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
+            
+            // dayOfWeek: [1, 2, 3, 4, 5]
+            // scheduleArr[0]['schedule_config']['schedule']['dayOfWeek']: [0, 2, 4, 5]
+            
+            // we need to return an array that holds overlapping numbers from both dayOfWeek arrays: [2, 4, 5];
+            // we we need to check [2,4,5] or just [2]? the time that these schedules go off are the same,
+            // however, we will need to double check them for date-based scheduling, so it is necessary to check these
+            self.scheduleArr.forEach(function(schedule_obj){
+                console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                let arr_second        = Number(schedule_obj['schedule_config']['schedule']['second'])|| undefined,
+                    arr_minute        = Number(schedule_obj['schedule_config']['schedule']['minute'])|| undefined,
+                    arr_hour          = Number(schedule_obj['schedule_config']['schedule']['hour'])  || undefined,
+                    arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
+                    arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
+                    arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
+                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
+                    timestamp         = new Date();
+                    
+                timestamp.setHours(arr_hour, arr_minute, arr_second);  
+                if(schedule_obj["_id"] !== schedule_id){
+                    // recurrence based scheduling compared to recurrence based scheduling
+                    if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
+                        // the times these schedules are set for are all the same for recurrence based scheduling
+                        let common_days = intersect(dayOfWeek, arr_dayOfWeek);
+                        // are there common days between these recurrence-based schedules?
+                        if(common_days.length > 0){
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict ^= isScheduleConflicting;
+                        }
+                    }
+                    // recurrence based scheduling compared to date based scheduling
+                    else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
+                        let arr_timestamp = new Date(arr_year, arr_month, arr_date, arr_hour, arr_minute, arr_second);
+                        let arr_numDay = arr_timestamp.getDay();
+                        if(dayOfWeek.includes(arr_numDay)){
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict ^= isScheduleConflicting;
+                        }
+                    }
+                    // otherwise, recurrence based scheduling compared check to daily 1 time - off schedules
+                    else{
+                        let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                        schedule_conflict ^= isScheduleConflicting;
+                    }
+                }else{
+                    console.log("schedule_obj['_id'] !== prev_schedule_config['_id']");
+                }
+                
+            });
+
+        }
+        // date based scheduling
+        else if(date !== undefined && month !== undefined && year !== undefined){ 
+            console.log("Date based scheduling");
+            self.scheduleArr.forEach(function(schedule_obj){
+                console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                let arr_second        = Number(schedule_obj['schedule_config']['schedule']['second'])|| undefined,
+                    arr_minute        = Number(schedule_obj['schedule_config']['schedule']['minute'])|| undefined,
+                    arr_hour          = Number(schedule_obj['schedule_config']['schedule']['hour'])  || undefined,
+                    arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
+                    arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
+                    arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
+                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
+                    timestamp         = new Date();
+                    
+                timestamp.setHours(arr_hour, arr_minute, arr_second);  
+                if(schedule_obj["_id"] !== schedule_id){
+                    // date based scheduling compared to recurrence based scheduling
+                    if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
+                        let datebased_timestamp = new Date(year, month, date, hour, minute, second);
+                        let datebased_numDay = datebased_timestamp.getDay();
+                        
+                        if(arr_dayOfWeek.includes(datebased_numDay)){
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict ^= isScheduleConflicting;
+                        }
+                    }
+                    // date based scheduling compared to date based scheduling
+                    else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
+                        if(date === arr_date && month === arr_month && year === arr_year){
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict ^= isScheduleConflicting;    
+                        }
+                       
+                    }
+                    // otherwise, date based scheduling compared check to 1 time - off schedules
+                    else{
+                        let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                        schedule_conflict ^= isScheduleConflicting;
+                    }
+                }else{
+                    console.log("schedule_obj['_id'] !== prev_schedule_config['_id']");
+                }
+            });
+            
+        }
+        // otherwise, everyday 1 time - off schedules
+        else{
+            self.scheduleArr.forEach(function(schedule_obj){
+                console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                let arr_second        = Number(schedule_obj['schedule_config']['schedule']['second'])|| undefined,
+                    arr_minute        = Number(schedule_obj['schedule_config']['schedule']['minute'])|| undefined,
+                    arr_hour          = Number(schedule_obj['schedule_config']['schedule']['hour'])  || undefined,
+                    arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
+                    arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
+                    arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
+                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
+                    timestamp         = new Date();
+                    
+                timestamp.setHours(arr_hour, arr_minute, arr_second);  
+                if(schedule_obj["_id"] !== schedule_id){
+                    // everyday 1 time - off schedules compared to recurrence based scheduling
+                    if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
+                        let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                        schedule_conflict ^= isScheduleConflicting;  
+                    }
+                    // everyday 1 time - off schedules compared to date based scheduling
+                    else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
+                        let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                        schedule_conflict ^= isScheduleConflicting;  
+                    }
+                    // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
+                    else{
+                        let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                        schedule_conflict ^= isScheduleConflicting;  
+                    }
+                }else{
+                    console.log("schedule_obj['_id'] !== prev_schedule_config['_id']");
+                }
+            });
+            
+        }
+        return schedule_conflict;
+    },
+    // Finds the next_schedule_config that's associated with the prev_schedule_config
+    // and returns the boolean result of whether the 2nd argument, timestamp is greater than or equal to 
+    // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
+    // the next_schedule_config object
+    // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
+    scheduleIsActive: function(prev_schedule_config, timestamp){
         let self = this,
             result = false,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -319,59 +472,14 @@ var scheduleObj = {
                                 today         = new Date(),
                                 desired_state = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                                 device_gpio   = Number(schedule_obj['schedule_config']['device']['gpio']);
-                            // if(dayOfWeek !== undefined && dayOfWeek.length){
-                            //     console.log("RECURRENCE BASED SCHEDULING");
-                            //     if(dayOfWeek.includes(today.getDay())){ // does our dayofweek array 
-                            //         let nextScheduleId =  schedule_config['schedule']['nextScheduleId'];
-                                        
-                            //         // have we already processed the 'off' schedule?
-                            //         if(processed_ids.includes(nextScheduleId)){
-                            //             console.log("This schedule has already been processed.");
-                            //         }else{
-                            //             if(self.scheduleIsActive(schedule_config)){
-                            //                 console.log("Schedule is active");
-                            //                 activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
-                            //                 processed_ids.push(schedule_config["_id"]);
-                            //                 processed_ids.push(nextScheduleId);
-                            //             }
-                            //         }
-                            //     }
-                            // }
-                            // CHECK LATER: i am not sure if you can associate date based scheduling together - though you probably can
-                            //         else if(date !== undefined && month !== undefined && year !== undefined){ // DATE BASED SCHEDULING
-                            //             console.log("DATE BASED SCHEDULING");
-                            //             // are we in the right year?
-                            //             if(year === today.getYear()){
-                            //                 // are we in the right month?
-                            //                 if(month === today.getMonth()){
-                            //                     // is the date correct? 0 - 31, etc
-                            //                     if(date === today.getDate()){
-                            //                         let nextScheduleId = schedule_config['schedule']['nextScheduleId'];
-                                                        
-                            //                         // have we already processed the 'off' schedule?
-                            //                         if(processed_ids.includes(nextScheduleId)){
-                            //                             console.log("This schedule has already been processed.");
-                            //                         }else{ 
-                            //                             console.log("Schedule is active");
-                            //                             if(self.scheduleIsActive(schedule_config)){
-                            //                                 activateRelayFn.call(context,  Number(schedule_config['device']['gpio']), Boolean(desired_state));
-                            //                                 processed_ids.push(schedule_config["_id"]);
-                            //                                 processed_ids.push(nextScheduleId);
-                            //                             }
-                            //                         }
-                            //                     }
-                            //                 }
-                            //             }
-                                        
-                            //         }else{ // regular scheduling
-                            // }
+                                
                             console.log("REGULAR SCHEDULING");
                             let nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
                             if(nextScheduleId === undefined){
                                 console.log("nextScheduleId is undefined");
                             }else{
                                 let today = new Date()
-                                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today, activateRelayFn, context);
+                                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                                 desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
                                 //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
                                 activateRelayFn.call(context,  device_gpio, desired_state);
@@ -404,12 +512,27 @@ var scheduleObj = {
     },
     editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
         let self  = this,
+            schedule_conflict = false,
             index = self.findScheduleIndex(schedule_id);
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${updated_schedule_config}`);
         console.log(self.scheduleArr);
         if(index !== -1){
             console.log(`Match found at index: ${index}`);
+            // let start_time_timestamp = new Date(),
+            //     end_time_timestamp = new Date();
+            // if(updated_schedule_config['schedule']['nextScheduleId'] !== undefined){
+            //     start_time_timestamp.setHours(updated_schedule_config['schedule']['hour'], updated_schedule_config['schedule']['minute'], updated_schedule_config['schedule']['second']); 
+            // }else if(updated_schedule_config['schedule']['prevScheduleId'] !== undefined){
+            //     end_time_timestamp.setHours(updated_schedule_config['schedule']['hour'], updated_schedule_config['schedule']['minute'], updated_schedule_config['schedule']['second']);
+            // }else{
+            //     // make sure the everyday once a day schedule doesn't conflict with any other schedules
+            // }
+        
+            schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
+            let timestamp = new Date();
+            // isSheduleConflicting?
+            
             Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
                 if(err){
                     console.log(err);
@@ -450,7 +573,7 @@ var scheduleObj = {
                             console.log("nextScheduleId is undefined");
                         }else{
                             let today                   = new Date();
-                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today, activateRelayFn, context);
+                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                             
                             desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
                             //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
