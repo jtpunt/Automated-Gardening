@@ -369,7 +369,7 @@ var scheduleObj = {
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
                         
                         let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                        schedule_conflict ^= isScheduleConflicting;   - IF
+                        schedule_conflict ^= isScheduleConflicting;  
                         console.log("372 - everyday 1 time - off schedules compared to recurrence based scheduling - IF");
                         console.log(`373 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
                     }
