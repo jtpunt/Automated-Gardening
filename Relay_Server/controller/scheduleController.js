@@ -379,7 +379,7 @@ var scheduleObj = {
                     // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
                     else{ 
                         let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                        schedule_conflict ^= isScheduleConflicting;  
+                        schedule_conflict = isScheduleConflicting;  
                         console.log("386 - otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules - ELSE");
                         console.log(`387 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
                     }
