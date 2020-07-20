@@ -354,7 +354,8 @@ var scheduleObj = {
         // otherwise, everyday 1 time - off schedules
         else{
             self.scheduleArr.forEach(function(schedule_obj){
-                let arr_second        = Number(schedule_obj['schedule_config']['schedule']['second'])|| undefined,
+                if(scheduleObj['schedule_config']['schedule']['nextScheduleId'] !== undefined){
+                    let arr_second        = Number(schedule_obj['schedule_config']['schedule']['second'])|| undefined,
                     arr_minute        = Number(schedule_obj['schedule_config']['schedule']['minute'])|| undefined,
                     arr_hour          = Number(schedule_obj['schedule_config']['schedule']['hour'])  || undefined,
                     arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
@@ -386,6 +387,8 @@ var scheduleObj = {
                         console.log("386 - otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules - ELSE");
                         console.log(`387 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
                     }
+                }
+                
                 //}else{
                   //  console.log("390 - otherwise, everyday 1 time - off schedules - ELSE");
                   //  console.log("391 - schedule_obj['_id'] !== prev_schedule_config['_id']");
