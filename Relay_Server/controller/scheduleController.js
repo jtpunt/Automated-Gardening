@@ -393,6 +393,7 @@ var scheduleObj = {
             });
             
         }
+        console.log("Returning schedule_conflict: " + schedule_conflict);
         return schedule_conflict;
     },
     // Finds the next_schedule_config that's associated with the prev_schedule_config
