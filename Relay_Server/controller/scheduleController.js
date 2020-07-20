@@ -433,16 +433,16 @@ var scheduleObj = {
                     next_schedule_minute    = sanitize_input(next_schedule_config['schedule']['minute']),
                     next_schedule_hour      = sanitize_input(next_schedule_config['schedule']['hour']);
                         
-                    console.log(`nowHour:      ${now_hour}     -      nextScheduleHour:      ${next_schedule_hour}`);
-                    console.log(`nowMin: "     ${now_min}      -      nextScheduleMin:       ${next_schedule_minute}`);
-                    console.log(`nowSecond:    ${now_second}   -      nextScheduleSecond:    ${next_schedule_second}`);
+                    // console.log(`nowHour:      ${now_hour}     -      nextScheduleHour:      ${next_schedule_hour}`);
+                    // console.log(`nowMin: "     ${now_min}      -      nextScheduleMin:       ${next_schedule_minute}`);
+                    // console.log(`nowSecond:    ${now_second}   -      nextScheduleSecond:    ${next_schedule_second}`);
                     
                     prev_schedule_timestamp.setHours(prev_schedule_hour, prev_schedule_minute, prev_schedule_second);
                     next_schedule_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
                     
-                    console.log(`prev_schedule_timestamp: ${prev_schedule_timestamp}`);
-                    console.log(`today timestamp:  ${today}`);
-                    console.log(`next_schedule_timestamp: ${next_schedule_timestamp}`);
+                    // console.log(`prev_schedule_timestamp: ${prev_schedule_timestamp}`);
+                    // console.log(`today timestamp:  ${today}`);
+                    // console.log(`next_schedule_timestamp: ${next_schedule_timestamp}`);
                     if(timestamp >= prev_schedule_timestamp && timestamp < next_schedule_timestamp){
                         result = true;
                     }
