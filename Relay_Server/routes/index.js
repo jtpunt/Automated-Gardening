@@ -147,6 +147,7 @@ router.post('/schedule', async function(req, res){
                     console.log(errMsg);
                     throw new Error(errMsg)
                 }else{
+                    // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
                     console.log("start_schedule: " + start_schedule['device']['desired_state']);
                     console.log("end_schedule: " + end_schedule['device']['desired_state']);
                 
