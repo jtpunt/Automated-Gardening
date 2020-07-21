@@ -399,7 +399,7 @@ var scheduleObj = {
                     timestamp       = new Date();
                 
                 console.log(schedule_config);
-                let schedule_obj1    = self.findScheduleIndex(schedule_config['schedule']['nextScheduleId']),
+                let schedule_obj1    = self.findScheduleIndex(schedule_config['schedule']['nextScheduleId'].toString()),
                     schedule_config1 = schedule_obj1['schedule_config'],
                     second1          = schedule_config1['schedule']['second'],
                     minute1          = schedule_config1['schedule']['minute'],
