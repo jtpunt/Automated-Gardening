@@ -407,10 +407,10 @@ var scheduleObj = {
                                     minute: '2-digit',
                                     second: '2-digit'
                                 }
-                                on_timestamp.toLocaleDateString(undefined, timestamp_options);
-                                timestamp.toLocaleDateString(undefined, timestamp_options);
-                                off_timestamp.toLocaleDateString(undefined, timestamp_options);
-                                throw new Error(`New Schedule timestamp - ${timestamp} Conflicts with ON - ${on_timestamp} and OFF - ${off_timestamp}` );
+                                let fixed_on_timestamp = on_timestamp.toLocaleDateString(undefined, timestamp_options);
+                                let fixed_timestamp = timestamp.toLocaleDateString(undefined, timestamp_options);
+                                let fixed_off_timestamp = off_timestamp.toLocaleDateString(undefined, timestamp_options);
+                                throw new Error(`New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}` );
                             }
                         }
                         schedule_conflict = isScheduleConflicting;  
