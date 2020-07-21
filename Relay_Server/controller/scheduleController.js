@@ -213,6 +213,9 @@ var scheduleObj = {
         }
         
     },
+    isScheduleOverlapping: function(start_timestamp, end_timestamp){
+        
+    },
     isScheduleConflicting: function(schedule_config){
         let self      = this,
             second    = Number(schedule_config['schedule']['second'])|| undefined,
@@ -225,7 +228,11 @@ var scheduleObj = {
             schedule_conflict = false,
             timestamp = new Date();
             
-        
+        let returnObj = {
+            schedule_conflict: false,
+            successMessage: "",
+            errorMessage: ""
+        }
         // '00' from minute, second, or hour will create an invalid date object
         if(schedule_config['schedule']['second'] === '00'){
             second = 0;
@@ -378,6 +385,26 @@ var scheduleObj = {
                     // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
                     else{ 
                         let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                        if(isScheduleConflicting){
+                            let second = schedule_obj['schedule_config']['schedule']['second'],
+                                minute  = schedule_obj['schedule_config']['schedule']['minute'],
+                                hour   = schedule_obj['schedule_config']['schedule']['hour'];
+                            let on_timestamp = new Date(),
+                                off_timestamp = new Date();
+                                
+                            on_timestamp.setHours(hour, minute, second);
+                            
+                            let nextScheduleIndex = self.findScheduleIndex(schedule_obj['schedule_config']['schedule']['nextScheduleId'].toString());
+            
+                            if(nextScheduleIndex !== -1){
+                                let next_schedule_config    = self.scheduleArr[nextScheduleIndex]['schedule_config'],
+                                    next_schedule_second    = next_schedule_config['schedule']['second'],
+                                    next_schedule_minute    = next_schedule_config['schedule']['minute'],
+                                    next_schedule_hour      = next_schedule_config['schedule']['hour'];
+                                off_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
+                                throw new Error(`New Schedule timestamp - ${timestamp} Conflicts with ON - ${on_timestamp} and OFF - ${timestamp}` );
+                            }
+                        }
                         schedule_conflict = isScheduleConflicting;  
                         console.log("386 - otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules - ELSE ");
                         console.log(`387 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}, timestamp: ${timestamp}`);
