@@ -409,6 +409,14 @@ var scheduleObj = {
                 }
             }
         }
+        indexes.forEach(function(index){
+            if(index >= 0){
+                let schedule_obj          = self.scheduleArr[index],
+                    isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                    
+                handleScheduleConflicts(isScheduleConflicting, schedule_obj);
+            }
+        });
         // recurrence based scheduling
         // if(dayOfWeek !== undefined && dayOfWeek.length){ 
         //     console.log("Recurrence Based Scheduling");
