@@ -186,13 +186,9 @@ var scheduleObj = {
         }
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
-        let self              = this,
-            schedule_conflict = false;
-        
-        self.isScheduleConflicting(new_schedule_config); // true - there is a schedule conflict
-        
-
+        let self              = this;
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
+        
         if(newScheduleResponse === undefined){
             return newScheduleResponse;
         }else{
