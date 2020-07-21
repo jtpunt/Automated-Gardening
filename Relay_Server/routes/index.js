@@ -152,7 +152,7 @@ router.post('/schedule', async function(req, res){
                     console.log("end_schedule: " + end_schedule['device']['desired_state']);
                     scheduleController.isScheduleConflicting(end_schedule);
                     scheduleController.isScheduleConflicting(start_schedule);
-                    scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
+                    //scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
                     // create the off schedule and grab the id
                     let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
                     start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
