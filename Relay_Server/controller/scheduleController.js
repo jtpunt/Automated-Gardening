@@ -259,8 +259,7 @@ var scheduleObj = {
                     arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                     arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
                     arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
-                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
-                    timestamp         = new Date();
+                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined;
                 if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined){
                     // recurrence based schedule compared to recurrence based scheduling
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
