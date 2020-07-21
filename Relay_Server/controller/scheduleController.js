@@ -189,7 +189,7 @@ var scheduleObj = {
         let self              = this,
             schedule_conflict = false;
         
-        console.log("createSchedule fn: " + new_schedule_config['schedule']);
+        console.log("createSchedule fn: " + new_schedule_config['schedule'].toString());
         schedule_conflict = self.isScheduleConflicting(new_schedule_config); // true - there is a schedule conflict
         console.log("Back in createSchedule: " + schedule_conflict);
         if(schedule_conflict == false){
