@@ -226,8 +226,13 @@ var scheduleObj = {
             schedule_conflict = false,
             timestamp = new Date();
             
+            
+        if(prev_schedule_config['schedule']['second'] === '00'){
+            second = 0;
+        }
         timestamp.setHours(hour, minute, second);  
-        console.log("prev_schedule_config['schedule']: " + prev_schedule_config['schedule'].toString());
+        console.log(`config: ${prev_schedule_config}`);
+        console.log(`prev_schedule_config['schedule']: ${prev_schedule_config['schedule'].toString()}`);
         console.log("timestamp in isScheduleConflicting: " + timestamp);
         let intersect = function(a, b){
             return a.filter(Set.prototype.has, new Set(b));
