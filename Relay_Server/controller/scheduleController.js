@@ -261,44 +261,45 @@ var scheduleObj = {
                     arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
                     arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
                     timestamp         = new Date();
-                    
-                // recurrence based schedule compared to recurrence based scheduling
-                if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
-                    // the times these schedules are set for are all the same for recurrence based scheduling
-                    let common_days = intersect(dayOfWeek, arr_dayOfWeek);
-                    // are there common days between these recurrence-based schedules?
-                    if(common_days.length > 0){
-                        // see if the time stamp representing our new schedule 
+                if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined){
+                    // recurrence based schedule compared to recurrence based scheduling
+                    if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
+                        // the times these schedules are set for are all the same for recurrence based scheduling
+                        let common_days = intersect(dayOfWeek, arr_dayOfWeek);
+                        // are there common days between these recurrence-based schedules?
+                        if(common_days.length > 0){
+                            // see if the time stamp representing our new schedule 
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict = isScheduleConflicting;
+                            console.log("262 - Recurrence based scheduling compared to recurrence based scheduling - IF");
+                            console.log(`263 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
+                        }
+                        else{
+                            console.log("266 - Recurrence based scheduling compared to recurrence based scheduling - ELSE");
+                        }
+                    }
+                    // recurrence based scheduling compared to date based scheduling
+                    else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
+                        let arr_timestamp = new Date(arr_year, arr_month, arr_date, arr_hour, arr_minute, arr_second);
+                        let arr_numDay = arr_timestamp.getDay();
+                        if(dayOfWeek.includes(arr_numDay)){
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict = isScheduleConflicting;
+                            console.log("276 - Recurrence based scheduling compared to date based scheduling- IF");
+                            console.log(`277 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
+                        }
+                        else{
+                            console.log("280 - Recurrence based scheduling compared to date based scheduling - ELSE");
+                        }
+                    }
+                    // otherwise, recurrence based scheduling compared check to daily 1 time - off schedules
+                    else{
                         let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
                         schedule_conflict = isScheduleConflicting;
-                        console.log("262 - Recurrence based scheduling compared to recurrence based scheduling - IF");
-                        console.log(`263 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
+                        console.log("288 - Otherwise, recurrence based scheduling compared check to daily 1 time - off schedules ELSE");
+                        console.log(`289 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
+                        
                     }
-                    else{
-                        console.log("266 - Recurrence based scheduling compared to recurrence based scheduling - ELSE");
-                    }
-                }
-                // recurrence based scheduling compared to date based scheduling
-                else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
-                    let arr_timestamp = new Date(arr_year, arr_month, arr_date, arr_hour, arr_minute, arr_second);
-                    let arr_numDay = arr_timestamp.getDay();
-                    if(dayOfWeek.includes(arr_numDay)){
-                        let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                        schedule_conflict = isScheduleConflicting;
-                        console.log("276 - Recurrence based scheduling compared to date based scheduling- IF");
-                        console.log(`277 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
-                    }
-                    else{
-                        console.log("280 - Recurrence based scheduling compared to date based scheduling - ELSE");
-                    }
-                }
-                // otherwise, recurrence based scheduling compared check to daily 1 time - off schedules
-                else{
-                    let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                    schedule_conflict = isScheduleConflicting;
-                    console.log("288 - Otherwise, recurrence based scheduling compared check to daily 1 time - off schedules ELSE");
-                    console.log(`289 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
-                    
                 }
             });
 
@@ -314,39 +315,40 @@ var scheduleObj = {
                     arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
                     arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
                     arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined;
-                    
-                // date based scheduling compared to recurrence based scheduling
-                if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
-                    let datebased_timestamp = new Date(year, month, date, hour, minute, second);
-                    let datebased_numDay = datebased_timestamp.getDay();
-                    
-                    if(arr_dayOfWeek.includes(datebased_numDay)){
+                if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined){
+                    // date based scheduling compared to recurrence based scheduling
+                    if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
+                        let datebased_timestamp = new Date(year, month, date, hour, minute, second);
+                        let datebased_numDay = datebased_timestamp.getDay();
+                        
+                        if(arr_dayOfWeek.includes(datebased_numDay)){
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict = isScheduleConflicting;
+                            console.log("322 - date based scheduling compared to recurrence based scheduling- IF");
+                            console.log(`323 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
+                        }else{
+                            console.log("325 - date based scheduling compared to recurrence based scheduling- ELSE");
+                        }
+                    }
+                    // date based scheduling compared to date based scheduling
+                    else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
+                        if(date === arr_date && month === arr_month && year === arr_year){
+                            let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                            schedule_conflict = isScheduleConflicting;    
+                            console.log("333 - Date based scheduling compared to date based scheduling- IF");
+                            console.log(`334 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
+                        }else{
+                            console.log("336 - Date based scheduling compared to date based scheduling - ELSE");
+                        }
+                       
+                    }
+                    // otherwise, date based scheduling compared check to 1 time - off schedules
+                    else{
                         let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
                         schedule_conflict = isScheduleConflicting;
-                        console.log("322 - date based scheduling compared to recurrence based scheduling- IF");
-                        console.log(`323 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
-                    }else{
-                        console.log("325 - date based scheduling compared to recurrence based scheduling- ELSE");
+                        console.log("344 - Otherwise, date based scheduling compared check to 1 time - off schedules - ELSE");
+                        console.log(`345 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
                     }
-                }
-                // date based scheduling compared to date based scheduling
-                else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
-                    if(date === arr_date && month === arr_month && year === arr_year){
-                        let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                        schedule_conflict = isScheduleConflicting;    
-                        console.log("333 - Date based scheduling compared to date based scheduling- IF");
-                        console.log(`334 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
-                    }else{
-                        console.log("336 - Date based scheduling compared to date based scheduling - ELSE");
-                    }
-                   
-                }
-                // otherwise, date based scheduling compared check to 1 time - off schedules
-                else{
-                    let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                    schedule_conflict = isScheduleConflicting;
-                    console.log("344 - Otherwise, date based scheduling compared check to 1 time - off schedules - ELSE");
-                    console.log(`345 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
                 }
             });
             
