@@ -225,6 +225,7 @@ var scheduleObj = {
             month     = Number(schedule_config['schedule']['month']) || undefined,
             year      = Number(schedule_config['schedule']['year'])  || undefined,
             dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
+            gpio      = Number(schedule_config['device']['gpio']) || undefined,
             schedule_conflict = false,
             timestamp = new Date();
             
@@ -365,8 +366,10 @@ var scheduleObj = {
                 let arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                     arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
                     arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
-                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined;
-                if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined){
+                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
+                    arr_gpio              = Number(schedule_obj['schedule_config']['device']['gpio'])    || undefined;
+                    
+                if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined && gpio === arr_gpio){
                 //if(schedule_obj["_id"] !== schedule_id){
                     // everyday 1 time - off schedules compared to recurrence based scheduling
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
