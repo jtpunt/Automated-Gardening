@@ -160,7 +160,7 @@ var scheduleObj = {
             console.log("Have been resumed");
             
             self.scheduleArr.forEach(function(schedule_obj){
-                console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                 let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                     nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
                     device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
@@ -493,7 +493,7 @@ var scheduleObj = {
                         });
                         console.log(`Done processing schedules: ${self.scheduleArr.length}`);
                         self.scheduleArr.forEach(function(schedule_obj){
-                            console.log("my schedule config: " + JSON.stringify(schedule_obj));
+                            //console.log("my schedule config: " + JSON.stringify(schedule_obj));
                             let date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                                 month         = sanitize_input(schedule_obj['schedule_config']['schedule']['month']),
                                 year          = Number(schedule_obj['schedule_config']['schedule']['year']) || undefined,
@@ -592,7 +592,7 @@ var scheduleObj = {
                     //self.setSchedule(obj, index);
                     // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
                     self.scheduleArr.forEach(function(schedule_obj){
-                        console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                        //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                         let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                             nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
                             device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
