@@ -356,13 +356,13 @@ var scheduleObj = {
             end_second      = Number(end_schedule_config['schedule']['second'])  || undefined,
             end_minute      = Number(end_schedule_config['schedule']['minute'])  || undefined,
             end_hour        = Number(end_schedule_config['schedule']['hour'])    || undefined, 
-            on_timestamp = new Date(),
+            on_timestamp    = new Date(),
             off_timestamp   = new Date();
             
         let conflictMsg = "",
             indexes     = [];
         
-
+        console.log("in isScheduleOverlapping");
         // '00' from minute, second, or hour will create an invalid date object
         if(start_schedule_config['schedule']['second'] === '00'){
             start_second = 0;
@@ -429,7 +429,7 @@ var scheduleObj = {
         let conflictMsg = "",
             indexes     = [];
 
-
+        console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_obj){
             if(isScheduleConflicting){
                 let second = schedule_obj['schedule_config']['schedule']['second'],
