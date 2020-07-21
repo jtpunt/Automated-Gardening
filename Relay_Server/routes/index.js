@@ -111,10 +111,16 @@ router.post('/schedule', async function(req, res){
                 }
                 let device_end = { // // we need to rewrite our device values for our end schedule
                     ... newSchedule['device'],
-                    desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'ff'
+                    desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
                 }
-                let start_time = {... newSchedule['schedule']['start_time'] },
-                    end_time   = {... newSchedule['schedule']['end_time'] },
+                let start_time = {
+                    ... newSchedule['schedule'],
+                    ... newSchedule['schedule']['start_time'] 
+                    
+                    
+                },end_time   = {
+                    ... newSchedule['schedule'],
+                    ... newSchedule['schedule']['end_time'] },
                     start_schedule = {
                         ... newSchedule,
                         schedule: start_time,
