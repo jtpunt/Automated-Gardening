@@ -402,7 +402,15 @@ var scheduleObj = {
                                     next_schedule_minute    = next_schedule_config['schedule']['minute'],
                                     next_schedule_hour      = next_schedule_config['schedule']['hour'];
                                 off_timestamp.setHours(next_schedule_hour, next_schedule_minute, next_schedule_second);
-                                throw new Error(`New Schedule timestamp - ${timestamp} Conflicts with ON - ${on_timestamp} and OFF - ${timestamp}` );
+                                let timestamp_options = {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    second: '2-digit'
+                                }
+                                on_timestamp.toLocaleDateString(undefined, timestamp_options);
+                                timestamp.tolocaleDateString(undefined, timestamp_options);
+                                off_timestamp.toLocaleDateString(undefined, timestamp_options);
+                                throw new Error(`New Schedule timestamp - ${timestamp} Conflicts with ON - ${on_timestamp} and OFF - ${off_timestamp}` );
                             }
                         }
                         schedule_conflict = isScheduleConflicting;  
