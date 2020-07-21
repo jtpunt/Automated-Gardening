@@ -408,7 +408,7 @@ var scheduleObj = {
                                     second: '2-digit'
                                 }
                                 on_timestamp.toLocaleDateString(undefined, timestamp_options);
-                                timestamp.tolocaleDateString(undefined, timestamp_options);
+                                timestamp.toLocaleDateString(undefined, timestamp_options);
                                 off_timestamp.toLocaleDateString(undefined, timestamp_options);
                                 throw new Error(`New Schedule timestamp - ${timestamp} Conflicts with ON - ${on_timestamp} and OFF - ${off_timestamp}` );
                             }
