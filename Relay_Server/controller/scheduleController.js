@@ -189,6 +189,7 @@ var scheduleObj = {
         let self              = this,
             schedule_conflict = false;
         
+        console.log("createSchedule fn: " + new_schedule_config);
         schedule_conflict = self.isScheduleConflicting(new_schedule_config); // true - there is a schedule conflict
         console.log("Back in createSchedule: " + schedule_conflict);
         if(schedule_conflict == false){
@@ -226,6 +227,7 @@ var scheduleObj = {
             timestamp = new Date();
             
         timestamp.setHours(hour, minute, second);  
+        console.log("timestamp in isScheduleConflicting: " + timestamp);
         let intersect = function(a, b){
             return a.filter(Set.prototype.has, new Set(b));
         }
