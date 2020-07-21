@@ -398,7 +398,14 @@ var scheduleObj = {
                     hour            = schedule_config['schedule']['hour'],
                     timestamp       = new Date();
                 
+                let schedule_obj1    = self.findScheduleIndex(schedule_config['schedule']['nextScheduleId']),
+                    schedule_config1 = schedule_obj['schedule_config'],
+                    second1         = schedule_config['schedule']['second'],
+                    minute1          = schedule_config['schedule']['minute'],
+                    hour1            = schedule_config['schedule']['hour'],
+                    timestamp1       = new Date();
                 timestamp.setHours(hour, second, minute);
+                timestamp1.setHours(hour1, second1, minute1);
                 
                 console.log("in isScheduleOverlapping: " + on_timestamp, timestamp, off_timestamp);
                 
@@ -408,8 +415,10 @@ var scheduleObj = {
                 let fixed_timestamp = timestamp.toLocaleString('en-US', timestamp_options);
                 let fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
                 
-                if(on_timestamp <= timestamp && off_timestamp >= timestamp){
-                   conflictMsg += `New Schedule timestamp - ${fixed_timestamp} overlaps with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}`;
+                if(on_timestamp <= timestamp && off_timestamp >= timestamp1){
+                   conflictMsg += "Overlapping?";
+                }else{
+                    conflictMsg += "Not overlapping";
                 }
         
             }
