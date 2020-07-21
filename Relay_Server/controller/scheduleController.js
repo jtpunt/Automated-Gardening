@@ -348,8 +348,73 @@ var scheduleObj = {
     areSchedulesOnSameDay: function(schedule_config){
 
     },
-    isScheduleOverlapping: function(start_timestamp, end_timestamp){
+    isScheduleOverlapping: function(start_schedule_config, end_schedule_config){
+        let self      = this,
+            start_second    = Number(start_schedule_config['schedule']['second'])|| undefined,
+            start_minute    = Number(start_schedule_config['schedule']['minute'])|| undefined,
+            start_hour      = Number(start_schedule_config['schedule']['hour'])  || undefined,
+            end_second      = Number(end_schedule_config['schedule']['second'])  || undefined,
+            end_minute      = Number(end_schedule_config['schedule']['minute'])  || undefined,
+            end_hour        = Number(end_schedule_config['schedule']['hour'])    || undefined, 
+            on_timestamp = new Date(),
+            off_timestamp   = new Date();
+            
+        let conflictMsg = "",
+            indexes     = [];
         
+
+        // '00' from minute, second, or hour will create an invalid date object
+        if(start_schedule_config['schedule']['second'] === '00'){
+            start_second = 0;
+        }
+        if(start_schedule_config['schedule']['minute'] === '00'){
+            start_minute = 0;
+        }
+        if(start_schedule_config['schedule']['hour'] == '00'){
+            start_hour = 0;
+        }
+        // '00' from minute, second, or hour will create an invalid date object
+        if(end_schedule_config['schedule']['second'] === '00'){
+            end_second = 0;
+        }
+        if(end_schedule_config['schedule']['minute'] === '00'){
+            end_minute = 0;
+        }
+        if(end_schedule_config['schedule']['hour'] == '00'){
+            end_hour = 0;
+        }
+        on_timestamp.setHours(start_hour, start_minute, start_second);  
+        off_timestamp.setHours(end_hour, end_minute, end_second);
+        
+        indexes = self.findSameDayScheduleAndRetIdxs(start_schedule_config);
+        console.log("indexes: " + indexes);
+        
+        indexes.forEach(function(index){
+            if(index >= 0){
+                let schedule_obj    = self.scheduleArr[index],
+                    schedule_config = schedule_obj['schedule_config'],
+                    second          = schedule_config['schedule']['second'],
+                    minute          = schedule_config['schedule']['minute'],
+                    hour            = schedule_config['schedule']['hour'],
+                    timestamp       = new Date();
+                
+                timestamp.setHours(hour, second, minute);
+                
+                let timestamp_options = { hour: 'numeric', minute: 'numeric', hour12: true };
+                
+                let fixed_on_timestamp = on_timestamp.toLocaleString('en-US', timestamp_options);
+                let fixed_timestamp = timestamp.toLocaleString('en-US', timestamp_options);
+                let fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
+                
+                if(on_timestamp <= timestamp && off_timestamp >= timestamp){
+                   conflictMsg += `New Schedule timestamp - ${fixed_timestamp} overlaps with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}`;
+                }
+        
+            }
+        });
+        if(conflictMsg !== ""){
+            throw new Error(conflictMsg);
+        }
     },
     isScheduleConflicting: function(schedule_config){
         let self      = this,
