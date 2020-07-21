@@ -399,15 +399,16 @@ var scheduleObj = {
                     timestamp       = new Date();
                 
                 let schedule_obj1    = self.findScheduleIndex(schedule_config['schedule']['nextScheduleId']),
-                    schedule_config1 = schedule_obj['schedule_config'],
-                    second1         = schedule_config['schedule']['second'],
-                    minute1          = schedule_config['schedule']['minute'],
-                    hour1            = schedule_config['schedule']['hour'],
+                    schedule_config1 = schedule_obj1['schedule_config'],
+                    second1          = schedule_config1['schedule']['second'],
+                    minute1          = schedule_config1['schedule']['minute'],
+                    hour1            = schedule_config1['schedule']['hour'],
                     timestamp1       = new Date();
+                    
                 timestamp.setHours(hour, second, minute);
                 timestamp1.setHours(hour1, second1, minute1);
                 
-                console.log("in isScheduleOverlapping: " + on_timestamp, timestamp, off_timestamp);
+                console.log(`on_timestamp ${on_timestamp}, timestamp: ${timestamp}, off_timestamp" ${off_timestamp}, timestamp1: ${timestamp1}`);
                 
                 let timestamp_options = { hour: 'numeric', minute: 'numeric', hour12: true };
                 
