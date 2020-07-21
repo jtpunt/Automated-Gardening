@@ -196,7 +196,7 @@ var scheduleObj = {
             if(newScheduleResponse === undefined){
                 return newScheduleResponse;
             }else{
-                console.log(`await result: ${newScheduleResponse}`);
+                //console.log(`await result: ${newScheduleResponse}`);
                 let job = self.buildJob(
                     new_schedule_config, 
                     activateRelayFn, 
