@@ -400,6 +400,8 @@ var scheduleObj = {
                 
                 timestamp.setHours(hour, second, minute);
                 
+                console.log("in isScheduleOverlapping: " + on_timestamp, timestamp, off_timestamp);
+                
                 let timestamp_options = { hour: 'numeric', minute: 'numeric', hour12: true };
                 
                 let fixed_on_timestamp = on_timestamp.toLocaleString('en-US', timestamp_options);
