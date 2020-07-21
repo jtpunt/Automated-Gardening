@@ -160,7 +160,7 @@ var scheduleObj = {
             console.log("Have been resumed");
             
             self.scheduleArr.forEach(function(schedule_obj){
-                //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                 let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                     nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
                     device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
@@ -196,7 +196,7 @@ var scheduleObj = {
             if(newScheduleResponse === undefined){
                 return newScheduleResponse;
             }else{
-                //console.log(`await result: ${newScheduleResponse}`);
+                console.log(`await result: ${newScheduleResponse}`);
                 let job = self.buildJob(
                     new_schedule_config, 
                     activateRelayFn, 
@@ -222,9 +222,10 @@ var scheduleObj = {
             month     = Number(prev_schedule_config['schedule']['month']) || undefined,
             year      = Number(prev_schedule_config['schedule']['year'])  || undefined,
             dayOfWeek = (prev_schedule_config['schedule']['dayOfWeek']) ? Array.from(prev_schedule_config['schedule']['dayOfWeek']) : undefined,
-            schedule_conflict = false;
+            schedule_conflict = false,
+            timestamp = new Date();
             
-            
+        timestamp.setHours(hour, minute, second);  
         let intersect = function(a, b){
             return a.filter(Set.prototype.has, new Set(b));
         }
@@ -249,7 +250,6 @@ var scheduleObj = {
                     arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
                     timestamp         = new Date();
                     
-                timestamp.setHours(arr_hour, arr_minute, arr_second);  
                 if(schedule_obj["_id"] !== schedule_id){
                     // recurrence based scheduling compared to recurrence based scheduling
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
@@ -306,10 +306,8 @@ var scheduleObj = {
                     arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                     arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
                     arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
-                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
-                    timestamp         = new Date();
+                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined;
                     
-                timestamp.setHours(arr_hour, arr_minute, arr_second);  
                 if(schedule_obj["_id"] !== schedule_id){
                     // date based scheduling compared to recurrence based scheduling
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
@@ -357,10 +355,8 @@ var scheduleObj = {
                 let arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                     arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
                     arr_year          = Number(schedule_obj['schedule_config']['schedule']['year'])  || undefined,
-                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
-                    timestamp         = new Date();
+                    arr_dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined;
                 if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined){
-                    timestamp.setHours(hour, minute, second);  
                 //if(schedule_obj["_id"] !== schedule_id){
                     // everyday 1 time - off schedules compared to recurrence based scheduling
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
@@ -380,8 +376,8 @@ var scheduleObj = {
                     else{ 
                         let isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
                         schedule_conflict = isScheduleConflicting;  
-                        console.log("386 - otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules - ELSE");
-                        console.log(`387 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}`);
+                        console.log("386 - otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules - ELSE ");
+                        console.log(`387 - isScheduleConflicting: ${isScheduleConflicting}, schedule_conflict: ${schedule_conflict}, timestamp: ${timestamp}`);
                     }
                 }
                 
@@ -493,7 +489,7 @@ var scheduleObj = {
                         });
                         console.log(`Done processing schedules: ${self.scheduleArr.length}`);
                         self.scheduleArr.forEach(function(schedule_obj){
-                            //console.log("my schedule config: " + JSON.stringify(schedule_obj));
+                            console.log("my schedule config: " + JSON.stringify(schedule_obj));
                             let date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                                 month         = sanitize_input(schedule_obj['schedule_config']['schedule']['month']),
                                 year          = Number(schedule_obj['schedule_config']['schedule']['year']) || undefined,
@@ -592,7 +588,7 @@ var scheduleObj = {
                     //self.setSchedule(obj, index);
                     // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
                     self.scheduleArr.forEach(function(schedule_obj){
-                        //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                        console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                         let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                             nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
                             device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
