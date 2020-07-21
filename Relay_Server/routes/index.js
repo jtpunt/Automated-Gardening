@@ -150,9 +150,10 @@ router.post('/schedule', async function(req, res){
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
                     console.log("start_schedule: " + start_schedule['device']['desired_state']);
                     console.log("end_schedule: " + end_schedule['device']['desired_state']);
+                    scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
                     scheduleController.isScheduleConflicting(end_schedule);
                     scheduleController.isScheduleConflicting(start_schedule);
-                    //scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
+                    
                     // create the off schedule and grab the id
                     let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
                     start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
