@@ -661,7 +661,7 @@ var scheduleObj = {
             //     // make sure the everyday once a day schedule doesn't conflict with any other schedules
             // }
         
-            schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
+            //schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
             let timestamp = new Date();
             // isSheduleConflicting?
             
