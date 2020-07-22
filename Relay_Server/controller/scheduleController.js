@@ -410,8 +410,8 @@ var scheduleObj = {
                     hour1            = schedule_config1['schedule']['hour'],
                     timestamp1       = new Date();
                     
-                timestamp.setHours(hour, second, minute);
-                timestamp1.setHours(hour1, second1, minute1);
+                timestamp.setHours(hour, minute, second);
+                timestamp1.setHours(hour1, minute1, second1);
                 
                 console.log(`on_timestamp ${on_timestamp}, timestamp: ${timestamp}, off_timestamp" ${off_timestamp}, timestamp1: ${timestamp1}`);
                 
