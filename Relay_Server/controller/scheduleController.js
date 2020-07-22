@@ -440,10 +440,10 @@ var scheduleObj = {
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_obj){
             if(isScheduleConflicting){
-                let second = schedule_obj['schedule']['second'],
-                    minute = schedule_obj['schedule']['minute'],
+                let second = schedule_obj['schedule_config']['schedule']['second'],
+                    minute = schedule_obj['schedule_config']['schedule']['minute'],
                     hour   = schedule_obj['schedule_config']['schedule']['hour'],
-                    offScheduleId = schedule_obj['schedule']['nextScheduleId'].toString();
+                    offScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'].toString();
                     
                 let on_timestamp  = new Date(),
                     off_timestamp = new Date();
@@ -451,7 +451,7 @@ var scheduleObj = {
                 on_timestamp.setHours(hour, minute, second);
                 
                 let offScheduleIndex = self.findScheduleIndex(offScheduleId);
-
+                
                 if(offScheduleIndex !== -1){
                     let off_schedule_config    = self.scheduleArr[offScheduleIndex]['schedule_config'],
                         off_schedule_second    = off_schedule_config['schedule']['second'],
@@ -463,7 +463,8 @@ var scheduleObj = {
                     let fixed_on_timestamp = on_timestamp.toLocaleString('en-US', timestamp_options);
                     let fixed_timestamp = timestamp.toLocaleString('en-US', timestamp_options);
                     let fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
-                    return `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}, offScheduleIndex: ${offScheduleIndex}`;
+                    // `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}, offScheduleIndex: ${offScheduleIndex}`;
+                    return `New Schedule timestamp - Conflicts with ON - and OFF - , offScheduleIndex: `;
                 }
             }
         }
