@@ -469,6 +469,7 @@ var scheduleObj = {
                     console.log("offScheduleIndex === -1");
             }else{
                 console.log("No schedule conflict");
+                return "";
             }
         }
         // '00' from minute, second, or hour will create an invalid date object
@@ -490,7 +491,7 @@ var scheduleObj = {
             if(index >= 0){
                 let schedule_obj          = self.scheduleArr[index],
                     isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                console.log("491: index >= 0");
+                console.log("491: index >= 0. timestamp: " + timestamp);
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_obj);
             }
         });
