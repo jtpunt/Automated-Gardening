@@ -440,16 +440,16 @@ var scheduleObj = {
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_obj){
             if(isScheduleConflicting){
-                let second = schedule_obj['schedule_config']['schedule']['second'],
-                    minute = schedule_obj['schedule_config']['schedule']['minute'],
-                    hour   = schedule_obj['schedule_config']['schedule']['hour'],
-                    offScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'].toString();
+                console.log("In handleScheduleConflictsMsg");
+                let second = schedule_obj['schedule']['second'],
+                    minute = schedule_obj['schedule']['minute'],
+                    hour   = schedule_obj['schedule']['hour'],
+                    offScheduleId = schedule_obj['schedule']['nextScheduleId'].toString();
                     
                 let on_timestamp  = new Date(),
                     off_timestamp = new Date();
                     
                 on_timestamp.setHours(hour, minute, second);
-                console.log("In handleScheduleConflictsMsg");
                 let offScheduleIndex = self.findScheduleIndex(offScheduleId);
                 
                 if(offScheduleIndex !== -1){
@@ -467,6 +467,8 @@ var scheduleObj = {
                     return `New Schedule timestamp - Conflicts with ON - and OFF - , offScheduleIndex: `;
                 }else
                     console.log("offScheduleIndex === -1");
+            }else{
+                console.log("No schedule conflict");
             }
         }
         // '00' from minute, second, or hour will create an invalid date object
