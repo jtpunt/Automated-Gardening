@@ -185,7 +185,7 @@ router.post('/schedule', async function(req, res){
                 if(newSchedule['device']['desired_state'] === undefined)
                     throw new Error("Device desired state not found!");
                 else{
-                    if(typeof newSchedule['device']['desired_state'] === 'string')
+                    if(typeof newSchedule['device']['desired_state'] === 'boolean')
                         throw new Error("Desired state must be 'true' or 'false'.")
                 }
             }
