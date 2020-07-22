@@ -449,7 +449,7 @@ var scheduleObj = {
                     off_timestamp = new Date();
                     
                 on_timestamp.setHours(hour, minute, second);
-                
+                console.log("In handleScheduleConflictsMsg");
                 let offScheduleIndex = self.findScheduleIndex(offScheduleId);
                 
                 if(offScheduleIndex !== -1){
