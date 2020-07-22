@@ -97,7 +97,105 @@ router.post('/schedule', async function(req, res){
     try{
         console.log("newSchedule: ", newSchedule);
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-
+        //let new_on_schedule = scheduleController.buildSchedule(),
+          //  new_off_schedule = scheduleController.buildSchedule();
+          
+          
+        // {
+        //     schedule: {
+        //         start_time: {
+        //             second: 0,
+        //             minute: 30,
+        //             hour: 11
+        //         },
+        //         end_time: {
+        //             second: 0,
+        //             minute: 30
+        //             hour: 12
+        //         },
+        //         dayOfWeek: [0, 1, 4]
+        //     },
+        //     device: {
+        //         id: mongoId,
+        //         localIP: ipAddr,
+        //         gpio: deviceGpio
+        //     }
+        // }  
+        if(newSchedule === undefined)
+            throw new Error("New schedule and device configuration details not found.")
+        else{
+            if(newSchedule['schedule'] === undefined)
+                throw new Error("New schedule configuration details not found.")
+            else{
+                if(newSchedule['schedule']['end_time'] === undefined)
+                    throw new Error("End time schedule configuration details not found.")
+                else{
+                    if(newSchedule['schedule']['end_time']['second'] === undefined)
+                        throw new Error("End Time Second configuration details not found.")
+                    if(newSchedule['schedule']['end_time']['minute'] === undefined)
+                        throw new Error("End Time Minute configuration details not found.")
+                    if(newSchedule['schedule']['end_time']['hour'] === undefined)
+                        throw new Error("End Time hour configuration details not found.")
+                }
+                if(newSchedule['schedule']['start_time'] !== undefined){
+                    if(newSchedule['schedule']['start_time']['second'] === undefined)
+                        throw new Error("End Time Second configuration details not found.")
+                    if(newSchedule['schedule']['start_time']['minute'] === undefined)
+                        throw new Error("End Time Minute configuration details not found.")
+                    if(newSchedule['schedule']['start_time']['hour'] === undefined)
+                        throw new Error("End Time hour configuration details not found.")
+                }
+                if(newSchedule['schedule']['dayOfWeek'] !== undefined){
+                    
+                }
+                if(newSchedule['schedule']['date'] !== undefined){
+                    if(newSchedule['schedule']['month'] === undefined)
+                        throw new Error("Month input required for date-based scheduling");
+                    if(newSchedule['schedule']['year'] !== undefined)
+                        throw new Error("Year input requried for date-based scheduling")
+                }
+                if(newSchedule['schedule']['month'] !== undefined){
+                    if(newSchedule['schedule']['year'] !== undefined)
+                        throw new Error("Year input requried for date-based scheduling")
+                    if(newSchedule['schedule']['date'] === undefined)
+                        throw new Error("Date input required for date-based scheduling");
+                }
+                if(newSchedule['schedule']['year'] !== undefined){
+                    if(newSchedule['schedule']['date'] !== undefined)
+                        throw new Error("Date input requried for date-based scheduling")
+                    if(newSchedule['schedule']['month'] === undefined)
+                        throw new Error("Month input required for date-based scheduling");
+                }
+            }
+            if(newSchedule['device'] === undefined){
+                throw new Error("New Device configurations not found");
+            }else{
+                if(newSchedule['device']['id'] === undefined)
+                    throw new Error("Device id not found!");
+                else{
+                    
+                }
+                if(newSchedule['device']['local_ip'] === undefined)
+                    throw new Error("Device Local IP not found!");
+                if(newSchedule['device']['gpio'] === undefined)
+                    throw new Error("Device GPIO not found!");
+                else{
+                    if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
+                        throw new Error("Invalid GPIO input");
+                    }
+                }
+                if(newSchedule['device']['desired_state'] === undefined)
+                    throw new Error("Device desired state not found!");
+                else{
+                    if(typeof newSchedule['device']['desired_state'] !== 'boolean')
+                        throw new Error("Desired state must be 'true' or 'false'.")
+                }
+            }
+        }
+                //let new_on_schedule = scheduleController.buildSchedule(),
+                //  new_off_schedule = scheduleController.buildSchedule();
+        
+        
         if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
         }else{
@@ -114,24 +212,28 @@ router.post('/schedule', async function(req, res){
                     desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
                 }
                 let start_time = {
-                    ... newSchedule['schedule'],
-                    ... newSchedule['schedule']['start_time'] 
+                    ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
+                    ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
                     
                     
-                },end_time   = {
+                },
+                end_time   = {
                     ... newSchedule['schedule'],
-                    ... newSchedule['schedule']['end_time'] },
-                    start_schedule = {
-                        ... newSchedule,
-                        schedule: start_time,
-                        device: device_start
-                        
-                    },
-                    end_schedule   = {
-                        ... newSchedule, 
-                        schedule: end_time,
-                        device: device_end
-                    };
+                    ... newSchedule['schedule']['end_time'] 
+                    
+                },
+                start_schedule = {
+                    ... newSchedule,
+                    schedule: start_time,
+                    device: device_start
+                    
+                },
+                end_schedule   = {
+                    ... newSchedule, 
+                    schedule: end_time,
+                    device: device_end
+                };
+                
                 let start_time_timestamp = new Date(),
                     end_time_timestamp = new Date();
                 
@@ -151,8 +253,8 @@ router.post('/schedule', async function(req, res){
                     console.log("start_schedule: " + start_schedule['device']['desired_state']);
                     console.log("end_schedule: " + end_schedule['device']['desired_state']);
                     scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
-                    //scheduleController.isScheduleConflicting(end_schedule);
-                    //scheduleController.isScheduleConflicting(start_schedule);
+                    scheduleController.isScheduleConflicting(end_schedule);
+                    scheduleController.isScheduleConflicting(start_schedule);
                     
                     // create the off schedule and grab the id
                     let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
