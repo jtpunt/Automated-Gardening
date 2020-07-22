@@ -458,14 +458,15 @@ var scheduleObj = {
                         off_schedule_minute    = off_schedule_config['schedule']['minute'],
                         off_schedule_hour      = off_schedule_config['schedule']['hour'];
                     off_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
-                    let timestamp_options = { hour: 'numeric', minute: 'numeric', hour12: true };
+                    // let timestamp_options = { hour: 'numeric', minute: 'numeric', hour12: true };
                     
-                    let fixed_on_timestamp = on_timestamp.toLocaleString('en-US', timestamp_options);
-                    let fixed_timestamp = timestamp.toLocaleString('en-US', timestamp_options);
-                    let fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
+                    // let fixed_on_timestamp = on_timestamp.toLocaleString('en-US', timestamp_options);
+                    // let fixed_timestamp = timestamp.toLocaleString('en-US', timestamp_options);
+                    // let fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
                     // `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}, offScheduleIndex: ${offScheduleIndex}`;
                     return `New Schedule timestamp - Conflicts with ON - and OFF - , offScheduleIndex: `;
-                }
+                }else
+                    console.log("offScheduleIndex === -1");
             }
         }
         // '00' from minute, second, or hour will create an invalid date object
@@ -487,7 +488,7 @@ var scheduleObj = {
             if(index >= 0){
                 let schedule_obj          = self.scheduleArr[index],
                     isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                    
+                console.log("491: index >= 0");
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_obj);
             }
         });
