@@ -5,7 +5,6 @@ var scheduleSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Device"
         },
-        local_ip: String,
         gpio: Number,
         desired_state: Boolean
     }, 

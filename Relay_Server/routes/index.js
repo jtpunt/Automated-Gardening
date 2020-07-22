@@ -175,8 +175,6 @@ router.post('/schedule', async function(req, res){
                 else{
                     
                 }
-                if(newSchedule['device']['local_ip'] === undefined)
-                    throw new Error("Device Local IP not found!");
                 if(newSchedule['device']['gpio'] === undefined)
                     throw new Error("Device GPIO not found!");
                 else{
@@ -187,7 +185,7 @@ router.post('/schedule', async function(req, res){
                 if(newSchedule['device']['desired_state'] === undefined)
                     throw new Error("Device desired state not found!");
                 else{
-                    if(typeof newSchedule['device']['desired_state'] !== 'boolean')
+                    if(typeof newSchedule['device']['desired_state'] === 'string')
                         throw new Error("Desired state must be 'true' or 'false'.")
                 }
             }
