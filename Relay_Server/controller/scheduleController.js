@@ -469,6 +469,7 @@ var scheduleObj = {
                     console.log("offScheduleIndex === -1");
             }else{
                 console.log("No schedule conflict");
+                return "";
             }
         }
         // '00' from minute, second, or hour will create an invalid date object
