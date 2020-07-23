@@ -250,14 +250,11 @@ router.post('/schedule', async function(req, res){
                 scheduleController.isScheduleConflicting(start_schedule);
                 
                 // create the off schedule and grab the id
-                
                 let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
                 start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
             
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                 let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
-                
-                
                 end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
@@ -323,8 +320,6 @@ router.put('/schedule/:schedule_id', function(req, res){
                 my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
                 console.log("My schedule else if: " + my_schedule);
             }else {
-
-                
                 console.log("My schedule else:" + my_schedule);
             } 
             scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);

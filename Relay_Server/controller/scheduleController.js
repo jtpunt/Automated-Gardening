@@ -117,7 +117,7 @@ var scheduleObj = {
             let device_gpio = self.scheduleArr[index]['schedule_config']['device']['gpio'],
                 desired_state = false;
                 
-            activateRelayFn.call(context,  device_gpio, 0);
+            activateRelayFn.call(context, device_gpio, 0);
             console.log("Have been successfully canceled");
         }else{
             console.log("Schedule not found!");
@@ -662,8 +662,8 @@ var scheduleObj = {
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                             if(isScheduleActive === true)
                                 activateRelayFn.call(context,  device_gpio, desired_state);
-                            else
-                                activateRelayFn.call(context, device_gpio, 0);
+                            // else
+                            //     activateRelayFn.call(context, device_gpio, 0);   
                         }
                     });
                 }
