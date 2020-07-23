@@ -169,7 +169,7 @@ var scheduleObj = {
                 if(nextScheduleId === undefined){
                     console.log("nextScheduleId is undefined");
                 }else{
-                    let today   = new Date();
+                    let today = new Date();
                     let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                     if(isScheduleActive === true)
                         activateRelayFn.call(context,  device_gpio, desired_state);
@@ -677,6 +677,8 @@ var scheduleObj = {
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                             if(isScheduleActive === true)
                                 activateRelayFn.call(context,  device_gpio, desired_state);
+                            else
+                                activateRelayFn.call(context, device_gpio, 0);
                         }
                     });
                 }
