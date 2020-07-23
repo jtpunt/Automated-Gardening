@@ -660,11 +660,10 @@ var scheduleObj = {
                         }else{
                             let today                   = new Date();
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                            if(isScheduleActive === true)
+                            if(isScheduleActive === true && desired_state === 1)
                                 activateRelayFn.call(context,  device_gpio, desired_state);
                             else
-                                if(desired_state === 1)
-                                    activateRelayFn.call(context, device_gpio, 0);  
+                                activateRelayFn.call(context, device_gpio, 0);  
                         }
                     });
                 }
