@@ -117,7 +117,7 @@ var scheduleObj = {
             let device_gpio = self.scheduleArr[index]['schedule_config']['device']['gpio'],
                 desired_state = false;
                 
-            activateRelayFn.call(context,  device_gpio, desired_state);
+            activateRelayFn.call(context,  device_gpio, 0);
             console.log("Have been successfully canceled");
         }else{
             console.log("Schedule not found!");
@@ -126,13 +126,18 @@ var scheduleObj = {
             
     },
     // invalidates the next planned invocation or the job
-    cancelNextSchedule: function(schedule_id){
+    cancelNextSchedule: function(schedule_id, activateRelayFn, context){
         let self  = this,
             index = self.findScheduleIndex(schedule_id);
-        if(index !== -1){   
+        if(index !== -1){
+            let schedule_config = self.scheduleArr[index]['schedule_config'],
+                device_gpio     = schedule_config['device']['gpio'];
+                
             // cancelNext(reschedule) - when you set reschedule to true then the Job is newly scheduled afterwards
             console.log(`Next Schedule for ${self.scheduleArr[index]['job'].nextInvocation()}`)
+            //activateRelayFn.call(context,  device_gpio, 0);
             self.scheduleArr[index]['job'].cancelNext();
+            
             console.log("Has been successfully canceled");
         }else{
             console.log("Schedule not found!");
@@ -342,25 +347,20 @@ var scheduleObj = {
         
         console.log("in isScheduleOverlapping");
         // '00' from minute, second, or hour will create an invalid date object
-        if(on_schedule_config['schedule']['second'] === '00'){
+        if(on_schedule_config['schedule']['second'] === '00')
             new_on_second = 0;
-        }
-        if(on_schedule_config['schedule']['minute'] === '00'){
+        if(on_schedule_config['schedule']['minute'] === '00')
             new_on_minute = 0;
-        }
-        if(on_schedule_config['schedule']['hour'] == '00'){
+        if(on_schedule_config['schedule']['hour'] == '00')
             new_on_hour = 0;
-        }
         // '00' from minute, second, or hour will create an invalid date object
-        if(off_schedule_config['schedule']['second'] === '00'){
+        if(off_schedule_config['schedule']['second'] === '00')
             new_off_second = 0;
-        }
-        if(off_schedule_config['schedule']['minute'] === '00'){
+        if(off_schedule_config['schedule']['minute'] === '00')
             new_off_minute = 0;
-        }
-        if(off_schedule_config['schedule']['hour'] == '00'){
+        if(off_schedule_config['schedule']['hour'] == '00')
             new_off_hour = 0;
-        }
+            
         new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
         new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
         
@@ -451,15 +451,13 @@ var scheduleObj = {
             }
         }
         // '00' from minute, second, or hour will create an invalid date object
-        if(schedule_config['schedule']['second'] === '00'){
+        if(schedule_config['schedule']['second'] === '00')
             second = 0;
-        }
-        if(schedule_config['schedule']['minute'] === '00'){
+        if(schedule_config['schedule']['minute'] === '00')
             minute = 0;
-        }
-        if(schedule_config['schedule']['hour'] == '00'){
+        if(schedule_config['schedule']['hour'] == '00')
             hour = 0;
-        }
+            
         timestamp.setHours(hour, minute, second);  
         
         indices = self.findSameDaySchedulesAndRetIdxs(schedule_config);
@@ -562,7 +560,6 @@ var scheduleObj = {
                             );
                             var obj = {"schedule_config": schedule_config, job};
                             self.setSchedule(obj);
-                            
                         });
                         console.log(`Done processing schedules: ${self.scheduleArr.length}`);
                         self.scheduleArr.forEach(function(schedule_obj){
@@ -620,20 +617,8 @@ var scheduleObj = {
         console.log(self.scheduleArr);
         if(index !== -1){
             console.log(`Match found at index: ${index}`);
-            // let start_time_timestamp = new Date(),
-            //     end_time_timestamp = new Date();
-            // if(updated_schedule_config['schedule']['nextScheduleId'] !== undefined){
-            //     start_time_timestamp.setHours(updated_schedule_config['schedule']['hour'], updated_schedule_config['schedule']['minute'], updated_schedule_config['schedule']['second']); 
-            // }else if(updated_schedule_config['schedule']['prevScheduleId'] !== undefined){
-            //     end_time_timestamp.setHours(updated_schedule_config['schedule']['hour'], updated_schedule_config['schedule']['minute'], updated_schedule_config['schedule']['second']);
-            // }else{
-            //     // make sure the everyday once a day schedule doesn't conflict with any other schedules
-            // }
-        
+
             //schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
-            let timestamp = new Date();
-            // isSheduleConflicting?
-            
             Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
                 if(err){
                     console.log(err);
