@@ -115,11 +115,11 @@ var scheduleObj = {
             console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
             self.scheduleArr[index]['job'].cancel();
             
-            let schedule_obj = self.scheduleArr[index],
-                device_gpio = scheduleObj['schedule_config']['device']['gpio'],
+            let schedule_config = self.scheduleArr[index]['schedule_config'],
+                device_gpio     = schedule_config['device']['gpio'],
                 today = new Date();
                 
-            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+            let isScheduleActive = self.scheduleIsActive(schedule_config, today);
             
             if(isScheduleActive === true)
                 activateRelayFn.call(context,  device_gpio, 0);
