@@ -169,7 +169,7 @@ var scheduleObj = {
                 if(nextScheduleId === undefined){
                     console.log("nextScheduleId is undefined");
                 }else{
-                    let today = new Date();
+                    let today   = new Date();
                     let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                     if(isScheduleActive === true)
                         activateRelayFn.call(context,  device_gpio, desired_state);
@@ -183,8 +183,8 @@ var scheduleObj = {
         }
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
-        let self                = this,
-            newScheduleResponse = await Scheduler.create(new_schedule_config);
+        let self              = this;
+        let newScheduleResponse = await Scheduler.create(new_schedule_config);
         
         if(newScheduleResponse === undefined){
             return newScheduleResponse;
@@ -217,13 +217,15 @@ var scheduleObj = {
         let indices = [];
             
         // '00' from minute, second, or hour will create an invalid date object
-        if(schedule_config['schedule']['second'] === '00')
+        if(schedule_config['schedule']['second'] === '00'){
             second = 0;
-        if(schedule_config['schedule']['minute'] === '00')
+        }
+        if(schedule_config['schedule']['minute'] === '00'){
             minute = 0;
-        if(schedule_config['schedule']['hour'] == '00')
+        }
+        if(schedule_config['schedule']['hour'] == '00'){
             hour = 0;
-            
+        }
         timestamp.setHours(hour, minute, second);  
         let intersect = function(a, b){
             return a.filter(Set.prototype.has, new Set(b));
@@ -340,19 +342,25 @@ var scheduleObj = {
         
         console.log("in isScheduleOverlapping");
         // '00' from minute, second, or hour will create an invalid date object
-        if(on_schedule_config['schedule']['second'] === '00')
+        if(on_schedule_config['schedule']['second'] === '00'){
             new_on_second = 0;
-        if(on_schedule_config['schedule']['minute'] === '00')
+        }
+        if(on_schedule_config['schedule']['minute'] === '00'){
             new_on_minute = 0;
-        if(on_schedule_config['schedule']['hour'] == '00')
+        }
+        if(on_schedule_config['schedule']['hour'] == '00'){
             new_on_hour = 0;
-        if(off_schedule_config['schedule']['second'] === '00')
+        }
+        // '00' from minute, second, or hour will create an invalid date object
+        if(off_schedule_config['schedule']['second'] === '00'){
             new_off_second = 0;
-        if(off_schedule_config['schedule']['minute'] === '00')
+        }
+        if(off_schedule_config['schedule']['minute'] === '00'){
             new_off_minute = 0;
-        if(off_schedule_config['schedule']['hour'] == '00')
+        }
+        if(off_schedule_config['schedule']['hour'] == '00'){
             new_off_hour = 0;
-            
+        }
         new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
         new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
         
@@ -668,9 +676,7 @@ var scheduleObj = {
                             let today                   = new Date();
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                             if(isScheduleActive === true)
-                                activateRelayFn.call(context,  device_gpio, desired_state)
-                            else
-                                activateRelayFn.call(context, device_gpio, false);
+                                activateRelayFn.call(context,  device_gpio, desired_state);
                         }
                     });
                 }

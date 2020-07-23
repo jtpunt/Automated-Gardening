@@ -224,8 +224,8 @@ router.post('/schedule', async function(req, res){
                 schedule: end_time,
                 device: device_end
             };
-            let new_on_schedule = scheduleController.buildSchedule(start_time),
-                new_off_schedule = scheduleController.buildSchedule(end_time);
+            // let new_on_schedule = scheduleController.buildSchedule(start_time),
+            //     new_off_schedule = scheduleController.buildSchedule(end_time);
                 
             let start_time_timestamp = new Date(),
                 end_time_timestamp = new Date();
