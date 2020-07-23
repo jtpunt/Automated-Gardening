@@ -114,10 +114,17 @@ var scheduleObj = {
         // cancel(reschedule) - when you set reschedule to true then the Job is newly scheduled afterwards
             console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
             self.scheduleArr[index]['job'].cancel();
-            let device_gpio = self.scheduleArr[index]['schedule_config']['device']['gpio'],
-                desired_state = false;
+            
+            let schedule_obj = self.scheduleArr[index],
+                device_gpio = scheduleObj['schedule_config']['device']['gpio'],
+                today = new Date();
                 
-            activateRelayFn.call(context, device_gpio, 0);
+            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+            
+            if(isScheduleActive === true)
+                activateRelayFn.call(context,  device_gpio, 0);
+                
+
             console.log("Have been successfully canceled");
         }else{
             console.log("Schedule not found!");
@@ -130,6 +137,7 @@ var scheduleObj = {
         let self  = this,
             index = self.findScheduleIndex(schedule_id);
         if(index !== -1){
+            
             let schedule_config = self.scheduleArr[index]['schedule_config'],
                 device_gpio     = schedule_config['device']['gpio'];
                 
