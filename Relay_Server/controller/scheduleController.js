@@ -660,7 +660,7 @@ var scheduleObj = {
                         }else{
                             let today                   = new Date();
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                            if(isScheduleActive === true && desired_state === 1)
+                            if(isScheduleActive === true)
                                 activateRelayFn.call(context,  device_gpio, desired_state);
                             else
                                 activateRelayFn.call(context, device_gpio, 0);  
