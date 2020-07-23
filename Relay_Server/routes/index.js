@@ -190,11 +190,9 @@ router.post('/schedule', async function(req, res){
                 }
             }
         }
-                //let new_on_schedule = scheduleController.buildSchedule(),
-                //  new_off_schedule = scheduleController.buildSchedule();
+
         // you can set a schedule with a start and end time
         if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
-            
             let device_start = { // we need to rewrite our device values for our start schedule
                 ... newSchedule['device'], // take every key: value stored in the 'device' key
                 desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
@@ -226,7 +224,9 @@ router.post('/schedule', async function(req, res){
                 schedule: end_time,
                 device: device_end
             };
-            
+            let new_on_schedule = scheduleController.buildSchedule(start_time),
+                new_off_schedule = scheduleController.buildSchedule(end_time);
+                
             let start_time_timestamp = new Date(),
                 end_time_timestamp = new Date();
             
@@ -250,6 +250,7 @@ router.post('/schedule', async function(req, res){
                 scheduleController.isScheduleConflicting(start_schedule);
                 
                 // create the off schedule and grab the id
+                
                 let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
                 start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
             
@@ -388,7 +389,7 @@ router.get('/schedule/:schedule_id/resume', function(req, res) {
     console.log(typeof schedule_id);
     try{
         scheduleController.resumeSchedule(schedule_id, outletController.activateRelay, outletController);
-        console.log("Successfully Pausex!");
+        console.log("Resume was successful");
         res.status(200).end();
     }catch(err){
         console.log("Error caught!\n");
