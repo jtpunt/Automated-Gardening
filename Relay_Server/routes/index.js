@@ -192,99 +192,93 @@ router.post('/schedule', async function(req, res){
         }
                 //let new_on_schedule = scheduleController.buildSchedule(),
                 //  new_off_schedule = scheduleController.buildSchedule();
-        
-        
-        if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
-            throw new Error("Invalid GPIO input");
-        }else{
-            // you can set a schedule with a start and end time
-            if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
+        // you can set a schedule with a start and end time
+        if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
+            
+            let device_start = { // we need to rewrite our device values for our start schedule
+                ... newSchedule['device'], // take every key: value stored in the 'device' key
+                desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
                 
-                let device_start = { // we need to rewrite our device values for our start schedule
-                    ... newSchedule['device'], // take every key: value stored in the 'device' key
-                    desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
-                    
-                }
-                let device_end = { // // we need to rewrite our device values for our end schedule
-                    ... newSchedule['device'],
-                    desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
-                }
-                let start_time = {
-                    ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
-                    ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
-                    
-                    
-                },
-                end_time   = {
-                    ... newSchedule['schedule'],
-                    ... newSchedule['schedule']['end_time'] 
-                    
-                },
-                start_schedule = {
-                    ... newSchedule,
-                    schedule: start_time,
-                    device: device_start
-                    
-                },
-                end_schedule   = {
-                    ... newSchedule, 
-                    schedule: end_time,
-                    device: device_end
-                };
-                
-                let start_time_timestamp = new Date(),
-                    end_time_timestamp = new Date();
-                
-                start_time_timestamp.setHours(start_time['hour'], start_time['minute'], start_time['second']); 
-                end_time_timestamp.setHours(end_time['hour'], end_time['minute'], end_time['second']); 
-                
-                if(start_time_timestamp > end_time_timestamp){
-                    let errMsg = "start_time must be less than end_time";
-                    console.log(errMsg);
-                    throw new Error(errMsg)
-                }else if(start_time_timestamp === end_time_timestamp){
-                    let errMsg = "start_time must not be equal to the end_time";
-                    console.log(errMsg);
-                    throw new Error(errMsg)
-                }else{
-                    // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
-                    console.log("start_schedule: " + start_schedule['device']['desired_state']);
-                    console.log("end_schedule: " + end_schedule['device']['desired_state']);
-                    scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
-                    scheduleController.isScheduleConflicting(end_schedule);
-                    scheduleController.isScheduleConflicting(start_schedule);
-                    
-                    // create the off schedule and grab the id
-                    let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
-                    start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
-                
-                    // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                    let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
-                    
-                    
-                    end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
-
-                    scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
-                    console.log("Done adding schedule set");
-                }
-
-            }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
-            // example usage: we want to make sure the lights are off by 2am
-                console.log("in else with start_time");
-                let start_time = newSchedule['schedule']['start_time'],
-                    start_schedule = newSchedule;
-                
-                start_schedule['schedule'] = start_time;
-                scheduleController.isScheduleConflicting(start_schedule);
-                let value = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
-                console.log(`value returned: ${value}`);
-                //value.then((value) => console.log(value));
-                console.log("Schedule successfully created!\n");
-            }else {
-                console.log("in else... no start_time or end_times in object");
             }
-            res.status(200).end();
+            let device_end = { // // we need to rewrite our device values for our end schedule
+                ... newSchedule['device'],
+                desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
+            }
+            let start_time = {
+                ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
+                ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
+                
+                
+            },
+            end_time   = {
+                ... newSchedule['schedule'],
+                ... newSchedule['schedule']['end_time'] 
+                
+            },
+            start_schedule = {
+                ... newSchedule,
+                schedule: start_time,
+                device: device_start
+                
+            },
+            end_schedule   = {
+                ... newSchedule, 
+                schedule: end_time,
+                device: device_end
+            };
+            
+            let start_time_timestamp = new Date(),
+                end_time_timestamp = new Date();
+            
+            start_time_timestamp.setHours(start_time['hour'], start_time['minute'], start_time['second']); 
+            end_time_timestamp.setHours(end_time['hour'], end_time['minute'], end_time['second']); 
+            
+            if(start_time_timestamp > end_time_timestamp){
+                let errMsg = "start_time must be less than end_time";
+                console.log(errMsg);
+                throw new Error(errMsg)
+            }else if(start_time_timestamp === end_time_timestamp){
+                let errMsg = "start_time must not be equal to the end_time";
+                console.log(errMsg);
+                throw new Error(errMsg)
+            }else{
+                // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
+                console.log("start_schedule: " + start_schedule['device']['desired_state']);
+                console.log("end_schedule: " + end_schedule['device']['desired_state']);
+                scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
+                scheduleController.isScheduleConflicting(end_schedule);
+                scheduleController.isScheduleConflicting(start_schedule);
+                
+                // create the off schedule and grab the id
+                let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
+                start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+            
+                // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
+                let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
+                
+                
+                end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+
+                scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
+                console.log("Done adding schedule set");
+            }
+
+        }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
+        // example usage: we want to make sure the lights are off by 2am
+            console.log("in else with start_time");
+            let start_time = newSchedule['schedule']['start_time'],
+                start_schedule = newSchedule;
+            
+            start_schedule['schedule'] = start_time;
+            scheduleController.isScheduleConflicting(start_schedule);
+            let value = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
+            console.log(`value returned: ${value}`);
+            //value.then((value) => console.log(value));
+            console.log("Schedule successfully created!\n");
+        }else {
+            console.log("in else... no start_time or end_times in object");
         }
+        res.status(200).end();
     }catch(err){
         console.log(`err: ${err}`);
         //res.write(err.toString());

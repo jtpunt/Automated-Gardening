@@ -175,7 +175,6 @@ var scheduleObj = {
                     desired_state = (isScheduleActive === true) ?  Boolean(desired_state) : Boolean(isScheduleActive);
                     //console.log("schedule is " (desired_state === true) ? " active" : " not active" );
                     activateRelayFn.call(context,  device_gpio, desired_state);
-                    
                 }
             });
             
@@ -204,8 +203,6 @@ var scheduleObj = {
             self.setSchedule(obj);
             return newScheduleResponse["_id"];
         }
-        
-        
     },
     findSameDaySchedulesAndRetIdxs: function(schedule_config){
         let self      = this,
@@ -219,7 +216,7 @@ var scheduleObj = {
             dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
             timestamp = new Date();
             
-        let indexes = [];
+        let indices = [];
             
         // '00' from minute, second, or hour will create an invalid date object
         if(schedule_config['schedule']['second'] === '00'){
@@ -239,13 +236,6 @@ var scheduleObj = {
         if(dayOfWeek !== undefined && dayOfWeek.length){ 
             console.log("Recurrence Based Scheduling");
             // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
-            
-            // dayOfWeek: [1, 2, 3, 4, 5]
-            // scheduleArr[0]['schedule_config']['schedule']['dayOfWeek']: [0, 2, 4, 5]
-            
-            // we need to return an array that holds overlapping numbers from both dayOfWeek arrays: [2, 4, 5];
-            // we we need to check [2,4,5] or just [2]? the time that these schedules go off are the same,
-            // however, we will need to double check them for date-based scheduling, so it is necessary to check these
             self.scheduleArr.forEach(function(schedule_obj, index){
                 let arr_second        = Number(schedule_obj['schedule_config']['schedule']['second'])|| undefined,
                     arr_minute        = Number(schedule_obj['schedule_config']['schedule']['minute'])|| undefined,
@@ -261,28 +251,25 @@ var scheduleObj = {
                         // the times these schedules are set for are all the same for recurrence based scheduling
                         let common_days = intersect(dayOfWeek, arr_dayOfWeek);
                         // are there common days between these recurrence-based schedules?
-                        if(common_days.length > 0){
-                            indexes.push(index);
-                        }
+                        if(common_days.length > 0)
+                            indices.push(index);
                     }
                     // recurrence based scheduling compared to date based scheduling
                     else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
                         let arr_timestamp = new Date(arr_year, arr_month, arr_date, arr_hour, arr_minute, arr_second);
                         let arr_numDay = arr_timestamp.getDay();
-                        if(dayOfWeek.includes(arr_numDay)){
-                            indexes.push(index);
-                        }
+                        if(dayOfWeek.includes(arr_numDay))
+                            indices.push(index);
                     }
                     // otherwise, recurrence based scheduling compared check to daily 1 time - off schedules
-                    else{
-                        indexes.push(index);
-                    }
+                    else
+                        indices.push(index);
                 }
             });
         }
         // date based scheduling
         else if(date !== undefined && month !== undefined && year !== undefined){ 
-            console.log("Date based scheduling");
+            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
             self.scheduleArr.forEach(function(schedule_obj, index){
                 let arr_date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                     arr_month         = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
@@ -296,25 +283,23 @@ var scheduleObj = {
                         let datebased_timestamp = new Date(year, month, date, hour, minute, second);
                         let datebased_numDay = datebased_timestamp.getDay();
                         
-                        if(arr_dayOfWeek.includes(datebased_numDay)){
-                            indexes.push(index);
-                        }
+                        if(arr_dayOfWeek.includes(datebased_numDay))
+                            indices.push(index);
                     }
                     // date based scheduling compared to date based scheduling
                     else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
-                        if(date === arr_date && month === arr_month && year === arr_year){
-                            indexes.push(index);
-                        }
+                        if(date === arr_date && month === arr_month && year === arr_year)
+                            indices.push(index);
                     }
                     // otherwise, date based scheduling compared check to 1 time - off schedules
-                    else{
-                        indexes.push(index);
-                    }
+                    else
+                        indices.push(index);
                 }
             });
         }
         // otherwise, everyday 1 time - off schedules
         else{
+            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
             self.scheduleArr.forEach(function(schedule_obj, index){
                 let arr_date      = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
                     arr_month     = Number(schedule_obj['schedule_config']['schedule']['month']) || undefined,
@@ -325,22 +310,19 @@ var scheduleObj = {
                 if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined && gpio === arr_gpio){
                 //if(schedule_obj["_id"] !== schedule_id){
                     // everyday 1 time - off schedules compared to recurrence based scheduling
-                    if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length){
-                        indexes.push(index);
-                    }
+                    if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length)
+                        indices.push(index);
                     // everyday 1 time - off schedules compared to date based scheduling
-                    else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined){
-                        indexes.push(index);
-                    }
+                    else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined)
+                        indices.push(index);
                     // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
-                    else{ 
-                        indexes.push(index);
-                    }
+                    else
+                        indices.push(index);
                 }
             });
             
         }
-        return indexes;
+        return indices;
     },
     areSchedulesOnSameDay: function(schedule_config){
 
@@ -417,14 +399,12 @@ var scheduleObj = {
                     fixed_timestamp2    = arr_off_timestamp.toLocaleString('en-US', timestamp_options),
                     fixed_off_timestamp = new_off_timestamp.toLocaleString('en-US', timestamp_options);
                 
-                if(new_on_timestamp <= arr_on_timestamp && new_off_timestamp >= arr_off_timestamp){
+                if(new_on_timestamp <= arr_on_timestamp && new_off_timestamp >= arr_off_timestamp)
                    conflictMsg += `Schedule is overlapping`;
-                }
             }
         });
-        if(conflictMsg !== ""){
+        if(conflictMsg !== "")
             throw new Error(conflictMsg);
-        }
     },
     isScheduleConflicting: function(schedule_config){
         let self      = this,
@@ -463,7 +443,7 @@ var scheduleObj = {
                     let fixed_on_timestamp = on_timestamp.toLocaleString('en-US', timestamp_options);
                     let fixed_timestamp = timestamp.toLocaleString('en-US', timestamp_options);
                     let fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
-                    return `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}, offScheduleIndex: ${offScheduleIndex}`;
+                    return `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}`;
                    // return `New Schedule timestamp - Conflicts with ON - and OFF - , offScheduleIndex: `;
                 }else
                     console.log("offScheduleIndex === -1");
@@ -540,9 +520,8 @@ var scheduleObj = {
                 // console.log(`prev_schedule_timestamp: ${prev_schedule_timestamp}`);
                 // console.log(`today timestamp:  ${today}`);
                 // console.log(`next_schedule_timestamp: ${next_schedule_timestamp}`);
-                if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp){
+                if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
                     result = true;
-                }
             }else{ // schedule not found
                 console.log("Schedule not found!!");
             }
