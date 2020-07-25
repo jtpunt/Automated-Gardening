@@ -679,7 +679,7 @@ var scheduleObj = {
                         }
                         else{
                             console.log("Schedule is not active");
-                            activateRelayFn.call(context, device_gpio, desired_state);
+                            activateRelayFn.call(context, device_gpio, 0);
                         }
                     }
                 });
