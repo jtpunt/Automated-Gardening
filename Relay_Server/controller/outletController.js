@@ -291,11 +291,11 @@ var outletObj = {
             console.log("In getStatus\n");
             if(index !== -1){
                 console.log("Outlet Found!\n");
-                let curState = self.outletArr[index]['outlet'].readSync();
+                let curState = Boolean(self.outletArr[index]['outlet'].readSync());
                 // different relay brand that I'm using has an initial output setting of 'out', which causes the status read here to be opposite
                 // the other relay brand has an initial output setting of 'high' when initializing the device setup and requires no adjustment for returning the current status
                 if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
-                    curState ^= 1;
+                    curState = !curState;
                 }
                 console.log("Outlet is currently: " + curState);
                 return curState;
