@@ -675,7 +675,7 @@ var scheduleObj = {
                         if(isScheduleActive === true)
                             activateRelayFn.call(context,  device_gpio, desired_state);
                         else
-                            activateRelayFn.call(context, device_gpio, 0);
+                            activateRelayFn.call(context, device_gpio, desired_state);
                     }
                 });
             }
