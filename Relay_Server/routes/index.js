@@ -346,7 +346,18 @@ router.delete('/schedule/:schedule_id', function(req, res){
 
 // Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', function(req, res) {
-    
+    var schedule_id = req.params.schedule_id;
+    console.log(typeof schedule_id);
+    try{
+        let nextInvocation = scheduleController.getDateOfNextInvocation(schedule_id);
+        res.write(nextInvocation.toString());
+        res.status(200).end();
+    }catch(err){
+        console.log("Error caught!\n");
+        console.log(err);
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
+    }
 });
 
 router.get('/schedule/:schedule_id/cancel', function(req, res) {

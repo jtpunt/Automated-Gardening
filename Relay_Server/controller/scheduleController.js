@@ -142,8 +142,8 @@ var scheduleObj = {
     },
     setScheduleJobById: function(schedule_id, job){
         let self     = this,
-            schedule = self.getScheduleJobById(schedule_id);
-        schedule['job'] = job;
+            schedule_job = self.getScheduleJobById(schedule_id);
+        schedule_job = job;
     },
     // invalidates the next planned invocation or the job
     cancelNextSchedule: function(schedule_id, activateRelayFn, context){
@@ -170,8 +170,7 @@ var scheduleObj = {
             schedule_job    = self.getScheduleJobById(schedule_id);
 
             
-            // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
-            
+        // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
         let job = self.buildJob(
             schedule_config, 
             activateRelayFn, 
