@@ -210,19 +210,19 @@ var scheduleObj = {
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
         let self                = this,
+            job                 = self.buildJob(
+                new_schedule_config, 
+                activateRelayFn, 
+                context, 
+                Number(newScheduleResponse['device']['gpio']), 
+                Boolean(newScheduleResponse['device']['desired_state'])
+            ),
             newScheduleResponse = await Scheduler.create(new_schedule_config);
         
         if(newScheduleResponse === undefined)
             return newScheduleResponse;
         else{
             console.log(`await result: ${newScheduleResponse}`);
-            let job = self.buildJob(
-                new_schedule_config, 
-                activateRelayFn, 
-                context, 
-                Number(newScheduleResponse['device']['gpio']), 
-                Boolean(newScheduleResponse['device']['desired_state'])
-            );
             var obj = { "schedule_config": newScheduleResponse, job };
             self.setSchedule(obj);
             return newScheduleResponse["_id"];
@@ -612,7 +612,15 @@ var scheduleObj = {
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${updated_schedule_config}`);
         console.log(`Match found at index: ${index}`);
-
+        
+        let job = self.buildJob(
+            updated_schedule_config, 
+            activateRelayFn, 
+            context, 
+            Number(updated_schedule_config['device']['gpio']), 
+            Boolean(updated_schedule_config['device']['desired_state'])
+        );
+        
         //schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
         Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
             if(err){
@@ -621,13 +629,7 @@ var scheduleObj = {
             } else {
                 self.scheduleArr[index]['job'].cancel();
                 console.log("Schedule canceled and removed!");
-                let job = self.buildJob(
-                    updated_schedule_config, 
-                    activateRelayFn, 
-                    context, 
-                    Number(updated_schedule_config['device']['gpio']), 
-                    Boolean(updated_schedule_config['device']['desired_state'])
-                );
+
                 let updated_schedule_device = updated_schedule_config['device'],
                     updated_schedule_schedule = updated_schedule_config['schedule'];
                 
