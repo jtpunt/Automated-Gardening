@@ -641,7 +641,6 @@ var scheduleObj = {
                 console.log(err);
                 throw err;
             } else {
-                self.scheduleArr[index]['job'].cancel();
                 console.log("Schedule canceled and removed!");
 
                 let updated_schedule_device = updated_schedule_config['device'],
