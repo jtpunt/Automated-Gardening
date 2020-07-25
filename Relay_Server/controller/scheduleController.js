@@ -605,14 +605,28 @@ var scheduleObj = {
         }
     },
     editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
-        let self  = this,
+        let self              = this,
             schedule_conflict = false,
-            today = new Date(),
-            index = self.findScheduleIndex(schedule_id);
+            today             = new Date(),
+            offScheduleId     = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
+            onScheduleId      = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
+            index             = self.findScheduleIndex(schedule_id);
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${updated_schedule_config}`);
         console.log(`Match found at index: ${index}`);
         
+
+        if(onScheduleId !== undefined){
+            let onScheduleIndex = self.findScheduleIndex(onScheduleId.toString());
+            if(onScheduleIndex === -1)
+                throw new Error("Invalid id provided for prevScheduleId");
+        }
+        if(offScheduleId !== undefined){
+            let offScheduleIndex = self.findScheduleIndex(offScheduleId.toString());
+            if(offScheduleIndex === -1)
+                throw new Error("Invalid id provided for nextScheduleId");
+        }
+
         let job = self.buildJob(
             updated_schedule_config, 
             activateRelayFn, 
