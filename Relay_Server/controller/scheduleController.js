@@ -155,7 +155,7 @@ var scheduleObj = {
         console.log("Has been successfully canceled");
     },
         // invalidates any job. All  planned invocations will be canceled
-    cancelSchedule: function(schedule_id, activateRelayFn, context){
+    cancelSchedule: function(schedule_id){
         let self  = this,
             job   = self.getScheduleJobById(schedule_id);
                 
@@ -187,7 +187,7 @@ var scheduleObj = {
         let self            = this,
             reschedule      = true,
             today           = new Date(),
-            index = self.findScheduleIndex(schedule_id),
+            index           = self.findScheduleIndex(schedule_id),
             schedule_config = self.scheduleArr[index]['schedule_config'];
             
             // schedule_config = self.getScheduleConfigById(schedule_id),
@@ -420,29 +420,29 @@ var scheduleObj = {
             throw new Error(conflictMsg);
     },
     isScheduleConflicting: function(schedule_config){
-        let self      = this,
-            second    = Number(schedule_config['schedule']['second'])|| undefined,
-            minute    = Number(schedule_config['schedule']['minute'])|| undefined,
-            hour      = Number(schedule_config['schedule']['hour'])  || undefined,
-            timestamp = new Date();
+        let self        = this,
+            second      = Number(schedule_config['schedule']['second'])|| undefined,
+            minute      = Number(schedule_config['schedule']['minute'])|| undefined,
+            hour        = Number(schedule_config['schedule']['hour'])  || undefined,
+            timestamp   = new Date();
             
         let conflictMsg = "",
-            indices    = [];
+            indices     = [];
 
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_obj){
             // is there a schedule conflict?
             if(isScheduleConflicting){
                 console.log("In handleScheduleConflictsMsg");
-                let second = schedule_obj['schedule']['second'],
-                    minute = schedule_obj['schedule']['minute'],
-                    hour   = schedule_obj['schedule']['hour'];
+                let second           = schedule_obj['schedule']['second'],
+                    minute           = schedule_obj['schedule']['minute'],
+                    hour             = schedule_obj['schedule']['hour'];
                     
                 let offScheduleId    = schedule_obj['schedule']['nextScheduleId'].toString(),
                     offScheduleIndex = self.findScheduleIndex(offScheduleId);
                     
-                let on_timestamp  = new Date(),
-                    off_timestamp = new Date();
+                let on_timestamp     = new Date(),
+                    off_timestamp    = new Date();
                     
                 on_timestamp.setHours(hour, minute, second);
                 
@@ -453,7 +453,7 @@ var scheduleObj = {
                         off_schedule_hour   = off_schedule_config['schedule']['hour'];
                         
                     off_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
-                    let timestamp_options = { hour: 'numeric', minute: 'numeric', hour12: true };
+                    let timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true };
                     
                     let fixed_on_timestamp  = on_timestamp.toLocaleString('en-US', timestamp_options),
                         fixed_timestamp     = timestamp.toLocaleString('en-US', timestamp_options),
@@ -648,7 +648,7 @@ var scheduleObj = {
     },
     deleteSchedule: function(schedule_id){
         let self = this,
-            index = this.findScheduleIndex(schedule_id);
+            index = self.findScheduleIndex(schedule_id);
             
         console.log(`Deleting Schedule Function: ${index}`);
         console.log(`Match found at index: ${index}`);
@@ -660,7 +660,8 @@ var scheduleObj = {
             }
             else{
                 console.log("in else");
-                self.scheduleArr[index]['job'].cancel();
+                //self.cancelSchedule(schedule_id);
+                //self.scheduleArr[index]['job'].cancel();
                 console.log("Schedule canceled and removed!\n");
                 self.scheduleArr.splice(index, 1);
                 console.log(self.scheduleArr.length);
