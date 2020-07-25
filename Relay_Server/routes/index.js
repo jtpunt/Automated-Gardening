@@ -296,16 +296,16 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', function(req, res){
     console.log("in put route with ", req.body);
     var schedule_id = req.params.schedule_id;
-    var newSchedule = req.body;
+    var updatedSchedule = req.body;
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-        if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
+        if(outletController.findOutletByGpio(Number(updatedSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
         }else{
-            let prevScheduleId = newSchedule['schedule']['prevScheduleId'],
-                nextScheduleId = newSchedule['schedule']['nextScheduleId'],
-                my_time = newSchedule['schedule']['start_time'] || newSchedule['schedule']['end_time'],
-                my_schedule = {... newSchedule };
+            let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
+                nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
+                my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
+                my_schedule = {... updatedSchedule };
             
       
             my_schedule['schedule'] = my_time;
