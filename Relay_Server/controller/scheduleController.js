@@ -209,16 +209,16 @@ var scheduleObj = {
         self.startActiveSchedules(activateRelayFn, context);
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
-        let self                = this,
-            job                 = self.buildJob(
-                new_schedule_config, 
-                activateRelayFn, 
-                context, 
-                Number(newScheduleResponse['device']['gpio']), 
-                Boolean(newScheduleResponse['device']['desired_state'])
-            ),
-            newScheduleResponse = await Scheduler.create(new_schedule_config);
-        
+        let self                = this;
+        let job                 = self.buildJob(
+            new_schedule_config, 
+            activateRelayFn, 
+            context, 
+            Number(new_schedule_config['device']['gpio']), 
+            Boolean(new_schedule_config['device']['desired_state'])
+        );
+        let newScheduleResponse = await Scheduler.create(new_schedule_config);
+    
         if(newScheduleResponse === undefined)
             return newScheduleResponse;
         else{
