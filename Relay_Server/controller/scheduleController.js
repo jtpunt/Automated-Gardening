@@ -168,7 +168,7 @@ var scheduleObj = {
             today = new Date();
             
         self.scheduleArr.forEach(function(schedule_obj){
-            console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+            //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
             let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                 nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
                 device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
@@ -662,7 +662,7 @@ var scheduleObj = {
                 //self.startActiveSchedules(activateRelayFn, context);
                 
                 self.scheduleArr.forEach(function(schedule_obj){
-                    console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                    //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                     let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                         nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
                         device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
