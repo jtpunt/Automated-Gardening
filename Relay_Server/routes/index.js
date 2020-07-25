@@ -350,7 +350,12 @@ router.get('/schedule/:schedule_id/date', function(req, res) {
     console.log(typeof schedule_id);
     try{
         let nextInvocation = scheduleController.getDateOfNextInvocation(schedule_id);
-        res.write(nextInvocation.toString());
+        if(nextInvocation === null){
+            res.write("Next Invocation Date Not Found For This Schedule.");
+        }else{
+            res.write(nextInvocation.toString());
+        }
+        
         res.status(200).end();
     }catch(err){
         console.log("Error caught!\n");
