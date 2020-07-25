@@ -187,8 +187,11 @@ var scheduleObj = {
         let self            = this,
             reschedule      = true,
             today           = new Date(),
-            schedule_config = self.getScheduleConfigById(schedule_id),
-            schedule_job    = self.getScheduleJobById(schedule_id);
+            index = self.findScheduleIndex(schedule_id),
+            schedule_config = self.scheduleArr[index]['schedule_config'];
+            
+            // schedule_config = self.getScheduleConfigById(schedule_id),
+            // schedule_job    = self.getScheduleJobById(schedule_id);
 
             
         // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
@@ -200,8 +203,8 @@ var scheduleObj = {
             Boolean(schedule_config['device']['desired_state'])
         );
 
-        schedule_job = job;
-        console.log(`All Schedules for ${schedule_job}`)
+        self.scheduleArr[index]['job'] = job;
+        console.log(`All Schedules for ${self.scheduleArr[index]['job']}`)
         console.log("Have been resumed");
         self.startActiveSchedules(activateRelayFn, context);
     },
