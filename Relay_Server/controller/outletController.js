@@ -285,7 +285,7 @@ var outletObj = {
         },
         getStatus: function(gpio_input){
             let self = this;
-            let index = self.findOutletGpio(gpio_input);
+            let index = self.findOutletByGpio(gpio_input);
             console.log("In getStatus\n");
             if(index !== -1){
                 console.log("Outlet Found!\n");
