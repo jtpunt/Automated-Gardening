@@ -163,9 +163,30 @@ var scheduleObj = {
         job.cancel();
         console.log("Has been successfully canceled");
     },
+    startActiveSchedules: function(activateRelayFn, context){
+        let self  = this,
+            today = new Date();
+            
+        self.scheduleArr.forEach(function(schedule_obj){
+            console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+            let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+                nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
+            
+            console.log("REGULAR SCHEDULING");
+            if(nextScheduleId === undefined)
+                console.log("nextScheduleId is undefined");
+            else{
+                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+                if(isScheduleActive === true)
+                    activateRelayFn.call(context,  device_gpio, desired_state);
+            }
+        });
+    },
     resumeSchedule: function(schedule_id, activateRelayFn, context){
         let self            = this,
             reschedule      = true,
+            today           = new Date(),
             schedule_config = self.getScheduleConfigById(schedule_id),
             schedule_job    = self.getScheduleJobById(schedule_id);
 
@@ -182,24 +203,7 @@ var scheduleObj = {
         schedule_job = job;
         console.log(`All Schedules for ${schedule_job}`)
         console.log("Have been resumed");
-        
-        self.scheduleArr.forEach(function(schedule_obj){
-            console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
-            let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-                device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
-            
-            console.log("REGULAR SCHEDULING");
-            if(nextScheduleId === undefined)
-                console.log("nextScheduleId is undefined");
-            else{
-                let today = new Date();
-                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                if(isScheduleActive === true)
-                    activateRelayFn.call(context,  device_gpio, desired_state);
-            }
-        });
-            
+        self.startActiveSchedules(activateRelayFn, context);
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
         let self                = this,
@@ -571,27 +575,7 @@ var scheduleObj = {
                             self.setSchedule(obj);
                         });
                         console.log(`Done processing schedules: ${self.scheduleArr.length}`);
-                        self.scheduleArr.forEach(function(schedule_obj){
-                            console.log("my schedule config: " + JSON.stringify(schedule_obj));
-                            let date          = Number(schedule_obj['schedule_config']['schedule']['date'])  || undefined,
-                                month         = sanitize_input(schedule_obj['schedule_config']['schedule']['month']),
-                                year          = Number(schedule_obj['schedule_config']['schedule']['year']) || undefined,
-                                dayOfWeek     = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined,
-                                today         = new Date(),
-                                desired_state = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                                device_gpio   = Number(schedule_obj['schedule_config']['device']['gpio']);
-                                
-                            console.log("REGULAR SCHEDULING");
-                            let offScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
-                            if(offScheduleId === undefined){
-                                console.log("offScheduleId is undefined");
-                            }else{
-                                let today = new Date()
-                                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                                if(isScheduleActive === true)
-                                    activateRelayFn.call(context,  device_gpio, desired_state);
-                            }
-                        });
+                        self.startActiveSchedules(activateRelayFn, context);
                     }).catch(function(err){
                         console.log(`Error caught: ${err}`);
                     })
@@ -655,32 +639,17 @@ var scheduleObj = {
                 self.scheduleArr[index] = obj;
                 //self.setSchedule(obj, index);
                 // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
-                self.scheduleArr.forEach(function(schedule_obj){
-                    console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
-                    let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                        nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-                        device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
-                    
-                    console.log("REGULAR SCHEDULING");
-                    if(nextScheduleId === undefined){
-                        console.log("nextScheduleId is undefined");
-                    }else{
-                        let today                   = new Date();
-                        let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                        if(isScheduleActive === true)
-                            activateRelayFn.call(context,  device_gpio, desired_state);
-                        else
-                            activateRelayFn.call(context, device_gpio, 0);  
-                    }
-                });
+                self.startActiveSchedules(activateRelayFn, context);
             }
         });
     },
     deleteSchedule: function(schedule_id){
-        let self = this;
-        let index = this.findScheduleIndex(schedule_id);
+        let self = this,
+            index = this.findScheduleIndex(schedule_id);
+            
         console.log(`Deleting Schedule Function: ${index}`);
         console.log(`Match found at index: ${index}`);
+        
         Scheduler.findByIdAndRemove(schedule_id, (err) => {
             if(err){
                 console.log(err);
@@ -697,7 +666,6 @@ var scheduleObj = {
     },
     findScheduleIndex: function(schedule_id){
         let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
-        
         if(index === -1)
             throw "Schedule not found!";
         return index;
