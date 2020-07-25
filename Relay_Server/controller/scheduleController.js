@@ -672,18 +672,14 @@ var scheduleObj = {
                         console.log("nextScheduleId is undefined");
                     else{
                         let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                        if(isScheduleActive === true){
+                        if(isScheduleActive === true && desired_state === true){
                             console.log("Schedule is active");
-                            if(desired_state === true){
-                                console.log("Desired state is on");
-                                activateRelayFn.call(context,  device_gpio, desired_state);     
-                            }
-                           
+                            console.log("Desired state is on");
+                            activateRelayFn.call(context,  device_gpio, desired_state);     
                         }
                         else{
                             console.log("Schedule is not active");
-                            if(desired_state === false)
-                                activateRelayFn.call(context, device_gpio, desired_state);
+                            activateRelayFn.call(context, device_gpio, desired_state);
                         }
                     }
                 });
