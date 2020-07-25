@@ -114,27 +114,6 @@ var scheduleObj = {
         
         return job;
     },
-    // invalidates any job. All  planned invocations will be canceled
-    cancelSchedule: function(schedule_id, activateRelayFn, context){
-        let self  = this,
-            index = self.findScheduleIndex(schedule_id);
-        // cancel(reschedule) - when you set reschedule to true then the Job is newly scheduled afterwards
-        console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
-        self.scheduleArr[index]['job'].cancel();
-        
-        // let schedule_config = self.scheduleArr[index]['schedule_config'],
-        //     device_gpio     = schedule_config['device']['gpio'],
-        //     today = new Date();
-            
-        // let isScheduleActive = self.scheduleIsActive(schedule_config, today);
-        
-        // if(isScheduleActive === true)
-        //     activateRelayFn.call(context,  device_gpio, 0);
-            
-
-        console.log("Have been successfully canceled");
-            
-    },
     getScheduleObjById: function(schedule_id){
         let self = this,
             index = self.findScheduleIndex(schedule_id);
@@ -173,6 +152,15 @@ var scheduleObj = {
                 
         console.log(`Next Schedule for ${job.nextInvocation()}`)
         job.cancelNext();
+        console.log("Has been successfully canceled");
+    },
+        // invalidates any job. All  planned invocations will be canceled
+    cancelSchedule: function(schedule_id, activateRelayFn, context){
+        let self  = this,
+            job   = self.getScheduleJobById(schedule_id);
+                
+        console.log(`Next Schedule for ${job.nextInvocation()}`)
+        job.cancel();
         console.log("Has been successfully canceled");
     },
     resumeSchedule: function(schedule_id, activateRelayFn, context){
