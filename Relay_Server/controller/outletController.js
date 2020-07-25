@@ -267,9 +267,10 @@ var outletObj = {
             let index = self.findOutletByGpio(gpio_input);
             console.log("in activateRelay\n");
             if(index !== -1){
-                let status = Boolean(self.getStatus(gpio_input));
+                let status = Boolean(self.getStatus(gpio_input)),
+                    desired_state = Boolean(desired_state);
                 console.log(`Status: ${status}, desired_state: ${desired_state}`);
-                if(status === Boolean(desired_state)){
+                if(status === desired_state){
                     console.log("Device is already in the desired state!");
                     return;
                 }else{
