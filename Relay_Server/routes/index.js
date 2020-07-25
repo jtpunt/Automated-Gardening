@@ -127,9 +127,11 @@ router.post('/schedule', async function(req, res){
             if(newSchedule['schedule'] === undefined)
                 throw new Error("New schedule configuration details not found.")
             else{
+                // end_time (off) details are required
                 if(newSchedule['schedule']['end_time'] === undefined)
                     throw new Error("End time schedule configuration details not found.")
                 else{
+                    // Second, minute, and hour details are required for end_time (off)
                     if(newSchedule['schedule']['end_time']['second'] === undefined)
                         throw new Error("End Time Second configuration details not found.")
                     if(newSchedule['schedule']['end_time']['minute'] === undefined)
@@ -137,6 +139,7 @@ router.post('/schedule', async function(req, res){
                     if(newSchedule['schedule']['end_time']['hour'] === undefined)
                         throw new Error("End Time hour configuration details not found.")
                 }
+                // start_time (on) details are not required
                 if(newSchedule['schedule']['start_time'] !== undefined){
                     if(newSchedule['schedule']['start_time']['second'] === undefined)
                         throw new Error("End Time Second configuration details not found.")
@@ -145,46 +148,49 @@ router.post('/schedule', async function(req, res){
                     if(newSchedule['schedule']['start_time']['hour'] === undefined)
                         throw new Error("End Time hour configuration details not found.")
                 }
+                // Check For Recurrence Based Scheduling details
                 if(newSchedule['schedule']['dayOfWeek'] !== undefined){
-                    
-                }
-                if(newSchedule['schedule']['date'] !== undefined){
-                    if(newSchedule['schedule']['month'] === undefined)
-                        throw new Error("Month input required for date-based scheduling");
-                    if(newSchedule['schedule']['year'] !== undefined)
-                        throw new Error("Year input requried for date-based scheduling")
-                }
-                if(newSchedule['schedule']['month'] !== undefined){
-                    if(newSchedule['schedule']['year'] !== undefined)
-                        throw new Error("Year input requried for date-based scheduling")
-                    if(newSchedule['schedule']['date'] === undefined)
-                        throw new Error("Date input required for date-based scheduling");
-                }
-                if(newSchedule['schedule']['year'] !== undefined){
+                    // Date-Based Scheduling Details can not be included with Recurrence Based Scheduling Details
                     if(newSchedule['schedule']['date'] !== undefined)
-                        throw new Error("Date input requried for date-based scheduling")
+                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                    if(newSchedule['schedule']['month'] !== undefined)
+                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                    if(newSchedule['schedule']['year'] !== undefined)
+                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                }
+                // Check For Date Based Scheduling Details
+                if(newSchedule['schedule']['date'] !== undefined){
+                    // Make sure the rest of the Date Based Scheduling Details were not left out
                     if(newSchedule['schedule']['month'] === undefined)
                         throw new Error("Month input required for date-based scheduling");
+                    if(newSchedule['schedule']['year'] === undefined)
+                        throw new Error("Year input requried for date-based scheduling")
                 }
             }
+            // device details are required
             if(newSchedule['device'] === undefined){
                 throw new Error("New Device configurations not found");
             }else{
+                // id - mongodb id representing our relay device - required
                 if(newSchedule['device']['id'] === undefined)
                     throw new Error("Device id not found!");
                 else{
-                    
+                    // Make sure that the id is a valid id that exists in mongodb
                 }
+                // gpio port that controls our relay switch - required
                 if(newSchedule['device']['gpio'] === undefined)
                     throw new Error("Device GPIO not found!");
                 else{
-                    if(outletController.findOutlet(Number(newSchedule['device']['gpio'])) === -1){
+                    // Make sure that the gpio is configured by the relay device
+                    if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
                         throw new Error("Invalid GPIO input");
                     }
                 }
+                // 0 or 1, on or off? - required
                 if(newSchedule['device']['desired_state'] === undefined)
                     throw new Error("Device desired state not found!");
                 else{
+                    // Make sure that only a boolean value was sent in
                     if(typeof newSchedule['device']['desired_state'] === 'boolean')
                         throw new Error("Desired state must be 'true' or 'false'.")
                 }
@@ -197,23 +203,21 @@ router.post('/schedule', async function(req, res){
                 ... newSchedule['device'], // take every key: value stored in the 'device' key
                 desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
                 
-            }
-            let device_end = { // // we need to rewrite our device values for our end schedule
+            },
+            device_end = { // // we need to rewrite our device values for our end schedule
                 ... newSchedule['device'],
                 desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
             }
             let start_time = {
                 ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
                 ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
-                
-                
             },
             end_time   = {
                 ... newSchedule['schedule'],
                 ... newSchedule['schedule']['end_time'] 
                 
-            },
-            start_schedule = {
+            }
+            let start_schedule = {
                 ... newSchedule,
                 schedule: start_time,
                 device: device_start
@@ -223,7 +227,7 @@ router.post('/schedule', async function(req, res){
                 ... newSchedule, 
                 schedule: end_time,
                 device: device_end
-            };
+            }
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
             //     new_off_schedule = scheduleController.buildSchedule(end_time);
                 
@@ -233,18 +237,12 @@ router.post('/schedule', async function(req, res){
             start_time_timestamp.setHours(start_time['hour'], start_time['minute'], start_time['second']); 
             end_time_timestamp.setHours(end_time['hour'], end_time['minute'], end_time['second']); 
             
-            if(start_time_timestamp > end_time_timestamp){
-                let errMsg = "start_time must be less than end_time";
-                console.log(errMsg);
-                throw new Error(errMsg)
-            }else if(start_time_timestamp === end_time_timestamp){
-                let errMsg = "start_time must not be equal to the end_time";
-                console.log(errMsg);
-                throw new Error(errMsg)
-            }else{
+            if(start_time_timestamp > end_time_timestamp)
+                throw new Error("start_time must be less than end_time")
+            else if(start_time_timestamp === end_time_timestamp)
+                throw new Error("start_time must not be equal to the end_time")
+            else{
                 // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
-                console.log("start_schedule: " + start_schedule['device']['desired_state']);
-                console.log("end_schedule: " + end_schedule['device']['desired_state']);
                 scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
                 scheduleController.isScheduleConflicting(end_schedule);
                 scheduleController.isScheduleConflicting(start_schedule);
@@ -258,7 +256,6 @@ router.post('/schedule', async function(req, res){
                 end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
-                console.log("Done adding schedule set");
             }
 
         }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
@@ -347,10 +344,11 @@ router.delete('/schedule/:schedule_id', function(req, res){
 });
 
 
-
+// Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', function(req, res) {
     
 });
+
 router.get('/schedule/:schedule_id/cancel', function(req, res) {
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);

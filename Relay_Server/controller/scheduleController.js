@@ -45,52 +45,60 @@ var scheduleObj = {
 
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
-                if(second >= MIN_SECOND && second <= MAX_SECOND){
+                if(second >= MIN_SECOND && second <= MAX_SECOND)
                     scheduleObj['second'] = second;
-                }else throw new Error(`second input must be >= ${MIN_SECOND} or <= ${MAX_SECOND}`);
-            }else throw new Error("Invalid second input!");
+                else 
+                    throw new Error(`second input must be >= ${MIN_SECOND} or <= ${MAX_SECOND}`);
+            }else 
+                throw new Error("Invalid second input!");
             // Validate minute input
             if(minute !== undefined && !minute.isNaN && Number.isInteger(minute)){
-                if(minute >= MIN_MINUTE && minute <= MAX_MINUTE){
+                if(minute >= MIN_MINUTE && minute <= MAX_MINUTE)
                     scheduleObj['minute'] = minute;
-                }else throw new Error(`Minute input must be >= ${MIN_MINUTE} or <= ${MAX_MINUTE}`);
-            }else throw new Error("Invalid minute input!");
+                else 
+                    throw new Error(`Minute input must be >= ${MIN_MINUTE} or <= ${MAX_MINUTE}`);
+            }else 
+                throw new Error("Invalid minute input!");
             // Validate hour input
             if(hour !== undefined && !hour.isNaN && Number.isInteger(hour)){
-                if(hour >= MIN_HOUR && hour <= MAX_HOUR){
+                if(hour >= MIN_HOUR && hour <= MAX_HOUR)
                     scheduleObj['hour'] = hour;
-                }else throw new Error(`Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}`)
-            }else throw new Error("Invalid hour input!");
+                else 
+                    throw new Error(`Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}`)
+            }else 
+                throw new Error("Invalid hour input!");
+                
+            // Validate Inputs for Day of Week Based Scheduling
             if(dayOfWeek !== undefined && dayOfWeek.length){
-                console.log("dayOfWeek scheduling");
                 let dayOfWeekArr = dayOfWeek.map(function(day){
                     // dayOfWeek = 0 - 6
-                    if(!Number.isNaN(day) && Number(day) >= MIN_DOW && Number(day) <= MAX_DOW){
+                    if(!Number.isNaN(day) && Number(day) >= MIN_DOW && Number(day) <= MAX_DOW)
                         return parseInt(day);
-                    }else throw new Error("Invalid day of week input.");
+                    else throw new Error("Invalid day of week input.");
                 });
                 scheduleObj['dayOfWeek'] = dayOfWeekArr; 
             }
-            // valid date input
+            // valid date based scheduling details
             else if(date !== undefined && month !== undefined && year !== undefined){
-                console.log("DATE BASED SCHEDULING");
-                // DATE-BASED SCHEDULING
-                if(date >= MIN_DATE && date <= MAX_DATE){
+                if(date >= MIN_DATE && date <= MAX_DATE)
                     scheduleObj['date'] = date;
-                }else throw new Error(`Date input must be >= ${MIN_DATE} or <= ${MAX_DATE}`);
-                if(month >= MIN_MONTH && month <= MAX_MONTH){
+                else 
+                    throw new Error(`Date input must be >= ${MIN_DATE} or <= ${MAX_DATE}`);
+                if(month >= MIN_MONTH && month <= MAX_MONTH)
                     scheduleObj['month'] = month;
-                }else throw new Error(`Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}`);
+                else 
+                    throw new Error(`Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}`);
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
-                    
                     let scheduleTestObj = new Date(year, month, date, hour, minute, second);
                     console.log("Date Obj: ", scheduleTestObj);
                     if(scheduleTestObj < new Date()) 
                         throw new Error("Schedule must occur in the future!");
-                }else throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
+                }else 
+                    throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
-        }else throw new Error("Schedule details not found!");
+        }else 
+            throw new Error("Schedule details not found!");
         return scheduleObj;
     },
     // params 1: schedule_config
@@ -110,98 +118,109 @@ var scheduleObj = {
     cancelSchedule: function(schedule_id, activateRelayFn, context){
         let self  = this,
             index = self.findScheduleIndex(schedule_id);
-        if(index !== -1){   
         // cancel(reschedule) - when you set reschedule to true then the Job is newly scheduled afterwards
-            console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
-            self.scheduleArr[index]['job'].cancel();
+        console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
+        self.scheduleArr[index]['job'].cancel();
+        
+        // let schedule_config = self.scheduleArr[index]['schedule_config'],
+        //     device_gpio     = schedule_config['device']['gpio'],
+        //     today = new Date();
             
-            let schedule_config = self.scheduleArr[index]['schedule_config'],
-                device_gpio     = schedule_config['device']['gpio'],
-                today = new Date();
-                
-            let isScheduleActive = self.scheduleIsActive(schedule_config, today);
+        // let isScheduleActive = self.scheduleIsActive(schedule_config, today);
+        
+        // if(isScheduleActive === true)
+        //     activateRelayFn.call(context,  device_gpio, 0);
             
-            if(isScheduleActive === true)
-                activateRelayFn.call(context,  device_gpio, 0);
-                
 
-            console.log("Have been successfully canceled");
-        }else{
-            console.log("Schedule not found!");
-            throw "Schedule not found!";
-        }
+        console.log("Have been successfully canceled");
             
+    },
+    getScheduleObjById: function(schedule_id){
+        let self = this,
+            index = self.findScheduleIndex(schedule_id);
+        return self.scheduleArr[index];
+    },
+    getScheduleJobById: function(schedule_id){
+        let self  = this,
+            index = self.findScheduleIndex(schedule_id);
+        return self.scheduleArr[index]['job'];
+    },
+    getScheduleConfigById: function(schedule_id){
+        let self  = this,
+            index = self.findScheduleIndex(schedule_id);
+        return self.scheduleArr[index]['schedule_config'];
+    },
+    getDateOfNextInvocation: function(schedule_id){
+        let self  = this,
+            job   = self.getScheduleJobById(schedule_id),
+            nextInvocationDate = job.nextInvocation();
+        return nextInvocationDate;
+    },
+    setScheduleConfigById: function(schedule_id, schedule_config){
+        let self   = this,
+            config = self.getScheduleConfigById(schedule_id);
+        config = schedule_config;
+    },
+    setScheduleJobById: function(schedule_id, job){
+        let self     = this,
+            schedule = self.getScheduleJobById(schedule_id);
+        schedule['job'] = job;
     },
     // invalidates the next planned invocation or the job
     cancelNextSchedule: function(schedule_id, activateRelayFn, context){
         let self  = this,
-            index = self.findScheduleIndex(schedule_id);
-        if(index !== -1){
-            
-            let schedule_config = self.scheduleArr[index]['schedule_config'],
-                device_gpio     = schedule_config['device']['gpio'];
+            job   = self.getScheduleJobById(schedule_id);
                 
-            // cancelNext(reschedule) - when you set reschedule to true then the Job is newly scheduled afterwards
-            console.log(`Next Schedule for ${self.scheduleArr[index]['job'].nextInvocation()}`)
-            //activateRelayFn.call(context,  device_gpio, 0);
-            self.scheduleArr[index]['job'].cancelNext();
-            
-            console.log("Has been successfully canceled");
-        }else{
-            console.log("Schedule not found!");
-            throw "Schedule not found!";
-        }
+        console.log(`Next Schedule for ${job.nextInvocation()}`)
+        job.cancelNext();
+        console.log("Has been successfully canceled");
     },
     resumeSchedule: function(schedule_id, activateRelayFn, context){
-        let self  = this,
-            reschedule = true,
-            index = self.findScheduleIndex(schedule_id);
-        if(index !== -1){   
-            console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
-            let schedule_config = self.scheduleArr[index]['schedule_config'];
-            
-            let job = self.buildJob(
-                schedule_config, 
-                activateRelayFn, 
-                context, 
-                Number(schedule_config['device']['gpio']), 
-                Boolean(schedule_config['device']['desired_state'])
-            );
+        let self            = this,
+            reschedule      = true,
+            schedule_config = self.getScheduleConfigById(schedule_id),
+            schedule_job    = self.getScheduleJobById(schedule_id);
 
-            self.scheduleArr[index]['job'] = job;
-            console.log(`All Schedules for ${self.scheduleArr[index]['job'].nextInvocation()}`)
-            console.log("Have been resumed");
             
-            self.scheduleArr.forEach(function(schedule_obj){
-                console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
-                let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                    nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-                    device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
-                
-                console.log("REGULAR SCHEDULING");
-                if(nextScheduleId === undefined){
-                    console.log("nextScheduleId is undefined");
-                }else{
-                    let today = new Date();
-                    let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                    if(isScheduleActive === true)
-                        activateRelayFn.call(context,  device_gpio, desired_state);
-                }
-            });
+            // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
             
+        let job = self.buildJob(
+            schedule_config, 
+            activateRelayFn, 
+            context, 
+            Number(schedule_config['device']['gpio']), 
+            Boolean(schedule_config['device']['desired_state'])
+        );
+
+        schedule_job = job;
+        console.log(`All Schedules for ${schedule_job}`)
+        console.log("Have been resumed");
+        
+        self.scheduleArr.forEach(function(schedule_obj){
+            console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+            let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+                nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
             
-        }else{
-            console.log("Schedule not found!");
-            throw "Schedule not found!";
-        }
+            console.log("REGULAR SCHEDULING");
+            if(nextScheduleId === undefined)
+                console.log("nextScheduleId is undefined");
+            else{
+                let today = new Date();
+                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+                if(isScheduleActive === true)
+                    activateRelayFn.call(context,  device_gpio, desired_state);
+            }
+        });
+            
     },
     createSchedule: async function(new_schedule_config, activateRelayFn, context){
-        let self              = this;
-        let newScheduleResponse = await Scheduler.create(new_schedule_config);
+        let self                = this,
+            newScheduleResponse = await Scheduler.create(new_schedule_config);
         
-        if(newScheduleResponse === undefined){
+        if(newScheduleResponse === undefined)
             return newScheduleResponse;
-        }else{
+        else{
             console.log(`await result: ${newScheduleResponse}`);
             let job = self.buildJob(
                 new_schedule_config, 
@@ -225,24 +244,22 @@ var scheduleObj = {
             year      = Number(schedule_config['schedule']['year'])  || undefined,
             gpio      = Number(schedule_config['device']['gpio'])    || undefined,
             dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
-            timestamp = new Date();
+            timestamp = new Date(),
+            indices   = [],
+            intersect = function(a, b){
+                return a.filter(Set.prototype.has, new Set(b));
+            };
             
-        let indices = [];
             
         // '00' from minute, second, or hour will create an invalid date object
-        if(schedule_config['schedule']['second'] === '00'){
+        if(schedule_config['schedule']['second'] === '00')
             second = 0;
-        }
-        if(schedule_config['schedule']['minute'] === '00'){
+        if(schedule_config['schedule']['minute'] === '00')
             minute = 0;
-        }
-        if(schedule_config['schedule']['hour'] == '00'){
+        if(schedule_config['schedule']['hour'] == '00')
             hour = 0;
-        }
         timestamp.setHours(hour, minute, second);  
-        let intersect = function(a, b){
-            return a.filter(Set.prototype.has, new Set(b));
-        }
+
         // recurrence based scheduling
         if(dayOfWeek !== undefined && dayOfWeek.length){ 
             console.log("Recurrence Based Scheduling");
@@ -331,12 +348,8 @@ var scheduleObj = {
                         indices.push(index);
                 }
             });
-            
         }
         return indices;
-    },
-    areSchedulesOnSameDay: function(schedule_config){
-
     },
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
@@ -350,8 +363,8 @@ var scheduleObj = {
             new_on_timestamp  = new Date(),
             new_off_timestamp = new Date();
             
-        let conflictMsg = "",
-            indices     = [];
+        let conflictMsg       = "",
+            indices           = [];
         
         console.log("in isScheduleOverlapping");
         // '00' from minute, second, or hour will create an invalid date object
@@ -417,7 +430,6 @@ var scheduleObj = {
             second    = Number(schedule_config['schedule']['second'])|| undefined,
             minute    = Number(schedule_config['schedule']['minute'])|| undefined,
             hour      = Number(schedule_config['schedule']['hour'])  || undefined,
-            dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
             timestamp = new Date();
             
         let conflictMsg = "",
@@ -425,45 +437,47 @@ var scheduleObj = {
 
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_obj){
+            // is there a schedule conflict?
             if(isScheduleConflicting){
                 console.log("In handleScheduleConflictsMsg");
                 let second = schedule_obj['schedule']['second'],
                     minute = schedule_obj['schedule']['minute'],
-                    hour   = schedule_obj['schedule']['hour'],
-                    offScheduleId = schedule_obj['schedule']['nextScheduleId'].toString();
+                    hour   = schedule_obj['schedule']['hour'];
+                    
+                let offScheduleId    = schedule_obj['schedule']['nextScheduleId'].toString(),
+                    offScheduleIndex = self.findScheduleIndex(offScheduleId);
                     
                 let on_timestamp  = new Date(),
                     off_timestamp = new Date();
                     
                 on_timestamp.setHours(hour, minute, second);
-                let offScheduleIndex = self.findScheduleIndex(offScheduleId);
                 
                 if(offScheduleIndex !== -1){
-                    let off_schedule_config    = self.scheduleArr[offScheduleIndex]['schedule_config'],
-                        off_schedule_second    = off_schedule_config['schedule']['second'],
-                        off_schedule_minute    = off_schedule_config['schedule']['minute'],
-                        off_schedule_hour      = off_schedule_config['schedule']['hour'];
+                    let off_schedule_config = self.scheduleArr[offScheduleIndex]['schedule_config'],
+                        off_schedule_second = off_schedule_config['schedule']['second'],
+                        off_schedule_minute = off_schedule_config['schedule']['minute'],
+                        off_schedule_hour   = off_schedule_config['schedule']['hour'];
+                        
                     off_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
                     let timestamp_options = { hour: 'numeric', minute: 'numeric', hour12: true };
                     
-                    let fixed_on_timestamp = on_timestamp.toLocaleString('en-US', timestamp_options);
-                    let fixed_timestamp = timestamp.toLocaleString('en-US', timestamp_options);
-                    let fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
+                    let fixed_on_timestamp  = on_timestamp.toLocaleString('en-US', timestamp_options),
+                        fixed_timestamp     = timestamp.toLocaleString('en-US', timestamp_options),
+                        fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
+                        
                     return `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}`;
-                   // return `New Schedule timestamp - Conflicts with ON - and OFF - , offScheduleIndex: `;
                 }else
                     console.log("offScheduleIndex === -1");
-            }else{
-                console.log("No schedule conflict");
+            }else // No Schedule Conflict Found
                 return "";
-            }
+            
         }
         // '00' from minute, second, or hour will create an invalid date object
         if(schedule_config['schedule']['second'] === '00')
             second = 0;
         if(schedule_config['schedule']['minute'] === '00')
             minute = 0;
-        if(schedule_config['schedule']['hour'] == '00')
+        if(schedule_config['schedule']['hour'] === '00')
             hour = 0;
             
         timestamp.setHours(hour, minute, second);  
@@ -475,7 +489,7 @@ var scheduleObj = {
             if(index >= 0){
                 let schedule_obj          = self.scheduleArr[index],
                     isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
-                console.log("491: index >= 0");
+
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_obj['schedule_config']);
             }
         });
@@ -494,9 +508,9 @@ var scheduleObj = {
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
             
         // check to see if 1 of the schedules is active right now.
-        if(on_schedule_config === undefined || on_schedule_config === null){
+        if(on_schedule_config === undefined || on_schedule_config === null)
             return result;
-        }
+        
         let on_schedule_second = sanitize_input(on_schedule_config['schedule']['second']),
             on_schedule_minute = sanitize_input(on_schedule_config['schedule']['minute']),
             on_schedule_hour   = sanitize_input(on_schedule_config['schedule']['hour']),
@@ -622,90 +636,84 @@ var scheduleObj = {
             index = self.findScheduleIndex(schedule_id);
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${updated_schedule_config}`);
-        console.log(self.scheduleArr);
-        if(index !== -1){
-            console.log(`Match found at index: ${index}`);
+        console.log(`Match found at index: ${index}`);
 
-            //schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
-            Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                } else {
-                    self.scheduleArr[index]['job'].cancel();
-                    console.log("Schedule canceled and removed!");
-                    let job = self.buildJob(
-                        updated_schedule_config, 
-                        activateRelayFn, 
-                        context, 
-                        Number(updated_schedule_config['device']['gpio']), 
-                        Boolean(updated_schedule_config['device']['desired_state'])
-                    );
-                    let updated_schedule_device = updated_schedule_config['device'],
-                        updated_schedule_schedule = updated_schedule_config['schedule'];
+        //schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
+        Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
+            if(err){
+                console.log(err);
+                throw err;
+            } else {
+                self.scheduleArr[index]['job'].cancel();
+                console.log("Schedule canceled and removed!");
+                let job = self.buildJob(
+                    updated_schedule_config, 
+                    activateRelayFn, 
+                    context, 
+                    Number(updated_schedule_config['device']['gpio']), 
+                    Boolean(updated_schedule_config['device']['desired_state'])
+                );
+                let updated_schedule_device = updated_schedule_config['device'],
+                    updated_schedule_schedule = updated_schedule_config['schedule'];
+                
+                let schedule_config = {
+                    "device": updated_schedule_device,
+                    "schedule": updated_schedule_schedule,
+                    "_id": schedule['_id']
+                };
+                // self.scheduleArr[index].updateSchedule(updated_schedule_device, updated_schedule_schedule, job);
+                // let schedule_config1 = new Schedule_Config(updated_schedule_device, updated_schedule_schedule, schedule["_id"]);
+                var obj = {"schedule_config": schedule_config, job};
+                self.scheduleArr[index] = null;
+                self.scheduleArr[index] = obj;
+                //self.setSchedule(obj, index);
+                // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
+                self.scheduleArr.forEach(function(schedule_obj){
+                    console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                    let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+                        nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                        device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
                     
-                    let schedule_config = {
-                        "device": updated_schedule_device,
-                        "schedule": updated_schedule_schedule,
-                        "_id": schedule['_id']
-                    };
-                    // self.scheduleArr[index].updateSchedule(updated_schedule_device, updated_schedule_schedule, job);
-                    // let schedule_config1 = new Schedule_Config(updated_schedule_device, updated_schedule_schedule, schedule["_id"]);
-                    var obj = {"schedule_config": schedule_config, job};
-                    self.scheduleArr[index] = null;
-                    self.scheduleArr[index] = obj;
-                    //self.setSchedule(obj, index);
-                    // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
-                    self.scheduleArr.forEach(function(schedule_obj){
-                        console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
-                        let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                            nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-                            device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
-                        
-                        console.log("REGULAR SCHEDULING");
-                        if(nextScheduleId === undefined){
-                            console.log("nextScheduleId is undefined");
-                        }else{
-                            let today                   = new Date();
-                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                            if(isScheduleActive === true)
-                                activateRelayFn.call(context,  device_gpio, desired_state);
-                            else
-                                activateRelayFn.call(context, device_gpio, 0);  
-                        }
-                    });
-                }
-            });
-        }else{
-            console.log("Schedule not found!");
-            throw "Schedule not found!";
-        }
+                    console.log("REGULAR SCHEDULING");
+                    if(nextScheduleId === undefined){
+                        console.log("nextScheduleId is undefined");
+                    }else{
+                        let today                   = new Date();
+                        let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+                        if(isScheduleActive === true)
+                            activateRelayFn.call(context,  device_gpio, desired_state);
+                        else
+                            activateRelayFn.call(context, device_gpio, 0);  
+                    }
+                });
+            }
+        });
     },
     deleteSchedule: function(schedule_id){
         let self = this;
         let index = this.findScheduleIndex(schedule_id);
         console.log(`Deleting Schedule Function: ${index}`);
-        if(index !== -1){
-            console.log(`Match found at index: ${index}`);
-            Scheduler.findByIdAndRemove(schedule_id, (err) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                }
-                else{
-                    console.log("in else");
-                    self.scheduleArr[index]['job'].cancel();
-                    console.log("Schedule canceled and removed!\n");
-                    self.scheduleArr.splice(index, 1);
-                    console.log(self.scheduleArr.length);
-                }
-            });
-        }else{
-            throw "Schedule not found!";
-        }
+        console.log(`Match found at index: ${index}`);
+        Scheduler.findByIdAndRemove(schedule_id, (err) => {
+            if(err){
+                console.log(err);
+                throw err;
+            }
+            else{
+                console.log("in else");
+                self.scheduleArr[index]['job'].cancel();
+                console.log("Schedule canceled and removed!\n");
+                self.scheduleArr.splice(index, 1);
+                console.log(self.scheduleArr.length);
+            }
+        });
     },
     findScheduleIndex: function(schedule_id){
-        return this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
+        let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
+        
+        if(index === -1)
+            throw "Schedule not found!";
+        return index;
     }
 }
 module.exports = scheduleObj;

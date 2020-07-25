@@ -194,7 +194,7 @@ var outletObj = {
             let self = this;
             // make sure all prevGpios in updatedOutlet array exist in the current setup
             updatedGpio.forEach(function(gpip){
-                let index = self.findOutlet(gpio['prevGpio']);
+                let index = self.findOutletByGpio(gpio['prevGpio']);
                 if(index !== -1){ 
                     gpio['outletArrIdx'] = index; // save the idx that the gpio was found in
                 }else{
@@ -232,7 +232,7 @@ var outletObj = {
         },
         deleteOutlet: function(outlet_id, gpio_input){
             let self = this;
-            let index = self.findOutlet(gpio_input);
+            let index = self.findOutletByGpio(gpio_input);
             console.log("in activateRelay\n");
             if(index !== -1){
                 Device.findByIdAndDelete(outlet_id, (err, myDevice) => {
@@ -248,7 +248,7 @@ var outletObj = {
         },
         toggleRelay: function(gpio_input) {
             let self = this;
-            let index = self.findOutlet(gpio_input);
+            let index = self.findOutletByGpio(gpio_input);
             console.log("in activateRelay\n");
             if(index !== -1){
                 console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + "\n");
@@ -298,7 +298,7 @@ var outletObj = {
                 return curState;
             }
         },
-        findOutlet: function(gpio_input){
+        findOutletByGpio: function(gpio_input){
             return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
         },
         findOutletById: function(outlet_id){
