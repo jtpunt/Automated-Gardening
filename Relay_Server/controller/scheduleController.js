@@ -634,8 +634,7 @@ var scheduleObj = {
             Number(updated_schedule_config['device']['gpio']), 
             Boolean(updated_schedule_config['device']['desired_state'])
         );
-        
-        //schedule_conflict ^= self.isScheduleConflicting(updated_schedule_config, schedule_id); // true - there is a schedule conflict
+
         Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
             if(err){
                 console.log(err);
@@ -660,6 +659,7 @@ var scheduleObj = {
                 // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
                 //self.startActiveSchedules(activateRelayFn, context);
                 
+                // for loop is turning the outlets on that are already on
                 self.scheduleArr.forEach(function(schedule_obj){
                     //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                     let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
@@ -667,19 +667,23 @@ var scheduleObj = {
                         device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
                     
                     console.log("REGULAR SCHEDULING");
+  
                     if(nextScheduleId === undefined)
                         console.log("nextScheduleId is undefined");
                     else{
-                        let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                        if(isScheduleActive === true && desired_state === true){
-                            console.log("Schedule is active");
-                            console.log("Desired state is on");
-                            activateRelayFn.call(context,  device_gpio, desired_state);     
+                        if(nextScheduleId === schedule_id){
+                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+                            if(isScheduleActive === true && desired_state === true){
+                                console.log("Schedule is active");
+                                console.log("Desired state is on");
+                                activateRelayFn.call(context,  device_gpio, desired_state);     
+                            }
+                            else{
+                                console.log("Schedule is not active");
+                                activateRelayFn.call(context, device_gpio, 0);
+                            }
                         }
-                        else{
-                            console.log("Schedule is not active");
-                            activateRelayFn.call(context, device_gpio, 0);
-                        }
+                       
                     }
                 });
             }
