@@ -674,7 +674,11 @@ var scheduleObj = {
                         let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                         if(isScheduleActive === true){
                             console.log("Schedule is active");
-                            activateRelayFn.call(context,  device_gpio, desired_state);
+                            if(desired_state === true){
+                                console.log("Desired state is on");
+                                activateRelayFn.call(context,  device_gpio, desired_state);     
+                            }
+                           
                         }
                         else{
                             console.log("Schedule is not active");

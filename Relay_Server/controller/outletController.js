@@ -277,11 +277,11 @@ var outletObj = {
                     if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
                         console.log("desired state is opposite due to initialState");
                         if(desired_state === true){
-                            console.log("Turning outlet off");
+                            console.log("Turning outlet on");
                             self.outletArr[index]['outlet'].writeSync(true);                         
                         }
                         else{
-                            console.log("Turning outlet on");
+                            console.log("Turning outlet off");
                             self.outletArr[index]['outlet'].writeSync(false);  
                         }
    
