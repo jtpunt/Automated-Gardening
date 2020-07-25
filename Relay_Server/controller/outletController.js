@@ -278,7 +278,7 @@ var outletObj = {
                         console.log("desired state is opposite due to initialState");
                         if(desired_state === true){
                             console.log("Turning outlet on");
-                            self.outletArr[index]['outlet'].writeSync(true);                         
+                            self.outletArr[index]['outlet'].writeSync(0);                         
                         }
                         else{
                             console.log("Turning outlet off");
