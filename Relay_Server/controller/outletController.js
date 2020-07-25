@@ -282,7 +282,7 @@ var outletObj = {
                         }
                         else{
                             console.log("Turning outlet off");
-                            self.outletArr[index]['outlet'].writeSync(false);  
+                            self.outletArr[index]['outlet'].writeSync(0);  
                         }
    
                     }else{
