@@ -608,8 +608,8 @@ var scheduleObj = {
         let self              = this,
             schedule_conflict = false,
             today             = new Date(),
-            offScheduleId     = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
-            onScheduleId      = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
+            onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
+            offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
             index             = self.findScheduleIndex(schedule_id);
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${updated_schedule_config}`);
