@@ -701,7 +701,7 @@ var scheduleObj = {
                     let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                         prevSheduleId  = schedule_obj['schedule_config']['schedule']['prevScheduleId'],
                         nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-                        sched_id       = schedule_obj['schedule_config']['_id'].toString,
+                        sched_id       = schedule_obj['schedule_config']['_id'].toString(),
                         device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
                     
   
