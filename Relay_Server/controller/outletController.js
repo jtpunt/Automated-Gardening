@@ -267,7 +267,7 @@ var outletObj = {
             let index = self.findOutletByGpio(gpio_input);
             console.log("in activateRelay\n");
             if(index !== -1){
-                let status = Boolean(self.getStatus(gpio_input));
+                let status = self.getStatus(gpio_input);
                 console.log(`Status: ${status}, desired_state: ${desired_state}`);
                 if(status === desired_state){
                     console.log("Device is already in the desired state!");
@@ -276,19 +276,9 @@ var outletObj = {
                     console.log("Desired State: " + desired_state);
                     if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
                         console.log("desired state is opposite due to initialState");
-                        if(desired_state === true){
-                            console.log("Turning outlet on");
-                            self.outletArr[index]['outlet'].writeSync(0);                         
-                        }
-                        else{
-                            console.log("Turning outlet off");
-                            self.outletArr[index]['outlet'].writeSync(1);  
-                        }
-   
-                    }else{
-                        self.outletArr[index]['outlet'].writeSync(desired_state);
+                        desired_state ^= 1;
                     }
-                   
+                    self.outletArr[index]['outlet'].writeSync(desired_state);  
                     console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + " to " + desired_state + "\n");      
                 }
 
