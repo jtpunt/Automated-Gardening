@@ -700,14 +700,15 @@ var scheduleObj = {
                     //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                     let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
                         prevSheduleId  = schedule_obj['schedule_config']['schedule']['prevScheduleId'],
-                        nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'].toString(),
-                        sched_id       = schedule_obj['schedule_config']['_id'].toString(),
+                        nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                        sched_id       = schedule_obj['schedule_config']['_id'].toString,
                         device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
                     
   
                     if(nextScheduleId === undefined)
                         console.log("nextScheduleId is undefined");
                     else{
+                        nextScheduleId = nextScheduleId.toString();
                         if(sched_id === schedule_id || nextScheduleId === schedule_id){
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                             if(isScheduleActive === true && desired_state === true){
