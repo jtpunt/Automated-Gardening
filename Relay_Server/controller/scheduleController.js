@@ -681,51 +681,51 @@ var scheduleObj = {
                 }
                 if(offScheduleId !== undefined){ // updating on schedule?
                     console.log("Updating on schedule");
-                    let schedule_config  = self.scheduleArr[index]['schedule_config'],
-                        device_gpio      = schedule_config['device']['gpio'],
-                        desired_state    = schedule_config['device']['desired_state'],
-                        isScheduleActive = self.scheduleIsActive(schedule_config, today);
-                    if(isScheduleActive === true){
-                        console.log("Schedule is active");
-                        console.log("Desired state is on");
-                        activateRelayFn.call(context,  device_gpio, desired_state);     
-                    }
-                    else{
-                        console.log("Schedule is not active");
-                        activateRelayFn.call(context, device_gpio, 0);
-                    }
+                    // let schedule_config  = self.scheduleArr[index]['schedule_config'],
+                    //     device_gpio      = schedule_config['device']['gpio'],
+                    //     desired_state    = schedule_config['device']['desired_state'],
+                    //     isScheduleActive = self.scheduleIsActive(schedule_config, today);
+                    // if(isScheduleActive === true){
+                    //     console.log("Schedule is active");
+                    //     console.log("Desired state is on");
+                    //     activateRelayFn.call(context,  device_gpio, desired_state);     
+                    // }
+                    // else{
+                    //     console.log("Schedule is not active");
+                    //     activateRelayFn.call(context, device_gpio, 0);
+                    // }
                 }
 
                 
-                // self.scheduleArr.forEach(function(schedule_obj){
-                //     //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
-                //     let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                //         prevSheduleId  = schedule_obj['schedule_config']['schedule']['prevScheduleId'],
-                //         nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-                //         sched_id       = schedule_obj['schedule_config']['_id'].toString(),
-                //         device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
+                self.scheduleArr.forEach(function(schedule_obj){
+                    //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                    let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+                        prevSheduleId  = schedule_obj['schedule_config']['schedule']['prevScheduleId'],
+                        nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                        sched_id       = schedule_obj['schedule_config']['_id'].toString(),
+                        device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
                     
   
-                //     if(nextScheduleId === undefined)
-                //         console.log("nextScheduleId is undefined");
-                //     else{
-                //         nextScheduleId = nextScheduleId.toString();
-                //         // schedule_id is the schedule we are trying to see is active or not
-                //         if(sched_id === schedule_id || nextScheduleId === schedule_id){
-                //             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                //             if(isScheduleActive === true && desired_state === true){
-                //                 console.log("Schedule is active");
-                //                 console.log("Desired state is on");
-                //                 activateRelayFn.call(context,  device_gpio, desired_state);     
-                //             }
-                //             else{
-                //                 console.log("Schedule is not active");
-                //                 activateRelayFn.call(context, device_gpio, 0);
-                //             }    
-                //         }
+                    if(nextScheduleId === undefined)
+                        console.log("nextScheduleId is undefined");
+                    else{
+                        nextScheduleId = nextScheduleId.toString();
+                        // schedule_id is the schedule we are trying to see is active or not
+                        if(sched_id === schedule_id || nextScheduleId === schedule_id){
+                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+                            if(isScheduleActive === true && desired_state === true){
+                                console.log("Schedule is active");
+                                console.log("Desired state is on");
+                                activateRelayFn.call(context,  device_gpio, desired_state);     
+                            }
+                            else{
+                                console.log("Schedule is not active");
+                                activateRelayFn.call(context, device_gpio, 0);
+                            }    
+                        }
                         
-                //     }
-                // });
+                    }
+                });
             }
         });
     },
