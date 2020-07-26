@@ -709,6 +709,9 @@ var scheduleObj = {
                         console.log("nextScheduleId is undefined");
                     else{
                         nextScheduleId = nextScheduleId.toString();
+                        console.log("The id we are trying to activate: " + schedule_id);
+                        console.log("The id of the schedule we are currently processing: " + sched_id);
+                        console.log("The nextScheduleId: " + nextScheduleId);
                         if(sched_id === schedule_id || nextScheduleId === schedule_id){
                             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
                             if(isScheduleActive === true && desired_state === true){
