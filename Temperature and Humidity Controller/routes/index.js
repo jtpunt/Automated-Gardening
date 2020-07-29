@@ -3,6 +3,7 @@ var express = require("express"),
     await = require("asyncawait/await"),
     Sensor = require("../models/sensor"),
     Device = require("../models/device"),
+    middleware = require("../middleware"),
     http = require('http'),
     router = express.Router();
 
@@ -51,5 +52,52 @@ router.get("/", (req, res) => {
     //     console.log("Error: " + err.message);
 
     // });
+});
+router.get('/login', function(req, res){
+    res.render('login');
+});
+router.post('/login', function(req, res){
+    console.log("IN LOGIN - POST");
+    var inserts = [req.body.user_name, req.body.user_pw]; 
+    // var redirect = "/admin"; // Go to admin page by default
+
+
+    // if(results[0].permission){ // admin user
+    //     req.session.admin = true;
+    //     req.session.normal_user = false;
+    // }else{ // normal user
+    //     req.session.normal_user = true;
+    //     req.session.admin = false;
+    //     req.session.user_id = results[0].id;
+    //     redirect="/user"; // Go to user dashboard
+    //  }
+    //req.session.username = results[0].username;
+    //req.flash("success", "Successfully logged in as " + results[0].username + ".");
+    res.redirect("/");
+});
+// This route handles the process for logging a user out, where the request and response
+// objects are passed to the middleware.logout function, where all of the logic to handle
+// logging out is stored
+router.get("/logout", middleware.logout, function(req, res){
+
+})
+// This route shows the forgot password form where the user can recover their password
+router.get("/forgot", function(req, res){
+    console.log("Show forgot form");
+    res.render("forgot");
+});
+router.post("/forgot", function(req, res){
+    var mysql = req.app.get('mysql');
+    var stylesheets = null;
+    var scripts = null;
+    var redirect = "/";
+    var sql = "SELECT id FROM User WHERE username = ? AND secret = ?;";
+    console.log("in post /forgot");
+    var inserts = [req.body.username, req.body.secret]; 
+    var inserts1 = [req.body.password1, req.body.password2];
+    // make sure the user is in the database first before trying to update their password
+
+    // req.flash("success", "Password successfully updated!");
+    // res.redirect(redirect);
 });
 module.exports = router;
