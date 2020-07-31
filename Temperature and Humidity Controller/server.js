@@ -1,5 +1,6 @@
 var express        = require("express"),
     bodyParser     = require("body-parser"),
+    flash          = require("connect-flash"),
     mongoose       = require("mongoose"),
     passport       = require("passport"),
     LocalStrategy  = require("passport-local"),
@@ -8,6 +9,7 @@ var express        = require("express"),
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
     Device         = require("./models/device"),
+    User           = require("./models/user"),
     env            = process.env.NODE_ENV || 'development',
     config         = require('./config')[env],
     ip             = require("ip"),
@@ -40,24 +42,45 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
-// PASSPORT CONFIGURATION
+
+// app.use(require("express-session")({
+//     secret: "Once again Rusty wins cutest dog!",
+//     resave: false,
+//     saveUninitialized: false
+// }));
+app.use(methodOverride("_method")); // _method is what we are telling it to look for
+app.use(flash()); // must be used before passport configuration, flash also require
+
+/*********************************************************************
+ * This code sets passport up so that it works in our application.
+ * We need these 2 methods anytime we need these two lines anytime we
+ * are going to use passport.
+ *********************************************************************/
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(require("express-session")({
     secret: "Once again Rusty wins cutest dog!",
     resave: false,
     saveUninitialized: false
 }));
-app.use(methodOverride("_method")); // _method is what we are telling it to look for
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// passport.use(new LocalStrategy(User.authenticate()));
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        User.findOne({ username: username }, function (err, user) {
+            if (err) { return done(err); }
+            if (!user) { return done(null, false); }
+            if (!user.verifyPassword(password)) { return done(null, false); }
+            return done(null, user);
+        });
+    }
+));
 
 // w/e function we provide to it will be called on every route
 app.use(function(req, res, next){
     // w/e we put in res.locals is what's available inside of our template
-    res.locals.currentUser = req.user;
+    //res.locals.currentUser = req.user;
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
 });
 // Shortens the route declarations

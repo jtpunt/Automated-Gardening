@@ -275,7 +275,7 @@ router.post("/", async (req, res) => {
                     res.render("schedule/index", {
                         schedules: schedulesByIp, 
                         devices: relayDevices, 
-                        errors: myChunk, 
+                        errors: "Schedule was not successfully added", 
                         success: [], 
                         stylesheets: ["/static/css/table.css"]
                     });
@@ -286,7 +286,7 @@ router.post("/", async (req, res) => {
                         schedules: schedulesByIp, 
                         devices: relayDevices, 
                         errors: [], 
-                        success: [], 
+                        success: "Schedule was successfully added", 
                         stylesheets: ["/static/css/table.css"]
                     });
                     res.status(resp.statusCode).end();
@@ -378,16 +378,16 @@ router.put("/:schedule_id/local_ip/:local_ip", async (req, res) => {
                 console.log(`BODY: ${chunk}`);
             });
             resp.on('end', () => {
-                console.log('No more data in response.');
+                console.log('No more data in response.' + resp.statusCode);
                 console.log(resp.statusCode);
-                 res.render("schedule/index", {
+                res.render("schedule/index", {
                     schedules: schedulesByIp, 
                     devices: relayDevices, 
                     errors: [], 
-                    success: ["Schedule successfully updated"], 
+                    success: "Schedule successfully updated", 
                     stylesheets: ["/static/css/table.css"]
                 });
-                res.status(201).end();
+                res.status(200).end();
             });
         });
         
@@ -411,7 +411,7 @@ router.put("/:schedule_id/local_ip/:local_ip", async (req, res) => {
         
         
     }catch(exc){
-        console.log(err);
+        console.log("Catch: " + exc);
         res.render("schedule/index", {
             schedules: [], 
             devices: [], 

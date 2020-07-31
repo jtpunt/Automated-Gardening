@@ -3,8 +3,10 @@ var express = require("express"),
     await = require("asyncawait/await"),
     Sensor = require("../models/sensor"),
     Device = require("../models/device"),
+    User   = require("../models/user"),
     middleware = require("../middleware"),
     http = require('http'),
+    passport = require("passport"),
     router = express.Router();
 
 
@@ -56,11 +58,19 @@ router.get("/", (req, res) => {
 router.get('/login', function(req, res){
     res.render('login');
 });
-router.post('/login', function(req, res){
+router.post('/login',  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: "Fail",
+    successFlash: "Success"
+}),function(req, res){
     console.log("IN LOGIN - POST");
     var inserts = [req.body.user_name, req.body.user_pw]; 
     // var redirect = "/admin"; // Go to admin page by default
+    let user_name = req.body.user_name,
+        user_ps   = req.body.user_pw;
 
+    
 
     // if(results[0].permission){ // admin user
     //     req.session.admin = true;
@@ -71,6 +81,7 @@ router.post('/login', function(req, res){
     //     req.session.user_id = results[0].id;
     //     redirect="/user"; // Go to user dashboard
     //  }
+    
     //req.session.username = results[0].username;
     //req.flash("success", "Successfully logged in as " + results[0].username + ".");
     res.redirect("/");
