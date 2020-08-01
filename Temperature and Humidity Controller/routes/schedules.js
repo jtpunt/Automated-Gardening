@@ -271,7 +271,7 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
                 console.log(`STATUS: ${resp.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
                 if(resp.statusCode !== 200){
-                    req.flash("error", "Schedule was not successfully added");
+                    req.flash("error", myChunk);
                     res.redirect("/schedule");
                     res.status(resp.statusCode).end();
                     
