@@ -196,32 +196,30 @@ function addLocalIPsToSchedules(schedules, relayDevices){
 // NOT COMPLETE
 router.get("/", middleware.isLoggedIn, async (req, res) =>{
     let relayDevices,
-        schedules,
-        adminCredentials;
+        schedules;
     
     try{
         relayDevices    = await getRelayDevices();
         schedules       = await getSchedules();
+        
         if(!relayDevices || relayDevices.length === 0){
             throw new Error("relay devices not valid!");
         }
         if(!schedules || schedules.length === 0){
             throw new Error(("schedules not valid!"));
         }
-        console.log("Admin credentials: " + adminCredentials);
-        console.log("Admin mongo id: " + adminCredentials['_id']);
+
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
+        // remove our periods between each octet to get an integer value and then sort
         relayDevices.sort(
             (a, b) => 
             (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1)
         );
-        //console.log(`SchedulesbyIp: ${schedulesByIp}`);
+
         res.render("schedule/index", {
             schedules: schedulesByIp, 
             devices: relayDevices, 
-            errors: [],
-            success: "Success", 
             stylesheets: ["/static/css/table.css"]
         });
         res.status(200).end();
@@ -231,10 +229,9 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
         res.render("schedule/index", {
             schedules: [], 
             devices: [], 
-            errors: exc.toString(),
-            success: [], 
             stylesheets: ["/static/css/table.css"]
         });
+        req.flash("error", exc.toString());
         res.status(400).end();
     }
 });
@@ -243,36 +240,25 @@ router.get("/:relay_id", (req, res) => {
     // Shows all active schedules
 });
 router.post("/", middleware.isLoggedIn, async (req, res) => {
-    let relayDevices,
-        schedules,
-        adminCredentials;
+    let adminCredentials;
     try{
         console.log(`New Schedule Received ${req.body}`)
         var scheduleObj = buildSchedule(req.body);
         
-        console.log(`finally.. ${scheduleObj}`);
-        const scheduleStr = JSON.stringify(scheduleObj);
-        console.log(scheduleStr);
-        const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
-        relayDevices = await getRelayDevices();
-        schedules    = await getSchedules();
         adminCredentials = await getAdminCredentions();
-        if(!relayDevices || relayDevices.length === 0){
-            throw new Error("relay devices not valid!");
-        }
-        if(!schedules || schedules.length === 0){
-            throw new Error(("schedules not valid"));
-        }
+
         if(!adminCredentials || adminCredentials === 0){
             throw new Error("admin credentials not valid!")
         }
         console.log("Admin credentials: " + adminCredentials);
         console.log("Admin mongo id: " + adminCredentials['_id']);
+        scheduleObj['admin_id'] = adminCredentials['_id'];
         
-        addLocalIPsToSchedules(schedules, relayDevices);
-        let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
-        relayDevices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
         
+        const scheduleStr = JSON.stringify(scheduleObj);
+        console.log(`scheduleStr: ${scheduleStr}`);
+        const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
+
 
         const myReq = http.request(options, (resp) => {
             let myChunk = '';
@@ -286,45 +272,32 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
                 console.log(`STATUS: ${resp.statusCode}`);
                 console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
                 if(resp.statusCode !== 200){
-                    res.render("schedule/index", {
-                        schedules: schedulesByIp, 
-                        devices: relayDevices, 
-                        errors: "Schedule was not successfully added", 
-                        success: [], 
-                        stylesheets: ["/static/css/table.css"]
-                    });
+                    req.flash("error", "Schedule was not successfully added");
+                    res.redirect("/schedule");
                     res.status(resp.statusCode).end();
                     
                 }else{
-                     res.render("schedule/index", {
-                        schedules: schedulesByIp, 
-                        devices: relayDevices, 
-                        errors: [], 
-                        success: "Schedule was successfully added", 
-                        stylesheets: ["/static/css/table.css"]
-                    });
+                    req.flash("success", "Schedule was successfully added");
+                    res.redirect("/schedule");
                     res.status(resp.statusCode).end();
                 }
-                
             });
         });
         
         myReq.on('error', (e) => {
             let errorMessage = e.message;
             console.error(`problem with request: ${errorMessage}`);
-            res.render("schedule/index", {
-                schedules: schedulesByIp, 
-                devices: relayDevices, 
-                errors: errorMessage, 
-                success: [], 
-                stylesheets: ["/static/css/table.css"]
-            });
+            req.flash("error", errorMessage);
+            res.redirect("/schedule");
+            res.status(400).end();
         });
         myReq.write(scheduleStr);
         myReq.end();
         
     }catch(err){
         console.log(err);
+        req.flash("error", err);
+        res.redirect("/schedule");
         res.status(500).end();
     }
 });
@@ -359,9 +332,7 @@ router.get("/:schedule_id/edit", middleware.isLoggedIn, (req, res) => {
 // UPDATE
 router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req, res) => {
     console.log(`in put route with ${req.params.schedule_id}, ${req.params.local_ip}`);
-    let relayDevices,
-        schedules,
-        adminCredentials;
+    let adminCredentials;
     try{
         console.log(`UPDATE ROUTE: ${req.body}`);
         var scheduleObj   = buildSchedule(req.body);
@@ -369,24 +340,13 @@ router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req
         const scheduleStr = JSON.stringify(scheduleObj);
         const options     = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'PUT', scheduleStr);
         
-        relayDevices      = await getRelayDevices();
-        schedules         = await getSchedules();
         adminCredentials  = await getAdminCredentions();
-        if(!relayDevices || relayDevices.length === 0){
-            throw new Error("relay devices not valid!");
-        }
-        if(!schedules || schedules.length === 0){
-            throw new Error(("schedules not valid"));
-        }
+
         if(!adminCredentials || adminCredentials === 0){
             throw new Error("admin credentials not valid!")
         }
         console.log("Admin credentials: " + adminCredentials);
         console.log("Admin mongo id: " + adminCredentials['_id']);
-        addLocalIPsToSchedules(schedules, relayDevices);
-        let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
-        relayDevices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
-        
         // console.log(`scheduleStr ${scheduleStr}`);
         // console.log(`options: ${options}`);
         
@@ -400,13 +360,9 @@ router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req
             resp.on('end', () => {
                 console.log('No more data in response.' + resp.statusCode);
                 console.log(resp.statusCode);
-                res.render("schedule/index", {
-                    schedules: schedulesByIp, 
-                    devices: relayDevices, 
-                    errors: [], 
-                    success: "Schedule successfully updated", 
-                    stylesheets: ["/static/css/table.css"]
-                });
+
+                req.flash("success", "Schedule successfully updated");
+                res.redirect("/schedule");
                 res.status(200).end();
             });
         });
@@ -414,15 +370,9 @@ router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req
         myReq.on('error', (e) => {
             let errorMessage = e.message;
             console.error(`problem with request: ${errorMessage}`);
-            res.render("schedule/index", {
-                schedules: schedulesByIp, 
-                devices: relayDevices, 
-                errors: errorMessage, 
-                success: [],
-                stylesheets: ["/static/css/table.css"]
-            });
+            req.flash("error", errorMessage);
+            res.redirect("/schedule");
             res.status(400).end();
-            
         });
         
         // Write data to request body
@@ -432,43 +382,25 @@ router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req
         
     }catch(exc){
         console.log("Catch: " + exc);
-        res.render("schedule/index", {
-            schedules: [], 
-            devices: [], 
-            errors: exc.toString(),
-            success: [], 
-            stylesheets: ["/static/css/table.css"]
-        });
+        req.flash("error", exc.toString());
+        res.redirect("/schedule");
         res.status(400).end();
     }
 });
 router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req, res) => {
     console.log(`in delete route with ${req.params.schedule_id}, ${req.params.local_ip}`);
-    let relayDevices,
-        schedules,
-        adminCredentials;
+    let adminCredentials;
     try{
         const options = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'DELETE');
-        relayDevices      = await getRelayDevices();
-        schedules         = await getSchedules();
+
         adminCredentials  = await getAdminCredentions();
-        if(!relayDevices || relayDevices.length === 0){
-            throw new Error("relay devices not valid!");
-        }
-        if(!schedules || schedules.length === 0){
-            throw new Error(("schedules not valid"));
-        }
+
         if(!adminCredentials || adminCredentials === 0){
             throw new Error("admin credentials not valid!")
         }
         console.log("Admin credentials: " + adminCredentials);
         console.log("Admin mongo id: " + adminCredentials['_id']);
-        addLocalIPsToSchedules(schedules, relayDevices);
-        let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
-        relayDevices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
-        
-        
-        
+
         const myReq = http.request(options, (resp) => {
             console.log(`STATUS: ${res.statusCode}`);
             console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
@@ -479,6 +411,7 @@ router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (
             resp.on('end', () => {
                 console.log('No more data in response.');
                 console.log(res.statusCode);
+                req.flash("success", "Schedule was successfully deleted!");
                 res.redirect("/schedule");
                 res.status(200).end();
             });
@@ -487,16 +420,10 @@ router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (
         myReq.on('error', (e) => {
             let errorMessage = e.message;
             console.error(`problem with request: ${errorMessage}`);
-            res.render("schedule/index", {
-                schedules: schedulesByIp, 
-                devices: relayDevices, 
-                errors: errorMessage, 
-                success: [],
-                stylesheets: ["/static/css/table.css"]
-            });
-            res.end(400)
+            req.flash("error", errorMessage);
+            res.redirect("/schedule");
+            res.status(400).end();
         });
-        
         myReq.end();
     }catch(exc){
         console.log("exc: " + exc.toString());
@@ -507,8 +434,10 @@ router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (
             success: [],
             stylesheets: ["/static/css/table.css"]
         });
+        req.flash("error", exc.toString());
+        res.redirect("/schedule");
+        res.status(400).end();
     }
-    
 });
 
 module.exports = router;

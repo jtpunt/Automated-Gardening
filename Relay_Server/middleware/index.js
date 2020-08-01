@@ -1,5 +1,7 @@
 //const jwt = require("jsonwebtoken");
 //const config = require("config");
+let User = require("../models/user");
+
 var middleware = {
 	// authenticate(req, res, next){
 	// 	//get the token from the header if present
@@ -18,7 +20,17 @@ var middleware = {
 	// 	}
 	// }
 	verifyAdminAccount(req, res, next){
-		
+	    let scheduleObj = req.body,
+	        admin_id    = scheduleObj['admin_id'].toString();
+	        
+	    console.log("verifyAdminAccount: " + admin_id);
+		User.findOne({"_id":admin_id}, function(err, user){
+		    if(err)
+		        console.log(err.toString);
+		    else{
+		        console.log("user");
+		    }
+		});
 		
 		res.status(404).send("you must be logged in as an admin to perform that action");
 	},
