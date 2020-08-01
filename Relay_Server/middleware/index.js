@@ -117,9 +117,9 @@ var middleware = {
                     throw new Error("Device GPIO not found!");
                 else{
                     // Make sure that the gpio is configured by the relay device
-                    // if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
-                    //     throw new Error("Invalid GPIO input");
-                    // }
+                    if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
+                        throw new Error("Invalid GPIO input");
+                    }
                 }
                 // 0 or 1, on or off? - required
                 if(newSchedule['device']['desired_state'] === undefined)
@@ -131,6 +131,7 @@ var middleware = {
                 }
             }
         }
+            next();
 		}catch(exc){
 			        console.log(`err: ${exc}`);
         //res.write(err.toString());
