@@ -93,7 +93,7 @@ router.get('/schedule', function(req, res) {
     });
 });
 // add a new chedule
-router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminAccount, async function(req, res){
+router.post('/schedule', async function(req, res){
     var newSchedule = req.body;
     try{
         console.log("newSchedule: ", newSchedule);
