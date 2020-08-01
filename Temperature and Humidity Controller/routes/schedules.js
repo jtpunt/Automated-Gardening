@@ -203,10 +203,10 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
         relayDevices    = await getRelayDevices();
         schedules       = await getSchedules();
         
-        if(!relayDevices || relayDevices.length === 0){
+        if(!relayDevices){
             throw new Error("relay devices not valid!");
         }
-        if(!schedules || schedules.length === 0){
+        if(!schedules){
             throw new Error(("schedules not valid!"));
         }
 
@@ -336,16 +336,19 @@ router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req
         console.log(`UPDATE ROUTE: ${req.body}`);
         var scheduleObj   = buildSchedule(req.body);
         
-        const scheduleStr = JSON.stringify(scheduleObj);
-        const options     = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'PUT', scheduleStr);
+
         
         adminCredentials  = await getAdminCredentions();
 
         if(!adminCredentials || adminCredentials === 0){
             throw new Error("admin credentials not valid!")
         }
+        scheduleObj['admin_id'] = adminCredentials['_id'];
         console.log("Admin credentials: " + adminCredentials);
         console.log("Admin mongo id: " + adminCredentials['_id']);
+        
+        const scheduleStr = JSON.stringify(scheduleObj);
+        const options     = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'PUT', scheduleStr);
         // console.log(`scheduleStr ${scheduleStr}`);
         // console.log(`options: ${options}`);
         

@@ -197,7 +197,7 @@ router.get('/schedule/:schedule_id', function(req, res) {
     }); 
 });
 // edit an existing schedule
-router.put('/schedule/:schedule_id', function(req, res){
+router.put('/schedule/:schedule_id', middleware.checkScheduleInputs, middleware.verifyAdminAccount, function(req, res){
     console.log("in put route with ", req.body);
     var schedule_id = req.params.schedule_id;
     var updatedSchedule = req.body;
