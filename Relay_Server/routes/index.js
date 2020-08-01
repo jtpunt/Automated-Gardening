@@ -232,7 +232,7 @@ router.put('/schedule/:schedule_id', function(req, res){
     }
 });
 // delete an existing schedule
-router.delete('/schedule/:schedule_id', function(req, res){
+router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req, res){
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     try{

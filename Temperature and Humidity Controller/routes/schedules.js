@@ -12,14 +12,15 @@ var express       = require("express"),
  
 function buildOptions(hostname, port, path, method, json){
     let options;
-    if(method === 'DELETE' && json === undefined){ // no data is sent with a delete request
+    if(method === 'DELETE'){ // no data is sent with a delete request
         options = {
             hostname: hostname,
             port: port,
             path: path,
             method: method,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(json)
             }
         }
     }else{
@@ -253,7 +254,6 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
         console.log("Admin mongo id: " + adminCredentials['_id']);
         scheduleObj['admin_id'] = adminCredentials['_id'];
         
-        scheduleObj['admin_id'] = "1";
         const scheduleStr = JSON.stringify(scheduleObj);
         console.log(`scheduleStr: ${scheduleStr}`)
         const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
@@ -390,13 +390,15 @@ router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (
     console.log(`in delete route with ${req.params.schedule_id}, ${req.params.local_ip}`);
     let adminCredentials;
     try{
-        const options = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'DELETE');
+
 
         adminCredentials  = await getAdminCredentions();
-
+        let credentialsJSON = JSON.stringify({ admin_id: adminCredentials['_id']});
+        const options = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'DELETE', credentialsJSON);
         if(!adminCredentials || adminCredentials === 0){
             throw new Error("admin credentials not valid!")
         }
+        
         console.log("Admin credentials: " + adminCredentials);
         console.log("Admin mongo id: " + adminCredentials['_id']);
 
@@ -423,6 +425,7 @@ router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (
             res.redirect("/schedule");
             res.status(400).end();
         });
+        myReq.write(credentialsJSON);
         myReq.end();
     }catch(exc){
         console.log("exc: " + exc.toString());
