@@ -8,6 +8,7 @@ var express = require("express"),
     Device = require("../models/device"),
     outletController   = require("../controller/outletController.js"),
     scheduleController = require("../controller/scheduleController.js"),
+    middleware = require("../middleware"),
     ip = require("ip"),
     localIP = ip.address(),
     router    = express.Router();
@@ -92,110 +93,10 @@ router.get('/schedule', function(req, res) {
     });
 });
 // add a new chedule
-router.post('/schedule', async function(req, res){
+router.post('/schedule', middleware.verifyAdminAccount, middleware.checkScheduleInputs, async function(req, res){
     var newSchedule = req.body;
     try{
         console.log("newSchedule: ", newSchedule);
-        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-        //let new_on_schedule = scheduleController.buildSchedule(),
-          //  new_off_schedule = scheduleController.buildSchedule();
-          
-          
-        // {
-        //     schedule: {
-        //         start_time: {
-        //             second: 0,
-        //             minute: 30,
-        //             hour: 11
-        //         },
-        //         end_time: {
-        //             second: 0,
-        //             minute: 30
-        //             hour: 12
-        //         },
-        //         dayOfWeek: [0, 1, 4]
-        //     },
-        //     device: {
-        //         id: mongoId,
-        //         localIP: ipAddr,
-        //         gpio: deviceGpio
-        //     }
-        // }  
-        if(newSchedule === undefined)
-            throw new Error("New schedule and device configuration details not found.")
-        else{
-            if(newSchedule['schedule'] === undefined)
-                throw new Error("New schedule configuration details not found.")
-            else{
-                // end_time (off) details are required
-                if(newSchedule['schedule']['end_time'] === undefined)
-                    throw new Error("End time schedule configuration details not found.")
-                else{
-                    // Second, minute, and hour details are required for end_time (off)
-                    if(newSchedule['schedule']['end_time']['second'] === undefined)
-                        throw new Error("End Time Second configuration details not found.")
-                    if(newSchedule['schedule']['end_time']['minute'] === undefined)
-                        throw new Error("End Time Minute configuration details not found.")
-                    if(newSchedule['schedule']['end_time']['hour'] === undefined)
-                        throw new Error("End Time hour configuration details not found.")
-                }
-                // start_time (on) details are not required
-                if(newSchedule['schedule']['start_time'] !== undefined){
-                    if(newSchedule['schedule']['start_time']['second'] === undefined)
-                        throw new Error("End Time Second configuration details not found.")
-                    if(newSchedule['schedule']['start_time']['minute'] === undefined)
-                        throw new Error("End Time Minute configuration details not found.")
-                    if(newSchedule['schedule']['start_time']['hour'] === undefined)
-                        throw new Error("End Time hour configuration details not found.")
-                }
-                // Check For Recurrence Based Scheduling details
-                if(newSchedule['schedule']['dayOfWeek'] !== undefined){
-                    // Date-Based Scheduling Details can not be included with Recurrence Based Scheduling Details
-                    if(newSchedule['schedule']['date'] !== undefined)
-                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                    if(newSchedule['schedule']['month'] !== undefined)
-                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                    if(newSchedule['schedule']['year'] !== undefined)
-                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                }
-                // Check For Date Based Scheduling Details
-                if(newSchedule['schedule']['date'] !== undefined){
-                    // Make sure the rest of the Date Based Scheduling Details were not left out
-                    if(newSchedule['schedule']['month'] === undefined)
-                        throw new Error("Month input required for date-based scheduling");
-                    if(newSchedule['schedule']['year'] === undefined)
-                        throw new Error("Year input requried for date-based scheduling")
-                }
-            }
-            // device details are required
-            if(newSchedule['device'] === undefined){
-                throw new Error("New Device configurations not found");
-            }else{
-                // id - mongodb id representing our relay device - required
-                if(newSchedule['device']['id'] === undefined)
-                    throw new Error("Device id not found!");
-                else{
-                    // Make sure that the id is a valid id that exists in mongodb
-                }
-                // gpio port that controls our relay switch - required
-                if(newSchedule['device']['gpio'] === undefined)
-                    throw new Error("Device GPIO not found!");
-                else{
-                    // Make sure that the gpio is configured by the relay device
-                    if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
-                        throw new Error("Invalid GPIO input");
-                    }
-                }
-                // 0 or 1, on or off? - required
-                if(newSchedule['device']['desired_state'] === undefined)
-                    throw new Error("Device desired state not found!");
-                else{
-                    // Make sure that only a boolean value was sent in
-                    if(typeof newSchedule['device']['desired_state'] === 'boolean')
-                        throw new Error("Desired state must be 'true' or 'false'.")
-                }
-            }
-        }
 
         // you can set a schedule with a start and end time
         if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
