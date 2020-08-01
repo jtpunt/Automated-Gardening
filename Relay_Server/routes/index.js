@@ -98,9 +98,9 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
     try{
         console.log("newSchedule: ", newSchedule);
         // Make sure that the gpio is configured by the relay device
-        if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
-            throw new Error("Invalid GPIO input");
-        }
+        // if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
+        //     throw new Error("Invalid GPIO input");
+        // }
         // you can set a schedule with a start and end time
         if(newSchedule['schedule']['start_time'] !== undefined && newSchedule['schedule']['end_time'] !== undefined){
             let device_start = { // we need to rewrite our device values for our start schedule
