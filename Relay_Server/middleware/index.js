@@ -27,8 +27,10 @@ var middleware = {
 		User.findOne({"_id":admin_id}, function(err, user){
 		    if(err)
 		        console.log(err.toString);
-    		else 
+    		else{
+    		    console.log("user: " + user);
     		    next();
+    		} 
 		});
 		
 		res.status(404).send("you must be logged in as an admin to perform that action");
