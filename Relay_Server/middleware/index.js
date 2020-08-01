@@ -27,10 +27,9 @@ var middleware = {
 		User.findOne({"_id":admin_id}, function(err, user){
 		    if(err)
 		        console.log(err.toString);
-    		else{
-    		    console.log("user: " + user);
-    		    //next();
-    		} 
+		    else{
+		        console.log("user")
+		    }
 		});
 		
 		res.status(404).send("you must be logged in as an admin to perform that action");
@@ -117,7 +116,10 @@ var middleware = {
                 if(newSchedule['device']['gpio'] === undefined)
                     throw new Error("Device GPIO not found!");
                 else{
-
+                    // Make sure that the gpio is configured by the relay device
+                    // if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
+                    //     throw new Error("Invalid GPIO input");
+                    // }
                 }
                 // 0 or 1, on or off? - required
                 if(newSchedule['device']['desired_state'] === undefined)

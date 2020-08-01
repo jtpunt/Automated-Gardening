@@ -242,7 +242,6 @@ router.get("/:relay_id", (req, res) => {
 router.post("/", middleware.isLoggedIn, async (req, res) => {
     let adminCredentials;
     try{
-        console.log(`New Schedule Received ${req.body}`)
         var scheduleObj = buildSchedule(req.body);
         
         adminCredentials = await getAdminCredentions();
@@ -256,10 +255,10 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
         
         
         const scheduleStr = JSON.stringify(scheduleObj);
-        console.log(`scheduleStr: ${scheduleStr}`);
+        console.log(`scheduleStr: ${scheduleStr}`)
         const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
-
-
+        
+        console.log("localIP: " + req.body.device.local_ip);
         const myReq = http.request(options, (resp) => {
             let myChunk = '';
             resp.setEncoding('utf8');
