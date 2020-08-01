@@ -29,7 +29,7 @@ var middleware = {
 		        console.log(err.toString);
 		    else{
 		        console.log("user: " + user);
-		        next();
+		        return next();
 		    }
 		});
 		
