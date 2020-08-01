@@ -353,19 +353,28 @@ router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req
         // console.log(`options: ${options}`);
         
         const myReq = http.request(options, (resp) => {
+            let myChunk = '';
             console.log(`STATUS: ${res.statusCode}`);
             console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
             resp.setEncoding('utf8');
             resp.on('data', (chunk) => {
                 console.log(`BODY: ${chunk}`);
+                myChunk += chunk;
             });
             resp.on('end', () => {
                 console.log('No more data in response.' + resp.statusCode);
                 console.log(resp.statusCode);
 
-                req.flash("success", "Schedule successfully updated");
-                res.redirect("/schedule");
-                res.status(200).end();
+                if(resp.statusCode !== 200){
+                    req.flash("error", myChunk);
+                    res.redirect("/schedule");
+                    res.status(resp.statusCode).end();
+                    
+                }else{
+                    req.flash("success", "Schedule was successfully updated");
+                    res.redirect("/schedule");
+                    res.status(resp.statusCode).end();
+                }
             });
         });
         
