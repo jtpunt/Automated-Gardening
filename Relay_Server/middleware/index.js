@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const config = require("config");
+//const jwt = require("jsonwebtoken");
+//const config = require("config");
 var middleware = {
 	// authenticate(req, res, next){
 	// 	//get the token from the header if present
