@@ -25,15 +25,17 @@ var middleware = {
 	        
 	    console.log("verifyAdminAccount: " + admin_id);
 		User.findOne({"_id":admin_id}, function(err, user){
-		    if(err)
+		    if(err){
 		        console.log(err.toString);
+		        res.status(404).send("you must be logged in as an admin to perform that action");
+		    }
 		    else{
 		        console.log("user: " + user);
 		        return next();
 		    }
 		});
 		
-		//res.status(404).send("you must be logged in as an admin to perform that action");
+		
 	},
 	checkScheduleInputs(req, res, next){
 		var newSchedule = req.body;

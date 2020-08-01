@@ -253,7 +253,7 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
         console.log("Admin mongo id: " + adminCredentials['_id']);
         scheduleObj['admin_id'] = adminCredentials['_id'];
         
-        
+        scheduleObj['admin_id'] = "1";
         const scheduleStr = JSON.stringify(scheduleObj);
         console.log(`scheduleStr: ${scheduleStr}`)
         const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
