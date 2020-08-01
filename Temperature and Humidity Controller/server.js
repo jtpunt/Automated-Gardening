@@ -51,6 +51,17 @@ app.use('/static', express.static('public')); // static directory is going to be
 app.use(methodOverride("_method")); // _method is what we are telling it to look for
 app.use(flash()); // must be used before passport configuration, flash also require
 
+
+/*********************************************************************
+ * Secret is used to encode/decode the sessions. We aren't going to be
+ * storing data inside the sessions, it's going to be encoded. This secret
+ * below will be used to unencode/decode that info in the session.
+ ********************************************************************/
+app.use(require("express-session")({ // in-line request
+    secret: "Rusty is the best and cutest dog in the world",
+    resave: false, // required by default
+    saveUninitialized: false // required by default
+}));
 /*********************************************************************
  * This code sets passport up so that it works in our application.
  * We need these 2 methods anytime we need these two lines anytime we
@@ -59,26 +70,23 @@ app.use(flash()); // must be used before passport configuration, flash also requ
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(require("express-session")({
-    secret: "Once again Rusty wins cutest dog!",
-    resave: false,
-    saveUninitialized: false
-}));
-passport.use(new LocalStrategy(
-    function(username, password, done) {
-        User.findOne({ username: username }, function (err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            if (!user.verifyPassword(password)) { return done(null, false); }
-            return done(null, user);
-        });
-    }
-));
-
+// passport.use(new LocalStrategy(
+//     function(username, password, done) {
+//         User.findOne({ username: username }, function (err, user) {
+//             if (err) { return done(err); }
+//             if (!user) { return done(null, false); }
+//             if (!user.verifyPassword(password)) { return done(null, false); }
+//             return done(null, user);
+//         });
+//     }
+// ));
+passport.use(new LocalStrategy(User.authenticate())); // UserSchema.plugin(passportLocalMongoose);
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 // w/e function we provide to it will be called on every route
 app.use(function(req, res, next){
     // w/e we put in res.locals is what's available inside of our template
-    //res.locals.currentUser = req.user;
+    res.locals.currentUser = req.user;
     res.locals.error = req.flash("error");
     res.locals.success = req.flash("success");
     next();

@@ -1,7 +1,9 @@
 var express       = require("express"),
     http          = require('http'),
     Device        = require("../models/device"),
-    Scheduler     = require("../models/scheduler");
+    Scheduler     = require("../models/scheduler"),
+    User          = require("../models/user"),
+    middleware    = require("../middleware"),
     querystring   = require('querystring'),
     async         = require("asyncawait/async"),
     await         = require("asyncawait/await"),
@@ -176,6 +178,10 @@ async function getSchedules(){
     //     "length: " + schedules.length;
     return schedules;
 }
+async function getAdminCredentions(){
+    let adminCredentials = await User.findOne({"username": "admin"});
+    return adminCredentials;
+}
 function addLocalIPsToSchedules(schedules, relayDevices){
     schedules.forEach(function(schedule){
         let found = relayDevices.find(function(device) { 
@@ -188,21 +194,22 @@ function addLocalIPsToSchedules(schedules, relayDevices){
 }
 // schedules.sort(addLocalIPsToSchedules(relayDevices);
 // NOT COMPLETE
-router.get("/", async (req, res) =>{
-    let relayDevices;
-    
-    let schedules;
+router.get("/", middleware.isLoggedIn, async (req, res) =>{
+    let relayDevices,
+        schedules,
+        adminCredentials;
     
     try{
-        relayDevices = await getRelayDevices();
-        schedules    = await getSchedules();
+        relayDevices    = await getRelayDevices();
+        schedules       = await getSchedules();
         if(!relayDevices || relayDevices.length === 0){
             throw new Error("relay devices not valid!");
         }
         if(!schedules || schedules.length === 0){
-            throw new Error(("schedules not valid"));
+            throw new Error(("schedules not valid!"));
         }
-        
+        console.log("Admin credentials: " + adminCredentials);
+        console.log("Admin mongo id: " + adminCredentials['_id']);
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
         relayDevices.sort(
@@ -235,9 +242,10 @@ router.get("/:relay_id", (req, res) => {
    // return all the schedules for that relay
     // Shows all active schedules
 });
-router.post("/", async (req, res) => {
+router.post("/", middleware.isLoggedIn, async (req, res) => {
     let relayDevices,
-        schedules;
+        schedules,
+        adminCredentials;
     try{
         console.log(`New Schedule Received ${req.body}`)
         var scheduleObj = buildSchedule(req.body);
@@ -248,12 +256,18 @@ router.post("/", async (req, res) => {
         const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
         relayDevices = await getRelayDevices();
         schedules    = await getSchedules();
+        adminCredentials = await getAdminCredentions();
         if(!relayDevices || relayDevices.length === 0){
             throw new Error("relay devices not valid!");
         }
         if(!schedules || schedules.length === 0){
             throw new Error(("schedules not valid"));
         }
+        if(!adminCredentials || adminCredentials === 0){
+            throw new Error("admin credentials not valid!")
+        }
+        console.log("Admin credentials: " + adminCredentials);
+        console.log("Admin mongo id: " + adminCredentials['_id']);
         
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
@@ -315,7 +329,7 @@ router.post("/", async (req, res) => {
     }
 });
 //EDIT
-router.get("/:schedule_id/edit", (req, res) => {
+router.get("/:schedule_id/edit", middleware.isLoggedIn, (req, res) => {
     console.log(`in get EDIT route with ${req.params.schedule_id}`);
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
         if(err) console.log(err);
@@ -343,26 +357,32 @@ router.get("/:schedule_id/edit", (req, res) => {
     });
 });
 // UPDATE
-router.put("/:schedule_id/local_ip/:local_ip", async (req, res) => {
+router.put("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req, res) => {
     console.log(`in put route with ${req.params.schedule_id}, ${req.params.local_ip}`);
     let relayDevices,
-        schedules;
+        schedules,
+        adminCredentials;
     try{
         console.log(`UPDATE ROUTE: ${req.body}`);
-        var scheduleObj = buildSchedule(req.body);
+        var scheduleObj   = buildSchedule(req.body);
         
         const scheduleStr = JSON.stringify(scheduleObj);
-        const options = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'PUT', scheduleStr);
+        const options     = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'PUT', scheduleStr);
         
-        relayDevices = await getRelayDevices();
-        schedules    = await getSchedules();
+        relayDevices      = await getRelayDevices();
+        schedules         = await getSchedules();
+        adminCredentials  = await getAdminCredentions();
         if(!relayDevices || relayDevices.length === 0){
             throw new Error("relay devices not valid!");
         }
         if(!schedules || schedules.length === 0){
             throw new Error(("schedules not valid"));
         }
-        
+        if(!adminCredentials || adminCredentials === 0){
+            throw new Error("admin credentials not valid!")
+        }
+        console.log("Admin credentials: " + adminCredentials);
+        console.log("Admin mongo id: " + adminCredentials['_id']);
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
         relayDevices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));
@@ -422,21 +442,27 @@ router.put("/:schedule_id/local_ip/:local_ip", async (req, res) => {
         res.status(400).end();
     }
 });
-router.delete("/:schedule_id/local_ip/:local_ip", async (req, res) => {
+router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (req, res) => {
     console.log(`in delete route with ${req.params.schedule_id}, ${req.params.local_ip}`);
     let relayDevices,
-        schedules;
+        schedules,
+        adminCredentials;
     try{
         const options = buildOptions(req.params.local_ip, 5000, '/schedule/' + req.params.schedule_id, 'DELETE');
-        relayDevices = await getRelayDevices();
-        schedules    = await getSchedules();
+        relayDevices      = await getRelayDevices();
+        schedules         = await getSchedules();
+        adminCredentials  = await getAdminCredentions();
         if(!relayDevices || relayDevices.length === 0){
             throw new Error("relay devices not valid!");
         }
         if(!schedules || schedules.length === 0){
             throw new Error(("schedules not valid"));
         }
-        
+        if(!adminCredentials || adminCredentials === 0){
+            throw new Error("admin credentials not valid!")
+        }
+        console.log("Admin credentials: " + adminCredentials);
+        console.log("Admin mongo id: " + adminCredentials['_id']);
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
         relayDevices.sort((a, b) => (a['local_ip'].replace(/\./g,'') > b['local_ip'].replace(/\./g,'') ? 1: -1));

@@ -28,16 +28,23 @@
 	                </button>
 	                <a class="navbar-brand" href="/">Smart Gardening</a>
 	            </div>
+	        	<% if(currentUser){ %>
 	            <div id="navbar" class="collapse navbar-collapse">
 	              <ul class="nav navbar-nav">
 	                <li><a href="/devices">Devices</a></li>
 	                <li><a href="/charts">Charts</a></li>
 	            	<li><a href="/schedule">Schedule</a></li>
-	            	<li><a href="/admin">Admin</a></li>
-	            	<li><a href="/login">Login</a></li>
 	              </ul>
-	              <ul class="nav navbar-nav navbar-right">
-	              </ul>
+	             <% } %>
+				<ul class="nav navbar-nav navbar-right">
+                  <% if(!currentUser){ %>
+                      <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>"><a href="/login">Login</a></li>
+                      <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>"><a href="/register">Sign Up</a></li>
+                  <% } else { %>
+                      <li><a href="#">Signed In As <%= currentUser.username %></a></li>
+                      <li><a href="/logout">Logout</a></li>
+                  <% } %>
+            		</ul>
 	            </div>
 	        </div>
 		</nav>
