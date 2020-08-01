@@ -33,7 +33,7 @@ var middleware = {
 		    }
 		});
 		
-		res.status(404).send("you must be logged in as an admin to perform that action");
+		//res.status(404).send("you must be logged in as an admin to perform that action");
 	},
 	checkScheduleInputs(req, res, next){
 		var newSchedule = req.body;
