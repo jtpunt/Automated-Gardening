@@ -43,7 +43,7 @@ var outletObj = {
                 // if JSON file 'device_id.json' exists
                 if(fileExists){
                     console.log("File does exist");
-                    fs.readFileSync(fileName, function(err, data){
+                    fs.readFile(fileName, function(err, data){
                         if(err) {
                             console.log("Err: " + err.toString());
                             throw err;
