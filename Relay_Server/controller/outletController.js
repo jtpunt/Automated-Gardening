@@ -44,10 +44,16 @@ var outletObj = {
                 if(fileExists){
                     console.log("File does exist");
                     fs.readFileSync(fileName, function(err, data){
-                        if(err) throw err;
+                        if(err) {
+                            console.log("Err: " + err.toString());
+                            throw err;
+                        }
                         else{
+                            console.log("File read successful");
                             deviceDataObj = JSON.parse(data);
+                            console.log("Parsed JSON object: " + deviceDataObj);
                             if(deviceDataObj["_id"] !== undefined){
+                                console.log("deviceDataObj[_id] is null");
                                 device_id = deviceDataObj['_id'].toString();
                                 // look up device in database, make sure it exists, overwrite local ip value
                                 
