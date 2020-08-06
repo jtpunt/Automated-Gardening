@@ -53,7 +53,7 @@ var outletObj = {
                             deviceDataObj = JSON.parse(data);
                             console.log("Parsed JSON object: " + deviceDataObj);
                             if(deviceDataObj["_id"] !== undefined){
-                                console.log("deviceDataObj[_id] is null");
+                                console.log("deviceDataObj[_id] is not null");
                                 device_id = deviceDataObj['_id'].toString();
                                 // look up device in database, make sure it exists, overwrite local ip value
                                 
@@ -64,6 +64,8 @@ var outletObj = {
                                         console.log(`device: ${device} has been updated`);
                                     }
                                 })    
+                            }else{
+                                console.log("deviceDataObj[_id] is null");
                             }
                         }
                     });
