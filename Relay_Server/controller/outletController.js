@@ -40,6 +40,7 @@ var outletObj = {
                 
                 // if JSON file 'device_id.json' exists
                 if(fileExists){
+                    console.log("File does exist");
                     fs.readFile(fileName, function(err, data){
                         if(err) throw err;
                         else{
@@ -63,6 +64,7 @@ var outletObj = {
                 else if(Device.findOne({local_ip: localIP, deviceType: "Relay Server"}).count() > 0 ? true : false){
                     // grab the device's mongo _id and write it to the 'device_id.json' file
                         // _id: _id
+                    console.log("local ip does exist in the device db");
                     Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, function(err, myDevice) {
                         if(err){
                             console.log(err);
@@ -79,7 +81,7 @@ var outletObj = {
                 else{
                     // create a basic device in mongo
                     // grab the id, and write it to our 'device_id.json' file
-                
+                    console.log("Device does not exist, creating device");
                     Device.create(newDeviceObj, (err, newDevice) =>{
                         if(err) console.log(err);
                         else{
