@@ -26,7 +26,7 @@ var outletObj = {
                 }
             });
         },
-        adjustForIPChange: function(){
+        adjustForIPChange: async function(){
             try{
                 let deviceDataObj,
                     deviceDataJSON,

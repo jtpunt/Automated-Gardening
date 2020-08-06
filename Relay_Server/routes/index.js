@@ -11,6 +11,8 @@ var express = require("express"),
     middleware = require("../middleware"),
     ip = require("ip"),
     localIP = ip.address(),
+    async         = require("asyncawait/async"),
+    await         = require("asyncawait/await"),
     router    = express.Router();
 var APPROVED_GPIO = [2, 3];
 
@@ -18,7 +20,8 @@ process.on('SIGINT', () => {
     outletController.releaseGpioMem();
 })
 try{
-    outletController.adjustForIPChange();
+    // synchronous execution is not happening here
+    async () => await outletController.adjustForIPChange();
     outletController.getOutletSetup();
     scheduleController.getSchedules(outletController.activateRelay, outletController);
 }catch(err){
