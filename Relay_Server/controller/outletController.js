@@ -4,6 +4,8 @@ var Device = require("../models/device"),
     fs          = require("fs"),
     path        = require("path"),
     fileName    = path.join("../Relay_Server/device_id.json"),
+    async         = require("asyncawait/async"),
+    await         = require("asyncawait/await"),
     localIP = ip.address();
 
 console.log("Local IP: " + localIP + "\n");
