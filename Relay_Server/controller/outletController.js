@@ -28,7 +28,7 @@ var outletObj = {
                 }
             });
         },
-        adjustForIPChange: async function(){
+        adjustForIPChange: function(){
             try{
                 let deviceDataObj,
                     deviceDataJSON,
@@ -43,13 +43,14 @@ var outletObj = {
                 // if JSON file 'device_id.json' exists
                 if(fileExists){
                     console.log("File does exist");
-                    fs.readFile(fileName, function(err, data){
+                    fs.readFileSync(fileName, function(err, data){
                         if(err) throw err;
                         else{
                             deviceDataObj = JSON.parse(data);
                             if(deviceDataObj["_id"] !== undefined){
                                 device_id = deviceDataObj['_id'].toString();
                                 // look up device in database, make sure it exists, overwrite local ip value
+                                
                                 Device.findByIdAndUpdate(device_id, {$set: {local_ip: localIP }}, function(err, device){
                                     if(err){
                                         console.log(err);
