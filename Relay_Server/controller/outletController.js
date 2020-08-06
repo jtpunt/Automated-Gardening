@@ -61,7 +61,7 @@ var outletObj = {
                     
                 }
                 // else if our local ip exist in device database
-                else if(Device.findOne({local_ip: localIP, deviceType: "Relay Server"}).count() > 0 ? true : false){
+                else if(Device.find({local_ip: localIP, deviceType: "Relay Server"}).limit(1)){
                     // grab the device's mongo _id and write it to the 'device_id.json' file
                         // _id: _id
                     console.log("local ip does exist in the device db");
