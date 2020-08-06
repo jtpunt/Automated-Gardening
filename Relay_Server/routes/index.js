@@ -18,11 +18,12 @@ process.on('SIGINT', () => {
     outletController.releaseGpioMem();
 })
 try{
+    outletController.adjustForIPChange();
     outletController.getOutletSetup();
+    scheduleController.getSchedules(outletController.activateRelay, outletController);
 }catch(err){
     console.log(err);
 }
-scheduleController.getSchedules(outletController.activateRelay, outletController);
 
 router.get('/device', function(req, res) {
     Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {

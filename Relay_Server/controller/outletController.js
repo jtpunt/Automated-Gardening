@@ -3,7 +3,7 @@ var Device = require("../models/device"),
     ip      = require("ip"),
     fs          = require("fs"),
     path        = require("path"),
-    fileName    = path.join("../Relay_Server/device_id.txt"),
+    fileName    = path.join("../Relay_Server/device_id.json"),
     localIP = ip.address();
 
 console.log("Local IP: " + localIP + "\n");
@@ -26,123 +26,77 @@ var outletObj = {
                 }
             });
         },
-        detectIPChange: function(){
-            console.log("in detectIPChange");
+        adjustForIPChange: function(){
             try{
-                if(!fs.existsSync(fileName)){ // file does not exist
-                    console.log("File does not exist");
-                    // check mongodb devices for matching IP/Device Type
-                    let filter = {local_ip: ipAddr, deviceType: "Relay Server"};
-                    let update = {local_ip: localIP };
-                    Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-                        if(err){
-                            // device is not set up in database
-                            var newDeviceObj = {
-                                local_ip: localIP,
-                                deviceName: 'New Relay Server',
-                                deviceType: 'Relay Server',
-                            }
-                            // create new mongo device
-                            Devices.create(newDeviceObj, (err, newDevice) =>{
-                                if(err) console.log(err);
-                                else{
-                                    newDevice.save();
-                                    console.log("Device saved!");
-                                    // grab device id and write it to the local text file
-                                    fs.writeFile(fileName, newDevice['_id'] + "\n", function(err){
-                                        if(err){
-                                            console.log(err);
-                                        }else{ // file write successful
-                                            console.log("No errors occured");
-                                            
-                                        }
-                                    });
-                                }
-                            });
-                        }else{ // a match was found
-                            // Write the device id to the local text file
-                            fs.writeFile(fileName, myDevice['_id'] + "\n", function(err){
-                                if(err){
-                                    console.log(err);
-                                }else{ // file write successful
-                                    console.log("No errors occured");
-                                    
-                                }
-                            });
-                        }
-                        
-                    });
-
-                }else{ // file does exist
-                    console.log("File exists");
+                let deviceDataObj,
+                    deviceDataJSON,
+                    device_id, 
+                    newDeviceObj = {
+                        local_ip: localIP,
+                        deviceName: 'New Relay Server',
+                        deviceType: 'Relay Server',
+                    },
+                    fileExists = fs.existsSync(fileName);
+                
+                // if JSON file 'device_id.json' exists
+                if(fileExists){
                     fs.readFile(fileName, function(err, data){
+                        if(err) throw err;
+                        else{
+                            deviceDataObj = JSON.parse(data);
+                            if(deviceDataObj["_id"] !== undefined){
+                                device_id = deviceDataObj['_id'].toString();
+                                // look up device in database, make sure it exists, overwrite local ip value
+                                Device.findByIdAndUpdate(device_id, {$set: {local_ip: localIP }}, function(err, device){
+                                    if(err){
+                                        console.log(err);
+                                    }else{
+                                        console.log(`device: ${device} has been updated`);
+                                    }
+                                })    
+                            }
+                        }
+                    });
+                    
+                }
+                // else if our local ip exist in device database
+                else if(Device.findOne({local_ip: localIP, deviceType: "Relay Server"}).count() > 0 ? true : false){
+                    // grab the device's mongo _id and write it to the 'device_id.json' file
+                        // _id: _id
+                    Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, function(err, myDevice) {
                         if(err){
                             console.log(err);
-                            //
-                        }else{ // file read successful
-                            let device_id = data.toString();
-                            console.log(device_id)
-                            Device.findById(device_id, (err, foundSchedule) =>{
-                                if(err) {
-                                    // device does not exist
-                                    // check to see if there is a relay device with the same local ip address
-                                    Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-                                        if(err){
-
-                                            // device is not set up in database
-                                            var newDeviceObj = {
-                                                local_ip: localIP,
-                                                deviceName: 'New Relay Server',
-                                                deviceType: 'Relay Server',
-                                            }
-                                             // create new mongo device
-                                            Devices.create(newDeviceObj, (err, newDevice) =>{
-                                                if(err) console.log(err);
-                                                else{
-                                                    newDevice.save();
-                                                    console.log("Device saved!");
-                                                     // grab device id and write it to the local file
-                                                    fs.writeFile(fileName, newDevice['_id'] + "\n", function(err){
-                                                        if(err){
-                                                            console.log(err);
-                                                        }else{ // file write successful
-                                                            console.log("No errors occured");
-                                                            
-                                                        }
-                                                    });
-                                                }
-                                            });
-                                        }else{
-                                            // device is set up in the database
-                                            fs.writeFile(fileName, newDevice['_id'] + "\n", function(err){
-                                                if(err){
-                                                    console.log(err);
-                                                }else{ // file write successful
-                                                    console.log("No errors occured");
-                                                    
-                                                }
-                                            });
-                                        }
-                                    });
-                                    
-                                }else{
-                                    // device does exist
-                                    if(foundSchedule['local_ip'] !== local_ip){
-                                        let filter = {local_ip: ipAddr, deviceType: "Relay Server"};
-                                        let update = {local_ip: localIP };
-                                        console.log("Device is already set up in the database, but the IP address has changed");
-                                        let doc = Devices.findOneAndUpdate(filter, update);
-                                        doc.save();
-
-                                    }
-                                }
-                            });
-                           
+                        }
+                        else{
+                            deviceDataObj = { _id: myDevice["_id"] };       // create our object
+                            deviceDataJSON = JSON.stringify(deviceDataObj); // stringify it
+                            
+                            fs.writeFileSync(fileName, deviceDataJSON);     // write it to our file
                         }
                     });
                 }
-            }catch(err){ // file does not exist
-                console.log(err);
+                // else, we have a new device
+                else{
+                    // create a basic device in mongo
+                    // grab the id, and write it to our 'device_id.json' file
+                
+                    Device.create(newDeviceObj, (err, newDevice) =>{
+                        if(err) console.log(err);
+                        else{
+                            newDevice.save();
+                            console.log("Device saved!");
+                            deviceDataObj = { _id: newDevice["_id"] };       // create our object
+                            deviceDataJSON = JSON.stringify(deviceDataObj);  // stringify it
+                            
+                            fs.writeFileSync(fileName, deviceDataJSON);      // write it to our file
+    
+                        }
+                    });
+                }
+                
+                
+            }catch(exc){
+                console.log(exc.toString());
             }
         },
         releaseGpioMem: function(){
