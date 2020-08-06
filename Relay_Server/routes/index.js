@@ -22,8 +22,8 @@ process.on('SIGINT', () => {
 try{
     // synchronous execution is not happening here
     outletController.adjustForIPChange();
-    outletController.getOutletSetup();
-    scheduleController.getSchedules(outletController.activateRelay, outletController);
+    // outletController.getOutletSetup();
+    // scheduleController.getSchedules(outletController.activateRelay, outletController);
 }catch(err){
     console.log(err);
 }
