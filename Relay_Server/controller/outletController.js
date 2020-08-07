@@ -62,32 +62,6 @@ var outletObj = {
                     }else{
                         console.log("deviceDataObj[_id] is null");
                     }
-                    // fs.readFileSync(fileName, function(err, data){
-                    //     if(err) {
-                    //         console.log("Err: " + err.toString());
-                    //         throw err;
-                    //     }
-                    //     else{
-                    //         console.log("File read successful");
-                    //         deviceDataObj = JSON.parse(data);
-                    //         console.log("Parsed JSON object: " + deviceDataObj);
-                    //         if(deviceDataObj["_id"] !== undefined){
-                    //             console.log("deviceDataObj[_id] is not null");
-                    //             device_id = deviceDataObj['_id'].toString();
-                    //             // look up device in database, make sure it exists, overwrite local ip value
-                                
-                    //             Device.findByIdAndUpdate(device_id, {$set: {local_ip: localIP }}, function(err, device){
-                    //                 if(err){
-                    //                     console.log(err);
-                    //                 }else{
-                    //                     console.log(`device: ${device} has been updated`);
-                    //                 }
-                    //             })    
-                    //         }else{
-                    //             console.log("deviceDataObj[_id] is null");
-                    //         }
-                    //     }
-                    // });
                     
                 }
                 // else if our local ip exist in device database

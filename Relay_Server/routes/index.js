@@ -20,12 +20,12 @@ process.on('SIGINT', () => {
     outletController.releaseGpioMem();
 })
 try{
-    // synchronous execution is not happening here
     outletController.adjustForIPChange();
     outletController.getOutletSetup();
     scheduleController.getSchedules(outletController.activateRelay, outletController);
 }catch(err){
     console.log(err);
+    // could probably throw an error here, catch it in the server.js file for further error handling
 }
 
 router.get('/device', function(req, res) {
