@@ -2,7 +2,7 @@ var schedule = require('node-schedule');
 
 var date = new Date(2020, 7, 6, 18, 45, 0);
 
-var j = schedule.scheduleJob(date, function(y){
+var j = schedule.scheduleJob(date, function(){
   console.log(y);
   var x = schedule.scheduleJob('*/1 * * * *', function(){
     
