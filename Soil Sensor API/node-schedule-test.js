@@ -1,6 +1,6 @@
 var schedule = require('node-schedule');
 
-var date = new Date(2020, 7, 6, 18, 44, 0);
+var date = new Date(2020, 7, 6, 18, 45, 0);
 
 var j = schedule.scheduleJob(date, function(y){
   console.log(y);
