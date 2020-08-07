@@ -1,12 +1,16 @@
 var schedule = require('node-schedule');
 
-var j = schedule.scheduleJob('* */1 * * *', function(){
-  console.log('This should execute every hour');
+var date = new Date(2020, 7, 6, 18, 44, 0);
+
+var j = schedule.scheduleJob(date, function(y){
+  console.log(y);
+  var x = schedule.scheduleJob('*/1 * * * *', function(){
+    
+        
+      console.log(`This should execute every minute starting at: `, date);
+    });
+    console.log(`x: ${x.nextInvocation()}`);
+
 });
-console.log(j);
+console.log(`j: ${j.nextInvocation()}`);
 
-console.log(`Every 1 Hours: ${j.nextInvocation()}`);
-
-j.reschedule('*/1 * * * *');
-
-console.log(`Every 1 minutes: ${j.nextInvocation()}`);
