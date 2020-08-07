@@ -1,7 +1,7 @@
 var schedule = require('node-schedule');
 
-var j = schedule.scheduleJob('* */5 * * *', function(){
-  console.log('This should execute every 5 hours');
+var j = schedule.scheduleJob('* */4 * * *', function(){
+  console.log('This should execute every 4 hours');
 });
 console.log(j);
 
