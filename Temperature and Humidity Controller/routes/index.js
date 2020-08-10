@@ -11,49 +11,44 @@ var express = require("express"),
 
 
 // root route
-router.get("/", (req, res) => {
-    // Device.find({deviceType: "DHT11 Sensor"},  (err, devices)=>{
-    //     if(err) console.log(err);
-    //     else{
-    //         console.log(devices);
-    //         var data = [];
-    //         devices.forEach(function(device, i, arr){
-    //             console.log(device);
-    //              http.get("http://" +device['local_ip'] + ":" + device['port'] + "/", (resp) => {
-    //                 // console.log(resp)
-    //                 resp.on('data', function(chunk) {
-    //                     var myData = JSON.parse(chunk);
-    //                     myData.forEach(function(reading){
-    //                       reading['_id'] = device['_id'];
-    //                       reading['deviceName'] = device['deviceName'];
-    //                       data.push(reading); 
-    //                     });
-    //                     console.log("data arr: ", data);
-    //                     if(i == arr.length - 1){
-    //                         console.log("data arr: ", data);
-    //                         res.render("index", { sensors: data, scripts: ["/static/js/drawGauges.js"], stylesheets: ["/static/css/spinner.css"] });
-    //                     }
-    //                 });
-    //             }).on("error", (err) => {
-    //                 console.log("Error: " + err.message);
-            
-    //             });
-    //         })
-    //     }
-    // });
-    // http.get("http://192.168.1.128:8080/readings", (resp) => {
-    //     // console.log(resp)
-    //     let str = '';
-    //     resp.on('data', function(chunk) {
-    //         var data = JSON.parse(chunk);
-    //         console.log(data);
-    //         res.render("index", { sensors: data, scripts: ["/static/js/drawGauges.js"], stylesheets: ["/static/css/spinner.css"] });
-    //     });
-    // }).on("error", (err) => {
-    //     console.log("Error: " + err.message);
+router.get("/", async function(req, res){
+    let dht11Devices = await Device.find({deviceType: "DHT11 Sensor"}),
+        dht22Devices = await Device.find({deviceType: "DHT22 Sensor"}),
+        sensors = [];
+    
+    if(dht11Devices !== undefined && dht11Devices !== null){
+        console.log("dht11Devices: " + dht11Devices);
+        dht11Devices.forEach(function(dht11Device){
+            dht11Device['gpio'].map(function(gpio){
+                let tempId = "temp" + gpio + dht11Device['_id'],
+                    humidId = "humid"  + gpio + dht11Device['_id'];
+                    
+                sensors.push({
+                    deviceName: dht11Device['deviceName'],
+                    tempId: tempId,
+                    humidId: humidId
+                })
+            });
+        })
+    }
+    
+    if(dht22Devices !== undefined && dht22Devices !== null){
+        console.log("dht22Devices: " + dht22Devices);
+        dht22Devices.forEach(function(dht22Device){
+            dht22Device['gpio'].map(function(gpio){
+                let tempId = "temp" + gpio + dht22Device['_id'],
+                    humidId = "humid"  + gpio + dht22Device['_id'];
+                    
+                sensors.push({
+                    deviceName: dht22Device['deviceName'],
+                    tempId: tempId,
+                    humidId: humidId
+                })
+            });
+        })
+    }
 
-    // });
-    res.render("index", { sensors: [], scripts: ["/static/js/drawGauges.js"], stylesheets: ["/static/css/spinner.css"] });
+    res.render("index", { sensors: sensors, scripts: ["/static/js/drawGauges.js"], stylesheets: ["/static/css/spinner.css"] });
 });
 router.get("/register", function(req, res){
     res.render("register");
