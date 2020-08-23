@@ -11,12 +11,15 @@ router.get("/", function(req, res){
             // to get a value that is either negative, positive, or zero.
             return new Date(b.date) - new Date(a.date);
           });
+         // console.log("Data before render: " + chart);
           res.render("charts", {charts: chart, scripts: ["/static/js/drawCharts.js"], stylesheets: ["/static/css/spinner.css"]});
         }
     });
 });
 router.get("/data", function(req, res){
-    Chart.find().sort({"date": -1, "_id" : false}, (err, chart) => { //remove _id from query result
+   // let mySort = {"date": -1, "_id" : false};
+    let mySort = {"date": -1};
+    Chart.find().sort(mySort).exec(function(err, chart){ //remove _id from query result
         if(err) console.log(err);
         else{
           res.write(JSON.stringify(chart));

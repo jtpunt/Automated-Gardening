@@ -10,39 +10,39 @@ document.onreadystatechange = () => {
         },1000);
     }
 }
-fetch("/charts/data").then((response) => {
-    var data = '';
-    const reader = response.body.getReader();
-    var decoder = new TextDecoder('utf-8');
-    const stream = new ReadableStream({
-        start(controller) {
-        // The following function handles each data chunk
-            function push() {
-                // "done" is a Boolean and value a "Uint8Array"
-                reader.read().then(({ done, value }) => {
-                // Is there no more data to read?
-                data += decoder.decode(value || new Uint8Array, { stream: !done });
-                // var parseData = data.split(', ').map(function (record) {
-                //     return JSON.parse(record)
-                // })
-                // console.log(parsedData);
-                console.log(data);
-                if (done) {
-                // Tell the browser that we have finished sending data
-                    controller.close();
-                    return;
-                }
+// fetch("/charts/data").then((response) => {
+//     var data = '';
+//     const reader = response.body.getReader();
+//     var decoder = new TextDecoder('utf-8');
+//     const stream = new ReadableStream({
+//         start(controller) {
+//         // The following function handles each data chunk
+//             function push() {
+//                 // "done" is a Boolean and value a "Uint8Array"
+//                 reader.read().then(({ done, value }) => {
+//                 // Is there no more data to read?
+//                 data += decoder.decode(value || new Uint8Array, { stream: !done });
+//                 // var parseData = data.split(', ').map(function (record) {
+//                 //     return JSON.parse(record)
+//                 // })
+//                 // console.log(parsedData);
+//                 console.log(data);
+//                 if (done) {
+//                 // Tell the browser that we have finished sending data
+//                     controller.close();
+//                     return;
+//                 }
             
-            // Get the data and send it to the browser via the controller
-                controller.enqueue(value);
-                push();
-                });
-            };
-            push();
-        }
-    })
-    return new Response(stream, { headers: { "Content-Type": "application/json" } });
-});
+//             // Get the data and send it to the browser via the controller
+//                 controller.enqueue(value);
+//                 push();
+//                 });
+//             };
+//             push();
+//         }
+//     })
+//     return new Response(stream, { headers: { "Content-Type": "application/json" } });
+// });
 function daysInMonth (month, year) {
     return new Date(year, month, 0).getDate();
 }

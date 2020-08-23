@@ -32,17 +32,25 @@
 </script>
 <body>
 	<div id="load"></div>
-	<div class="container"  id="contents">
-		<h3>CURRENT CONDITIONS</h3>
-		<% sensors.forEach(function(sensor){ %>
+	<div class="container" style='  margin: auto;
+  width: 75%;
+  border: 3px solid green;'>
+		<h3 style='text-align: center'>CURRENT CONDITIONS</h3>
+		<% 
+			var lastDeviceName
+			sensors.forEach(function(sensor, i){ %>
+		<%  sensor.deviceName;%>
 			<div class="row">
-				<h3><%=sensor.deviceName%></h3>
-				<div class="col-sm-3">
-					<div id="<%=sensor.tempId%>"></div>
-				</div>
-				<div class="col-sm-3">
-					<div id="<%=sensor.humidId%>"></div>
-				</div>
+			<% console.log("EJS" + lastDeviceName); 
+				console.log(sensor.deviceName);
+				if(i > 0 && lastDeviceName === sensor.deviceName){
+					console.log("lastDeviceName === sensor.deviceName")
+				}
+				
+			%>
+				<h3 style='text-align: center'><%=sensor.deviceName%></h3>
+				<div class="col-sm-6" id="<%=sensor.tempId%>" align="center"></div>
+				<div class="col-sm-6" id="<%=sensor.humidId%>" align="center"></div>
 			</div>
 			<script type='text/javascript'>
 				// set the gauges initially to 0

@@ -1,29 +1,32 @@
 <% include ./partials/header %>
 <script type="text/javascript">
-	// document.onreadystatechange = function () {
-	// 	var state = document.readyState
-	// 	if (state == 'interactive') {
-	// 		document.getElementById('contents').style.visibility="hidden";
-	// 	}else if (state == 'complete') {
-	// 		setTimeout(function(){
-	// 			document.getElementById('interactive');
-	// 			document.getElementById('load').style.visibility="hidden";
-	// 			document.getElementById('contents').style.visibility="visible";
-	// 		},1000);
-	// 	}
-	// }
 	var tempArr = [];
 	var humidArr = [];
 	var arr = [];
+	console.log(<% charts %>);
 	arr.push(["Date", "Temperature", "Humidity"]);
 <% charts.forEach(function(myChart){ %>
-		tempArr.push([new Date("<%=myChart.date%>"), <%=myChart.temp%>]);
-		arr.push([new Date("<%=myChart.date%>"), <%=myChart.temp%>, <%=myChart.humid%>]);
-		humidArr.push([new Date("<%=myChart.date%>"), <%=myChart.humid%>]);
+		var date    = "<%=myChart.date%>",
+		    values  = date.split(/[^0-9]/),
+    		year    = parseInt(values[0], 10),
+    		month   = parseInt(values[1], 10) - 1, // Month is zero based, so subtract 1
+    		day     = parseInt(values[2], 10),
+    		hours   = parseInt(values[3], 10),
+    		minutes = parseInt(values[4], 10),
+    		seconds = parseInt(values[5], 10);
+    		
+    	var formattedDate = new Date(year, month, day, hours, minutes, seconds);
+
+		console.log(formattedDate);
+		tempArr.push([formattedDate, <%=myChart.temp%>]);
+		arr.push([formattedDate, <%=myChart.temp%>, <%=myChart.humid%>]);
+		humidArr.push([formattedDate, <%=myChart.humid%>]);
 	<% }); %>
+	console.log("DRAWING CHARTS");
+	console.log(tempArr);
 	drawChart('chart_div', 'Temperature', tempArr);
 	drawChart('chart_div1', 'Humidity', humidArr);
-    drawChart('chart_div2', 'Temperature + Humidity', arr);
+ 	drawChart('chart_div2', 'Temperature + Humidity', arr);
 	var options = {
 		width: 900,
 		height: 500,
