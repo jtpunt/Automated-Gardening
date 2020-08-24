@@ -17,13 +17,11 @@
     		
     	var formattedDate = new Date(year, month, day, hours, minutes, seconds);
 
-		console.log(formattedDate);
 		tempArr.push([formattedDate, <%=myChart.temp%>]);
 		arr.push([formattedDate, <%=myChart.temp%>, <%=myChart.humid%>]);
 		humidArr.push([formattedDate, <%=myChart.humid%>]);
 	<% }); %>
 	console.log("DRAWING CHARTS");
-	console.log(tempArr);
 	drawChart('chart_div', 'Temperature', tempArr);
 	drawChart('chart_div1', 'Humidity', humidArr);
  	drawChart('chart_div2', 'Temperature + Humidity', arr);
