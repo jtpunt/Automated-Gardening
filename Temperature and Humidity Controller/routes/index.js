@@ -12,42 +12,25 @@ var express = require("express"),
 
 // root route
 router.get("/", async function(req, res){
-    let dht11Devices = await Device.find({deviceType: "DHT11 Sensor"}),
-        dht22Devices = await Device.find({deviceType: "DHT22 Sensor"}),
+
+    let dhtDevices   = await Device.find({"$or": [{ deviceType: "DHT11 Sensor"}, { deviceType: "DHT22 Sensor"}]}),
         sensors = [];
     
-    if(dht11Devices !== undefined && dht11Devices !== null){
-        console.log("dht11Devices: " + dht11Devices);
-        dht11Devices.forEach(function(dht11Device){
-            dht11Device['gpio'].map(function(gpio){
-                let tempId = "temp" + gpio + dht11Device['_id'],
-                    humidId = "humid"  + gpio + dht11Device['_id'];
+    if(dhtDevices !== undefined && dhtDevices !== null){
+        console.log("dht1=Devices: " + dhtDevices);
+        dhtDevices.forEach(function(dhtDevice){
+            dhtDevice['gpio'].map(function(gpio){
+                let tempId = "temp" + gpio + dhtDevice['_id'],
+                    humidId = "humid"  + gpio + dhtDevice['_id'];
                     
                 sensors.push({
-                    deviceName: dht11Device['deviceName'],
+                    deviceName: dhtDevice['deviceName'],
                     tempId: tempId,
                     humidId: humidId
-                })
+                });
             });
         })
     }
-    
-    if(dht22Devices !== undefined && dht22Devices !== null){
-        console.log("dht22Devices: " + dht22Devices);
-        dht22Devices.forEach(function(dht22Device){
-            dht22Device['gpio'].map(function(gpio){
-                let tempId = "temp" + gpio + dht22Device['_id'],
-                    humidId = "humid"  + gpio + dht22Device['_id'];
-                    
-                sensors.push({
-                    deviceName: dht22Device['deviceName'],
-                    tempId: tempId,
-                    humidId: humidId
-                })
-            });
-        })
-    }
-
     res.render("index", { sensors: sensors, scripts: ["/static/js/drawGauges.js"], stylesheets: ["/static/css/spinner.css"] });
 });
 router.get("/register", function(req, res){
