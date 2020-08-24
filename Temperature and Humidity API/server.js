@@ -4,6 +4,7 @@ var express        = require("express"),
 //    passport       = require("passport"),
   //  LocalStrategy  = require("passport-local"),
 //    methodOverride = require("method-override"),
+    cors           = require('cors'),
     sensor         = require('node-dht-sensor'),
     ip             = require("ip");
     Sensor         = require("./models/sensor"),
@@ -44,7 +45,8 @@ mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
     }
 });
 // seedDB();
-
+app.use(cors());
+app.options('*', cors());
 //app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
