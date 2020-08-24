@@ -1,5 +1,5 @@
 var express = require("express"),
-    dhtSensor  = require('node-dht-sensor'),
+    dhtSensor  = require('node-dht-sensor').promises,
     async = require("asyncawait/async"),
     await = require("asyncawait/await"),
     Sensor = require("../models/sensor"),
