@@ -57,6 +57,7 @@ router.get("/",  async function(req, res) {
     }else{
          try{
             dhtDevices.forEach(function(dhtDevice){
+                console.log("dhtDevice: " + dhtDevice);
                 dhtDevice['gpio'].map(function(gpio){
                     dhtVersion = dhtDevice['deviceType'] === "DHT11 Sensor" ? 11 : 22;
                     sensorData = dhtSensor.readSync(dhtVersion, gpio); // if you use await here, mySensorData is not sent and the response never $
