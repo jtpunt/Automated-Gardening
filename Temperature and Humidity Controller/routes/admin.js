@@ -5,7 +5,10 @@ var express = require("express"),
     router = express.Router();
     
 router.get("/", middleware.isLoggedIn, (req, res) => {
-    res.render("admin/dashboard", { stylesheets: ["/static/css/dashboard.css"] });
+    // res.render("admin/dashboard", { 
+    // 	stylesheets: ["/static/css/sidebar.css"] 
+    // });
+    res.redirect("/");
     res.status(200).end();
 });
 
