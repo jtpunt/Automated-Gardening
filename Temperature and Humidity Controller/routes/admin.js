@@ -1,9 +1,10 @@
 var express = require("express"),
     Sensor = require("../models/sensor"),
     Device = require("../models/device"),
+    middleware = require("../middleware"),
     router = express.Router();
     
-router.get("/", (req, res) => {
+router.get("/", middleware.isLoggedIn, (req, res) => {
     res.render("admin/dashboard", { stylesheets: ["/static/css/dashboard.css"] });
     res.status(200).end();
 });
