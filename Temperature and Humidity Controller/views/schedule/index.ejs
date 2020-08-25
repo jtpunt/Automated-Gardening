@@ -45,53 +45,53 @@
   cursor: pointer;
 }
 </style>
-<body>
-	<div class="container">
-	<div class="row" style="margin: auto;
-	    width: 100%;
-	    padding: 10px;">
-		<div class="col-md-12">
-			<h2>My Schedules</h2>
-			<!-- Show schedules for each relay device - sorted by local ip address -->
-			<% devices.forEach(function(device){ let ipStr = device['local_ip'].replace(/\./g,''); %>
-			<div class="well col-md-12">
-				<!--Setting up the add new schedule button that is used for collapsing-->
-		        <div class="text-right">
-		            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>" aria-expanded="false" aria-controls="collapse<%=ipStr%>">
-		            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Schedules</a>
-		        </div>
-		        <!--Schedule section-->
-		    	<div class="text-left">
-		        	<h4><strong><%=device['deviceName']%></strong></h4>
-		        	<strong>Schedules for <%=device["local_ip"]%> <i class="fa fa-calendar" aria-hidden="true"></i></strong>
-		    	</div>
-	        	<div class="collapse" id="collapse<%=ipStr%>">
-	        		<div class="rTable">
-						<div class="rTableRow">
-							<div class="rTableHead"><span style="font-weight: bold;">GPIO Pin #</span></div>
-							<div class="rTableHead"><span style="font-weight: bold;">Time</div>
-							<div class="rTableHead"><span style="font-weight: bold;">Day of Week</div>
-							<div class="rTableHead"><span style="font-weight: bold;">Date</div>
-							<div class="rTableHead"><span style="font-weight: bold;">On/Off</div>
-						</div>
-						<!-- Do we have any schedules set up for the current device? -->
-						<% include ./show %>
-						<!--Setting up the add new schedule button that is used for collapsing-->
-				        <div class="text-right">
-				            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>New" aria-expanded="false" aria-controls="collapse<%=ipStr%>New">
-				            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Schedule</a>
-				        </div>
+<div class="container">
+<div class="row" style="margin: auto;
+    width: 100%;
+    padding: 10px;">
+	<div class="col-md-12">
+		<h2>My Schedules</h2>
+		<!-- Show schedules for each relay device - sorted by local ip address -->
+		<!-- Remove periods from our local ip address so that the bootstrap collapse class works correctly -->
+		<% devices.forEach(function(device){ let ipStr = device['local_ip'].replace(/\./g,''); %>
+		<div class="well col-md-12">
+			<!--Setting up the add new schedule button that is used for collapsing-->
+	        <div class="text-right">
+	            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>" aria-expanded="false" aria-controls="collapse<%=ipStr%>">
+	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Schedules</a>
+	        </div>
+	        <!--Schedule section-->
+	    	<div class="text-left">
+	        	<h4><strong><%=device['deviceName']%></strong></h4>
+	        	<strong>Schedules for <%=device["local_ip"]%> <i class="fa fa-calendar" aria-hidden="true"></i></strong>
+	    	</div>
+        	<div class="collapse" id="collapse<%=ipStr%>">
+        		<div class="rTable">
+					<div class="rTableRow">
+						<div class="rTableHead"><span style="font-weight: bold;">GPIO Pin #</span></div>
+						<div class="rTableHead"><span style="font-weight: bold;">Time</div>
+						<div class="rTableHead"><span style="font-weight: bold;">Day of Week</div>
+						<div class="rTableHead"><span style="font-weight: bold;">Date</div>
+						<div class="rTableHead"><span style="font-weight: bold;">On/Off</div>
 					</div>
-	        	</div>
-		        <!--Collapse Add a schedule form START-->
-				<% include ./new %>
-		        <!--Collapse Add a schedule form END-->
-			</div>
-			<% }); %>
+					<!-- Do we have any schedules set up for the current device? -->
+					<% include ./show %>
+					<!--Setting up the add new schedule button that is used for collapsing-->
+			        <div class="text-right">
+			            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>New" aria-expanded="false" aria-controls="collapse<%=ipStr%>New">
+			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Schedule</a>
+			        </div>
+				</div>
+        	</div>
+	        <!--Collapse Add a schedule form START-->
+			<% include ./new %>
+	        <!--Collapse Add a schedule form END-->
 		</div>
+		<% }); %>
 	</div>
-	</div>
-</body>
+</div>
+</div>
+
 <script type="text/javascript">
 	let dateControl = document.querySelectorAll('input[type="date"]');
 	let currDate = new Date().toISOString().split("T")[0];

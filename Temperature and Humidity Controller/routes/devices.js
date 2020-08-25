@@ -4,33 +4,31 @@ var express    = require("express"),
 
 // Shows all devices
 router.get("/", (req, res) =>{
-    var dht11Arr = [];
-    var dht22Arr = [];
-    var relayArr = [];
-    var soilArr  = [];
-    var waterArr = [];
+    var deviceObj = { 
+        'DHT11 Sensor': [],
+        'DHT22 Sensor': [],
+        'Relay Server': [] ,
+        'Soil Moisture Sensor': [],
+        'Water Level Sensor' : [] 
+    } 
+    
     Device.find( (err, devices)=>{
         if(err) console.log(err);
         else{
             console.log(devices);
             devices.forEach(function(device){
-                if(device['deviceType'] === 'DHT11 Sensor'){
-                    dht11Arr.push(device);
-                }else if(device['deviceType'] === 'DHT22 Sensor'){
-                    dht22Arr.push(device);
-                }else if(device['deviceType'] === 'Relay Server'){
-                    relayArr.push(device);
-                }else if(device['deviceType'] === 'Soil Moisture Sensor'){
-                    soilArr.push(device);
-                }else if(device['deviceType'] === 'Water Level Sensor'){
-                    waterArr.push(device);
+                if(!device['deviceType'] in deviceObj){
+                    deviceObj[device['deviceType']] = [];
                 }else{
-                    console.log("Unknown device type found!\n");
-                    res.status(500).end();
+                    console.log("device is already in the deviceObj");
                 }
+                deviceObj[device['deviceType']].push(device);
             })
-            console.log(dht11Arr, dht22Arr, relayArr, soilArr, waterArr);
-            res.render("device/index", {dht11Arr: dht11Arr, dht22Arr: dht22Arr, relayArr: relayArr, soilArr: soilArr, waterArr: waterArr,  stylesheets: ["/static/css/table.css"]});
+
+            res.render("device/index", {
+                deviceObj: deviceObj,
+                stylesheets: ["/static/css/table.css"]
+            });
             res.status(200).end();
         }
     })
