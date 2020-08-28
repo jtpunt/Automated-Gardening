@@ -6,8 +6,12 @@ var express    = require("express"),
     router     = express.Router();
 
 router.get("/", (req, res) =>{
+    
     getSensors((sensors) => {
-        res.render("sensor/index", {sensors: sensors, stylesheets: ["/static/css/sensors.css"]});
+        res.render("sensor/index", {
+            sensors: sensors, 
+            stylesheets: ["/static/css/sensors.css"]
+        });
     });
 });
 router.post("/", (req, res) => {

@@ -4,6 +4,7 @@ var express    = require("express"),
 
 // Shows all devices
 router.get("/", (req, res) =>{
+    let page_name = "device";
     var deviceObj = { 
         'DHT11 Sensor': [],
         'DHT22 Sensor': [],
@@ -26,6 +27,7 @@ router.get("/", (req, res) =>{
             })
 
             res.render("device/index", {
+                page_name: page_name,
                 deviceObj: deviceObj,
                 stylesheets: ["/static/css/table.css"]
             });

@@ -56,22 +56,26 @@
 </script>
 <div id="load"></div>
 <div class="container" id="contents">
-	<select id="mySelect">
-		<option value="" default>Display ..</option>
-		<option value="Yesterday">Yesterday</option>
-		<option value="Today">Today</option>
-		<option value="Week">Week</option>
-		<option value="Month">Month</option>
-		<option value="All Time">All Time</option>
-	</select>
-	<br>
-	<label for="from">From</label>
-	<input type="text" id="from" name="from">
-	<label for="to">to</label>
-	<input type="text" id="to" name="to">
-	<div id="chart_div" style="width: 900px; height: 500px;"></div>
-	<div id="chart_div1" style="width: 900px; height: 500px;"></div>
-	<div id="chart_div2" style="width: 900px; height: 500px;"></div>
+	<div class="row" style="margin: auto;width: 100%;padding: 10px;">
+		<div class="col-md-12">
+			<select id="mySelect">
+				<option value="" default>Display ..</option>
+				<option value="Yesterday">Yesterday</option>
+				<option value="Today">Today</option>
+				<option value="Week">Week</option>
+				<option value="Month">Month</option>
+				<option value="All Time">All Time</option>
+			</select>
+			<br>
+			<label for="from">From</label>
+			<input type="text" id="from" name="from">
+			<label for="to">to</label>
+			<input type="text" id="to" name="to">
+			<div id="chart_div" style="width: 900px; height: 500px;"></div>
+			<div id="chart_div1" style="width: 900px; height: 500px;"></div>
+			<div id="chart_div2" style="width: 900px; height: 500px;"></div>
+		</div>
+	</div>
 </div>
 
 <% include ./partials/footer %>

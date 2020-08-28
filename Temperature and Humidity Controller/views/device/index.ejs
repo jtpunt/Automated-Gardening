@@ -2,12 +2,13 @@
 
 <div class="container">
 <div class="row" style="margin: auto; width: 100%; padding: 10px;">
-<% 
-for(const deviceNameKey in deviceObj){
-    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
-  	let deviceNameStr = deviceNameKey.replace(/\s/g,'');
-%>   
 	<div class="col-md-12">
+		<h2>My Devices</h2>
+		<% 
+		for(const deviceNameKey in deviceObj){
+		    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
+		  	let deviceNameStr = deviceNameKey.replace(/\s/g,'');
+		%>   
 		<div class="well col-md-12">
 			<!--Setting up the add new schedule button that is used for collapsing-->
 	        <div cla ss="text-right">
@@ -38,8 +39,8 @@ for(const deviceNameKey in deviceObj){
 				</div>
 			</div>
 		</div>
+		<%  } %>
 	</div>	
-<%  } %>
 </div>
 </div>
 <% include ../partials/footer %>

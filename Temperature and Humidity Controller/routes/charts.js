@@ -3,6 +3,7 @@ var express    = require("express"),
     router     = express.Router();
 
 router.get("/", function(req, res){
+    let page_name = "chart";
     Chart.find({}, {"_id" : false}, (err, chart) => { //remove _id from query result
         if(err) console.log(err);
         else{
@@ -12,7 +13,12 @@ router.get("/", function(req, res){
             return new Date(b.date) - new Date(a.date);
           });
          // console.log("Data before render: " + chart);
-          res.render("charts", {charts: chart, scripts: ["/static/js/drawCharts.js"], stylesheets: ["/static/css/spinner.css"]});
+          res.render("charts", {
+            page_name: page_name,
+            charts: chart, 
+            scripts: ["/static/js/drawCharts.js"], 
+            stylesheets: ["/static/css/spinner.css"]
+        });
         }
     });
 });

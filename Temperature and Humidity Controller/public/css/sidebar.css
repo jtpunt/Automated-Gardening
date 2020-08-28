@@ -76,7 +76,9 @@ a, a:hover, a:focus {
     color: #fff;
     padding: 10px;
 }
-
+/*#sidebar ul li {
+    width: 100%;
+}*/
 #sidebar ul li a {
     padding: 10px;
     font-size: 1.1em;
@@ -188,3 +190,5 @@ ul ul a {
         transform: rotate(-45deg) translate(1px, -1px);
     }
 }
+
+

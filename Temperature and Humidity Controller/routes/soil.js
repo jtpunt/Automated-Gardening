@@ -5,8 +5,8 @@ var express = require("express"),
     router = express.Router();
     
 router.get("/", middleware.isLoggedIn, (req, res) => {
-	let page_name = "home";
-    res.render("admin/dashboard", { page_name: page_name});
+	let page_name = "soil";
+    res.render("soil/index", { page_name: page_name});
     res.status(200).end();
 });
 

@@ -17,11 +17,13 @@ var express        = require("express"),
     app            = express();
 // requiring routes
 var indexRoutes   = require("./routes/index"),
-    deviceRoutes  = require("./routes/devices"),
-    sensorRoutes  = require("./routes/sensors"),
+    adminRoutes   = require("./routes/admin"),
+    cameraRoutes  = require("./routes/camera"),
     chartRoutes   = require("./routes/charts"),
+    deviceRoutes  = require("./routes/devices"),
     schedRoutes   = require("./routes/schedules"),
-    adminRoutes   = require("./routes/admin");
+    sensorRoutes  = require("./routes/sensors"),
+    soilRoutes    = require("./routes/soil");
     
 var localIP = ip.address(),
     port    = config.server.port,
@@ -43,11 +45,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
 
-// app.use(require("express-session")({
-//     secret: "Once again Rusty wins cutest dog!",
-//     resave: false,
-//     saveUninitialized: false
-// }));
 app.use(methodOverride("_method")); // _method is what we are telling it to look for
 app.use(flash()); // must be used before passport configuration, flash also require
 
@@ -94,10 +91,12 @@ app.use(function(req, res, next){
 // Shortens the route declarations
 app.use("/", indexRoutes);
 app.use("/admin", adminRoutes);
-app.use("/devices", deviceRoutes);
-app.use("/sensors", sensorRoutes);
+app.use("/camera", cameraRoutes);
 app.use("/charts", chartRoutes);
+app.use("/devices", deviceRoutes);
 app.use("/schedule", schedRoutes);
+app.use("/sensors", sensorRoutes);
+app.use("/soil", soilRoutes);
 
 app.use(function(req,res){
     res.status(404);

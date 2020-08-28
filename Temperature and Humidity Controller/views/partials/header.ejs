@@ -30,92 +30,111 @@
 </head>
 <body>
 <div class="wrapper">
-    <nav id="sidebar" style="justify-content: flex-end;">
-        <div class="sidebar-header">
-            <h3>Smart Gardening</h3>
-        </div>
-        <ul class="list-unstyled components">
+<nav id="sidebar">
+    <div class="sidebar-header">
+        <h3>Smart Gardening</h3>
+    </div>
+    <div style="height: 90%;
+        min-height: 90%;display: flex; flex-direction: column; justify-content: space-between;">
+        <ul class="list-unstyled components" >
             <% if(currentUser){ %>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/devices">
-                        <i class="fab fa-fw fa-raspberry-pi"></i> Devices
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <i class="fa fa-fw fa-thermometer"></i> Temp/Humidity
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <i class="fa fa-fw fa-leaf"></i> Soil
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/charts">
-                        <i class="fa fa-fw fa-chart-pie"></i> Graphs
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <i class="fa fa-fw fa-file"></i> Reports
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <i class="fa fa-fw fa-image"></i> Images
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <i class="fa fa-fw fa-video"></i> Live Video
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/schedule">
-                        <i class="fa fa-fw fa-calendar" ></i> Schedule
-                    </a>
-                </li>
-            <% } %>
-            <% if(!currentUser){ %>
-                <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %> nav-item">
-                    <a class="nav-link" href="/login">
-                        <i class="fa fa-fw fa-user"></i> Login
-                    </a>
-                </li>
-                <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %> nav-item">
-                    <a class="nav-link" href="/register">
-                        <i class="fa fa-fw fa-sign-in"></i> Sign Up
-                    </a>
-                </li>
-            <% } else { %>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin">
-                        <i class="fa fa-fw fa-user-circle"></i> Signed In As <%= currentUser.username %>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">
-                        <i class="fa fa-fw fa-sign-out"></i> Logout
-                    </a>
-                </li>
+            <li class="nav-item <%= page_name === 'home' && 'active' %>">
+                <a class="nav-link" href="/admin">
+                    <i class="fas fa-fw fa-home"></i> Home
+                </a>
+            </li>
+            <li class="nav-item <%= page_name === 'device' && 'active' %>">
+                <a class="nav-link" href="/devices">
+                    <i class="fab fa-fw fa-raspberry-pi"></i> Devices
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fa fa-fw fa-thermometer"></i> Temp/Humidity
+                </a>
+            </li>
+            <li class="nav-item <%= page_name === 'soil' && 'active' %>">
+                <a class="nav-link" href="/soil">
+                    <i class="fa fa-fw fa-leaf"></i> Soil
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/charts">
+                    <i class="fa fa-fw fa-chart-pie"></i> Graphs
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    <i class="fa fa-fw fa-file"></i> Reports
+                </a>
+            </li>
+            <li class="nav-item <%= page_name === 'camera' && 'active' %>">
+                <a href="#cameraSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fa fa-fw fa-camera"></i>
+                    Camera
+                </a>
+                <ul class="collapse list-unstyled" id="cameraSubmenu">
+                    <li class="nav-item <%= page_name === 'image' && 'active' %>">
+                        <a class="nav-link" href="/camera/image">
+                            <i class="fa fa-fw fa-image"></i> Images
+                        </a>
+                    </li>
+                    <li class="nav-item <%= page_name === 'video' && 'active' %>">
+                        <a class="nav-link" href="/camera/video">
+                            <i class="fa fa-fw fa-video"></i> Video
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item <%= page_name === 'schedules' && 'active' %>">
+                <a class="nav-link" href="/schedule">
+                    <i class="fa fa-fw fa-calendar" ></i> Schedule
+                </a>
+            </li>
+        <% } %>
+        </ul>
+        <ul class="list-unstyled components">
+        <% if(!currentUser){ %>
+            <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %> nav-item" style="">
+                <a class="nav-link" href="/login">
+                    <i class="fa fa-fw fa-user"></i> Login
+                </a>
+            </li>
+            <li class="<%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %> nav-item">
+                <a class="nav-link" href="/register">
+                    <i class="fa fa-fw fa-sign-in"></i> Sign Up
+                </a>
+            </li>
+        <% } else { %>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin">
+                    <i class="fa fa-fw fa-user-circle"></i> Signed In As <%= currentUser.username %>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/logout">
+                    <i class="fa fa-fw fa-sign-out"></i> Logout
+                </a>
+            </li>
             <% } %>
         </ul>
-    </nav>
-        <!-- Page Content -->
-    <div id="content">
-        <button type="button" id="sidebarCollapse" class="navbar-btn">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        <div>
     </div>
-	<div class="container">
-		<% if(success && success.length > 0){ %>
-			<span class="alert alert-success" role="alert"><%=success%></span>
-		<% } %>
-		<% if (error && error.length > 0){ %>
-			<span class="alert alert-danger" role="alert"><%=error%></span>
-		<% } %> 
-	</div>
+</nav>
+    <!-- Page Content -->
+<div id="content">
+    <button type="button" id="sidebarCollapse" class="navbar-btn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    <div>
+</div>
+<div class="container">
+	<% if(success && success.length > 0){ %>
+		<span class="alert alert-success" role="alert"><%=success%></span>
+	<% } %>
+	<% if (error && error.length > 0){ %>
+		<span class="alert alert-danger" role="alert"><%=error%></span>
+	<% } %> 
+</div>

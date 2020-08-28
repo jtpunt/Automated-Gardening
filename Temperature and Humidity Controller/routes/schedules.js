@@ -196,7 +196,8 @@ function addLocalIPsToSchedules(schedules, relayDevices){
 // schedules.sort(addLocalIPsToSchedules(relayDevices);
 // NOT COMPLETE
 router.get("/", middleware.isLoggedIn, async (req, res) =>{
-    let relayDevices,
+    let page_name = "schedules",
+        relayDevices,
         schedules;
     
     try{
@@ -219,6 +220,7 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
         );
 
         res.render("schedule/index", {
+            page_name: page_name,
             schedules: schedulesByIp, 
             devices: relayDevices, 
             stylesheets: ["/static/css/table.css"]
