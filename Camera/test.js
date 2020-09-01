@@ -1,7 +1,7 @@
 const PiCamera = require('pi-camera');
 
 var schedule = require('node-schedule');
-var date  = new Date(Date.now() + 5000);
+var date  = new Date(Date.now());
 const myCamera = new PiCamera({
   mode: 'photo',
   output: `${ __dirname }/test.jpg`,
@@ -31,7 +31,7 @@ var j = schedule.scheduleJob(date, function(){
             width = 640,
             height = 480,
             noPreview = true;
-        let myNewCamera = createCamera(mode, outputFileName, fileFormat, width, height, nopreview);
+        let myNewCamera = createCamera(mode, outputFileName, fileFormat, width, height, noPreview);
         //myCamera.snap()
         myNewCamera.snap()
         .then((result) => {
