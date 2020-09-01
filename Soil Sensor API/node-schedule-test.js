@@ -14,7 +14,7 @@ var schedule = require('node-schedule');
 // });
 
 let startTime = new Date(Date.now() + 5000);
-let endTime = new Date(startTime.getTime() + 5000);
+let endTime = new Date(startTime.getTime() + 15000);
 let initialState = true;
 var j = schedule.scheduleJob(
 		{

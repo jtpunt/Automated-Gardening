@@ -1,5 +1,5 @@
 const PiCamera = require('pi-camera');
-const schedule = require('node-schedule');
+let schedule = require('node-schedule');
 
 let startTime = new Date(Date.now() + 2000),
     endTime = new Date(startTime.getTime() + 1*60*60*1000),
