@@ -26,7 +26,7 @@ var j = schedule.scheduleJob(date, function(){
     // this would schedule would be created at  18:51:00
     var x = schedule.scheduleJob('*/1 * * * *', function(){
         let mode = 'photo',
-            outputFileName = 'test' + Math.floor(Math.random() * Math.floor(max)),
+            outputFileName = 'test' + Math.random(),
             fileFormat = 'jpg',
             width = 640,
             height = 480,
