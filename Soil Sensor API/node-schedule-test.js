@@ -19,7 +19,8 @@ let initialState = true;
 var j = schedule.scheduleJob(
 		{
 			start: startTime, 
-			end: endTime
+			end: endTime, 
+			rule: '*/1 * * * * *' 
 		}, function(){
   			console.log('Time for tea!: ' + initialState);
   			initialState = !initialState;
