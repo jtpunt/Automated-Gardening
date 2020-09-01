@@ -1,7 +1,7 @@
 const PiCamera = require('pi-camera');
 
 var schedule = require('node-schedule');
-var date  = new Date(Date.now());
+var date  = new Date(Date.now() + 2000);
 const myCamera = new PiCamera({
   mode: 'photo',
   output: `${ __dirname }/test.jpg`,
