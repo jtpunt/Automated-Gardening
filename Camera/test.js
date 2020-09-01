@@ -1,7 +1,10 @@
 const PiCamera = require('pi-camera');
+const schedule = require('node-schedule');
 
-var schedule = require('node-schedule');
-var date  = new Date(Date.now() + 2000);
+let startTime = new Date(Date.now() + 2000),
+    endTime = new Date(startTime.getTime() + 1*60*60*1000),
+    date  = new Date(Date.now() + 2000);
+
 const myCamera = new PiCamera({
   mode: 'photo',
   output: `${ __dirname }/test.jpg`,
@@ -21,26 +24,51 @@ function createCamera(mode, outputFileName, fileFormat, width, height, noPreview
     myCamera = new PiCamera(cameraObj);
     return myCamera;
 }
-
-var j = schedule.scheduleJob(date, function(){
-    // this would schedule would be created at  18:51:00
-    var x = schedule.scheduleJob('*/1 * * * *', function(){
-        let mode = 'photo',
-            outputFileName = 'test' + Math.random(),
-            fileFormat = 'jpg',
-            width = 640,
-            height = 480,
-            noPreview = true;
-        let myNewCamera = createCamera(mode, outputFileName, fileFormat, width, height, noPreview);
-        //myCamera.snap()
-        myNewCamera.snap()
-        .then((result) => {
-          // Your picture was captured
-          console.log("pic taken: " + result);
-        })
-        .catch((error) => {
-           // Handle your error
-           console.log(error);
-        }); 
-    })
-});
+var j = schedule.scheduleJob(
+        {
+            start: startTime, 
+            end: endTime, 
+            rule: '*/1 * * * * *' 
+        }, function(){
+            let mode = 'photo',
+                outputFileName = 'test' + Math.random(),
+                fileFormat = 'jpg',
+                width = 640,
+                height = 480,
+                noPreview = true;
+            let myNewCamera = createCamera(mode, outputFileName, fileFormat, width, height, noPreview);
+            myNewCamera.snap()
+            .then((result) => {
+              // Your picture was captured
+              console.log("pic taken: " + result);
+            })
+            .catch((error) => {
+               // Handle your error
+               console.log(error);
+            }); 
+        }
+);
+// this would execute at some time before 8:51
+console.log(`j: ${j.nextInvocation()}`);
+// var j = schedule.scheduleJob(date, function(){
+//     // this would schedule would be created at  18:51:00
+//     var x = schedule.scheduleJob('*/1 * * * *', function(){
+//         let mode = 'photo',
+//             outputFileName = 'test' + Math.random(),
+//             fileFormat = 'jpg',
+//             width = 640,
+//             height = 480,
+//             noPreview = true;
+//         let myNewCamera = createCamera(mode, outputFileName, fileFormat, width, height, noPreview);
+//         //myCamera.snap()
+//         myNewCamera.snap()
+//         .then((result) => {
+//           // Your picture was captured
+//           console.log("pic taken: " + result);
+//         })
+//         .catch((error) => {
+//            // Handle your error
+//            console.log(error);
+//         }); 
+//     })
+// });
