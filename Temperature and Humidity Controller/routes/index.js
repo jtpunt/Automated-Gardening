@@ -31,7 +31,11 @@ router.get("/", async function(req, res){
             });
         })
     }
-    res.render("index", { sensors: sensors, scripts: ["/static/js/drawGauges.js"], stylesheets: ["/static/css/spinner.css"] });
+    res.render("index", { 
+        sensors: sensors, 
+        scripts: ["/static/js/drawGauges.js"], 
+        stylesheets: ["/static/css/spinner.css"] 
+    });
 });
 router.get("/register", function(req, res){
     res.render("register");

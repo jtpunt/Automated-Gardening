@@ -6,7 +6,7 @@ var scheduleSchema = new mongoose.Schema({
             ref: "Device"
         },
         gpio: Number,
-        desired_state: Boolean
+        desired_state: Boolean // TO DO - take this code out, moved to new 'relaySettings.js' schema
     }, 
     schedule: {
         second: Number,
@@ -16,10 +16,12 @@ var scheduleSchema = new mongoose.Schema({
         month: Number,
         year: Number,
         dayOfWeek: [],
+        // TO DO - change to 'onScheduleId'
         prevScheduleId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
         },
+        // TO DO - change to 'offScheduleId'
         nextScheduleId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"

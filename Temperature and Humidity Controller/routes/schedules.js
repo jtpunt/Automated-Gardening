@@ -11,9 +11,7 @@ var express       = require("express"),
     
  
 function buildOptions(hostname, port, path, method, json){
-    let options;
-    if(method === 'DELETE'){ // no data is sent with a delete request
-        options = {
+    let options = {
             hostname: hostname,
             port: port,
             path: path,
@@ -22,18 +20,6 @@ function buildOptions(hostname, port, path, method, json){
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(json)
             }
-        }
-    }else{
-         options = {
-            hostname: hostname,
-            port: port,
-            path: path,
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(json)
-            }
-        }   
         }
     return options;
 }
@@ -43,80 +29,70 @@ function buildSchedule(mySchedule){
     obj.schedule = {};
     var date = new Date();
     console.log(`buildSchedule: ${mySchedule}`);
-    if(mySchedule['device']['id'] !== null && mySchedule['device']['id'] !== undefined){
-        console.log("VALID _ID");
+    if(mySchedule['device']['id'] !== null && mySchedule['device']['id'] !== undefined)
         obj['device']['id'] = mySchedule['device']['id'];
-    }
-    // if(mySchedule['device']['local_ip'] !== null && mySchedule['device']['local_ip'] !== undefined){
-    //     console.log("VALID IP\n");
-    //     obj['device']['local_ip'] = mySchedule['device']['local_ip'];
-    // }
-    if(mySchedule['device']['gpio'] !== null && mySchedule['device']['gpio'] !== undefined){
-        console.log("VALID GPIO\n");
+
+    if(mySchedule['device']['gpio'] !== null && mySchedule['device']['gpio'] !== undefined)
         obj['device']['gpio'] = mySchedule['device']['gpio'];
-    }
+    
     if(mySchedule['device']['desired_state'] !== null && mySchedule['device']['desired_state'] !== undefined){
         console.log("VALID On/Off\n");
         if(mySchedule['device']['desired_state'] === "on" || mySchedule['device']['desired_state'] === "off"){
-            if(mySchedule['device']['desired_state'] === "on"){
+            if(mySchedule['device']['desired_state'] === "on")
                  obj['device']['desired_state'] = 1;
-            }else{
+            else
                  obj['device']['desired_state'] = 0;
-            }
         }
         
-    }else{
+    }else // no desired state posted, make it 0 'off' by default
         obj['device']['desired_state'] = 0;
-        console.log("no desired state posted");
-    }
+    
     if(mySchedule['schedule']['start_time'] !== null && mySchedule['schedule']['start_time'] !== undefined){
-        console.log("VALID TIME\n");
         let splitTimeArr = mySchedule['schedule']['start_time'].split(":");
-        console.log(`splitTimeArr: ${splitTimeArr}`);
-        console.log(splitTimeArr);
         obj['schedule']['start_time'] = {
             second: splitTimeArr[2],
             minute: splitTimeArr[1],
             hour: splitTimeArr[0]
         };
-        
-        // ['second'] = splitTimeArr[2];
-        // obj['schedule']['start_time']['minute'] = splitTimeArr[1];
-        // obj['schedule']['start_time']['hour']   = splitTimeArr[0];
-        console.log(obj['schedule']);
     }
     if(mySchedule['schedule']['end_time'] !== null && mySchedule['schedule']['end_time'] !== undefined){
         console.log("VALID TIME\n");
         let splitTimeArr = mySchedule['schedule']['end_time'].split(":");
-            obj['schedule']['end_time'] = {
-                second: splitTimeArr[2],
-                minute: splitTimeArr[1],
-                hour: splitTimeArr[0]
+        obj['schedule']['end_time'] = {
+            second: splitTimeArr[2],
+            minute: splitTimeArr[1],
+            hour: splitTimeArr[0]
         };
     }
     if(mySchedule['schedule']['date'] !== null && mySchedule['schedule']['date'] !== undefined && mySchedule['schedule']['date'] !== '' && mySchedule.DateCheckBox === "on"){
-        let myDate = new Date(mySchedule['schedule']['date']);
-        let day = myDate.getDate();
-        let month = myDate.getMonth();
-        let year = myDate.getFullYear();
-        let currYear = date.getFullYear();
-        console.log(year, currYear);
+        let myDate   = new Date(mySchedule['schedule']['date']),
+            day      = myDate.getDate(),
+            month    = myDate.getMonth(),
+            year     = myDate.getFullYear(),
+            currYear = date.getFullYear();
+
         // date = 1 - 31
-        if(day >= 1 && day <= 31){
+        if(day >= 1 && day <= 31)
             obj['schedule']['date'] = day;
-        }else throw new Error("Invalid date input.");
+        else 
+            throw new Error("Invalid date input.");
+
         // month = 0 - 11
-        if(month >= 0 && month <= 11){
+        if(month >= 0 && month <= 11)
             obj['schedule']['month'] = month;
-        }else throw new Error("Invalid month input.");
+        else 
+            throw new Error("Invalid month input.");
+
         // year = current year or above
-        if(year >= currYear){
+        if(year >= currYear)
             obj['schedule']['year'] = year;
-        }else throw new Error("Invalid year input.");
-        if(myDate < new Date()) throw new Error("Schedule must occur in the future!");
+        else 
+            throw new Error("Invalid year input.");
+
+        if(myDate < new Date()) 
+            throw new Error("Schedule must occur in the future!");
     }
     if(mySchedule['schedule']['dayOfWeek'] && mySchedule['DayOfWeekCheckBox'] === "on"){
-        console.log("VALID dayOfWeek.");
         let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
             // dayOfWeek = 0 - 6
             if(!Number.isNaN(day) && Number(day) >= 0 && Number(day) <= 6){
@@ -124,19 +100,14 @@ function buildSchedule(mySchedule){
             }throw new Error("Invalid day of week input.");
         });
         obj['schedule']['dayOfWeek'] = dayOfWeek;
-        console.log(dayOfWeek);
     }
     if(mySchedule['schedule']['prevScheduleId'] !== null && mySchedule['schedule']['prevScheduleId'] !== undefined){
-        if(Number(mySchedule['schedule']['prevScheduleId']) !== 0){ // 'none' was selected, which has a value of 0
-            console.log("VALID prevScheduleId");
+        if(Number(mySchedule['schedule']['prevScheduleId']) !== 0) // 'none' was selected, which has a value of 0
             obj['schedule']['prevScheduleId'] = mySchedule['schedule']['prevScheduleId'];
-        }
     }
     if(mySchedule['schedule']['nextScheduleId'] !== null && mySchedule['schedule']['nextScheduleId'] !== undefined){
-        if(Number(mySchedule['schedule']['nextScheduleId']) !== 0){ // 'none' was selected, which has a value of 0
-            console.log("VALID nextScheduleId");
+        if(Number(mySchedule['schedule']['nextScheduleId']) !== 0)// 'none' was selected, which has a value of 0
             obj['schedule']['nextScheduleId'] = mySchedule['schedule']['nextScheduleId'];
-        }
     }
     return obj;
 }
@@ -252,15 +223,11 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
         if(!adminCredentials || adminCredentials === 0){
             throw new Error("admin credentials not valid!")
         }
-        console.log("Admin credentials: " + adminCredentials);
-        console.log("Admin mongo id: " + adminCredentials['_id']);
         scheduleObj['admin_id'] = adminCredentials['_id'];
         
         const scheduleStr = JSON.stringify(scheduleObj);
-        console.log(`scheduleStr: ${scheduleStr}`)
         const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
         
-        console.log("localIP: " + req.body.device.local_ip);
         const myReq = http.request(options, (resp) => {
             let myChunk = '';
             resp.setEncoding('utf8');

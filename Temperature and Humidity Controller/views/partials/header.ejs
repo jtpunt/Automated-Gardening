@@ -36,16 +36,11 @@
     </div>
     <div style="height: 90%;
         min-height: 90%;display: flex; flex-direction: column; justify-content: space-between;">
+        <% if(currentUser){ %>
         <ul class="list-unstyled components" >
-            <% if(currentUser){ %>
             <li class="nav-item <%= page_name === 'home' && 'active' %>">
                 <a class="nav-link" href="/admin">
                     <i class="fas fa-fw fa-home"></i> Home
-                </a>
-            </li>
-            <li class="nav-item <%= page_name === 'device' && 'active' %>">
-                <a class="nav-link" href="/devices">
-                    <i class="fab fa-fw fa-raspberry-pi"></i> Devices
                 </a>
             </li>
             <li class="nav-item">
@@ -96,6 +91,9 @@
         </ul>
         <ul class="list-unstyled components">
         <% if(!currentUser){ %>
+
+
+
             <li class="<%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %> nav-item" style="">
                 <a class="nav-link" href="/login">
                     <i class="fa fa-fw fa-user"></i> Login
@@ -107,6 +105,20 @@
                 </a>
             </li>
         <% } else { %>
+            <li class="nav-item>">
+                <a href="#settingSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                    <i class="fa fa-fw fa-cog"></i>
+                    Settings
+                </a>
+                <ul class="collapse list-unstyled" id="settingSubmenu">
+                    <li class="nav-item <%= page_name === 'device' && 'active' %>">
+                    <a class="nav-link" href="/devices">
+                        <i class="fab fa-fw fa-raspberry-pi"></i> Devices
+                    </a>
+                    </li>
+                    
+                </ul>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/admin">
                     <i class="fa fa-fw fa-user-circle"></i> Signed In As <%= currentUser.username %>

@@ -18,11 +18,10 @@ router.get("/", (req, res) =>{
         else{
             console.log(devices);
             devices.forEach(function(device){
-                if(!device['deviceType'] in deviceObj){
+                if(!device['deviceType'] in deviceObj)
                     deviceObj[device['deviceType']] = [];
-                }else{
+                else
                     console.log("device is already in the deviceObj");
-                }
                 deviceObj[device['deviceType']].push(device);
             })
 
