@@ -15,14 +15,14 @@ var schedule = require('node-schedule');
 
 let startTime = new Date(Date.now() + 5000);
 let endTime = new Date(startTime.getTime() + 5000);
-let initialDesiredState = true;
+let initialState = true;
 var j = schedule.scheduleJob(
 		{
 			start: startTime, 
 			end: endTime, 
 			rule: '*/1 * * * * *' 
 		}, function(){
-  			console.log('Time for tea!: ' + initialDesiredState);
+  			console.log('Time for tea!: ' + initialState);
   			initialState = !initialState;
 		}
 );
