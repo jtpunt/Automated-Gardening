@@ -28,7 +28,7 @@ var j = schedule.scheduleJob(
         {
             start: startTime, 
             end: endTime, 
-            rule: '*/1 * * * * *' 
+            rule: '*/5 * * * * *' 
         }, function(){
             let mode = 'photo',
                 outputFileName = 'test' + Math.random(),

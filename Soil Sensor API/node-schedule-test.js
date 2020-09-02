@@ -17,14 +17,14 @@ let startTime = new Date(Date.now() + 5000);
 let endTime = new Date(startTime.getTime() + 15000);
 let initialState = true;
 var j = schedule.scheduleJob(
-		{
-			start: startTime, 
-			end: endTime, 
-			rule: '*/5 * * * * *' 
-		}, function(){
-  			console.log('Time for tea!: ' + initialState);
-  			initialState = !initialState;
-		}
+	{
+		start: startTime, 
+		end: endTime, 
+		rule: '* * * * * *' 
+	}, function(){
+		console.log('Time for tea!: ' + initialState);
+		initialState = !initialState;
+	}
 );
 // this would execute at some time before 8:51
 console.log(`j: ${j.nextInvocation()}`);
