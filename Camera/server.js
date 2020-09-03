@@ -36,20 +36,22 @@ app.use('/static', express.static('public')); // static directory is going to be
 // app.use("/", indexRoutes);
 app.ws('/echo', (ws, req) => {
     console.log("WebSocket created")
-    let stream = raspividStream();
-    console.log("message received");
-    stream.on('data', (data) => {
+    ws.send(JSON.stringify({
+        action: 'init',
+        width: '960',
+        height: '540'
+    }));
+    var videoStream = raspividStream({ rotation: 180 });
+    videoStream.on('data', (data) => {
         console.log("In the rpi camera stream");
         ws.send(data, { binary: true }, (error) => { 
             if (error) console.error(error); 
         });
     });
-    ws.on('message', msg => {
-        console.log(`msg rcvd: ${msg}`);
-    })
 
     ws.on('close', () => {
         console.log('WebSocket was closed')
+        videoStream.removeAllListeners('data');
     })
 })
 
