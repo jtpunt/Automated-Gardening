@@ -6,7 +6,8 @@ var express        = require("express"),
   //  LocalStrategy  = require("passport-local"),
 //    methodOverride = require("method-override"),
     cors           = require('cors'),
-    ip             = require("ip");
+    ip             = require("ip"),
+    raspividStream = require('raspivid-stream');
     // Sensor         = require("./models/sensor"),
     // Chart          = require("./models/chart"),
     // Device         = require("./models/device"),
@@ -14,6 +15,7 @@ var express        = require("express"),
     config         = require('./config')[env],
     // schedule       = require('node-schedule'),
     // http          = require('http'),
+    stream = raspividStream(),
     app            = express();
 
 enableWs(app);
@@ -34,9 +36,15 @@ app.use('/static', express.static('public')); // static directory is going to be
 // Shortens the route declarations
 // app.use("/", indexRoutes);
 app.ws('/echo', (ws, req) => {
+    console.log("WebSocket created")
     ws.on('message', msg => {
-        console.log(`msg rcv: ${msg}`)
-        ws.send(msg)
+        console.log("message received");
+        stream.on('data', (data) => {
+            console.log("In the rpi camera stream");
+            ws.send(data, { binary: true }, (error) => { 
+                if (error) console.error(error); 
+            });
+        });
     })
 
     ws.on('close', () => {
