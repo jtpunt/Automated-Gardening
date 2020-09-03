@@ -1,6 +1,7 @@
 var express        = require("express"),
     bodyParser     = require("body-parser"),
     mongoose       = require("mongoose"),
+    enableWs       = require('express-ws'),
 //    passport       = require("passport"),
   //  LocalStrategy  = require("passport-local"),
 //    methodOverride = require("method-override"),
@@ -14,8 +15,10 @@ var express        = require("express"),
     // schedule       = require('node-schedule'),
     // http          = require('http'),
     app            = express();
+
+enableWs(app);
 // requiring routes
-var indexRoutes   = require("./routes/index");
+// var indexRoutes   = require("./routes/index");
 
 var localIP = ip.address(),
     port    = config.server.port,
@@ -29,7 +32,17 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
 
 // Shortens the route declarations
-app.use("/", indexRoutes);
+// app.use("/", indexRoutes);
+app.ws('/echo', (ws, req) => {
+    ws.on('message', msg => {
+        ws.send(msg)
+    })
+
+    ws.on('close', () => {
+        console.log('WebSocket was closed')
+    })
+})
+
 app.listen(port,process.env.IP, function(){
     console.log("server started on port ", port); 
 });
