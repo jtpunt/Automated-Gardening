@@ -5,13 +5,13 @@ let startTime = new Date(Date.now() + 2000),
     endTime = new Date(startTime.getTime() + 1*60*60*1000),
     date  = new Date(Date.now() + 2000);
 
-const myCamera = new PiCamera({
-  mode: 'photo',
-  output: `${ __dirname }/test.jpg`,
-  width: 640,
-  height: 480,
-  nopreview: true,
-});
+// const myCamera = new PiCamera({
+//   mode: 'photo',
+//   output: `${ __dirname }/test.jpg`,
+//   width: 640,
+//   height: 480,
+//   nopreview: true,
+// });
 
 function createCamera(mode, outputFileName, fileFormat, width, height, noPreview){
     let cameraObj = {
