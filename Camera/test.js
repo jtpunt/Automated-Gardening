@@ -71,7 +71,7 @@ let mode = 'video',
 
 const myVideo = new PiCamera({
   mode: mode,
-  output: `${ __dirname }/${oFileName}.${h264}`,
+  output: `${ __dirname }/${oFileName}.${fileFormat}`,
   width: width,
   height: height,
   timeout: timeout, // Record for 5 seconds
