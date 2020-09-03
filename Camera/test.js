@@ -32,6 +32,18 @@ function createCamera(mode, oFileName, fileFormat, width, height, noPreview){
         myCamera = new PiCamera(cameraObj);
     return myCamera;
 }
+function createVideo(mode, oFileName, fileFormat, width, height, timeout, noPreview){
+    let cameraObj = {
+        mode: mode,
+        output: `${__dirname}/${oFileName}.${fileFormat}`,
+        width: width,
+        height: height,
+        timeout: timeout,
+        nopreview: noPreview 
+    },
+        myVideo = new PiCamera(cameraObj);
+    return myVideo;
+}
 // can leave out 'end' and have the job run indefinitely after it's start time
 // Note - the picture is taken 1 minute after the schedule job object is created
 // var j = schedule.scheduleJob( 
@@ -69,14 +81,16 @@ let mode = 'video',
     noPreview = true;
 
 
-const myVideo = new PiCamera({
-  mode: mode,
-  output: `${ __dirname }/${oFileName}.${fileFormat}`,
-  width: width,
-  height: height,
-  timeout: timeout, // Record for 5 seconds
-  nopreview: noPreview,
-});
+// const myVideo = new PiCamera({
+//   mode: mode,
+//   output: `${ __dirname }/${oFileName}.${fileFormat}`,
+//   width: width,
+//   height: height,
+//   timeout: timeout, // Record for 5 seconds
+//   nopreview: noPreview,
+// });
+const myVideo = createVideo(mode, oFileName, fileFormat, width, height, timeout, noPreview);
+
 myVideo.record()
 .then((result) => {
     // Your video was captured
