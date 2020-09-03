@@ -28,11 +28,11 @@ function createCamera(mode, oFileName, fileFormat, width, height, timeout, noPre
         width: width,
         height: height,
         nopreview: noPreview 
-    },
+    }
     if(timeout !== undefined){
         cameraObj.timeout = timeout;
     }
-    myCamera = new PiCamera(cameraObj);
+    let myCamera = new PiCamera(cameraObj);
     return myCamera;
 }
 // can leave out 'end' and have the job run indefinitely after it's start time
