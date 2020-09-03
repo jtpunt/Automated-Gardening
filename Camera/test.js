@@ -36,7 +36,7 @@ var j = schedule.scheduleJob(
         {
             start: startTime, 
             end: endTime, 
-            rule: '*/5 * * * * *' 
+            rule: '*/5 * * * *' 
         }, function(){
             let mode = 'photo',
                 outputFileName = 'test',
@@ -56,7 +56,7 @@ var j = schedule.scheduleJob(
             }); 
         }
 );
-this would execute at some time before 8:51
+//this would execute at some time before 8:51
 console.log(`j: ${j.nextInvocation()}`);
 // var j = schedule.scheduleJob(date, function(){
 //     // this would schedule would be created at  18:51:00
