@@ -21,18 +21,15 @@ let startTime = new Date(Date.now() + 2000),
 //    // Handle your error
 //    console.log(error);
 // }); 
-function createCamera(mode, oFileName, fileFormat, width, height, timeout, noPreview){
+function createCamera(mode, oFileName, fileFormat, width, height, noPreview){
     let cameraObj = {
         mode: mode,
         output: `${__dirname}/${oFileName}.${fileFormat}`,
         width: width,
         height: height,
         nopreview: noPreview 
-    }
-    if(timeout !== undefined){
-        cameraObj.timeout = timeout;
-    }
-    let myCamera = new PiCamera(cameraObj);
+    },
+        myCamera = new PiCamera(cameraObj);
     return myCamera;
 }
 // can leave out 'end' and have the job run indefinitely after it's start time
@@ -72,7 +69,14 @@ let mode = 'video',
     noPreview = true;
 
 
-const myVideo = createCamera(mode, oFileName, width, height, timeout, noPreview);
+const myVideo = new PiCamera({
+  mode: mode,
+  output: `${ __dirname }/${oFileName}.${h264}`,
+  width: width,
+  height: height,
+  timeout: timeout, // Record for 5 seconds
+  nopreview: noPreview,
+});
 myVideo.record()
 .then((result) => {
     // Your video was captured
