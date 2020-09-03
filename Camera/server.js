@@ -15,7 +15,6 @@ var express        = require("express"),
     config         = require('./config')[env],
     // schedule       = require('node-schedule'),
     // http          = require('http'),
-    stream = raspividStream(),
     app            = express();
 
 enableWs(app);
@@ -37,7 +36,9 @@ app.use('/static', express.static('public')); // static directory is going to be
 // app.use("/", indexRoutes);
 app.ws('/echo', (ws, req) => {
     console.log("WebSocket created")
+
     ws.on('message', msg => {
+        let stream = raspividStream();
         console.log("message received");
         stream.on('data', (data) => {
             console.log("In the rpi camera stream");
