@@ -35,7 +35,7 @@ function createCamera(mode, outputFileName, fileFormat, width, height, noPreview
 var j = schedule.scheduleJob(
         {
             start: startTime, 
-            end: endTime, 
+            // end: endTime, 
             rule: '*/1 * * * *' 
         }, function(){
             let mode = 'photo',
