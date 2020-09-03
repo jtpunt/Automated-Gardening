@@ -12,7 +12,15 @@ const myCamera = new PiCamera({
   height: 480,
   nopreview: true,
 });
-
+myCamera.snap()
+.then((result) => {
+  // Your picture was captured
+  console.log("pic taken: " + result);
+})
+.catch((error) => {
+   // Handle your error
+   console.log(error);
+}); 
 function createCamera(mode, outputFileName, fileFormat, width, height, noPreview){
     let cameraObj = {
         mode: mode,
