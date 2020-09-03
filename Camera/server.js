@@ -35,6 +35,7 @@ app.use('/static', express.static('public')); // static directory is going to be
 // app.use("/", indexRoutes);
 app.ws('/echo', (ws, req) => {
     ws.on('message', msg => {
+        console.log(`msg rcv: ${msg}`)
         ws.send(msg)
     })
 
