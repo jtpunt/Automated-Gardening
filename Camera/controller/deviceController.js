@@ -25,6 +25,7 @@ var outletObj = {
                 
 
                 console.log("Device does not exist, creating device");
+                console.log("Device: " + Device);
                 Device.create(newDeviceObj, (err, newDevice) => {
                     if(err) console.log(err);
                     else{
