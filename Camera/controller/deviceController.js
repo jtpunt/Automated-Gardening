@@ -28,6 +28,7 @@ var outletObj = {
                 Device.create(newDeviceObj, (err, newDevice) => {
                     if(err) console.log(err);
                     else{
+                        console.log("Device saved?");
                         newDevice.save();
                         console.log("Device saved!");
                         deviceDataObj = { _id: newDevice["_id"] };       // create our object
