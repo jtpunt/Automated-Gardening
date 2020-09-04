@@ -23,6 +23,7 @@ var outletObj = {
                     },
                     fileExists = fs.existsSync(fileName);
                 
+                let result = Device.find({local_ip: localIP, deviceType: "Camera"}).limit(1);
                 // if JSON file 'device_id.json' exists
                 if(fileExists){
                     console.log("File does exist");
@@ -49,8 +50,6 @@ var outletObj = {
                     }
                     
                 }
-                let result = Device.find({local_ip: localIP, deviceType: "Camera"}).limit(1);
-                console.log(result);
                 // else if our local ip exist in device database
                 else if(result){
                     // grab the device's mongo _id and write it to the 'device_id.json' file
