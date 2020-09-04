@@ -28,29 +28,55 @@ app.options('*', cors());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
 
-// Shortens the route declarations
-app.use("/", indexRoutes);
-app.ws('/echo', (ws, req) => {
-    console.log("WebSocket created")
-    ws.send(JSON.stringify({
-        action: 'init',
-        width: '960',
-        height: '540'
-    }));
-    var videoStream = raspividStream({ rotation: 180 });
-    
-    videoStream.on('data', (data) => {
-        ws.send(data, { binary: true }, (error) => { 
-            if (error) console.error(error); 
+let options = {
+  server : {
+    useNewUrlParser: true,
+    reconnectTries : 300,
+    reconnectInterval: 60000,
+    autoReconnect : true
+  }
+}
+mongoose.connect(connStr, options, function(err){
+    if(err){
+        console.log("Error connecting to mongodb", err);
+        // default schedule here
+        setTimeout(function() {
+            console.log('Connection failed. Retrying in 30 seconds.');
+        }, 30000);
+    }else{
+        console.log("Successfully Connected!");
+        // idea: pause execution for 5-30 seconds before retrying
+        /**********************************************************************
+        * Setup Routes For Our Server
+        **********************************************************************/
+        //app.use("/schedule", schedRoutes);
+        app.use("/", indexRoutes);
+        app.ws('/echo', (ws, req) => {
+            console.log("WebSocket created")
+            ws.send(JSON.stringify({
+                action: 'init',
+                width: '960',
+                height: '540'
+            }));
+            var videoStream = raspividStream({ rotation: 180 });
+            
+            videoStream.on('data', (data) => {
+                ws.send(data, { binary: true }, (error) => { 
+                    if (error) console.error(error); 
+                });
+            });
+
+            ws.on('close', () => {
+                console.log('WebSocket was closed')
+                videoStream.removeAllListeners('data');
+            })
+        })
+
+        /**********************************************************************
+        * Start The Server
+        **********************************************************************/
+        app.listen(port,process.env.IP, function(){
+            console.log("server started on port ", port); 
         });
-    });
-
-    ws.on('close', () => {
-        console.log('WebSocket was closed')
-        videoStream.removeAllListeners('data');
-    })
-})
-
-app.listen(port,process.env.IP, function(){
-    console.log("server started on port ", port); 
+    }
 });
