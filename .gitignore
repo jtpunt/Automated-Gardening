@@ -1,7 +1,9 @@
+Camera/config.js
 Relay_Server/config.js
 Temperature\ and\ Humidity\ Controller/config.js
 Temperature\ and\ Humidity\ API/config.js
 
+Camera/node_modules/
 Relay_Server/node_modules/
 Temperature\ and\ Humidity\ Controller/node_modules/
 Temperature\ and\ Humidity\ API/node_modules/
