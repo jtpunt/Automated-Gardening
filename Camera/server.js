@@ -15,7 +15,7 @@ var express        = require("express"),
 
 enableWs(app);
 // requiring routes
-// var indexRoutes   = require("./routes/index");
+var indexRoutes   = require("./routes/index");
 
 var localIP = ip.address(),
     port    = config.server.port,
