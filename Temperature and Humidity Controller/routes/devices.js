@@ -10,7 +10,8 @@ router.get("/", (req, res) =>{
         'DHT22 Sensor': [],
         'Relay Server': [] ,
         'Soil Moisture Sensor': [],
-        'Water Level Sensor' : [] 
+        'Water Level Sensor' : [],
+        'Camera': []
     } 
     
     Device.find( (err, devices)=>{

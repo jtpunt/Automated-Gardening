@@ -2,9 +2,6 @@ var express        = require("express"),
     bodyParser     = require("body-parser"),
     mongoose       = require("mongoose"),
     enableWs       = require('express-ws'),
-//    passport       = require("passport"),
-  //  LocalStrategy  = require("passport-local"),
-//    methodOverride = require("method-override"),
     cors           = require('cors'),
     ip             = require("ip"),
     raspividStream = require('raspivid-stream');
@@ -14,7 +11,6 @@ var express        = require("express"),
     env            = process.env.NODE_ENV || 'development',
     config         = require('./config')[env],
     // schedule       = require('node-schedule'),
-    // http          = require('http'),
     app            = express();
 
 enableWs(app);
@@ -33,7 +29,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
 
 // Shortens the route declarations
-// app.use("/", indexRoutes);
+app.use("/", indexRoutes);
 app.ws('/echo', (ws, req) => {
     console.log("WebSocket created")
     ws.send(JSON.stringify({
@@ -42,8 +38,8 @@ app.ws('/echo', (ws, req) => {
         height: '540'
     }));
     var videoStream = raspividStream({ rotation: 180 });
+    
     videoStream.on('data', (data) => {
-        console.log("In the rpi camera stream");
         ws.send(data, { binary: true }, (error) => { 
             if (error) console.error(error); 
         });
