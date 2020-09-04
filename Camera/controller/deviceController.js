@@ -74,7 +74,7 @@ var outletObj = {
                 else{
                     // create a basic device in mongo
                     // grab the id, and write it to our 'device_id.json' file
-                    //console.log("Device does not exist, creating device");
+                    console.log("Device does not exist, creating device");
                     Device.create(newDeviceObj, (err, newDevice) => {
                         if(err) console.log(err);
                         else{
