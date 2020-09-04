@@ -49,8 +49,10 @@ var outletObj = {
                     }
                     
                 }
+                let result = Device.find({local_ip: localIP, deviceType: "Camera"}).limit(1);
+                console.log(result);
                 // else if our local ip exist in device database
-                else if(Device.find({local_ip: localIP, deviceType: "Camera"}).limit(1)){
+                else if(result){
                     // grab the device's mongo _id and write it to the 'device_id.json' file
                         // _id: _id
                     console.log("local ip does exist in the device db");
