@@ -24,6 +24,7 @@ var outletObj = {
                     fileExists = fs.existsSync(fileName);
                 
                 let result = Device.find({local_ip: localIP, deviceType: "Camera"}).limit(1);
+                console.log("Result: " + result);
                 // if JSON file 'device_id.json' exists
                 if(fileExists){
                     console.log("File does exist");
