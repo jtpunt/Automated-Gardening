@@ -23,8 +23,8 @@ var outletObj = {
                     },
                     fileExists = fs.existsSync(fileName);
                 
-                let result = Device.find({local_ip: localIP, deviceType: "Camera"}).limit(1);
-                console.log("Result: " + result);
+                //let result = Device.findOne({local_ip: localIP, deviceType: "Camera"}).limit(1);
+                //console.log("Result: " + result);
                 // if JSON file 'device_id.json' exists
                 if(fileExists){
                     console.log("File does exist");
@@ -52,29 +52,29 @@ var outletObj = {
                     
                 }
                 // else if our local ip exist in device database
-                else if(result){
-                    // grab the device's mongo _id and write it to the 'device_id.json' file
-                        // _id: _id
-                    console.log("local ip does exist in the device db");
-                    Device.findOne({local_ip: localIP, deviceType: "Camera"}, 
-                        function(err, myDevice) {
-                            if(err){
-                                console.log(err);
-                            }
-                            else{
-                                deviceDataObj = { _id: myDevice["_id"] };       // create our object
-                                deviceDataJSON = JSON.stringify(deviceDataObj); // stringify it
+                // else if(result){
+                //     // grab the device's mongo _id and write it to the 'device_id.json' file
+                //         // _id: _id
+                //     console.log("local ip does exist in the device db");
+                //     Device.findOne({local_ip: localIP, deviceType: "Camera"}, 
+                //         function(err, myDevice) {
+                //             if(err){
+                //                 console.log(err);
+                //             }
+                //             else{
+                //                 deviceDataObj = { _id: myDevice["_id"] };       // create our object
+                //                 deviceDataJSON = JSON.stringify(deviceDataObj); // stringify it
                                 
-                                fs.writeFileSync(fileName, deviceDataJSON);     // write it to our file
-                            }
-                        }
-                    );
-                }
+                //                 fs.writeFileSync(fileName, deviceDataJSON);     // write it to our file
+                //             }
+                //         }
+                //     );
+                // }
                 // else, we have a new device
                 else{
                     // create a basic device in mongo
                     // grab the id, and write it to our 'device_id.json' file
-                    console.log("Device does not exist, creating device");
+                    //console.log("Device does not exist, creating device");
                     Device.create(newDeviceObj, (err, newDevice) => {
                         if(err) console.log(err);
                         else{
