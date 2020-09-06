@@ -16,6 +16,13 @@ router.get("/image", middleware.isLoggedIn, (req, res) => {
 });
 router.get("/video", middleware.isLoggedIn, (req, res) => {
 	let page_name = "video";
+    // retrieve our video devices
+    Device.find({deviceType: 'Camera'}, (err, devices)=>{
+        if(err) console.log(err);
+        else{
+            console.log(`Devices: ${devices}`);
+        }
+    });
     res.render("camera/video", { page_name: page_name});
     res.status(200).end();
 });

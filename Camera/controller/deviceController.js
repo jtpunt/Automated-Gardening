@@ -5,6 +5,9 @@ var Device   = require("../models/device"),
     fileName = path.join("../Camera/device_id.json"),
     async    = require("asyncawait/async"),
     await    = require("asyncawait/await"),
+    env      = process.env.NODE_ENV || 'development',
+    config   = require('./config')[env],
+    port     = config.server.port,
     localIP  = ip.address();
 
 console.log("Local IP: " + localIP + "\n");
@@ -18,8 +21,9 @@ var outletObj = {
                     device_id, 
                     newDeviceObj = {
                         local_ip: localIP,
+                        port: port,
                         deviceName: 'New Camera Server',
-                        deviceType: 'Camera',
+                        deviceType: 'Camera'
                     },
                     fileExists = fs.existsSync(fileName);
                 
