@@ -27,7 +27,6 @@ var outletObj = {
                     },
                     fileExists = fs.existsSync(fileName);
 
-                console.log(dbResult);
                 console.log(`port: ${port}`);
                 // if JSON file 'device_id.json' exists
                 if(fileExists){
