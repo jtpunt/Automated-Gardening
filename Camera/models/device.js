@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var deviceSchema = new mongoose.Schema({
     local_ip: String,
+    port: String,
     deviceName: String,
     deviceType: {
         type: String,
