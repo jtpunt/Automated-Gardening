@@ -6,7 +6,7 @@ var Device   = require("../models/device"),
     async    = require("asyncawait/async"),
     await    = require("asyncawait/await"),
     env      = process.env.NODE_ENV || 'development',
-    config   = require('./config')[env],
+    config   = require('../config')[env],
     port     = config.server.port,
     localIP  = ip.address();
 
