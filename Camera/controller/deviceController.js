@@ -26,7 +26,12 @@ var outletObj = {
                         deviceType: 'Camera'
                     },
                     fileExists = fs.existsSync(fileName);
-                let dbResult = Device.find({local_ip: localIP, deviceType: "Camera"}).limit(1);
+                Device.findOne(newDeviceObj, function(err, device) {
+                    if(err) console.log(err);
+                    else{
+                        console.log("Device found?: " + device);
+                    }
+                });
                 console.log(dbResult);
                 console.log(`port: ${port}`);
                 // if JSON file 'device_id.json' exists
