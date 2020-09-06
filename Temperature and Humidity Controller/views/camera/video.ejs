@@ -1,23 +1,32 @@
 <% include ../partials/header %>
-  <h1>Video Page</h1>
-  	<script type="text/javascript" src="https://rawgit.com/131/h264-live-player/master/vendor/dist/http-live-player.js"></script>
-    <script type="text/javascript">
-  	const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
-    <%  devices.forEach(function(device){ %>
-    		var ip = "<%=device['local_ip']%>",
-    			port = <%=device['port']%>,
-    			socketURL = socketProtocol + "//" + ip + ":" + port + "/video-stream";
+<div class="container">
+	<div class="row" style="margin: auto;
+	    width: 100%;
+	    padding: 10px;">
+		<div id="videosDiv" class="col-md-12">
+			<h2>Live View</h2>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="https://rawgit.com/131/h264-live-player/master/vendor/dist/http-live-player.js"></script>
+<script type="text/javascript">
+const socketProtocol = (window.location.protocol === 'https:' ? 'wss:' : 'ws:')
+<%  devices.forEach(function(device){ %>
+	var ip = "<%=device['local_ip']%>",
+		port = <%=device['port']%>,
+		socketURL = socketProtocol + "//" + ip + ":" + port + "/video-stream";
 
-			var canvas = document.createElement("canvas"),
-				contentDiv = document.getElementById("content");
+	var canvas = document.createElement("canvas"),
+		videosDiv = document.getElementById("videosDiv");
 
-			canvas.style.backgroundColor = "red";
-		    contentDiv.appendChild(canvas);
-		 
-		    var wsavc = new WSAvcPlayer(canvas, "webgl");
-		 
-		    wsavc.connect(socketURL);
-    		console.log(`ejs ip: ${ip}, port: ${port}, socketURL: ${socketURL}`);
- 	<%	}); %>
-  </script>
+	canvas.style.backgroundColor = "red";
+    videosDiv.appendChild(canvas);
+ 
+    var wsavc = new WSAvcPlayer(canvas, "webgl");
+ 
+    wsavc.connect(socketURL);
+	console.log(`ejs ip: ${ip}, port: ${port}, socketURL: ${socketURL}`);
+<%	}); %>
+</script>
+
 <% include ../partials/footer %>
