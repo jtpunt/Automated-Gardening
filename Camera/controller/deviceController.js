@@ -39,7 +39,9 @@ var outletObj = {
                         device_id = deviceDataObj['_id'].toString();
                         
                         // look up device in database, make sure it exists, overwrite local ip value
-                        Device.findByIdAndUpdate(device_id, {$set: {local_ip: localIP }}, 
+                        // and also overwrite the localport incase there are overlapping ports being used
+                        // on the same server
+                        Device.findByIdAndUpdate(device_id, {$set: {local_ip: localIP, port: port }}, 
                             function(err, device){
                                 if(err){
                                     console.log(err);
