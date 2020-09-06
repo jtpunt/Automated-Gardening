@@ -20,10 +20,13 @@ router.get("/video", middleware.isLoggedIn, (req, res) => {
     Device.find({deviceType: 'Camera'}, (err, devices)=>{
         if(err) console.log(err);
         else{
-            console.log(`Devices: ${devices}`);
+            console.log("nodejs devices: " + devices);
+            res.render("camera/video", { 
+                page_name: page_name,
+                devices: Array.from(devices)
+            });
+            res.status(200).end();
         }
     });
-    res.render("camera/video", { page_name: page_name});
-    res.status(200).end();
 });
 module.exports = router;

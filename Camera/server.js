@@ -51,7 +51,7 @@ mongoose.connect(connStr, options, function(err){
         **********************************************************************/
         //app.use("/schedule", schedRoutes);
         app.use("/", indexRoutes);
-        app.ws('/echo', (ws, req) => {
+        app.ws('/video-stream', (ws, req) => {
             console.log("WebSocket created")
             ws.send(JSON.stringify({
                 action: 'init',
