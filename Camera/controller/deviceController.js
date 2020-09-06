@@ -38,14 +38,28 @@ var outletObj = {
                         console.log("deviceDataObj[_id] is not null");
                         device_id = deviceDataObj['_id'].toString();
                         
-                        // look up device in database, make sure it exists, overwrite local ip value
-                        // and also overwrite the localport incase there are overlapping ports being used
-                        // on the same server
+                        // overwrite local ip value and also overwrite the localport incase there are 
+                        // overlapping ports being used on the same server
                         Device.findByIdAndUpdate(device_id, {$set: {local_ip: localIP, port: port }}, 
                             function(err, device){
                                 if(err){
                                     console.log(err);
                                 }else{
+                                    // CASE: device has been deleted from the DB, but the file still exists
+                                    if(device === null){
+                                        Device.create(newDeviceObj, (err, newDevice) => {
+                                            if(err) console.log(err);
+                                            else{
+                                                newDevice.save();
+                                                console.log("Device saved!");
+                                                deviceDataObj = { _id: newDevice["_id"] };       // create our object
+                                                deviceDataJSON = JSON.stringify(deviceDataObj);  // stringify it
+                                                
+                                                fs.writeFileSync(fileName, deviceDataJSON);      // write it to our file
+                        
+                                            }
+                                        });
+                                    }
                                     console.log(`device: ${device} has been updated`);
                                 }
                             }
