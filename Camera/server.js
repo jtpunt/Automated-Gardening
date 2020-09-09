@@ -55,8 +55,9 @@ mongoose.connect(connStr, options, function(err){
 
         app.ws('/video-stream', (ws, req) => {
             console.log("WebSocket created");
-            let cameraHeight = 540,
-                cameraWidth = 960;
+            let cameraWidth = 960,
+                cameraHeight = 540;
+                
             Device.findOne({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
                 if(err) console.log(err.toString);
                 else{
@@ -66,9 +67,8 @@ mongoose.connect(connStr, options, function(err){
                         if(err) console.log(err);
                         else{
                             console.log(`Found camera: ${JSON.stringify(camera)}`);
-
-                            cameraHeight = camera['height'];
                             cameraWidth = camera['width'];
+                            cameraHeight = camera['height'];
                         };
                         console.log(`using height: ${cameraHeight}`);
                         console.log(`using width: ${cameraWidth}`);
