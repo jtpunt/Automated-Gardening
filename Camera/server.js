@@ -52,14 +52,26 @@ mongoose.connect(connStr, options, function(err){
         **********************************************************************/
         //app.use("/schedule", schedRoutes);
         app.use("/", indexRoutes);
+        let cameraHeight = 960,
+            cameraWidth = 540;
         Device.find({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
             if(err) console.log(err.toString);
             else{
                 console.log("Found device: " + device);
+                Camera.find({camera_id: device['id']}, function(err, camera){
+                    if(err) console.log(err);
+                    else{
+                        console.log("found camera");
+                        cameraHeight = camera['height'];
+                        cameraWidth = camera['width'];
+                    }
+                })
             }
         });
         app.ws('/video-stream', (ws, req) => {
-            console.log("WebSocket created")
+            console.log("WebSocket created");
+            console.log(`using height: ${cameraHeight}`);
+            console.log(`using width: ${cameraWidth}`);
             ws.send(JSON.stringify({
                 action: 'init',
                 width: '960',
