@@ -61,7 +61,8 @@ mongoose.connect(connStr, options, function(err){
                 Camera.find({camera_id: device['id']}, function(err, camera){
                     if(err) console.log(err);
                     else{
-                        console.log("found camera");
+                        console.log(`Found camera: ${JSON.stringify(camera)}`);
+
                         cameraHeight = camera['height'];
                         cameraWidth = camera['width'];
                     }
