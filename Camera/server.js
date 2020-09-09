@@ -62,36 +62,38 @@ mongoose.connect(connStr, options, function(err){
                 else{
                     console.log("Found device: " + device);
                     console.log("Device id: " + device['_id']);
-                    // Camera.findOne({camera_id: device._id}, function(err, camera){
-                    //     if(err) console.log(err);
-                    //     else{
-                    //         console.log(`Found camera: ${JSON.stringify(camera)}`);
+                    Camera.findOne({camera_id: device._id}, function(err, camera){
+                        if(err) console.log(err);
+                        else{
+                            console.log(`Found camera: ${JSON.stringify(camera)}`);
 
-                    //         // cameraHeight = camera['height'];
-                    //         // cameraWidth = camera['width'];
-                    //     }
-                    // })
+                            cameraHeight = camera['height'];
+                            cameraWidth = camera['width'];
+                        };
+                        console.log(`using height: ${cameraHeight}`);
+                        console.log(`using width: ${cameraWidth}`);
+                        ws.send(JSON.stringify({
+                            action: 'init',
+                            width: cameraWidth,
+                            height: cameraHeight
+                        }));
+                        var videoStream = raspividStream({ rotation: 180 });
+                        
+                        videoStream.on('data', (data) => {
+                            ws.send(data, { binary: true }, (error) => { 
+                                if (error) console.error(error); 
+                            });
+                        });
+
+                        ws.on('close', () => {
+                            console.log('WebSocket was closed')
+                            videoStream.removeAllListeners('data');
+                        })
+                    })
                 }
             });
-            console.log(`using height: ${cameraHeight}`);
-            console.log(`using width: ${cameraWidth}`);
-            // ws.send(JSON.stringify({
-            //     action: 'init',
-            //     width: cameraWidth,
-            //     height: cameraHeight
-            // }));
-            // var videoStream = raspividStream({ rotation: 180 });
-            
-            // videoStream.on('data', (data) => {
-            //     ws.send(data, { binary: true }, (error) => { 
-            //         if (error) console.error(error); 
-            //     });
-            // });
+    
 
-            // ws.on('close', () => {
-            //     console.log('WebSocket was closed')
-            //     videoStream.removeAllListeners('data');
-            // })
         })
 
         /**********************************************************************
