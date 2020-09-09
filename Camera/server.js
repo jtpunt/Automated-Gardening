@@ -57,20 +57,20 @@ mongoose.connect(connStr, options, function(err){
             console.log("WebSocket created");
             let cameraHeight = 540,
                 cameraWidth = 960;
-            Device.find({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
+            Device.findOne({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
                 if(err) console.log(err.toString);
                 else{
                     console.log("Found device: " + device);
                     console.log("Device id: " + device['_id']);
-                    Camera.findOne({camera_id: device._id}, function(err, camera){
-                        if(err) console.log(err);
-                        else{
-                            console.log(`Found camera: ${JSON.stringify(camera)}`);
+                    // Camera.findOne({camera_id: device._id}, function(err, camera){
+                    //     if(err) console.log(err);
+                    //     else{
+                    //         console.log(`Found camera: ${JSON.stringify(camera)}`);
 
-                            // cameraHeight = camera['height'];
-                            // cameraWidth = camera['width'];
-                        }
-                    })
+                    //         // cameraHeight = camera['height'];
+                    //         // cameraWidth = camera['width'];
+                    //     }
+                    // })
                 }
             });
             console.log(`using height: ${cameraHeight}`);
