@@ -55,7 +55,7 @@ mongoose.connect(connStr, options, function(err){
         Device.find({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
             if(err) console.log(err.toString);
             else{
-                console.log("Found device: " device);
+                console.log("Found device: " + device);
             }
         });
         app.ws('/video-stream', (ws, req) => {
