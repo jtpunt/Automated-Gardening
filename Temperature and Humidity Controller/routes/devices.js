@@ -1,9 +1,11 @@
 var express    = require("express"),
-    Device         = require("../models/device"),
+    middleware = require("../middleware"),
+    Device     = require("../models/device"),
+    Camera     = require("../models/cameraSettings"),
     router     = express.Router();
 
 // Shows all devices
-router.get("/", (req, res) =>{
+router.get("/", middleware.isLoggedIn, (req, res) =>{
     let page_name = "device";
     var deviceObj = { 
         'DHT11 Sensor': [],
@@ -42,20 +44,23 @@ router.post("/", (req, res) => {
 
 });
 //EDIT
-router.get("/:device_id/edit", (req, res) => {
+router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
+    let page_name = "edit";
     console.log("in edit route..\n");
     Device.findById(req.params.device_id, (err, device) =>{
         if(err) res.redirect("back");
         else{
             console.log(device);
-            res.render("device/edit", {device: device});
+            res.render("device/edit", {
+                page_name: page_name,
+                device: device
+            });
         }
     });
 });
 // UPDATE
-router.put("/:device_id", (req, res) => {
-    console.log("in put request!");
-    console.log(req.body);
+router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
+    console.log(`In put request with: ${JSON.stringify(req.body)}`);
      
     let newData = {
         local_ip: req.body.local_ip, 
@@ -64,11 +69,49 @@ router.put("/:device_id", (req, res) => {
     };
     Device.findByIdAndUpdate(req.params.device_id, {$set: newData}, (err, device) => {
         if(err){
+            req.flash("error", err.toString());
             res.redirect("back");
         } else {
-            console.log("Successfully Updated!");
-            res.redirect("/devices");
-            res.status(200).end();
+            if(device['deviceType'] === 'Camera'){
+                let cameraData = {
+                    camera_id: device['id'],
+                    height: req.body.cameraHeight,
+                    width: req.body.cameraWidth
+                }
+                Camera.findOneAndUpdate({ camera_id: device['id'] }, {$set: cameraData}, (err, camera) => {
+                    if(err){
+                        console.log(err.toString);
+                        req.flash("error", err.toString());
+                        res.redirect("back");
+                    }else{
+                        if(camera === null){
+                            console.log("Camera is null");
+                            Camera.create(cameraData, (err, newCamera) => {
+                                if(err) console.log('Error creating device');
+                                else{
+                                    console.log(`Created new camera settings ${JSON.stringify(newCamera)}`);
+                                    console.log(`Successfully updated ${JSON.stringify(device)}`)
+                                    console.log("Successfully Updated!");
+                                    res.redirect("/device");
+                                    res.status(200).end();
+                                }
+                            });
+                        }else{
+                            console.log("no error on camera update");
+                            console.log(`Successfully updated ${JSON.stringify(device)}`)
+                            console.log("Successfully Updated!");
+                            res.redirect("/device");
+                            res.status(200).end();
+                        }
+                    }
+                });
+            }else{
+                console.log(`Successfully updated ${JSON.stringify(device)}`)
+                console.log("Successfully Updated!");
+                res.redirect("/device");
+                res.status(200).end();
+            }
+ 
         }
     });
 })
@@ -77,8 +120,10 @@ router.put("/:device_id", (req, res) => {
 // router.get("/:device_id/start_date/:start_date/end_date/:end_date");
 // router.get("/:device_id/start_date/:start_date/end_date/:end_date/average");
 
-router.delete("/:device_id", (req, res) => {
-
+router.delete("/:device_id", middleware.isLoggedIn, (req, res) => {
+    // deleting a relay device should remove all associated schedules
+    // deleting a camera device should remove all associated camera settings
+    // deleting a water sensor device should remove all associated water settings
 });
 
 module.exports = router;

@@ -7,6 +7,7 @@ var express        = require("express"),
     raspividStream = require('raspivid-stream');
     // Sensor         = require("./models/sensor"),
     // Chart          = require("./models/chart"),
+    Camera         = require("./models/cameraSettings"),
     Device         = require("./models/device"),
     env            = process.env.NODE_ENV || 'development',
     config         = require('./config')[env],
@@ -51,6 +52,12 @@ mongoose.connect(connStr, options, function(err){
         **********************************************************************/
         //app.use("/schedule", schedRoutes);
         app.use("/", indexRoutes);
+        Device.find({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
+            if(err) console.log(err.toString);
+            else{
+                console.log("Found device: " device);
+            }
+        });
         app.ws('/video-stream', (ws, req) => {
             console.log("WebSocket created")
             ws.send(JSON.stringify({

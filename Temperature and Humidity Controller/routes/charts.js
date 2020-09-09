@@ -1,8 +1,9 @@
 var express    = require("express"),
-    Chart     = require("../models/chart"),
+    middleware = require("../middleware"),
+    Chart      = require("../models/chart"),
     router     = express.Router();
 
-router.get("/", function(req, res){
+router.get("/", middleware.isLoggedIn, function(req, res){
     let page_name = "chart";
     Chart.find({}, {"_id" : false}, (err, chart) => { //remove _id from query result
         if(err) console.log(err);
@@ -22,7 +23,7 @@ router.get("/", function(req, res){
         }
     });
 });
-router.get("/data", function(req, res){
+router.get("/data", middleware.isLoggedIn, function(req, res){
    // let mySort = {"date": -1, "_id" : false};
     let mySort = {"date": -1};
     Chart.find().sort(mySort).exec(function(err, chart){ //remove _id from query result

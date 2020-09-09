@@ -61,7 +61,7 @@
     <div class="row">
         <h1 style="text-align: center;">Edit <%=device.deviceType%></h1>
         <div style="width: 30%; margin:25px auto;">
-            <form action="/devices/<%=device._id%>/?_method=PUT" method="post">
+            <form action="/device/<%=device._id%>/?_method=PUT" method="post">
                <div class="form-group">
                     <label for="local_ip">Local IP</label>
                     <input class="form-control" type="text" id="local_ip" name="local_ip" value="<%=device.local_ip%>" maxlength="30" required>
@@ -70,7 +70,9 @@
                     <label for="deviceName">Device Name</label>
                     <input class="form-control" type="text" id="deviceName" name="deviceName" value="<%=device.deviceName%>" maxlength="30" required>
                 </div>
-                <% device['gpio'].forEach(function(myGpio){ console.log(myGpio) %>
+                <% 
+                if(device['gpio'] && device['deviceType'] !== "Camera"){    
+                    device['gpio'].forEach(function(myGpio){ console.log(myGpio) %>
                     <div class="form-group">
                         <label for="gpio">GPIO #</label>      
         				<select name="gpio">
@@ -97,13 +99,25 @@
         				</select>
         				<button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
     			    </div>
-                <% });%>
-                <button id="addGpioBtn" type="button">Add GPIO</button>
+                    <button id="addGpioBtn" type="button">Add GPIO</button>
+                <% });
+                }
+                %>
+                <% if(device['deviceType'] === "Camera"){ %>
+                    <div class="form-group">
+                        <label for="cameraWidth">Camera Height</label>
+                        <input class="form-control" type="text" id="cameraHeight" name="cameraHeight" value="1920" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cameraWidth">Camera Width</label>
+                        <input class="form-control" type="text" id="cameraWidth" name="cameraWidth" value="1080" maxlength="5" required>
+                    </div>
+                <% } %>
                 <div class="form-group">
                     <button class="btn btn-lg btn-primary btn-block">Submit!</button>
                 </div>
             </form>
-            <a href="/devices">Go Back</a>
+            <a href="/device">Go Back</a>
         </div>
     </div>
 </div>

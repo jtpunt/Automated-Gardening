@@ -93,7 +93,7 @@ app.use("/", indexRoutes);
 app.use("/admin", adminRoutes);
 app.use("/camera", cameraRoutes);
 app.use("/charts", chartRoutes);
-app.use("/devices", deviceRoutes);
+app.use("/device", deviceRoutes);
 app.use("/schedule", schedRoutes);
 app.use("/sensors", sensorRoutes);
 app.use("/soil", soilRoutes);
