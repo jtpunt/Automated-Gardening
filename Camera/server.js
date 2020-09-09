@@ -52,8 +52,8 @@ mongoose.connect(connStr, options, function(err){
         **********************************************************************/
         //app.use("/schedule", schedRoutes);
         app.use("/", indexRoutes);
-        let cameraHeight = 960,
-            cameraWidth = 540;
+        let cameraHeight = 540,
+            cameraWidth = 960;
         Device.find({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
             if(err) console.log(err.toString);
             else{
@@ -74,8 +74,8 @@ mongoose.connect(connStr, options, function(err){
             console.log(`using width: ${cameraWidth}`);
             ws.send(JSON.stringify({
                 action: 'init',
-                width: '960',
-                height: '540'
+                width: cameraWidth,
+                height: cameraHeight
             }));
             var videoStream = raspividStream({ rotation: 180 });
             
