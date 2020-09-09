@@ -61,6 +61,7 @@ mongoose.connect(connStr, options, function(err){
                 if(err) console.log(err.toString);
                 else{
                     console.log("Found device: " + device);
+                    console.log("Device id: " + device['_id']);
                     Camera.findOne({camera_id: device._id}, function(err, camera){
                         if(err) console.log(err);
                         else{
