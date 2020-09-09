@@ -75,23 +75,23 @@ mongoose.connect(connStr, options, function(err){
             });
             console.log(`using height: ${cameraHeight}`);
             console.log(`using width: ${cameraWidth}`);
-            ws.send(JSON.stringify({
-                action: 'init',
-                width: cameraWidth,
-                height: cameraHeight
-            }));
-            var videoStream = raspividStream({ rotation: 180 });
+            // ws.send(JSON.stringify({
+            //     action: 'init',
+            //     width: cameraWidth,
+            //     height: cameraHeight
+            // }));
+            // var videoStream = raspividStream({ rotation: 180 });
             
-            videoStream.on('data', (data) => {
-                ws.send(data, { binary: true }, (error) => { 
-                    if (error) console.error(error); 
-                });
-            });
+            // videoStream.on('data', (data) => {
+            //     ws.send(data, { binary: true }, (error) => { 
+            //         if (error) console.error(error); 
+            //     });
+            // });
 
-            ws.on('close', () => {
-                console.log('WebSocket was closed')
-                videoStream.removeAllListeners('data');
-            })
+            // ws.on('close', () => {
+            //     console.log('WebSocket was closed')
+            //     videoStream.removeAllListeners('data');
+            // })
         })
 
         /**********************************************************************
