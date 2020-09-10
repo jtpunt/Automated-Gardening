@@ -75,6 +75,7 @@ mongoose.connect(connStr, options, function(err){
                         };
                         console.log(`using height: ${cameraHeight}`);
                         console.log(`using width: ${cameraWidth}`);
+                        console.log(`using rotation: ${cameraRotation}`);
                         ws.send(JSON.stringify({
                             action: 'init',
                             width: cameraWidth,

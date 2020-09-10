@@ -115,10 +115,10 @@
                     <div class="form-group">
                         <label for="rotation">Camera Rotation</label>      
                         <select name="rotation">
-                            <option value="0">0</option>
-                            <option value="90">90</option>
-                            <option value="180">180</option>
-                            <option value="240">240</option>
+                            <option value="0" <% if (cameraSettings.rotation == 0) { %>selected="selected"<% } %>>0</option>
+                            <option value="90" <% if (cameraSettings.rotation == 90) { %>selected="selected"<% } %>>90</option>
+                            <option value="180" <% if (cameraSettings.rotation == 180) { %>selected="selected"<% } %>>180</option>
+                            <option value="240" <% if (cameraSettings.rotation === 240) { %>selected="selected"<% } %>>240</option>
                         </select>
                     </div>
                 <% } %>
