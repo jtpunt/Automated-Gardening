@@ -98,7 +98,7 @@ mongoose.connect(connStr, options, function(err){
                                 if (error) console.error(error); 
                             });
                         });
-                        await streamCamera.startCapture();
+                        streamCamera.startCapture();
                         // videoStream.on('data', (data) => {
                         //     ws.send(data, { binary: true }, (error) => { 
                         //         if (error) console.error(error); 
@@ -108,7 +108,7 @@ mongoose.connect(connStr, options, function(err){
                         ws.on('close', () => {
                             console.log('WebSocket was closed')
                             //videoStream.removeAllListeners('data');
-                            await streamCamera.stopCapture();
+                            streamCamera.stopCapture();
                         })
                     })
                 }
