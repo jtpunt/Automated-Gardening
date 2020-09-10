@@ -5,9 +5,6 @@ var express        = require("express"),
     cors           = require('cors'),
     ip             = require("ip"),
     raspividStream = require('raspivid-stream'),                // works but can't rotate without restarting node.js
-    StreamCamera   = require('pi-camera-connect').StreamCamera, // testing
-    StillCamera    = require('pi-camera-connect').StillCamera,  // testing - errors
-    Codec          = require('pi-camera-connect').Codec,        // testing
     fs             = require('fs'),
     async          = require("asyncawait/async"),
     await          = require("asyncawait/await"),
@@ -44,19 +41,7 @@ let options = {
   }
 }
 
-const streamCamera = new StreamCamera({
-    codec: Codec.H264
-});
-// Take still image and save to disk
-let runApp = async function() {
-    const stillCamera = new StillCamera();
-    console.log("Taking picture");
-    let image = await stillCamera.takeImage();
-    console.log("Done taking picture");
-    fs.writeFileSync("still-image.jpg", image);
-}
- 
-runApp();
+
 mongoose.connect(connStr, options, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
@@ -97,10 +82,8 @@ mongoose.connect(connStr, options, function(err){
                         console.log(`using width: ${cameraWidth}`);
                         console.log(`using rotation: ${cameraRotation}`);
 
-                        //var videoStream = raspividStream({ rotation: cameraRotation });
-                        const videoStream = streamCamera.createStream();
+                        var videoStream = raspividStream({ rotation: cameraRotation });
 
-                        streamCamera.startCapture();
                         ws.send(JSON.stringify({
                             action: 'init',
                             width: cameraWidth,
@@ -108,19 +91,12 @@ mongoose.connect(connStr, options, function(err){
                         }));
                     
  
-                        videoStream.on("data", (data) => {
-                            // console.log("New video data", data);
+                        videoStream.on('data', (data) => {
                             ws.send(data, { binary: true }, (error) => { 
                                 if (error) console.error(error); 
                             });
                         });
-                        videoStream.on("end", data => console.log("Video stream has ended"));
-                        // videoStream.on('data', (data) => {
-                        //     ws.send(data, { binary: true }, (error) => { 
-                        //         if (error) console.error(error); 
-                        //     });
-                        // });
-
+                                                videoStream.on("end", data => console.log("Video stream has ended"));
                         ws.on('close', () => {
                             console.log('WebSocket was closed')
                             //videoStream.removeAllListeners('data');
