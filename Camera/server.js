@@ -5,7 +5,8 @@ var express        = require("express"),
     cors           = require('cors'),
     ip             = require("ip"),
     raspividStream = require('raspivid-stream'),
-    StreamCamera   = require('pi-camera-connect'),
+    StreamCamera   = require('pi-camera-connect').StreamCamera,
+    Codec          = require('pi-camera-connect').Codec,
     // Sensor         = require("./models/sensor"),
     // Chart          = require("./models/chart"),
     Camera         = require("./models/cameraSettings"),
@@ -40,7 +41,7 @@ let options = {
 }
 
 const streamCamera = new StreamCamera({
-    codec: StreamCamera.Codec.H264
+    codec: Codec.H264
 });
 
 mongoose.connect(connStr, options, function(err){
