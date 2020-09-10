@@ -4,7 +4,8 @@ var express        = require("express"),
     enableWs       = require('express-ws'),
     cors           = require('cors'),
     ip             = require("ip"),
-    raspividStream = require('raspivid-stream');
+    raspividStream = require('raspivid-stream'),
+    streamCamera   = require('pi-camera-connect'),
     // Sensor         = require("./models/sensor"),
     // Chart          = require("./models/chart"),
     Camera         = require("./models/cameraSettings"),
@@ -37,6 +38,11 @@ let options = {
     autoReconnect : true
   }
 }
+
+const streamCamera = new StreamCamera({
+    codec: Codec.H264
+});
+
 mongoose.connect(connStr, options, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
@@ -78,22 +84,31 @@ mongoose.connect(connStr, options, function(err){
                         console.log(`using rotation: ${cameraRotation}`);
 
                         var videoStream = raspividStream({ rotation: cameraRotation });
-                        
+
                         ws.send(JSON.stringify({
                             action: 'init',
                             width: cameraWidth,
                             height: cameraHeight
                         }));
-                        
-                        videoStream.on('data', (data) => {
+                        const videoStream = streamCamera.createStream();
+ 
+                        videoStream.on("data", (data) => {
+                            console.log("New video data", data);
                             ws.send(data, { binary: true }, (error) => { 
                                 if (error) console.error(error); 
                             });
                         });
+                        await streamCamera.startCapture();
+                        // videoStream.on('data', (data) => {
+                        //     ws.send(data, { binary: true }, (error) => { 
+                        //         if (error) console.error(error); 
+                        //     });
+                        // });
 
                         ws.on('close', () => {
                             console.log('WebSocket was closed')
-                            videoStream.removeAllListeners('data');
+                            //videoStream.removeAllListeners('data');
+                            await streamCamera.stopCapture();
                         })
                     })
                 }
