@@ -6,9 +6,11 @@ var express        = require("express"),
     ip             = require("ip"),
     raspividStream = require('raspivid-stream'),                // works but can't rotate without restarting node.js
     StreamCamera   = require('pi-camera-connect').StreamCamera, // testing
-    StillCamera    = require('pi-camera-connect').StillCamera,  // testing
+    StillCamera    = require('pi-camera-connect').StillCamera,  // testing - errors
     Codec          = require('pi-camera-connect').Codec,        // testing
     fs             = require('fs'),
+    async          = require("asyncawait/async"),
+    await          = require("asyncawait/await"),
     // Sensor         = require("./models/sensor"),
     // Chart          = require("./models/chart"),
     Camera         = require("./models/cameraSettings"),
@@ -46,7 +48,7 @@ const streamCamera = new StreamCamera({
     codec: Codec.H264
 });
 const stillCamera = new StillCamera();
-const image = stillCamera.takeImage();
+const image = await stillCamera.takeImage();
 fs.writeFileSync("still-image.jpg", image);
 mongoose.connect(connStr, options, function(err){
     if(err){
