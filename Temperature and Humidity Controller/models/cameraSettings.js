@@ -6,6 +6,10 @@ var cameraSettingsSchema = new mongoose.Schema({
     	ref: "Device"
 	},
 	height: Number,
-	width: Number
+	width: Number,
+	rotation: {
+		type: Number,
+		enum: [0, 90, 180, 240]
+	}
 });
 module.exports = mongoose.model('CameraSettings', cameraSettingsSchema, 'cameraSettings');

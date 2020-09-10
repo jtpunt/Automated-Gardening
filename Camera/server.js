@@ -55,8 +55,10 @@ mongoose.connect(connStr, options, function(err){
 
         app.ws('/video-stream', (ws, req) => {
             console.log("WebSocket created");
-            let cameraWidth = 960,
-                cameraHeight = 540;
+            // set default in case the camera has no settings configured yet
+            let cameraWidth    = 960, 
+                cameraHeight   = 540,
+                cameraRotation = 180;
                 
             Device.findOne({local_ip: localIP, deviceType: 'Camera'}, function(err, device){
                 if(err) console.log(err.toString);
@@ -67,8 +69,9 @@ mongoose.connect(connStr, options, function(err){
                         if(err) console.log(err);
                         else{
                             console.log(`Found camera: ${JSON.stringify(camera)}`);
-                            cameraWidth = camera['width'];
-                            cameraHeight = camera['height'];
+                            cameraWidth    = camera['width'];
+                            cameraHeight   = camera['height'];
+                            cameraRotation = camera['rotation'];
                         };
                         console.log(`using height: ${cameraHeight}`);
                         console.log(`using width: ${cameraWidth}`);
@@ -77,7 +80,7 @@ mongoose.connect(connStr, options, function(err){
                             width: cameraWidth,
                             height: cameraHeight
                         }));
-                        var videoStream = raspividStream({ rotation: 180 });
+                        var videoStream = raspividStream({ rotation: cameraRotation });
                         
                         videoStream.on('data', (data) => {
                             ws.send(data, { binary: true }, (error) => { 

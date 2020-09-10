@@ -50,11 +50,25 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
     Device.findById(req.params.device_id, (err, device) =>{
         if(err) res.redirect("back");
         else{
-            console.log(device);
-            res.render("device/edit", {
-                page_name: page_name,
-                device: device
-            });
+            if(device['deviceType'] === 'Camera'){
+                Camera.findOne({ camera_id: device['id'] }, (err, camera) => {
+                    if(err) console.log(err.toString);
+                    else{
+                        console.log(`Found camera settings: ${JSON.stringify(camera)}`)
+                        res.render("device/edit", {
+                            cameraSettings: camera,
+                            page_name: page_name,
+                            device: device
+                        }); 
+                    }
+                });
+            }else{
+                console.log(device);
+                res.render("device/edit", {
+                    page_name: page_name,
+                    device: device
+                });
+            }
         }
     });
 });
@@ -76,11 +90,12 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                 let cameraData = {
                     camera_id: device['id'],
                     height: req.body.cameraHeight,
-                    width: req.body.cameraWidth
+                    width: req.body.cameraWidth,
+                    rotation: req.body.rotation
                 }
                 Camera.findOneAndUpdate({ camera_id: device['id'] }, {$set: cameraData}, (err, camera) => {
                     if(err){
-                        console.log(err.toString);
+                        console.log(err.toString());
                         req.flash("error", err.toString());
                         res.redirect("back");
                     }else{

@@ -106,11 +106,20 @@
                 <% if(device['deviceType'] === "Camera"){ %>
                     <div class="form-group">
                         <label for="cameraWidth">Camera Width</label>
-                        <input class="form-control" type="text" id="cameraWidth" name="cameraWidth" value="1920" maxlength="5" required>
+                        <input class="form-control" type="text" id="cameraWidth" name="cameraWidth" value="<%=cameraSettings.width%>" maxlength="5" required>
                     </div>
                     <div class="form-group">
                         <label for="cameraWidth">Camera Height</label>
-                        <input class="form-control" type="text" id="cameraHeight" name="cameraHeight" value="1080" maxlength="5" required>
+                        <input class="form-control" type="text" id="cameraHeight" name="cameraHeight" value="<%=cameraSettings.height%>" maxlength="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rotation">Camera Rotation</label>      
+                        <select name="rotation">
+                            <option value="0">0</option>
+                            <option value="90">90</option>
+                            <option value="180">180</option>
+                            <option value="240">240</option>
+                        </select>
                     </div>
                 <% } %>
                 <div class="form-group">
