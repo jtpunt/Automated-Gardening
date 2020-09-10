@@ -86,6 +86,8 @@ mongoose.connect(connStr, options, function(err){
 
                         //var videoStream = raspividStream({ rotation: cameraRotation });
                         const videoStream = streamCamera.createStream();
+
+                        streamCamera.startCapture();
                         ws.send(JSON.stringify({
                             action: 'init',
                             width: cameraWidth,
@@ -100,7 +102,6 @@ mongoose.connect(connStr, options, function(err){
                             });
                         });
                         videoStream.on("end", data => console.log("Video stream has ended"));
-                        streamCamera.startCapture();
                         // videoStream.on('data', (data) => {
                         //     ws.send(data, { binary: true }, (error) => { 
                         //         if (error) console.error(error); 
