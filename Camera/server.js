@@ -81,7 +81,7 @@ mongoose.connect(connStr, options, function(err){
                             width: cameraWidth,
                             height: cameraHeight
                         }));
-                        var videoStream = raspividStream({ rotation: cameraRotation });
+                        var videoStream = new raspividStream({ rotation: cameraRotation });
                         
                         videoStream.on('data', (data) => {
                             ws.send(data, { binary: true }, (error) => { 
