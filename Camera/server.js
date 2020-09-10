@@ -85,20 +85,21 @@ mongoose.connect(connStr, options, function(err){
                         console.log(`using rotation: ${cameraRotation}`);
 
                         //var videoStream = raspividStream({ rotation: cameraRotation });
-
+                        const videoStream = streamCamera.createStream();
                         ws.send(JSON.stringify({
                             action: 'init',
                             width: cameraWidth,
                             height: cameraHeight
                         }));
-                        const videoStream = streamCamera.createStream();
+                    
  
                         videoStream.on("data", (data) => {
                             console.log("New video data", data);
-                            ws.send(data, (error) => { 
+                            ws.send(data, { binary: true }, (error) => { 
                                 if (error) console.error(error); 
                             });
                         });
+                        videoStream.on("end", data => console.log("Video stream has ended"));
                         streamCamera.startCapture();
                         // videoStream.on('data', (data) => {
                         //     ws.send(data, { binary: true }, (error) => { 
