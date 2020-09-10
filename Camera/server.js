@@ -45,8 +45,8 @@ let options = {
 const streamCamera = new StreamCamera({
     codec: Codec.H264
 });
-const StillCamera = new StillCamera();
-const image = StillCamera.takeImage();
+const stillCamera = new StillCamera();
+const image = stillCamera.takeImage();
 fs.writeFileSync("still-image.jpg", image);
 mongoose.connect(connStr, options, function(err){
     if(err){
