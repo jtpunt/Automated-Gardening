@@ -86,11 +86,11 @@ mongoose.connect(connStr, options, function(err){
 
                         //var videoStream = raspividStream({ rotation: cameraRotation });
                         const videoStream = streamCamera.createStream();
-                        ws.send(JSON.stringify({
-                            action: 'init',
-                            width: cameraWidth,
-                            height: cameraHeight
-                        }));
+                        // ws.send(JSON.stringify({
+                        //     action: 'init',
+                        //     width: cameraWidth,
+                        //     height: cameraHeight
+                        // }));
                     
  
                         videoStream.on("data", (data) => {
