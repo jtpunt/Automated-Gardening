@@ -40,7 +40,7 @@ let options = {
 }
 
 const streamCamera = new StreamCamera({
-    codec: Codec.H264
+    codec: StreamCamera.Codec.H264
 });
 
 mongoose.connect(connStr, options, function(err){
