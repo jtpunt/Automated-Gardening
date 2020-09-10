@@ -47,18 +47,9 @@ let options = {
 const streamCamera = new StreamCamera({
     codec: Codec.H264
 });
+const stillCamera = new StillCamera();
+const image = async() => { await stillCamera.takeImage(); }
 
-// Take still image and save to disk
-const runApp = async () => {
- 
-    const stillCamera = new StillCamera();
- 
-    const image = await stillCamera.takeImage();
- 
-    fs.writeFileSync("still-image.jpg", image);
-};
- 
-runApp();
 
 fs.writeFileSync("still-image.jpg", image);
 mongoose.connect(connStr, options, function(err){
