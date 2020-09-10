@@ -95,7 +95,7 @@ mongoose.connect(connStr, options, function(err){
  
                         videoStream.on("data", (data) => {
                             console.log("New video data", data);
-                            ws.send(data, { binary: true }, (error) => { 
+                            ws.send(data, (error) => { 
                                 if (error) console.error(error); 
                             });
                         });
