@@ -99,8 +99,8 @@ mongoose.connect(connStr, options, function(err){
                                                 videoStream.on("end", data => console.log("Video stream has ended"));
                         ws.on('close', () => {
                             console.log('WebSocket was closed')
-                            //videoStream.removeAllListeners('data');
-                            streamCamera.stopCapture();
+                            videoStream.removeAllListeners('data');
+                            //streamCamera.stopCapture();
                         })
                     })
                 }
