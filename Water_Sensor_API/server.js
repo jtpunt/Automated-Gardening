@@ -66,7 +66,6 @@ mongoose.connect(connStr, options, function(err){
                 WaterSettings.findOne({device_id: device._id}, function(err, water_config){
                     if(err) console.log(err);
                     else{
-                        console.log(`Found camera: ${JSON.stringify(camera)}`);
                         Scheduler.find({'device.id': water_config["relayId"]}, function(err, schedule_configs){
                             if(err) console.log(err);
                             else{
