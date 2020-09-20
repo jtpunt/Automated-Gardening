@@ -11,7 +11,7 @@ var express        = require("express"),
     // Chart          = require("./models/chart"),
 
     Device         = require("./models/device"),
-    WaterSettings  = require("./models/WaterSettings"),
+    WaterSettings  = require("./models/waterSettings"),
     Scheduler      = require("./models/scheduler"),
     env            = process.env.NODE_ENV || 'development',
     config         = require('./config')[env],
