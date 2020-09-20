@@ -1,7 +1,6 @@
 var express        = require("express"),
     bodyParser     = require("body-parser"),
     mongoose       = require("mongoose"),
-    enableWs       = require('express-ws'),
     cors           = require('cors'),
     ip             = require("ip"),
     fs             = require('fs'),
@@ -18,7 +17,6 @@ var express        = require("express"),
     // schedule       = require('node-schedule'),
     app            = express();
 
-enableWs(app);
 // requiring routes
 var indexRoutes   = require("./routes/index");
 

@@ -13,5 +13,5 @@ var waterSettingsSchema = new mongoose.Schema({
 	checkMinsBefore: Number,
 	checkMinsAfter: Number,
 	cancelRelay: Boolean // Water detected before watering starts? cancel the relay's schedule(s) to prevent overwatering
-}
+});
 module.exports = mongoose.model('WaterSettings', waterSettingsSchema, 'waterSettings');
