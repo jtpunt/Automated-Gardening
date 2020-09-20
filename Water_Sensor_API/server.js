@@ -34,12 +34,12 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
 
 let options = {
-  server : {
-    useNewUrlParser: true,
-    reconnectTries : 300,
-    reconnectInterval: 60000,
-    autoReconnect : true
-  }
+    server : {
+        useNewUrlParser: true,
+        reconnectTries : 300,
+        reconnectInterval: 60000,
+        autoReconnect : true
+    }
 }
 
 

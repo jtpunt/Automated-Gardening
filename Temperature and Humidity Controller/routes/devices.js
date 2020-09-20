@@ -12,7 +12,7 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
         'DHT22 Sensor': [],
         'Relay Server': [] ,
         'Soil Moisture Sensor': [],
-        'Water Level Sensor' : [],
+        'Water Sensor' : [],
         'Camera': []
     } 
     
@@ -52,7 +52,7 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
         else{
             if(device['deviceType'] === 'Camera'){
                 Camera.findOne({ camera_id: device['id'] }, (err, camera) => {
-                    if(err) console.log(err.toString);
+                    if(err) console.log(err.toString());
                     else{
                         console.log(`Found camera settings: ${JSON.stringify(camera)}`)
                         res.render("device/edit", {
@@ -62,6 +62,17 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                         }); 
                     }
                 });
+            }else if(device['deviceType'] === 'Water Sensor'){
+                Device.find({ deviceType: "Relay Server" } ,(err, water_config) =>{
+                    if(err) console.log(err.toString());
+                    else{
+                        res.render("device/edit", {
+                            waterSettings: camera_config,
+                            page_name: page_name,
+                            device: device
+                        }); 
+                    }
+                })
             }else{
                 console.log(device);
                 res.render("device/edit", {
