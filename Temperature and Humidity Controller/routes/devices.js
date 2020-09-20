@@ -2,6 +2,7 @@ var express    = require("express"),
     middleware = require("../middleware"),
     Device     = require("../models/device"),
     Camera     = require("../models/cameraSettings"),
+    WaterSettings = require("../models/waterSettings"),
     router     = express.Router();
 
 // Shows all devices
@@ -63,11 +64,12 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                     }
                 });
             }else if(device['deviceType'] === 'Water Sensor'){
-                Device.find({ deviceType: "Relay Server" } ,(err, water_config) =>{
+                Device.find({ deviceType: "Relay Server" } ,(err, relay_devices) =>{
                     if(err) console.log(err.toString());
                     else{
+                        console.log(`Relay Devices ${relay_devices}`)
                         res.render("device/edit", {
-                            waterSettings: camera_config,
+                            relay_devices: relay_devices,
                             page_name: page_name,
                             device: device
                         }); 
@@ -131,6 +133,39 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                         }
                     }
                 });
+            }else if(device['deviceType'] === "Water Sensor"){
+                let water_config = {
+                      checkMinsBefore: req.body.checkMinsBefore,
+                      checkMinsAfter: req.body.checkMinsAfter,
+                      relayId: req.body.targetDevice
+                }
+                // WaterSettings.findOneAndUpdate({ camera_id: device['id'] }, {$set: cameraData}, (err, camera) => {
+                //     if(err){
+                //         console.log(err.toString());
+                //         req.flash("error", err.toString());
+                //         res.redirect("back");
+                //     }else{
+                //         if(camera === null){
+                //             console.log("Camera is null");
+                //             WaterSettings.create(water_config, (err, new_water_config) => {
+                //                 if(err) console.log('Error creating device');
+                //                 else{
+                //                     console.log(`Created new camera settings ${JSON.stringify(newCamera)}`);
+                //                     console.log(`Successfully updated ${JSON.stringify(device)}`)
+                //                     console.log("Successfully Updated!");
+                //                     res.redirect("/device");
+                //                     res.status(200).end();
+                //                 }
+                //             });
+                //         }else{
+                //             console.log("no error on camera update");
+                //             console.log(`Successfully updated ${JSON.stringify(device)}`)
+                //             console.log("Successfully Updated!");
+                //             res.redirect("/device");
+                //             res.status(200).end();
+                //         }
+                //     }
+                // });
             }else{
                 console.log(`Successfully updated ${JSON.stringify(device)}`)
                 console.log("Successfully Updated!");
