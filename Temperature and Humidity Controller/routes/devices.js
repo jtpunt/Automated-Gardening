@@ -151,7 +151,7 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
             }else if(device['deviceType'] === "Water Sensor"){
                 let checkMinsBefore = req.body.checkMinsBefore,
                     checkMinsAfter  = req.body.checkMinsAfter,
-                    relayId         = req.body.Id,
+                    relayId         = req.body.relayId,
                     waterId         = req.params.device_id.toString();
                     
                 let water_config    = {

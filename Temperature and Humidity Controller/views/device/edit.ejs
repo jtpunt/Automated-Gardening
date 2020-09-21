@@ -124,8 +124,8 @@
                 <% } %>
                 <% if(device['deviceType'] === "Water Sensor"){ %>
                     <div class="form-group">
-                        <label for="targetDevice">Device To Turn Off</label>      
-                        <select name="targetDevice">
+                        <label for="relayId">Device To Turn Off</label>      
+                        <select name="relayId">
                             <% relay_devices.forEach(function(relay_device){ %>
                                 <option value="<%=relay_device['_id']%>"><%=relay_device['deviceName']%></option>
                             <% }); %>

@@ -26,13 +26,13 @@ var scheduleSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
         }, 
-        runAtInterval: {
-            Interval: Number,
-            time_format: {
-                format: String, // seconds is not a valid format
-                enum: ['minutes', 'hours']
-            }
-        }
+        // runAtInterval: {
+        //     Interval: Number,
+        //     time_format: {
+        //         format: String, // seconds is not a valid format
+        //         enum: ['minutes', 'hours']
+        //     }
+        // }
     }
     
 });
