@@ -63,7 +63,7 @@ mongoose.connect(connStr, options, function(err){
             else{
                 console.log("Found device: " + device);
                 console.log("Device id: " + device['_id']);
-                WaterSettings.findOne({deviceId: device._id}, function(err, water_config){
+                WaterSettings.findOne({ waterId: device['_id'] }, function(err, water_config){
                     if(err) console.log(err);
                     else{
                         console.log(`water_config found: ${water_config}`);
