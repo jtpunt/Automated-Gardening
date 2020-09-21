@@ -548,7 +548,8 @@ var scheduleObj = {
         return result;
     },
     getSchedulesTest: function(fn, context){
-        let self = this,
+        let self = this;
+
         Device.findOne({local_ip: localIP, deviceType: 'Water Sensor'}, function(err, device){
             if(err) console.log(err.toString);
             else{
