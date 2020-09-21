@@ -1,5 +1,6 @@
 var Scheduler     = require("../models/scheduler"),
     Device        = require("../models/device"),
+    WaterSettings = require("../models/WaterSettings"),
     schedule      = require('node-schedule'),
     ip            = require("ip"),
     async         = require("asyncawait/async"),
