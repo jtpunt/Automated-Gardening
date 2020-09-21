@@ -108,10 +108,10 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, activateRelayFn, context, gpio_pin, desired_state){
+    buildJob: function(schedule_config, fn, context, gpio_pin, desired_state){
         let myScheduleObj = this.buildSchedule(schedule_config);
 
-        let job = schedule.scheduleJob(myScheduleObj, function(){ activateRelayFn.call(context, gpio_pin, desired_state); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, gpio_pin, desired_state); });
         
         return job;
     },
@@ -548,7 +548,7 @@ var scheduleObj = {
         return result;
     },
     getSchedulesTest: function(fn, context){
-        let self = this;
+        let self = th
         Device.findOne({local_ip: localIP, deviceType: 'Water Sensor'}, function(err, device){
             if(err) console.log(err.toString);
             else{

@@ -16,8 +16,8 @@ var APPROVED_GPIO      = [2, 3];
 try{
     deviceController.adjustForIPChange();
     let obj = {
-        test: function(){
-            console.log('hello world');
+        test: function(gpio_pin, desired_state){
+            console.log(`hello world ${gpio_pin}, ${desired_state}`);
         }
     }
     scheduleController.getSchedulesTest(obj.test, obj);
