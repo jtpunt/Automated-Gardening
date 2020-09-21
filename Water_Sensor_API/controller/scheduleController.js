@@ -548,7 +548,7 @@ var scheduleObj = {
         return result;
     },
     getSchedulesTest: function(fn, context){
-        let self = th
+        let self = this,
         Device.findOne({local_ip: localIP, deviceType: 'Water Sensor'}, function(err, device){
             if(err) console.log(err.toString);
             else{
@@ -571,6 +571,7 @@ var scheduleObj = {
                                         Number(schedule_config['device']['gpio']), 
                                         Boolean(schedule_config['device']['desired_state'])
                                     );
+                                    console.log("Job created: " + job);
                                     var obj = {"schedule_config": schedule_config, job};
                                     self.setSchedule(obj);
                                 });
