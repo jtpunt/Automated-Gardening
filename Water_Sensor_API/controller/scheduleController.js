@@ -561,7 +561,19 @@ var scheduleObj = {
                             if(err) console.log(err);
                             else{
                                 console.log(`Schedule configurations found: ${schedule_configs}`);
-                                
+                                schedule_configs.forEach(function(schedule_config){
+                                    console.log(`schedule_config: ${schedule_config}`);
+                                    let job = self.buildJob(
+                                        schedule_config, 
+                                        fn, 
+                                        context, 
+                                        Number(schedule_config['device']['gpio']), 
+                                        Boolean(schedule_config['device']['desired_state'])
+                                    );
+                                    var obj = {"schedule_config": schedule_config, job};
+                                    self.setSchedule(obj);
+                                });
+                                console.log(`Done processing schedules: ${self.scheduleArr.length}`);
                                 // with node-schedule, create new crontab like schedules
                                 // that occur a specified amount of time before and after our relay turns on
                                 //  - > water_config['checkMinsBefore'] and water_config['checkMinsAfter'],
