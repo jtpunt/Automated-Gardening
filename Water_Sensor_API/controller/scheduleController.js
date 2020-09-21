@@ -573,7 +573,7 @@ var scheduleObj = {
                                         Boolean(schedule_config['device']['desired_state'])
                                     );
                                     console.log("Job created: " + job);
-                                    console.log("Next invocation: " + job.nextInvocation);
+                                    console.log("Next invocation: " + job.nextInvocation());
                                     var obj = {"schedule_config": schedule_config, job};
                                     self.setSchedule(obj);
                                 });
