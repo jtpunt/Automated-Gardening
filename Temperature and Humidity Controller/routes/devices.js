@@ -67,12 +67,27 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                 Device.find({ deviceType: "Relay Server" } ,(err, relay_devices) =>{
                     if(err) console.log(err.toString());
                     else{
-                        console.log(`Relay Devices ${relay_devices}`)
-                        res.render("device/edit", {
-                            relay_devices: relay_devices,
-                            page_name: page_name,
-                            device: device
-                        }); 
+                        let waterId = device['_id'];
+                        WaterSettings.findOne({waterId: waterId}, function(err, water_config){
+                            if(err) {console.log(err.toString());
+                                console.log(`Relay Devices ${relay_devices}`)
+                                res.render("device/edit", {
+                                    relay_devices: relay_devices,
+                                    page_name: page_name,
+                                    device: device
+                                }); 
+                            }
+                            else{
+                                console.log(`Water Config found: ${JSON.stringify(water_config)}`);
+                                res.render("device/edit", {
+                                    water_config: water_config,
+                                    relay_devices: relay_devices,
+                                    page_name: page_name,
+                                    device: device
+                                }); 
+                            }
+                        });
+ 
                     }
                 })
             }else{
@@ -134,38 +149,45 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                     }
                 });
             }else if(device['deviceType'] === "Water Sensor"){
-                let water_config = {
-                      checkMinsBefore: req.body.checkMinsBefore,
-                      checkMinsAfter: req.body.checkMinsAfter,
-                      relayId: req.body.targetDevice
-                }
-                // WaterSettings.findOneAndUpdate({ camera_id: device['id'] }, {$set: cameraData}, (err, camera) => {
-                //     if(err){
-                //         console.log(err.toString());
-                //         req.flash("error", err.toString());
-                //         res.redirect("back");
-                //     }else{
-                //         if(camera === null){
-                //             console.log("Camera is null");
-                //             WaterSettings.create(water_config, (err, new_water_config) => {
-                //                 if(err) console.log('Error creating device');
-                //                 else{
-                //                     console.log(`Created new camera settings ${JSON.stringify(newCamera)}`);
-                //                     console.log(`Successfully updated ${JSON.stringify(device)}`)
-                //                     console.log("Successfully Updated!");
-                //                     res.redirect("/device");
-                //                     res.status(200).end();
-                //                 }
-                //             });
-                //         }else{
-                //             console.log("no error on camera update");
-                //             console.log(`Successfully updated ${JSON.stringify(device)}`)
-                //             console.log("Successfully Updated!");
-                //             res.redirect("/device");
-                //             res.status(200).end();
-                //         }
-                //     }
-                // });
+                let checkMinsBefore = req.body.checkMinsBefore,
+                    checkMinsAfter  = req.body.checkMinsAfter,
+                    relayId         = req.body.Id,
+                    waterId         = req.params.device_id.toString();
+                    
+                let water_config    = {
+                        relayId: relayId,
+                        waterId: waterId,   
+                        checkMinsBefore: checkMinsBefore,
+                        checkMinsAfter: checkMinsAfter,
+                    }
+
+                console.log(`water_config: ${JSON.stringify(water_config)}`)
+                WaterSettings.findOneAndUpdate({ waterId: waterId, relayId: relayId }, {$set: water_config}, (err, updated_water_config) => {
+                    if(err){
+                        console.log(err.toString());
+                        req.flash("error", err.toString());
+                        res.redirect("back");
+                    }else{
+                        if(updated_water_config === null){
+                            console.log("water_config is null");
+                            WaterSettings.create(water_config, (err, new_water_config) => {
+                                if(err) console.log('Error creating device');
+                                else{
+                                    console.log(`Created new water settings ${JSON.stringify(new_water_config)}`);
+                                    console.log("Successfully Updated!");
+                                    res.redirect("/device");
+                                    res.status(200).end();
+                                }
+                            });
+                        }else{
+                            console.log("no error on camera update");
+                            console.log(`Successfully updated ${JSON.stringify(device)}`)
+                            console.log("Successfully Updated!");
+                            res.redirect("/device");
+                            res.status(200).end();
+                        }
+                    }
+                });
             }else{
                 console.log(`Successfully updated ${JSON.stringify(device)}`)
                 console.log("Successfully Updated!");
