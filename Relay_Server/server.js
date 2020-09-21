@@ -37,12 +37,12 @@ var indexRoutes = require('./routes/index.js');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
 let options = {
-  server : {
-    useNewUrlParser: true,
-    reconnectTries : 300,
-    reconnectInterval: 60000,
-    autoReconnect : true
-  }
+    server : {
+        useNewUrlParser: true,
+        reconnectTries : 300,
+        reconnectInterval: 60000,
+        autoReconnect : true
+    }
 }
 mongoose.connect(connStr, options, function(err){
     if(err){

@@ -546,6 +546,38 @@ var scheduleObj = {
         }
         return result;
     },
+    getSchedulesTest: function(fn, context){
+        Device.findOne({local_ip: localIP, deviceType: 'Water Sensor'}, function(err, device){
+            if(err) console.log(err.toString);
+            else{
+                console.log("Found device: " + device);
+                console.log("Device id: " + device['_id']);
+                WaterSettings.findOne({ waterId: device['_id'] }, function(err, water_config){
+                    if(err) console.log(err);
+                    else{
+                        console.log(`water_config found: ${water_config}`);
+                        Scheduler.find({'device.id': water_config["relayId"]}, function(err, schedule_configs){
+                            if(err) console.log(err);
+                            else{
+                                console.log(`Schedule configurations found: ${schedule_configs}`);
+                                
+                                // with node-schedule, create new crontab like schedules
+                                // that occur a specified amount of time before and after our relay turns on
+                                //  - > water_config['checkMinsBefore'] and water_config['checkMinsAfter'],
+                                
+                                // if our water config is set up to prevent this, send an HTTP request to
+                                // to our relay device and cancel it's upcoming schedule to prevent it form overwatering
+                                // - > water_config['cancelRelay'] 
+                                // - > http GET /schedule/:schedule_id/cancel
+                                
+                                // 
+                            }
+                        });
+                    };
+                });
+            }
+        });
+    },
     getSchedules: function(activateRelayFn, context){
         let self = this,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};

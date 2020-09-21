@@ -15,7 +15,12 @@ var APPROVED_GPIO      = [2, 3];
 
 try{
     deviceController.adjustForIPChange();
-    //scheduleController.getSchedules(outletController.activateRelay, outletController);
+    let obj = {
+        test: function(){
+            console.log('hello world');
+        }
+    }
+    scheduleController.getSchedulesTest(obj.test, obj);
 }catch(err){
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
