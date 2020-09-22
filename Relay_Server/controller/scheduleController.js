@@ -550,7 +550,7 @@ var scheduleObj = {
         let self = this,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
 
-        Device.findOne({local_ip: localIP}, function(err, myDevices){
+        Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, function(err, myDevices){
             if(err){
                 console.log(err);
             }else{
