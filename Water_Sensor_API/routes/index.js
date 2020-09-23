@@ -1,4 +1,5 @@
-var express            = require("express"),
+var http               = require('http'),
+    express            = require("express"),
     schedule           = require('node-schedule'),
     Device             = require("../models/device"),
     deviceController   = require("../controller/deviceController.js"),
@@ -12,12 +13,69 @@ var express            = require("express"),
 
 var APPROVED_GPIO      = [2, 3];
 
+    
+async function getAdminCredentials (){
+    let adminCredentials = await User.findOne({"username": "admin"});
+    return adminCredentials;
+}
 
 try{
     deviceController.adjustForIPChange();
     let obj = {
         test: function(gpio_pin, desired_state){
             console.log(`hello world ${gpio_pin}, ${desired_state}`);
+
+        },
+        test1: async function(targetIp, port, scheduleId, payload){
+            let waterDetected    = await detectWater(),
+                adminCredentials = await getAdminCredentions();
+
+            if(waterDetected === true){
+                cancelRelay(adminCredentials, targetIp, port, scheduleId, payload);
+            }
+
+        },
+        detectWater: function(){
+            return false;
+        },
+        cancelRelay: function(adminCredentials, targetIp, port, scheduleId, payload){
+            // http code
+
+            if(!adminCredentials || adminCredentials === 0){
+                throw new Error("admin credentials not valid!")
+            }
+            payload['admin_id'] = adminCredentials['_id'];
+            
+            const payloadStr = JSON.stringify(payload);
+            const options = buildOptions(targetIp, port, "/schedule/" + scheduleId + "/cancel", 'POST', payloadStr);
+            
+            const myReq = http.request(options, (resp) => {
+                let myChunk = '';
+                resp.setEncoding('utf8');
+                resp.on('data', (chunk) => {
+                    console.log(`BODY: ${chunk}`);
+                    myChunk += chunk;
+                });
+                resp.on('end', () => {
+                    console.log('No more data in response.');
+                    console.log(`STATUS: ${resp.statusCode}`);
+                    console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
+                    if(resp.statusCode !== 200){
+                        // error
+
+                        
+                    }else{
+                        // success 
+                    }
+                });
+            });
+            
+            myReq.on('error', (e) => {
+                let errorMessage = e.message;
+                console.error(`problem with request: ${errorMessage}`);
+            });
+            myReq.write(scheduleStr);
+            myReq.end();
         }
     }
     scheduleController.getSchedulesTest(obj.test, obj);
