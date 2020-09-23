@@ -14,7 +14,6 @@ var express     = require('express'),
     fs          = require("fs"),
     path        = require("path"),
     isIp        = require('is-ip'),
-    fileName    = path.join("../Relay_Server/lastIPAddr.txt"),
     app         = express();
 
 var env = process.env.NODE_ENV || 'development';
