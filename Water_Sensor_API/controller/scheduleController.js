@@ -584,7 +584,7 @@ var scheduleObj = {
                                         // adjust timestamp to check a set amount of time after the water pump shuts off
                                         timestamp.setMinutes(timestamp.getMinutes() - checkMinsAfter);
                                     
-                                    console.log(`checkMinsBefore at: ${check_before_timestamp.toString()}`);
+                                    console.log(`checkMinsBefore at: ${timestamp.toString()}`);
                                     schedule_config['schedule']['second'] = timestamp.getSeconds();
                                     schedule_config['schedule']['minute'] = timestamp.getMinutes();
                                     schedule_config['schedule']['hour']   = timestamp.getHours();
