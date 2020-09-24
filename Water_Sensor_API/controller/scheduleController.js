@@ -547,6 +547,7 @@ var scheduleObj = {
         }
         return result;
     },
+    // TO DO - pass in the device id, remove the Device mongodb model, remove the 'include ../models/Device' line at the top of the file
     getSchedulesTest: function(fn, context){
         let self = this;
 
@@ -559,12 +560,26 @@ var scheduleObj = {
                     if(err) console.log(err);
                     else{
                         console.log(`water_config found: ${water_config}`);
+                        let checkMinsBefore = water_config['checkMinsBefore'],
+                            checkMinsAfter  = water_config['checkMinsAfter'];
+
                         Scheduler.find({'device.id': water_config["relayId"]}, function(err, schedule_configs){
                             if(err) console.log(err);
                             else{
                                 console.log(`Schedule configurations found: ${schedule_configs}`);
                                 schedule_configs.forEach(function(schedule_config){
                                     console.log(`schedule_config: ${schedule_config}`);
+                                    let schedule = schedule_config['schedule'],
+                                        second   = schedule['second'],
+                                        minute   = schedule['minute'],
+                                        hour     = schedule['hour'],
+                                        timestamp = new Date();
+
+                                    timestamp.setHours(hour, minute, second);
+                                    timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
+
+                                    console.log(`checkMinsBefore at: ${timestamp.toString()}`);
+
                                     let job = self.buildJob(
                                         schedule_config, 
                                         fn, 
