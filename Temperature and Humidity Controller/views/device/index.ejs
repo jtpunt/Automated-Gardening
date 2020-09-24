@@ -22,14 +22,14 @@
 	    	<div class="collapse" id="collapse<%=deviceNameStr%>">
 				<div class="rTable">
 					<div class="rTableRow">
-						<div class="rTableHead"><strong>IP Address</strong></div>
 						<div class="rTableHead"><span style="font-weight: bold;">Device Name</span></div>
+						<div class="rTableHead"><strong>IP Address</strong></div>
 						<div class="rTableHead"><span style="font-weight: bold;">Device GPIOs</span></div>
 					</div>
 				<% deviceObj[deviceNameKey].forEach(function(device){ %>
 					<div class="rTableRow">
-						<div class="rTableCell"><%=device.local_ip%></div>
 						<div class="rTableCell"><%=device.deviceName%></div>
+						<div class="rTableCell"><%=device.local_ip%></div>
 						<div class="rTableCell"><%=device.gpio%></div>
 						<div style="float:left;margin-left: 5%"> 
 							<a class="btn btn-warning" href="/device/<%=device._id%>/edit">Edit</a>

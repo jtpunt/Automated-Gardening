@@ -15,6 +15,14 @@ var relaySettingsSchema = new mongoose.Schema({
 		type: String,
 		enum: ['in', 'out', 'high', 'low']
 	},
-	desired_state: Boolean
-}
+	gpio:  {
+        type: Number,
+        enum: [2,3,4,5,6,12,13,16,17,18,19,20,21,22,23,24,25,26,27]
+    },
+	relayType: {
+		type: String,
+		enum: ['air conditioner', 'light', 'water pump']
+	}
+});
+relaySettingsSchema.index({relayId: 1, gpio: 1}, { unique: true});
 module.exports = mongoose.model('RelaySettings', relaySettingsSchema, 'relaySettings');

@@ -3,6 +3,7 @@ var express    = require("express"),
     Device     = require("../models/device"),
     Camera     = require("../models/cameraSettings"),
     WaterSettings = require("../models/waterSettings"),
+    RelaySettings = require("../models/relaySettings"),
     router     = express.Router();
 
 // Shows all devices
@@ -90,6 +91,12 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
  
                     }
                 })
+            }else if(device['deviceType'] === 'Relay Server') {
+                console.log(`Relay Device: ${JSON.stringify(device)}`);
+                res.render("device/edit", {
+                    page_name: page_name,
+                    device: device
+                });
             }else{
                 console.log(device);
                 res.render("device/edit", {
@@ -188,6 +195,11 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                         }
                     }
                 });
+            }else if(device['deviceType'] === "Relay Server") {
+                console.log("Processing Extra settings for relay server");
+                console.log("Successfully Updated!");
+                res.redirect("/device");
+                res.status(200).end();
             }else{
                 console.log(`Successfully updated ${JSON.stringify(device)}`)
                 console.log("Successfully Updated!");
