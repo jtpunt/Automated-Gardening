@@ -576,9 +576,15 @@ var scheduleObj = {
                                         timestamp = new Date();
 
                                     timestamp.setHours(hour, minute, second);
-                                    timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
 
-                                    console.log(`checkMinsBefore at: ${timestamp.toString()}`);
+                                    if(schedule_config['device']['desired_state'] === true) // on?
+                                        // adjust timestamp to check a set amount of time before the water pumps start
+                                        timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
+                                    else
+                                        // adjust timestamp to check a set amount of time after the water pump shuts off
+                                        timestamp.setMinutes(timestamp.getMinutes() - checkMinsAfter);
+                                    
+                                    console.log(`checkMinsBefore at: ${check_before_timestamp.toString()}`);
                                     schedule_config['schedule']['second'] = timestamp.getSeconds();
                                     schedule_config['schedule']['minute'] = timestamp.getMinutes();
                                     schedule_config['schedule']['hour']   = timestamp.getHours();
