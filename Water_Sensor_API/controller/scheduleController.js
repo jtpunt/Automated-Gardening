@@ -579,7 +579,9 @@ var scheduleObj = {
                                     timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
 
                                     console.log(`checkMinsBefore at: ${timestamp.toString()}`);
-
+                                    schedule_config['schedule']['second'] = timestamp.getSeconds();
+                                    schedule_config['schedule']['minute'] = timestamp.getMinutes();
+                                    schedule_config['schedule']['hour']   = timestamp.getHours();
                                     let job = self.buildJob(
                                         schedule_config, 
                                         fn, 
