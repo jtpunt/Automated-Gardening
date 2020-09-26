@@ -53,7 +53,7 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
         if(err) res.redirect("back");
         else{
             if(device['deviceType'] === 'Camera'){
-                Camera.findOne({ camera_id: device['id'] }, (err, camera) => {
+                Camera.findOne({ camera_id: device['_id'] }, (err, camera) => {
                     if(err) console.log(err.toString());
                     else{
                         console.log(`Found camera settings: ${JSON.stringify(camera)}`)
@@ -93,9 +93,28 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                 })
             }else if(device['deviceType'] === 'Relay Server') {
                 console.log(`Relay Device: ${JSON.stringify(device)}`);
-                res.render("device/edit", {
-                    page_name: page_name,
-                    device: device
+
+
+                RelaySettings.find( {relayId: device['_id']}, function(err, relaySettings){
+                    if(err) console.log(err.toString());
+                    else{
+                        let directionArr = [],
+                            relayTypeArr = [];
+                        relaySettings.forEach(function(relay_config){
+                            directionArr.push(relay_config['direction']);
+                            relayTypeArr.push(relay_config['relayType']);
+                        });
+                        console.log(`directArr: ${directionArr}`);
+                        console.log(`relayTypeArr: ${relayTypeArr}`);
+
+                        console.log(`Relay Settings found for device: ${JSON.stringify(relaySettings)}`);
+                        res.render("device/edit", {
+                            page_name: page_name,
+                            device: device,
+                            directionArr: directionArr,
+                            relayTypeArr: relayTypeArr
+                        });
+                    }
                 });
             }else{
                 console.log(device);
@@ -196,10 +215,55 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                     }
                 });
             }else if(device['deviceType'] === "Relay Server") {
-                console.log("Processing Extra settings for relay server");
-                console.log("Successfully Updated!");
-                res.redirect("/device");
-                res.status(200).end();
+                let relaySettings = req.body.relaySettings;
+                console.log("Before if statement with relaySettings var: " + relaySettings);
+                if(relaySettings){
+                    console.log("relaySettings is valid")
+                    let directionArr = relaySettings['direction'],
+                        relayTypeArr = relaySettings['relayType'];
+                    console.log("Relay Settings: " + relaySettings);
+                    console.log("DirectionArr: " + directionArr);
+                    console.log("RelayTypeArr: " + relayTypeArr);
+                    if(directionArr.length === relayTypeArr.length && directionArr.length === device['gpio'].length){
+                        console.log(`DirectionArr: ${directionArr}`);
+                        console.log(`RelayTypeArr: ${relayTypeArr}`);
+                        console.log(`GPIO: ${device['gpio']}`);
+
+                        device['gpio'].forEach(function(myGpio, i){
+                            let relay_config = {
+                                relayId: device["_id"],
+                                direction: directionArr[i],
+                                gpio: myGpio,
+                                relayType: relayTypeArr[i]
+                            }
+                            console.log(`relay_config: ${JSON.stringify(relay_config)}`);
+                            RelaySettings.findOneAndUpdate({ relayId: device['id'], gpio: myGpio}, {$set: relay_config}, (err, updated_relay_settings) => {
+                                if(err){
+                                    console.log(err.toString());
+                                    // req.flash("error", err.toString());
+                                    // res.redirect("back");
+                                }else{
+                                    if(updated_relay_settings === null){
+                                        console.log("updated_relay_settings is null");
+                                        RelaySettings.create(relay_config, (err, new_relay_setting) => {
+                                            if(err) console.log(`Error Creating Relay Settings ${err}`);
+                                            else{
+                                                console.log(`Created new relay settings ${JSON.stringify(new_relay_setting)}`);
+                                                console.log("Successfully Updated!");
+                                            }
+                                        });
+                                    }else{
+                                        console.log("no error on relaySettings update");
+                                        console.log(`Successfully updated ${JSON.stringify(device)}`)
+                                    }
+                                }
+                            });
+                        });
+                        console.log("Successfully Updated!");
+                        res.redirect("/device");
+                        res.status(200).end();
+                    }
+                }
             }else{
                 console.log(`Successfully updated ${JSON.stringify(device)}`)
                 console.log("Successfully Updated!");

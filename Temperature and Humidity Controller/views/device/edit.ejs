@@ -103,7 +103,7 @@
                 </div>
                 <% 
                 if(device['gpio'] && device['deviceType'] !== "Camera"){    
-                    device['gpio'].forEach(function(myGpio){ console.log(myGpio) %>
+                    device['gpio'].forEach(function(myGpio, i){ console.log(myGpio) %>
                     <div class="form-group">
                         <label for="gpio">GPIO #</label>      
         				<select name="gpio">
@@ -134,18 +134,18 @@
                             <div class="form-group">
                                 <label for="relaySettings[relayType]">Relay Type</label>      
                                 <select name="relaySettings[relayType]">
-                                    <option value="air conditioner">Air Conditioner</option>
-                                    <option value="light">Light</option>
-                                    <option value="water pump">Water Pump</option>
+                                    <option value="air conditioner" <% if (relayTypeArr[i] == "air conditioner") { %>selected="selected"<% } %>>Air Conditioner</option>
+                                    <option value="light" <% if (relayTypeArr[i] == "light") { %>selected="selected"<% } %>>Light</option>
+                                    <option value="water pump" <% if (relayTypeArr[i] == "water pump") { %>selected="selected"<% } %>>Water Pump</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="relaySettings[direction]">Direction</label>      
                                 <select name="relaySettings[direction]">
-                                    <option value="in">in</option>
-                                    <option value="out">out</option>
-                                    <option value="high">high</option>
-                                    <option value="low">low</option>
+                                    <option value="in" <% if (directionArr[i] == "in") { %>selected="selected"<% } %>>in</option>
+                                    <option value="out" <% if (directionArr[i] == "out") { %>selected="selected"<% } %>>out</option>
+                                    <option value="high" <% if (directionArr[i] == "high") { %>selected="selected"<% } %>>high</option>
+                                    <option value="low" <% if (directionArr[i] == "low") { %>selected="selected"<% } %>>low</option>
                                 </select>
                             </div>
                         <% } %>
@@ -178,7 +178,11 @@
                         <label for="relayId">Device To Turn Off</label>      
                         <select name="relayId">
                             <% relay_devices.forEach(function(relay_device){ %>
-                                <option value="<%=relay_device['_id']%>"><%=relay_device['deviceName']%></option>
+                                <option value="<%=relay_device['_id']%>" 
+                                    <% if (water_config['relayId'].toString() === relay_device['_id'].toString()) { %>selected="selected"<% } %>
+
+
+                                    ><%=relay_device['deviceName']%></option>
                             <% }); %>
                         </select>
                     </div>

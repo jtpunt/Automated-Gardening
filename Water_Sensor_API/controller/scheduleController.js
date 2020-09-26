@@ -1,6 +1,7 @@
 var Scheduler     = require("../models/scheduler"),
     Device        = require("../models/device"),
     WaterSettings = require("../models/waterSettings"),
+    RelaySettings = require("../models/RelaySettings"),
     schedule      = require('node-schedule'),
     ip            = require("ip"),
     async         = require("asyncawait/async"),
@@ -562,7 +563,12 @@ var scheduleObj = {
                         console.log(`water_config found: ${water_config}`);
                         let checkMinsBefore = water_config['checkMinsBefore'],
                             checkMinsAfter  = water_config['checkMinsAfter'];
-
+                        RelaySettings.find({'device.id': water_config["relayId"]}, function(err, relay_config){
+                            if(err) console.log(err);
+                            else{
+                                console.log("Relay settings found: " + relay_config);
+                            }
+                        }
                         Scheduler.find({'device.id': water_config["relayId"]}, function(err, schedule_configs){
                             if(err) console.log(err);
                             else{
