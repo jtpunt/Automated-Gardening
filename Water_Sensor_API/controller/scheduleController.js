@@ -563,7 +563,7 @@ var scheduleObj = {
                         console.log(`water_config found: ${water_config}`);
                         let checkMinsBefore = water_config['checkMinsBefore'],
                             checkMinsAfter  = water_config['checkMinsAfter'];
-                        RelaySettings.find({ relayId: water_config["relayId"]}, function(err, relay_config){
+                        RelaySettings.find({ }, function(err, relay_config){
                             if(err) console.log(err);
                             else{
                                 console.log("Relay settings found: " + relay_config);
