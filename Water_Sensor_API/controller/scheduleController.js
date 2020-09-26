@@ -563,62 +563,67 @@ var scheduleObj = {
                         console.log(`water_config found: ${water_config}`);
                         let checkMinsBefore = water_config['checkMinsBefore'],
                             checkMinsAfter  = water_config['checkMinsAfter'];
-                        RelaySettings.find({ relayId: water_config["relayId"], relayType: "water pump"}, function(err, relay_config){
+                        RelaySettings.find({ relayId: water_config["relayId"], relayType: "water pump"}, function(err, relay_configs){
                             if(err) console.log(err);
                             else{
                                 console.log("Relay settings found: " + relay_config);
+                                relay_configs.forEach(function(relay_config){
+                                    Scheduler.find({'device.id': water_config["relayId"], 'device.gpio': relay_config['gpio']}, function(err, schedule_configs){
+                                        if(err) console.log(err);
+                                        else{
+                                            console.log(`Schedule configurations found: ${schedule_configs}`);
+                                            schedule_configs.forEach(function(schedule_config){
+                                                console.log(`schedule_config: ${schedule_config}`);
+                                                let schedule = schedule_config['schedule'],
+                                                    second   = schedule['second'],
+                                                    minute   = schedule['minute'],
+                                                    hour     = schedule['hour'],
+                                                    timestamp = new Date();
+
+                                                timestamp.setHours(hour, minute, second);
+
+                                                if(schedule_config['device']['desired_state'] === true) // on?
+                                                    // adjust timestamp to check a set amount of time before the water pumps start
+                                                    timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
+                                                else
+                                                    // adjust timestamp to check a set amount of time after the water pump shuts off
+                                                    timestamp.setMinutes(timestamp.getMinutes() - checkMinsAfter);
+                                                
+                                                console.log(`checkMinsBefore at: ${timestamp.toString()}`);
+                                                schedule_config['schedule']['second'] = timestamp.getSeconds();
+                                                schedule_config['schedule']['minute'] = timestamp.getMinutes();
+                                                schedule_config['schedule']['hour']   = timestamp.getHours();
+                                                let job = self.buildJob(
+                                                    schedule_config, 
+                                                    fn, 
+                                                    context, 
+                                                    Number(schedule_config['device']['gpio']), 
+                                                    Boolean(schedule_config['device']['desired_state'])
+                                                );
+                                                console.log("Job created: " + job);
+                                                console.log("Next invocation: " + job.nextInvocation());
+                                                var obj = {"schedule_config": schedule_config, job};
+                                                self.setSchedule(obj);
+                                            });
+                                            console.log(`Done processing schedules: ${self.scheduleArr.length}`);
+                                            // with node-schedule, create new crontab like schedules
+                                            // that occur a specified amount of time before and after our relay turns on
+                                            //  - > water_config['checkMinsBefore'] and water_config['checkMinsAfter'],
+                                            
+                                            // if our water config is set up to prevent this, send an HTTP request to
+                                            // to our relay device and cancel it's upcoming schedule to prevent it form overwatering
+                                            // - > water_config['cancelRelay'] 
+                                            // - > http GET /schedule/:schedule_id/cancel
+                                            
+                                            // 
+                                        }
+                                    });
+                                });
+                                
+
                             }
                         });
-                        // Scheduler.find({'device.id': water_config["relayId"]}, function(err, schedule_configs){
-                        //     if(err) console.log(err);
-                        //     else{
-                        //         console.log(`Schedule configurations found: ${schedule_configs}`);
-                        //         schedule_configs.forEach(function(schedule_config){
-                        //             console.log(`schedule_config: ${schedule_config}`);
-                        //             let schedule = schedule_config['schedule'],
-                        //                 second   = schedule['second'],
-                        //                 minute   = schedule['minute'],
-                        //                 hour     = schedule['hour'],
-                        //                 timestamp = new Date();
 
-                        //             timestamp.setHours(hour, minute, second);
-
-                        //             if(schedule_config['device']['desired_state'] === true) // on?
-                        //                 // adjust timestamp to check a set amount of time before the water pumps start
-                        //                 timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
-                        //             else
-                        //                 // adjust timestamp to check a set amount of time after the water pump shuts off
-                        //                 timestamp.setMinutes(timestamp.getMinutes() - checkMinsAfter);
-                                    
-                        //             console.log(`checkMinsBefore at: ${timestamp.toString()}`);
-                        //             schedule_config['schedule']['second'] = timestamp.getSeconds();
-                        //             schedule_config['schedule']['minute'] = timestamp.getMinutes();
-                        //             schedule_config['schedule']['hour']   = timestamp.getHours();
-                        //             let job = self.buildJob(
-                        //                 schedule_config, 
-                        //                 fn, 
-                        //                 context, 
-                        //                 Number(schedule_config['device']['gpio']), 
-                        //                 Boolean(schedule_config['device']['desired_state'])
-                        //             );
-                        //             console.log("Job created: " + job);
-                        //             console.log("Next invocation: " + job.nextInvocation());
-                        //             var obj = {"schedule_config": schedule_config, job};
-                        //             self.setSchedule(obj);
-                        //         });
-                        //         console.log(`Done processing schedules: ${self.scheduleArr.length}`);
-                        //         // with node-schedule, create new crontab like schedules
-                        //         // that occur a specified amount of time before and after our relay turns on
-                        //         //  - > water_config['checkMinsBefore'] and water_config['checkMinsAfter'],
-                                
-                        //         // if our water config is set up to prevent this, send an HTTP request to
-                        //         // to our relay device and cancel it's upcoming schedule to prevent it form overwatering
-                        //         // - > water_config['cancelRelay'] 
-                        //         // - > http GET /schedule/:schedule_id/cancel
-                                
-                        //         // 
-                        //     }
-                        // });
                     };
                 });
             }
