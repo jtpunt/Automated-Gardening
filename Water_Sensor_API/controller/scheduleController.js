@@ -568,7 +568,7 @@ var scheduleObj = {
                             else{
                                 console.log("Relay settings found: " + relay_config);
                             }
-                        }
+                        });
                         Scheduler.find({'device.id': water_config["relayId"]}, function(err, schedule_configs){
                             if(err) console.log(err);
                             else{
