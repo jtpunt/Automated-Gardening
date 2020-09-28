@@ -576,7 +576,7 @@ var scheduleObj = {
                             else{
                                 
                                 Device.findOne({
-                                    _id: relayId,
+                                    _id: water_config["relayId"],
                                     deviceType: "Relay Server"
                                 }, function(err, relay_device){
                                     if(err) console.log(err.toString());
