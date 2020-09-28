@@ -552,7 +552,10 @@ var scheduleObj = {
     getSchedulesTest: function(fn, context){
         let self = this;
 
-        Device.findOne({local_ip: localIP, deviceType: 'Water Sensor'}, function(err, device){
+        Device.findOne({
+            local_ip: localIP, 
+            deviceType: 'Water Sensor'
+        }, function(err, device){
             if(err) console.log(err.toString);
             else{
                 console.log("Found device: " + device);
@@ -572,7 +575,7 @@ var scheduleObj = {
                                 console.log("Relay settings found: " + relay_configs);
                                 relay_configs.forEach(function(relay_config){
                                     Scheduler.find({ 
-                                        device["id"]: water_config["relayId"], 
+                                        device.id: water_config["relayId"], 
                                         device["gpio"]: relay_config["gpio"]
                                     }, function(err, schedule_configs){
                                         if(err) console.log(err);
