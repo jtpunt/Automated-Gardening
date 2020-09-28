@@ -568,7 +568,7 @@ var scheduleObj = {
                             else{
                                 console.log("Relay settings found: " + relay_configs);
                                 relay_configs.forEach(function(relay_config){
-                                    Scheduler.find({'device.id': water_config["relayId"], 'device.gpio': relay_config['gpio']}, function(err, schedule_configs){
+                                    Scheduler.find({device.["_id"]: water_config["relayId"], device["gpio"]: relay_config['gpio']}, function(err, schedule_configs){
                                         if(err) console.log(err);
                                         else{
                                             console.log(`Schedule configurations found: ${schedule_configs}`);
@@ -586,7 +586,7 @@ var scheduleObj = {
                                                     // adjust timestamp to check a set amount of time before the water pumps start
                                                     timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
                                                 else
-                                                    // adjust timestamp to check a set amount of time after the water pump shuts off
+                                                    // adjust timestamp to check a set amount of time after the water pumps shuts off
                                                     timestamp.setMinutes(timestamp.getMinutes() - checkMinsAfter);
                                                 
                                                 console.log(`checkMinsBefore at: ${timestamp.toString()}`);
@@ -606,24 +606,11 @@ var scheduleObj = {
                                                 self.setSchedule(obj);
                                             });
                                             console.log(`Done processing schedules: ${self.scheduleArr.length}`);
-                                            // with node-schedule, create new crontab like schedules
-                                            // that occur a specified amount of time before and after our relay turns on
-                                            //  - > water_config['checkMinsBefore'] and water_config['checkMinsAfter'],
-                                            
-                                            // if our water config is set up to prevent this, send an HTTP request to
-                                            // to our relay device and cancel it's upcoming schedule to prevent it form overwatering
-                                            // - > water_config['cancelRelay'] 
-                                            // - > http GET /schedule/:schedule_id/cancel
-                                            
-                                            // 
                                         }
                                     });
                                 });
-                                
-
                             }
                         });
-
                     };
                 });
             }
