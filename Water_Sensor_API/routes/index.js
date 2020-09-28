@@ -80,7 +80,7 @@ try{
             myReq.end();
         }
     }
-    scheduleController.getSchedulesTest(obj.test1, obj);
+    scheduleController.getSchedulesTest(obj.test, obj);
 }catch(err){
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
