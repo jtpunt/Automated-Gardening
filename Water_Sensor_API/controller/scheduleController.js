@@ -572,7 +572,7 @@ var scheduleObj = {
                                 console.log("Relay settings found: " + relay_configs);
                                 relay_configs.forEach(function(relay_config){
                                     Scheduler.find({ 
-                                        device["_id"]: water_config["relayId"], 
+                                        device["id"]: water_config["relayId"], 
                                         device["gpio"]: relay_config["gpio"]
                                     }, function(err, schedule_configs){
                                         if(err) console.log(err);
