@@ -26,8 +26,8 @@ try{
             console.log(`hello world ${gpio_pin}, ${desired_state}`);
 
         },
-        test1: function(localIP, port){
-            console.log(`hello world ${localIP}, ${port}`);
+        test1: function(targetIp, port, schedule_id){
+            console.log(`hello world ${localIP}, ${port}, ${schedule_id}`);
         },
         test2: async function(targetIp, port, scheduleId, payload){
             let self             = this,

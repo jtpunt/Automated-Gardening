@@ -109,10 +109,10 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, fn, context, localIP, port){
+    buildJob: function(schedule_config, fn, context, targetIP, port, schedule_id){
         let myScheduleObj = this.buildSchedule(schedule_config);
 
-        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, localIP, port); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, targetIP, port, schedule_id); });
         
         return job;
     },
@@ -618,7 +618,8 @@ var scheduleObj = {
                                                             fn, 
                                                             context, 
                                                             relay_device['local_ip'],
-                                                            relay_device['port']
+                                                            relay_device['port'],
+                                                            schedule_config['_id']
                                                         );
                                                         console.log("Job created: " + job);
                                                         console.log("Next invocation: " + job.nextInvocation());
