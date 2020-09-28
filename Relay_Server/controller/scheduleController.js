@@ -153,6 +153,7 @@ var scheduleObj = {
         console.log(`Next Schedule for ${job.nextInvocation()}`)
         job.cancelNext();
         console.log("Has been successfully canceled");
+        console.log(`Next Schedule for ${job.nextInvocation()}`)
     },
         // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
