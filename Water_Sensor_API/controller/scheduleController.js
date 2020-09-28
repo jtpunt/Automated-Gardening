@@ -109,10 +109,10 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, fn, context, gpio_pin, desired_state){
+    buildJob: function(schedule_config, fn, context, localIP, port){
         let myScheduleObj = this.buildSchedule(schedule_config);
 
-        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, gpio_pin, desired_state); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, localIP, port); });
         
         return job;
     },
@@ -617,8 +617,8 @@ var scheduleObj = {
                                                             schedule_config, 
                                                             fn, 
                                                             context, 
-                                                            Number(schedule_config['device']['gpio']), 
-                                                            Boolean(schedule_config['device']['desired_state'])
+                                                            relay_device['local_ip'],
+                                                            relay_device['port']
                                                         );
                                                         console.log("Job created: " + job);
                                                         console.log("Next invocation: " + job.nextInvocation());

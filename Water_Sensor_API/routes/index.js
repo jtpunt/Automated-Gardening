@@ -26,7 +26,10 @@ try{
             console.log(`hello world ${gpio_pin}, ${desired_state}`);
 
         },
-        test1: async function(targetIp, port, scheduleId, payload){
+        test1: function(localIP, port){
+            console.log(`hello world ${localIP}, ${port}`);
+        }
+        test2: async function(targetIp, port, scheduleId, payload){
             let self             = this,
                 waterDetected    = true,
                 adminCredentials = await getAdminCredentions();
@@ -80,7 +83,7 @@ try{
             myReq.end();
         }
     }
-    scheduleController.getSchedulesTest(obj.test, obj);
+    scheduleController.getSchedulesTest(obj.test1, obj);
 }catch(err){
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
