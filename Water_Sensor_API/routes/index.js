@@ -28,7 +28,7 @@ try{
         },
         test1: function(localIP, port){
             console.log(`hello world ${localIP}, ${port}`);
-        }
+        },
         test2: async function(targetIp, port, scheduleId, payload){
             let self             = this,
                 waterDetected    = true,
