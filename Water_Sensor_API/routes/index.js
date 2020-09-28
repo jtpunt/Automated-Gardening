@@ -27,16 +27,17 @@ try{
 
         },
         test1: async function(targetIp, port, scheduleId, payload){
-            let waterDetected    = await detectWater(),
+            let self             = this,
+                waterDetected    = true,
                 adminCredentials = await getAdminCredentions();
 
             if(waterDetected === true){
-                cancelRelay(adminCredentials, targetIp, port, scheduleId, payload);
+                self.cancelRelay(adminCredentials, targetIp, port, scheduleId, payload);
             }
 
         },
         detectWater: function(){
-            return false;
+            return true;
         },
         cancelRelay: function(adminCredentials, targetIp, port, scheduleId, payload){
             // http code
@@ -62,10 +63,11 @@ try{
                     console.log(`HEADERS: ${JSON.stringify(resp.headers)}`);
                     if(resp.statusCode !== 200){
                         // error
-
+                        console.log("Error on cancel");
                         
                     }else{
                         // success 
+                        console.log("Cancel request was successful");
                     }
                 });
             });
@@ -78,7 +80,7 @@ try{
             myReq.end();
         }
     }
-    scheduleController.getSchedulesTest(obj.test, obj);
+    scheduleController.getSchedulesTest(obj.test1, obj);
 }catch(err){
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
