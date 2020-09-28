@@ -581,7 +581,7 @@ var scheduleObj = {
                                 }, function(err, relay_device){
                                     if(err) console.log(err.toString());
                                     else{
-                                        console.log(`Water Pump relay_device: ${JSON.stringifY(relay_device)}`);
+                                        console.log(`Water Pump relay_device: ${JSON.stringify(relay_device)}`);
 
                                         console.log("Relay settings found: " + relay_configs);
                                         relay_configs.forEach(function(relay_config){
