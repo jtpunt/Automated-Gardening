@@ -19,21 +19,21 @@ let options = {
         autoReconnect : true
     }
 }
-function buildOptions(hostname, port, path, method, json){
-    let options = {
-            hostname: hostname,
-            port: port,
-            path: path,
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(json)
-            }
-        }
-    return options;
-}
+
 var obj = {
-	
+	buildOptions: function(hostname, port, path, method, json){
+        let options = {
+                hostname: hostname,
+                port: port,
+                path: path,
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(json)
+                }
+            }
+        return options;
+    },
 	test2: function(adminCredentials, targetIp, port, scheduleId){
         let self             = this,
             waterDetected    = true;
@@ -48,14 +48,15 @@ var obj = {
     },
     cancelRelay: function(adminCredentials, targetIp, port, scheduleId){
         // http code
-        let payload = { };
+        let self    = this,
+            payload = { }
         if(!adminCredentials || adminCredentials === 0){
             throw new Error("admin credentials not valid!")
         }
         payload['admin_id'] = adminCredentials['_id'];
         
         const payloadStr = JSON.stringify(payload);
-        const options = buildOptions(targetIp, port, "/schedule/" + scheduleId + "/cancel/next", 'POST', payloadStr);
+        const options = self.buildOptions(targetIp, port, "/schedule/" + scheduleId + "/cancel/", 'POST', payloadStr);
         
         const myReq = http.request(options, (resp) => {
             let myChunk = '';
