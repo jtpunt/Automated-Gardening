@@ -315,6 +315,20 @@ router.get('/schedule/:schedule_id/cancel/next', function(req, res) {
         res.status(404).end();
     }
 });
+router.post('/schedule/:schedule_id/cancel/next', middleware.verifyAdminAccount ,function(req, res) {
+    var schedule_id = req.params.schedule_id;
+    console.log(typeof schedule_id);
+    try{
+        scheduleController.cancelNextSchedule(schedule_id);
+        console.log("Successfully Canceled!");
+        res.status(200).end();
+    }catch(err){
+        console.log("Error caught!\n");
+        console.log(err);
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
+    }
+});
 router.get('/schedule/:schedule_id/resume', function(req, res) {
         var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
