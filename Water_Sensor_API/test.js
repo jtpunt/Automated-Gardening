@@ -83,7 +83,7 @@ var obj = {
             let errorMessage = e.message;
             console.error(`problem with request: ${errorMessage}`);
         });
-        myReq.write(scheduleStr);
+        myReq.write(payloadStr);
         myReq.end();
     }
 }
