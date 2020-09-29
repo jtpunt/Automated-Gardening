@@ -1,11 +1,21 @@
 var http               = require('http'),
     User               = require("./models/user"),
 	async              = require("asyncawait/async"),
-	await              = require("asyncawait/await");
+	await              = require("asyncawait/await"),
+	config             = require('./config')[env],
+	mongoose           = require("mongoose")
 
-async function getAdminCredentials (){
-    let adminCredentials = await User.findOne({"username": "admin"});
-    return adminCredentials;
+var targetIp = "192.168.254.201",
+	port     = "5000",
+	scheduleId = "5f72802198466e03be898256";
+
+let options = {
+    server : {
+        useNewUrlParser: true,
+        reconnectTries : 300,
+        reconnectInterval: 60000,
+        autoReconnect : true
+    }
 }
 
 var obj = {
@@ -63,19 +73,34 @@ var obj = {
         myReq.end();
     }
 }
-var targetIp = "192.168.254.201",
-	port     = "5000",
-	scheduleId = "5f72802198466e03be898256";
 
-let adminCredentialsPromise = async () => { return await User.findOne({"username": "admin"}); }
+
+
+
+
+
+
+mongoose.connect(connStr, options, function(err){
+    if(err){
+        console.log("Error connecting to mongodb", err);
+        // default schedule here
+        setTimeout(function() {
+            console.log('Connection failed. Retrying in 30 seconds.');
+        }, 30000);
+    }else{
+    	let adminCredentialsPromise = async () => { return await User.findOne({"username": "admin"}); }
                    
-adminCredentialsPromise().then(function(result){
-    console.log(`result: ${result}`);
-    return result;
-}, function(err){
-    console.log(`err: ${err}`);
-}).then(function(admin_credentials){
-	obj.test2(admin_credentials, targetIp, port, scheduleId);
-	console.log("Done");
+		adminCredentialsPromise().then(function(result){
+		    console.log(`result: ${result}`);
+		    return result;
+		}, function(err){
+		    console.log(`err: ${err}`);
+		}).then(function(admin_credentials){
+			obj.test2(admin_credentials, targetIp, port, scheduleId);
+			console.log("Done");
+		});
+
+    }
 });
+
 
