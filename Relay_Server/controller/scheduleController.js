@@ -163,6 +163,7 @@ var scheduleObj = {
         console.log(`Next Schedule for ${job.nextInvocation()}`)
         job.cancel();
         console.log("Has been successfully canceled");
+        console.log(`Next Schedule for ${job.nextInvocation()}`)
     },
     startActiveSchedules: function(activateRelayFn, context){
         let self  = this,

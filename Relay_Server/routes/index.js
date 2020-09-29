@@ -292,7 +292,7 @@ router.post('/schedule/:schedule_id/cancel', middleware.verifyAdminAccount ,func
     console.log(typeof schedule_id);
     try{
         scheduleController.cancelSchedule(schedule_id);
-        console.log("Successfully Pausex!");
+        console.log("Successfully Canceled!");
         res.status(200).end();
     }catch(err){
         console.log("Error caught!\n");
@@ -306,7 +306,7 @@ router.get('/schedule/:schedule_id/cancel/next', function(req, res) {
     console.log(typeof schedule_id);
     try{
         scheduleController.cancelNextSchedule(schedule_id);
-        console.log("Successfully Pausex!");
+        console.log("Successfully Canceled Next Schedule!");
         res.status(200).end();
     }catch(err){
         console.log("Error caught!\n");
