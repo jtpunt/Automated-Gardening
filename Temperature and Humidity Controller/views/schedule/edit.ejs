@@ -152,16 +152,18 @@ input:checked + .slider:before {
   				<div class="form-group row">
   				     <label class="col-sm-6 col-form-label">Set Device Time</label>
   				     <% 
-                        let minute = schedule['schedule']['minute'];
-                        let second = schedule['schedule']['second'];
-                        if(schedule['schedule']['minute'] < 10){ 
-                          minute = "0" + schedule['schedule']['minute'];
-                        }
-                        if(schedule['schedule']['second'] < 10){
-                          second = "0" + schedule['schedule']['second'];
-                        }
+                        let second = schedule['schedule']['second'],
+                            minute = schedule['schedule']['minute'],
+                            hour   = schedule['schedule']['hour'];
+
+                        if(second < 10) 
+                            second = "0" + second;
+                        if(minute < 10) 
+                            minute = "0" + minute;
+                        if(hour < 10) 
+                            hour = "0" + hour;
       				 %>
-					<input type="time" id="time" class="col-sm-20" name="schedule[start_time]" value="<%=schedule['schedule']['hour']%>:<%=minute%>:<%=second%>" step="1" required>
+					<input type="time" id="time" class="col-sm-20" name="schedule[start_time]" value="<%=hour%>:<%=minute%>:<%=second%>" step="1" required>
                 </div>
                  
                 <div class="form-group row">
