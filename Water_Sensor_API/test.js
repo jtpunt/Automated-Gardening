@@ -63,10 +63,19 @@ var obj = {
         myReq.end();
     }
 }
-var adminCredentials = await getAdminCredentials(),
-	targetIp = "192.168.254.201",
+var targetIp = "192.168.254.201",
 	port     = "5000",
 	scheduleId = "5f72802198466e03be898256";
 
-obj.test2(adminCredentials, targetIp, port, scheduleId);
+let adminCredentialsPromise = async () => { return await getAdminCredentials(); }
+                   
+adminCredentialsPromise().then(function(result){
+    console.log(`result: ${result}`);
+    return result;
+}, function(err){
+    console.log(`err: ${err}`);
+}).then(function(admin_credentials){
+	obj.test2(admin_credentials, targetIp, port, scheduleId);
+
+});
 
