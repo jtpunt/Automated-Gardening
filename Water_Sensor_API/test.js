@@ -67,7 +67,7 @@ var targetIp = "192.168.254.201",
 	port     = "5000",
 	scheduleId = "5f72802198466e03be898256";
 
-let adminCredentialsPromise = async () => { return await getAdminCredentials(); }
+let adminCredentialsPromise = async () => { return await User.findOne({"username": "admin"}); }
                    
 adminCredentialsPromise().then(function(result){
     console.log(`result: ${result}`);
@@ -76,6 +76,6 @@ adminCredentialsPromise().then(function(result){
     console.log(`err: ${err}`);
 }).then(function(admin_credentials){
 	obj.test2(admin_credentials, targetIp, port, scheduleId);
-
+	console.log("Done");
 });
 
