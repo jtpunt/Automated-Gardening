@@ -596,54 +596,54 @@ var scheduleObj = {
                                                 else{
                                                     console.log(`Schedule configurations found: ${schedule_configs}`);
                                                     schedule_configs.forEach(function(schedule_config){
-                                                        console.log(`schedule_config: ${schedule_config}`);
-                                                        let schedule = schedule_config['schedule'],
-                                                            second   = schedule['second'],
-                                                            minute   = schedule['minute'],
-                                                            hour     = schedule['hour'],
-                                                            timestamp = new Date();
+                                                        // process only the 'on' schedule
+                                                        if(schedule_config["device"]["desired_state"] === true){
+                                                                                                                    console.log(`schedule_config: ${schedule_config}`);
+                                                            let schedule = schedule_config['schedule'],
+                                                                second   = schedule['second'],
+                                                                minute   = schedule['minute'],
+                                                                hour     = schedule['hour'],
+                                                                timestamp = new Date();
 
-                                                        timestamp.setHours(hour, minute, second);
+                                                            timestamp.setHours(hour, minute, second);
 
-                                                        if(schedule_config['device']['desired_state'] === true) // on?
-                                                            // adjust timestamp to check a set amount of time before the water pumps start
-                                                            timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
-                                                        else
-                                                            // adjust timestamp to check a set amount of time after the water pumps shuts off
-                                                            timestamp.setMinutes(timestamp.getMinutes() - checkMinsAfter);
-                                                        
-                                                        console.log(`checkMinsBefore at: ${timestamp.toString()}`);
-                                                        schedule_config['schedule']['second'] = timestamp.getSeconds();
-                                                        schedule_config['schedule']['minute'] = timestamp.getMinutes();
-                                                        schedule_config['schedule']['hour']   = timestamp.getHours();
-                                                        
+                                                            if(schedule_config['device']['desired_state'] === true) // on?
+                                                                // adjust timestamp to check a set amount of time before the water pumps start
+                                                                timestamp.setMinutes(timestamp.getMinutes() - checkMinsBefore);
+                                                            else
+                                                                // adjust timestamp to check a set amount of time after the water pumps shuts off
+                                                                timestamp.setMinutes(timestamp.getMinutes() - checkMinsAfter);
+                                                            
+                                                            console.log(`checkMinsBefore at: ${timestamp.toString()}`);
+                                                            schedule_config['schedule']['second'] = timestamp.getSeconds();
+                                                            schedule_config['schedule']['minute'] = timestamp.getMinutes();
+                                                            schedule_config['schedule']['hour']   = timestamp.getHours();
+                                                            
 
-                                                        let adminCredentialsPromise = async () => { return await User.findOne({"username": "admin"}); }
-                   
-                                                        adminCredentialsPromise().then(function(result){
-                                                            console.log(`result: ${result}`);
-                                                            return result;
-                                                        }, function(err){
-                                                            console.log(`err: ${err}`);
-                                                        }).then(function(admin_credentials){
-                                                 
-                                                            let job = self.buildJob(
-                                                                schedule_config, 
-                                                                fn, 
-                                                                context, 
-                                                                admin_credentials,
-                                                                relay_device['local_ip'],
-                                                                relay_device['port'],
-                                                                schedule_config['_id']
-                                                            );
-                                                            console.log("Job created: " + job);
-                                                            console.log("Next invocation: " + job.nextInvocation());
-                                                            var obj = {"schedule_config": schedule_config, job};
-                                                            self.setSchedule(obj);
-
-
-
-                                                        });
+                                                            let adminCredentialsPromise = async () => { return await User.findOne({"username": "admin"}); }
+                       
+                                                            adminCredentialsPromise().then(function(result){
+                                                                console.log(`result: ${result}`);
+                                                                return result;
+                                                            }, function(err){
+                                                                console.log(`err: ${err}`);
+                                                            }).then(function(admin_credentials){
+                                                     
+                                                                let job = self.buildJob(
+                                                                    schedule_config, 
+                                                                    fn, 
+                                                                    context, 
+                                                                    admin_credentials,
+                                                                    relay_device['local_ip'],
+                                                                    relay_device['port'],
+                                                                    schedule_config['_id']
+                                                                );
+                                                                console.log("Job created: " + job);
+                                                                console.log("Next invocation: " + job.nextInvocation());
+                                                                var obj = {"schedule_config": schedule_config, job};
+                                                                self.setSchedule(obj);
+                                                            });
+                                                        }
                                                         
                                                     });
                                                     console.log(`Done processing schedules: ${self.scheduleArr.length}`);
