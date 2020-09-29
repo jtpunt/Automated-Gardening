@@ -1,5 +1,5 @@
 var http               = require('http'),
-    User               = require("../models/user"),
+    User               = require("./models/user"),
 	async              = require("asyncawait/async"),
 	await              = require("asyncawait/await");
 
