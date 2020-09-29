@@ -145,23 +145,23 @@ var scheduleObj = {
             schedule_job = self.getScheduleJobById(schedule_id);
         schedule_job = job;
     },
-    // invalidates the next planned invocation or the job
-    cancelNextSchedule: function(schedule_id, activateRelayFn, context){
-        let self  = this,
-            job   = self.getScheduleJobById(schedule_id);
-                
-        console.log(`Next Schedule for ${job.nextInvocation()}`)
-        job.cancelNext();
-        console.log("Has been successfully canceled");
-        console.log(`Next Schedule for ${job.nextInvocation()}`)
-    },
-        // invalidates any job. All  planned invocations will be canceled
+    // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
         let self  = this,
             job   = self.getScheduleJobById(schedule_id);
                 
         console.log(`Next Schedule for ${job.nextInvocation()}`)
         job.cancel();
+        console.log("Has been successfully canceled");
+        console.log(`Next Schedule for ${job.nextInvocation()}`)
+    },
+    // invalidates the next planned invocation
+    cancelNextSchedule: function(schedule_id, activateRelayFn, context){
+        let self  = this,
+            job   = self.getScheduleJobById(schedule_id);
+                
+        console.log(`Next Schedule for ${job.nextInvocation()}`)
+        job.cancelNext();
         console.log("Has been successfully canceled");
         console.log(`Next Schedule for ${job.nextInvocation()}`)
     },

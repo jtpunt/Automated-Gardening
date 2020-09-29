@@ -109,10 +109,12 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, fn, context, targetIP, port, schedule_id){
+    buildJob: function(schedule_config, fn, context, adminCredentials, targetIP, port, schedule_id){
         let myScheduleObj = this.buildSchedule(schedule_config);
 
-        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, targetIP, port, schedule_id); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){ 
+            fn.call(context, adminCredentials, targetIP, port, schedule_id); 
+        });
         
         return job;
     },
@@ -613,18 +615,35 @@ var scheduleObj = {
                                                         schedule_config['schedule']['second'] = timestamp.getSeconds();
                                                         schedule_config['schedule']['minute'] = timestamp.getMinutes();
                                                         schedule_config['schedule']['hour']   = timestamp.getHours();
-                                                        let job = self.buildJob(
-                                                            schedule_config, 
-                                                            fn, 
-                                                            context, 
-                                                            relay_device['local_ip'],
-                                                            relay_device['port'],
-                                                            schedule_config['_id']
-                                                        );
-                                                        console.log("Job created: " + job);
-                                                        console.log("Next invocation: " + job.nextInvocation());
-                                                        var obj = {"schedule_config": schedule_config, job};
-                                                        self.setSchedule(obj);
+                                                        
+
+                                                        let adminCredentialsPromise = async () => { return await User.findOne({"username": "admin"}); }
+                   
+                                                        adminCredentialsPromise().then(function(result){
+                                                            console.log(`result: ${result}`);
+                                                            return result;
+                                                        }, function(err){
+                                                            console.log(`err: ${err}`);
+                                                        }).then(function(admin_credentials){
+                                                 
+                                                            let job = self.buildJob(
+                                                                schedule_config, 
+                                                                fn, 
+                                                                context, 
+                                                                admin_credentials,
+                                                                relay_device['local_ip'],
+                                                                relay_device['port'],
+                                                                schedule_config['_id']
+                                                            );
+                                                            console.log("Job created: " + job);
+                                                            console.log("Next invocation: " + job.nextInvocation());
+                                                            var obj = {"schedule_config": schedule_config, job};
+                                                            self.setSchedule(obj);
+
+
+
+                                                        });
+                                                        
                                                     });
                                                     console.log(`Done processing schedules: ${self.scheduleArr.length}`);
                                                 }

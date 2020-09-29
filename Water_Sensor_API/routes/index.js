@@ -30,29 +30,28 @@ try{
         test1: function(targetIp, port, schedule_id){
             console.log(`hello world ${localIP}, ${port}, ${schedule_id}`);
         },
-        test2: async function(targetIp, port, scheduleId, payload){
+        test2: function(adminCredentials, targetIp, port, scheduleId){
             let self             = this,
-                waterDetected    = true,
-                adminCredentials = await getAdminCredentions();
+                waterDetected    = true;
 
             if(waterDetected === true){
-                self.cancelRelay(adminCredentials, targetIp, port, scheduleId, payload);
+                self.cancelRelay(adminCredentials, targetIp, port, scheduleId);
             }
 
         },
         detectWater: function(){
             return true;
         },
-        cancelRelay: function(adminCredentials, targetIp, port, scheduleId, payload){
+        cancelRelay: function(adminCredentials, targetIp, port, scheduleId){
             // http code
-
+            let payload = { };
             if(!adminCredentials || adminCredentials === 0){
                 throw new Error("admin credentials not valid!")
             }
             payload['admin_id'] = adminCredentials['_id'];
             
             const payloadStr = JSON.stringify(payload);
-            const options = buildOptions(targetIp, port, "/schedule/" + scheduleId + "/cancel", 'POST', payloadStr);
+            const options = buildOptions(targetIp, port, "/schedule/" + scheduleId + "/cancel/", 'POST', payloadStr);
             
             const myReq = http.request(options, (resp) => {
                 let myChunk = '';
@@ -80,11 +79,11 @@ try{
                 let errorMessage = e.message;
                 console.error(`problem with request: ${errorMessage}`);
             });
-            myReq.write(scheduleStr);
+            myReq.write(payloadStr);
             myReq.end();
         }
     }
-    scheduleController.getSchedulesTest(obj.test1, obj);
+    scheduleController.getSchedulesTest(obj.test2, obj);
 }catch(err){
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
