@@ -27,7 +27,7 @@ var obj = {
             waterDetected    = true;
 
         if(waterDetected === true){
-            self.cancelRelay(adminCredentials, targetIp, port, scheduleId, payload);
+            self.cancelRelay(adminCredentials, targetIp, port, scheduleId);
         }
 
     },
