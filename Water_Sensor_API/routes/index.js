@@ -65,7 +65,7 @@ try{
             payload['admin_id'] = adminCredentials['_id'];
             
             const payloadStr = JSON.stringify(payload);
-            const options = self.buildOptions(targetIp, port, "/schedule/" + scheduleId + "/cancel/", 'POST', payloadStr);
+            const options = self.buildOptions(targetIp, port, "/schedule/" + scheduleId + "/cancel/next", 'POST', payloadStr);
             
             const myReq = http.request(options, (resp) => {
                 let myChunk = '';
