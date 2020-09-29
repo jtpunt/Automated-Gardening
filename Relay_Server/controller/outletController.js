@@ -1,5 +1,6 @@
 const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
 var Device = require("../models/device"),
+    RelaySettings = require("../models/relaySettings"),
     ip      = require("ip"),
     fs          = require("fs"),
     path        = require("path"),
@@ -113,7 +114,11 @@ var outletObj = {
         getOutletSetup: function(){
             var self = this;
             console.log("in getOutlets\n");
-            Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
+
+            Device.findOne({
+                local_ip: localIP, 
+                deviceType: "Relay Server"
+            }, (err, myDevice) => {
                 if(err){
                     console.log(err);
                     throw err;
@@ -124,11 +129,16 @@ var outletObj = {
                         if(myDevice){
                             console.log("Test: ", myDevice);
                             myDevice['gpio'].forEach(function(myGpio){
-                                var myOutlet = new Gpio(myGpio, GPIO_EXPORT);
-                                var initialState = myOutlet.readSync();
-                                console.log("Initial State:", initialState);
-                                self.setOutlet({id: myDevice['_id'], gpio: myGpio, initialState: initialState, outlet: myOutlet});
-                                console.log("Status: ", self.getStatus(myGpio));
+                                RelaySettings.findOne({
+                                    relayId: myDevice["_id"], 
+                                    gpio: myGpio
+                                }, function(err, relay_config){
+                                    var myOutlet = new Gpio(myGpio, relay_config["direction"]);
+                                    var initialState = myOutlet.readSync();
+                                    console.log("Initial State:", initialState);
+                                    self.setOutlet({id: myDevice['_id'], gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                                    console.log("Status: ", self.getStatus(myGpio));
+                                });
                             });
                             console.log(self.outletArr);
                         }else{
