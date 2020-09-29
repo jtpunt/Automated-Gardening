@@ -4,7 +4,8 @@ var http               = require('http'),
 	await              = require("asyncawait/await"),
 	env                = process.env.NODE_ENV || 'development',
 	config             = require('./config')[env],
-	mongoose           = require("mongoose")
+	mongoose           = require("mongoose"),
+    connStr            = config.getConnStr();
 
 var targetIp = "192.168.254.201",
 	port     = "5000",
