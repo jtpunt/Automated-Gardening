@@ -124,28 +124,34 @@ var outletObj = {
                     throw err;
                 }
                 else{
-                    try{
-                        console.log("My Device: ", myDevice);
-                        if(myDevice){
-                            console.log("Test: ", myDevice);
-                            myDevice['gpio'].forEach(function(myGpio){
-                                RelaySettings.findOne({
-                                    relayId: myDevice["_id"], 
-                                    gpio: myGpio
-                                }, function(err, relay_config){
+                    console.log("My Device: ", myDevice);
+                    if(myDevice){
+                        console.log("Test: ", myDevice);
+                        myDevice['gpio'].forEach(function(myGpio){
+                            RelaySettings.findOne({
+                                relayId: myDevice["_id"], 
+                                gpio: myGpio
+                            }, function(err, relay_config){
+                                if(err){
+                                    console.log(err.toString());
+                                    throw err;
+                                }else{
                                     var myOutlet = new Gpio(myGpio, relay_config["direction"]);
                                     var initialState = myOutlet.readSync();
                                     console.log("Initial State:", initialState);
-                                    self.setOutlet({id: myDevice['_id'], gpio: myGpio, initialState: initialState, outlet: myOutlet});
+                                    self.setOutlet({
+                                        id: myDevice['_id'], 
+                                        gpio: myGpio, 
+                                        initialState: initialState, 
+                                        outlet: myOutlet
+                                    });
                                     console.log("Status: ", self.getStatus(myGpio));
-                                });
+                                }
                             });
-                            console.log(self.outletArr);
-                        }else{
-                            throw "No configuration found for this device!"
-                        }
-                    }catch(err){
-                        console.log(err);
+                        });
+                        console.log(self.outletArr);
+                    }else{
+                        throw "No configuration found for this device!"
                     }
                 }
             });
