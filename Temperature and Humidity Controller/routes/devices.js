@@ -188,7 +188,7 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                     }
 
                 console.log(`water_config: ${JSON.stringify(water_config)}`)
-                WaterSettings.findOneAndUpdate({ waterId: waterId, relayId: relayId }, {$set: water_config}, (err, updated_water_config) => {
+                WaterSettings.findOneAndUpdate({ waterId: waterId }, {$set: water_config}, (err, updated_water_config) => {
                     if(err){
                         console.log(err.toString());
                         req.flash("error", err.toString());
@@ -206,7 +206,7 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                                 }
                             });
                         }else{
-                            console.log("no error on camera update");
+                            console.log("no error on water_config update");
                             console.log(`Successfully updated ${JSON.stringify(device)}`)
                             console.log("Successfully Updated!");
                             res.redirect("/device");
