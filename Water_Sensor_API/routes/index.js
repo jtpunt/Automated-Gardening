@@ -23,6 +23,19 @@ async function getAdminCredentials (){
 try{
     deviceController.adjustForIPChange();
     let obj = {
+        buildOptions: function(hostname, port, path, method, json){
+            let options = {
+                    hostname: hostname,
+                    port: port,
+                    path: path,
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Content-Length': Buffer.byteLength(json)
+                    }
+                }
+            return options;
+        },
         test: function(gpio_pin, desired_state){
             console.log(`hello world ${gpio_pin}, ${desired_state}`);
 
@@ -44,7 +57,8 @@ try{
         },
         cancelRelay: function(adminCredentials, targetIp, port, scheduleId){
             // http code
-            let payload = { };
+            let self    = this,
+                payload = { };
             if(!adminCredentials || adminCredentials === 0){
                 throw new Error("admin credentials not valid!")
             }
