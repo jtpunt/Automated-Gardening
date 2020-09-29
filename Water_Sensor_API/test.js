@@ -19,7 +19,19 @@ let options = {
         autoReconnect : true
     }
 }
-
+function buildOptions(hostname, port, path, method, json){
+    let options = {
+            hostname: hostname,
+            port: port,
+            path: path,
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(json)
+            }
+        }
+    return options;
+}
 var obj = {
 	
 	test2: function(adminCredentials, targetIp, port, scheduleId){
