@@ -533,7 +533,7 @@ var scheduleObj = {
                     off_schedule_minute    = Number(off_schedule_config['schedule']['minute']) || undefined,
                     off_schedule_hour      = Number(off_schedule_config['schedule']['hour'])   || undefined;
 
-                if(offschedule_config['schedule']['second'] === '00')
+                if(off_schedule_config['schedule']['second'] === '00')
                     off_schedule_second = 0;
                 if(off_schedule_config['schedule']['minute'] === '00')
                     off_schedule_minute = 0;
