@@ -245,7 +245,7 @@ var outletObj = {
             if(index !== -1){
                 let status = self.getStatus(gpio_input);
                 console.log(`Status: ${status}, desired_state: ${desired_state}`);
-                if(status === desired_state){
+                if(status === Number(desired_state)){
                     console.log("Device is already in the desired state!");
                     return;
                 }else{
