@@ -500,20 +500,25 @@ var scheduleObj = {
     // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
     scheduleIsActive: function(on_schedule_config, timestamp){
         let self = this,
-            result = false,
-            sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+            result = false;
             
         // check to see if 1 of the schedules is active right now.
         if(on_schedule_config === undefined || on_schedule_config === null)
             return result;
         
-        let on_schedule_second = sanitize_input(on_schedule_config['schedule']['second']),
-            on_schedule_minute = sanitize_input(on_schedule_config['schedule']['minute']),
-            on_schedule_hour   = sanitize_input(on_schedule_config['schedule']['hour']),
+        let on_schedule_second = Number(on_schedule_config['schedule']['second'])       || undefined,
+            on_schedule_minute = Number(on_schedule_config['schedule']['minute'])       || undefined, 
+            on_schedule_hour   = Number(on_schedule_config['schedule']['hour'])         || undefined,
             desired_state      = Boolean(on_schedule_config['device']['desired_state']),
             onScheduleId       = on_schedule_config['schedule']['prevScheduleId'],
             offScheduleId      = on_schedule_config['schedule']['nextScheduleId'];
             
+        if(on_schedule_config['schedule']['second'] === '00')
+            on_schedule_second = 0;
+        if(on_schedule_config['schedule']['minute'] === '00')
+            on_schedule_minute = 0;
+        if(on_schedule_config['schedule']['hour'] == '00')
+            on_schedule_hour = 0;
         // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
@@ -524,10 +529,17 @@ var scheduleObj = {
                     on_schedule_timestamp  = new Date(),
                     off_schedule_timestamp = new Date(),
                     off_schedule_config    = self.scheduleArr[offScheduleIndex]['schedule_config'],
-                    off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
-                    off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
-                    off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
-                        
+                    off_schedule_second    = Number(off_schedule_config['schedule']['second']) || undefined,
+                    off_schedule_minute    = Number(off_schedule_config['schedule']['minute']) || undefined,
+                    off_schedule_hour      = Number(off_schedule_config['schedule']['hour'])   || undefined;
+
+                if(offschedule_config['schedule']['second'] === '00')
+                    off_schedule_second = 0;
+                if(off_schedule_config['schedule']['minute'] === '00')
+                    off_schedule_minute = 0;
+                if(off_schedule_config['schedule']['hour'] == '00')
+                    off_schedule_hour = 0;        
+
                 on_schedule_timestamp.setHours(on_schedule_hour, on_schedule_minute, on_schedule_second);
                 off_schedule_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
                 
