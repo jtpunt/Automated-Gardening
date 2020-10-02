@@ -23,7 +23,11 @@ var scheduleSchema = new mongoose.Schema({
         nextScheduleId: { // associated with desired_state === false. Turn the relay off
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
-        }
+        },
+        endScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scheduler"
+        },
     }
     
 });

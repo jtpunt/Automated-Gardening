@@ -1,10 +1,14 @@
-const PiCamera = require('pi-camera');
+//const PiCamera = require('pi-camera');
 let schedule = require('node-schedule');
 
 let startTime = new Date(Date.now() + 2000),
-    endTime = new Date(startTime.getTime() + 1*60*60*1000),
-    date  = new Date(Date.now() + 2000);
+    endTime = new Date(startTime.getTime() + 1*60*60*24*365*2),
+    date = new Date(Date.now() + 2000),
+    rule ='*/1 * * * * *';
 
+var j = schedule.scheduleJob({ start: startTime, end: endTime, rule: rule }, function(){
+  console.log('Time for tea!');
+});
 // const myCamera = new PiCamera({
 //   mode: 'photo',
 //   output: `${ __dirname }/test.jpg`,
@@ -21,29 +25,31 @@ let startTime = new Date(Date.now() + 2000),
 //    // Handle your error
 //    console.log(error);
 // }); 
-function createCamera(mode, oFileName, fileFormat, width, height, noPreview){
-    let cameraObj = {
-        mode: mode,
-        output: `${__dirname}/${oFileName}.${fileFormat}`,
-        width: width,
-        height: height,
-        nopreview: noPreview 
-    },
-        myCamera = new PiCamera(cameraObj);
-    return myCamera;
-}
-function createVideo(mode, oFileName, fileFormat, width, height, timeout, noPreview){
-    let cameraObj = {
-        mode: mode,
-        output: `${__dirname}/${oFileName}.${fileFormat}`,
-        width: width,
-        height: height,
-        timeout: timeout,
-        nopreview: noPreview 
-    },
-        myVideo = new PiCamera(cameraObj);
-    return myVideo;
-}
+
+// function createCamera(mode, oFileName, fileFormat, width, height, noPreview){
+//     let cameraObj = {
+//         mode: mode,
+//         output: `${__dirname}/${oFileName}.${fileFormat}`,
+//         width: width,
+//         height: height,
+//         nopreview: noPreview 
+//     },
+//         myCamera = new PiCamera(cameraObj);
+//     return myCamera;
+// }
+// function createVideo(mode, oFileName, fileFormat, width, height, timeout, noPreview){
+//     let cameraObj = {
+//         mode: mode,
+//         output: `${__dirname}/${oFileName}.${fileFormat}`,
+//         width: width,
+//         height: height,
+//         timeout: timeout,
+//         nopreview: noPreview 
+//     },
+//         myVideo = new PiCamera(cameraObj);
+//     return myVideo;
+// }
+
 // can leave out 'end' and have the job run indefinitely after it's start time
 // Note - the picture is taken 1 minute after the schedule job object is created
 // var j = schedule.scheduleJob( 
@@ -81,6 +87,7 @@ let mode = 'video',
     noPreview = true;
 
 
+
 // const myVideo = new PiCamera({
 //   mode: mode,
 //   output: `${ __dirname }/${oFileName}.${fileFormat}`,
@@ -89,14 +96,14 @@ let mode = 'video',
 //   timeout: timeout, // Record for 5 seconds
 //   nopreview: noPreview,
 // });
-const myVideo = createVideo(mode, oFileName, fileFormat, width, height, timeout, noPreview);
+//const myVideo = createVideo(mode, oFileName, fileFormat, width, height, timeout, noPreview);
 
-myVideo.record()
-.then((result) => {
-    // Your video was captured
-    console.log("pic taken: " + result);
-})
-.catch((error) => {
-     // Handle your error
-    console.log(error);
-});
+// myVideo.record()
+// .then((result) => {
+//     // Your video was captured
+//     console.log("pic taken: " + result);
+// })
+// .catch((error) => {
+//      // Handle your error
+//     console.log(error);
+// });

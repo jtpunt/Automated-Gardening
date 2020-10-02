@@ -64,8 +64,8 @@ function buildSchedule(mySchedule){
             hour: splitTimeArr[0]
         };
     }
-    if(mySchedule['schedule']['date'] !== null && mySchedule['schedule']['date'] !== undefined && mySchedule['schedule']['date'] !== '' && mySchedule.DateCheckBox === "on"){
-        let myDate   = new Date(mySchedule['schedule']['date']),
+    if(mySchedule['schedule']['start_date'] !== null && mySchedule['schedule']['start_date'] !== undefined && mySchedule['schedule']['start_date'] !== '' && mySchedule.StartDateCheckBox === "on"){
+        let myDate   = new Date(mySchedule['schedule']['start_date']),
             day      = myDate.getDate(),
             month    = myDate.getMonth(),
             year     = myDate.getFullYear(),
@@ -109,6 +109,9 @@ function buildSchedule(mySchedule){
         if(Number(mySchedule['schedule']['nextScheduleId']) !== 0)// 'none' was selected, which has a value of 0
             obj['schedule']['nextScheduleId'] = mySchedule['schedule']['nextScheduleId'];
     }
+    if(mySchedule['schedule']['endScheduleId'] !== null && mySchedule['schedule']['endScheduleId'] !== undefined)
+        if(Number(mySchedule['schedule']['endScheduleId']) !== 0)
+            obj['schedule']['endScheduleId'] = mySchedule['schedule']['endScheduleId'];
     return obj;
 }
 

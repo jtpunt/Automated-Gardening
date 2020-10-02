@@ -156,14 +156,17 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 scheduleController.isScheduleConflicting(start_schedule);
                 
                 // create the off schedule and grab the id
-                let nextScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
-                start_schedule['schedule']['nextScheduleId'] = nextScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                let offScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
+                start_schedule['schedule']['nextScheduleId'] = OffScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
             
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                let prevScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
-                end_schedule['schedule']['prevScheduleId'] = prevScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                let onScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
+                end_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
+            
+                let offEndScheduleId,
+                    onEndScheduleId;
             }
 
         }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
