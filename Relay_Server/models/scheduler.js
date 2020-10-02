@@ -27,7 +27,7 @@ var scheduleSchema = new mongoose.Schema({
         endScheduleId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
-        },
+        }
     }
     
 });
