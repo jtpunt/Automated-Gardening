@@ -91,7 +91,9 @@ var scheduleObj = {
                     throw new Error(`Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}`);
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
-                    let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
+                    //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
+                    let scheduleTestDate = new Date(year, month, date);
+                    scheduleTestDate.setHours(hour, minute, second);  
                     console.log("Date Obj: ", scheduleTestDate.toISOString());
                     // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
