@@ -97,6 +97,7 @@ var scheduleObj = {
                     //     throw new Error("Schedule must occur in the future!");
                     // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
                     if(scheduleTestDate > today){
+                        console.log(`scheduleTestDate > today`);
                         delete scheduleObj['date'];
                         delete scheduleObj['month'];
                         delete scheduleObj['year'];
