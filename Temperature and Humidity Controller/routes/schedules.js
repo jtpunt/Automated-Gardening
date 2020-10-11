@@ -65,8 +65,9 @@ function buildSchedule(mySchedule){
         };
     }
     if(mySchedule['schedule']['start_date'] !== null && mySchedule['schedule']['start_date'] !== undefined && mySchedule['schedule']['start_date'] !== '' && mySchedule.StartDateCheckBox === "on"){
-
-        let myDate   = new Date(mySchedule['schedule']['start_date'].replace(/-/g, '\/')), // changes '-' to '/', etc. "2020-10-11" to "2020/10/11"
+        // the replace method changes '-' (iso format) to '/', etc. "2020-10-11" to "2020/10/11"
+        // without this, JS would create date objects that were 1 day off
+        let myDate   = new Date(mySchedule['schedule']['start_date'].replace(/-/g, '\/')), 
             day      = myDate.getDate(), // 1 - 31
             month    = myDate.getMonth(), // 0 - 11
             year     = myDate.getFullYear(), // returns a 4 digit year
