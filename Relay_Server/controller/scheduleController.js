@@ -96,7 +96,7 @@ var scheduleObj = {
                     console.log(`hour: ${hour}`);
                     console.log(`minute: ${minute}`);
                     console.log(`second: ${second}`);
-                    scheduleTestDate.setHours(hour, minute, second);  
+                    scheduleTestDate.setHours(10, minute, second);  
                     console.log("Date Obj: ", scheduleTestDate.toISOString());
                     // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
