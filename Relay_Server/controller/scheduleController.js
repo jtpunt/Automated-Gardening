@@ -41,7 +41,8 @@ var scheduleObj = {
                   date      = Number(schedule['date'])  || undefined,
                   month     = sanitize_input(schedule['month']),
                   year      = Number(schedule['year']) || undefined,
-                  dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined;
+                  dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined,
+                  today     = new Date();
 
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
@@ -92,8 +93,14 @@ var scheduleObj = {
                     scheduleObj['year'] = year;
                     let scheduleTestObj = new Date(year, month, date, hour, minute, second);
                     console.log("Date Obj: ", scheduleTestObj);
-                    // if(scheduleTestObj < new Date()) 
+                    // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
+                    // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
+                    if(scheduleTestObj > today){
+                        delete scheduleObj['date'];
+                        delete scheduleObj['month'];
+                        delete scheduleObj['year'];
+                    }
                 }else 
                     throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
