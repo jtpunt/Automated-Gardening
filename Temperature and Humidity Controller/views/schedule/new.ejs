@@ -29,7 +29,7 @@
             </div>
             <div class="form-group">
             	<label for="DateCheckBox">Set Date?</label>
-                <input type="checkbox" name="StartDateCheckBox" onclick="myFunction('<%=ipStr%>Date')">
+                <input type="checkbox" name="StartDateCheckBox" onclick="myFunction('<%=ipStr%>StartDate')">
             </div>
             <div class="form-group">
                 <label for="DateCheckBox">Set End Date?</label>
@@ -39,7 +39,7 @@
             	<label for="DayOfWeekCheckBox">Set Day of Week?</label>
                 <input type="checkbox" name="DayOfWeekCheckBox" onclick="myFunction('<%=ipStr%>DayOfWeek')">
             </div>
-            <div class="form-group" id="<%=ipStr%>Date" style="display:none">
+            <div class="form-group" id="<%=ipStr%>StartDate" style="display:none">
             	<label for="date">Set Date: </label>
             	<input type="date" name="schedule[start_date]">
             </div>
