@@ -553,7 +553,7 @@ var scheduleObj = {
                 if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
                     result = true;
             }else{ // schedule not found
-                console.log("Schedule not found!!");
+                console.log("Off Schedule not found!!");
             }
             
         }else{

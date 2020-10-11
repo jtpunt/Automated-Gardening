@@ -244,7 +244,7 @@ router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(
     console.log(typeof schedule_id);
     try{
         scheduleController.cancelSchedule(schedule_id);
-        //scheduleController.deleteSchedule(schedule_id);
+        scheduleController.deleteSchedule(schedule_id);
         console.log("Successfully Deleted!");
         res.status(200).end();
     }catch(err){
@@ -308,7 +308,7 @@ router.post('/schedule/:schedule_id/cancel/next', middleware.verifyAdminAccount 
     }
 });
 router.get('/schedule/:schedule_id/resume', function(req, res) {
-        var schedule_id = req.params.schedule_id;
+    var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     try{
         scheduleController.resumeSchedule(schedule_id, outletController.activateRelay, outletController);
