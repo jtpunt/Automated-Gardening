@@ -93,11 +93,12 @@ var scheduleObj = {
                     scheduleObj['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
                     let scheduleTestDate = new Date(year, month, date);
+                    scheduleTestDate.setHours(10, minute, second);  
                     console.log(`hour: ${hour}`);
                     console.log(`minute: ${minute}`);
                     console.log(`second: ${second}`);
-                    scheduleTestDate.setHours(10, minute, second);  
                     console.log("Date Obj: ", scheduleTestDate.toISOString());
+                    console.log(`time hour: ${scheduleTestDate.getHours()}`);
                     // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
                     // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
