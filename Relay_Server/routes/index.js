@@ -116,11 +116,11 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ... newSchedule['device'],
                 desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
             }
-            let start_time = {
+            let on_timeObj = {
                 ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
                 ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
             },
-            end_time   = {
+            off_timeObj = {
                 ... newSchedule['schedule'],
                 ... newSchedule['schedule']['end_time'] 
                 
@@ -131,7 +131,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 device: device_start
                 
             },
-            off_schedule   = {
+            off_schedule = {
                 ... newSchedule, 
                 schedule: end_time,
                 device: device_end
@@ -142,8 +142,8 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
             let on_timestamp = new Date(),
                 off_timestamp = new Date();
             
-            on_timestamp.setHours(on_time['hour'], on_time['minute'], on_time['second']); 
-            off_timestamp.setHours(off_time['hour'], off_time['minute'], off_time['second']); 
+            on_timestamp.setHours(on_timeObj['hour'], on_timeObj['minute'], on_timeObj['second']); 
+            off_timestamp.setHours(off_timeObj['hour'], off_timeObj['minute'], off_timeObj['second']); 
             
             if(on_timestamp > off_timestamp)
                 throw new Error("start_time must be less than end_time")
