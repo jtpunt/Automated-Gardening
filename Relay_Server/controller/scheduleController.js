@@ -91,16 +91,17 @@ var scheduleObj = {
                     throw new Error(`Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}`);
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
-                    let scheduleTestObj = new Date(year, month, date, hour, minute, second);
+                    let scheduleTestDate = new Date(year, month, date, hour, minute, second);
                     console.log("Date Obj: ", scheduleTestObj);
                     // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
                     // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
-                    if(scheduleTestObj > today){
+                    if(scheduleTestDate > today){
                         delete scheduleObj['date'];
                         delete scheduleObj['month'];
                         delete scheduleObj['year'];
                     }
+                    console.log(`scheduleObj: ${JSON.stringify(scheduleObj)}`);
                 }else 
                     throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
