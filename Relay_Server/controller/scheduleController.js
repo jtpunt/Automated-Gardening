@@ -584,6 +584,7 @@ var scheduleObj = {
                                 Boolean(schedule_config['device']['desired_state'])
                             );
                             var obj = {"schedule_config": schedule_config, job};
+                            console.log(`obj: ${JSON.stringify(obj)}`);
                             self.setSchedule(obj);
                         });
                         console.log(`Done processing schedules: ${self.scheduleArr.length}`);
