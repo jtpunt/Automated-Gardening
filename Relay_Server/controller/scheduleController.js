@@ -93,6 +93,9 @@ var scheduleObj = {
                     scheduleObj['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
                     let scheduleTestDate = new Date(year, month, date);
+                    console.log(`hour: ${hour}`);
+                    console.log(`minute: ${minute}`);
+                    console.log(`second: ${second}`);
                     scheduleTestDate.setHours(hour, minute, second);  
                     console.log("Date Obj: ", scheduleTestDate.toISOString());
                     // if(scheduleTestObj < today) 
