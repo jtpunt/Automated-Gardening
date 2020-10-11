@@ -102,15 +102,16 @@ var scheduleObj = {
         return scheduleObj;
     },
     // params 1: schedule_config
-    // params 2:
-    // params 3:
+    // params 2: activateRelayFn
+    // params 3: context
+    // parans 4: gpio_pin
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, activateRelayFn, context, gpio_pin, desired_state){
+    buildJob: function(schedule_config, fn, context, ...args){
         let myScheduleObj = this.buildSchedule(schedule_config);
 
-        let job = schedule.scheduleJob(myScheduleObj, function(){ activateRelayFn.call(context, gpio_pin, desired_state); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         
         return job;
     },
@@ -179,8 +180,8 @@ var scheduleObj = {
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
-                let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                if(isScheduleActive === true)
+                let isScheduleActiveBool = self.isScheduleActive(schedule_obj['schedule_config'], today);
+                if(isScheduleActiveBool === true)
                     activateRelayFn.call(context,  device_gpio, desired_state);
             }
         });
@@ -484,7 +485,7 @@ var scheduleObj = {
         indices.forEach(function(index){
             if(index >= 0){
                 let schedule_obj          = self.scheduleArr[index],
-                    isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+                    isScheduleConflicting = self.isScheduleActive(schedule_obj['schedule_config'], timestamp);
 
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_obj['schedule_config']);
             }
@@ -498,7 +499,7 @@ var scheduleObj = {
     // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
     // the next_schedule_config object
     // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    scheduleIsActive: function(on_schedule_config, timestamp){
+    isScheduleActive: function(on_schedule_config, timestamp){
         let self = this,
             result = false,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -714,8 +715,8 @@ var scheduleObj = {
                         nextScheduleId = nextScheduleId.toString();
                         // schedule_id is the schedule we are trying to see is active or not
                         if(sched_id === schedule_id || nextScheduleId === schedule_id){
-                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                            if(isScheduleActive === true && desired_state === true){
+                            let isScheduleActiveBool = self.isScheduleActive(schedule_obj['schedule_config'], today);
+                            if(isScheduleActiveBool === true && desired_state === true){
                                 console.log("Schedule is active");
                                 console.log("Desired state is on");
                                 activateRelayFn.call(context,  device_gpio, desired_state);     
@@ -745,8 +746,7 @@ var scheduleObj = {
             }
             else{
                 console.log("in else");
-                //self.cancelSchedule(schedule_id);
-                //self.scheduleArr[index]['job'].cancel();
+                self.cancelSchedule(schedule_id);
                 console.log("Schedule canceled and removed!\n");
                 self.scheduleArr.splice(index, 1);
                 console.log(self.scheduleArr.length);
