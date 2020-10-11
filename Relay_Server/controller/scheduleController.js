@@ -92,7 +92,7 @@ var scheduleObj = {
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
                     let scheduleTestDate = new Date(year, month, date, hour, minute, second);
-                    console.log("Date Obj: ", scheduleTestObj);
+                    console.log("Date Obj: ", scheduleTestDate);
                     // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
                     // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
