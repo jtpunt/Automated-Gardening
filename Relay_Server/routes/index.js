@@ -163,7 +163,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 let onScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
                 end_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                scheduleController.editSchedule(nextScheduleId, end_schedule, outletController.activateRelay, outletController);    
+                scheduleController.editSchedule(offScheduleId, end_schedule, outletController.activateRelay, outletController);    
             
                 let offEndScheduleId,
                     onEndScheduleId;
