@@ -125,13 +125,13 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ... newSchedule['schedule']['end_time'] 
                 
             }
-            let start_schedule = {
+            let on_schedule = {
                 ... newSchedule,
                 schedule: start_time,
                 device: device_start
                 
             },
-            end_schedule   = {
+            off_schedule   = {
                 ... newSchedule, 
                 schedule: end_time,
                 device: device_end
@@ -139,31 +139,31 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
             //     new_off_schedule = scheduleController.buildSchedule(end_time);
                 
-            let start_time_timestamp = new Date(),
-                end_time_timestamp = new Date();
+            let on_timestamp = new Date(),
+                off_timestamp = new Date();
             
-            start_time_timestamp.setHours(start_time['hour'], start_time['minute'], start_time['second']); 
-            end_time_timestamp.setHours(end_time['hour'], end_time['minute'], end_time['second']); 
+            on_timestamp.setHours(on_time['hour'], on_time['minute'], on_time['second']); 
+            off_timestamp.setHours(off_time['hour'], off_time['minute'], off_time['second']); 
             
-            if(start_time_timestamp > end_time_timestamp)
+            if(on_timestamp > off_timestamp)
                 throw new Error("start_time must be less than end_time")
-            else if(start_time_timestamp === end_time_timestamp)
+            else if(on_timestamp === off_timestamp)
                 throw new Error("start_time must not be equal to the end_time")
             else{
                 // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
-                scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
-                scheduleController.isScheduleConflicting(end_schedule);
-                scheduleController.isScheduleConflicting(start_schedule);
+                scheduleController.isScheduleOverlapping(on_schedule, off_schedule);
+                scheduleController.isScheduleConflicting(off_schedule);
+                scheduleController.isScheduleConflicting(on_schedule);
                 
                 // create the off schedule and grab the id
-                let offScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
-                start_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                let offScheduleId = await scheduleController.createSchedule(off_schedule, outletController.activateRelay, outletController);
+                on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
             
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                let onScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
-                end_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
+                off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                scheduleController.editSchedule(offScheduleId, end_schedule, outletController.activateRelay, outletController);    
+                scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);    
             
                 let offEndScheduleId,
                     onEndScheduleId;
