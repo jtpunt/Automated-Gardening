@@ -92,7 +92,7 @@ var scheduleObj = {
                 if(year >= MIN_YEAR){
                     scheduleObj['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
-                    let scheduleTestDate = new Date.UTC(year, month, date, hour, minute, second);  
+                    let scheduleTestDate = new Date(Date.UTC(year, month, date, hour, minute, second));  
                     console.log(`hour: ${hour}`);
                     console.log(`minute: ${minute}`);
                     console.log(`second: ${second}`);
