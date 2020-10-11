@@ -107,10 +107,10 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, activateRelayFn, context, gpio_pin, desired_state){
+    buildJob: function(schedule_config, fn, context, ...args){
         let myScheduleObj = this.buildSchedule(schedule_config);
 
-        let job = schedule.scheduleJob(myScheduleObj, function(){ activateRelayFn.call(context, gpio_pin, desired_state); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         
         return job;
     },
