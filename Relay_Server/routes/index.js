@@ -244,7 +244,7 @@ router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(
     console.log(typeof schedule_id);
     try{
         scheduleController.cancelSchedule(schedule_id);
-        scheduleController.deleteSchedule(schedule_id);
+        //scheduleController.deleteSchedule(schedule_id);
         console.log("Successfully Deleted!");
         res.status(200).end();
     }catch(err){
