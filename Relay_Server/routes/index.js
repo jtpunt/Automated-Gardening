@@ -125,7 +125,11 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ... newSchedule['schedule']['end_time'] 
                 
             },
-            end_schedule_time = {
+            on_end_schedule_time = {
+                ... newSchedule['schedule']['end_date'],
+                ... newSchedule['schedule']['start_time'] 
+            },
+            off_end_schedule_time = {
                 ... newSchedule['schedule']['end_date'],
                 ... newSchedule['schedule']['end_time'] 
             }
@@ -142,12 +146,12 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
             },
             on_end_schedule = {
                 ... newSchedule,
-                schedule: end_schedule_time,
+                schedule: on_end_schedule_time,
                 device: device_start
             },
             off_end_schedule = {
                 ... newSchedule,
-                schedule: end_schedule_time,
+                schedule: off_end_schedule_time,
                 device: device_end
             }
 
