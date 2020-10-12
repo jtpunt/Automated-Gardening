@@ -116,24 +116,24 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ... newSchedule['device'],
                 desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
             }
-            let start_time = {
+            let on_start_time = {
                 ... newSchedule['schedule']['start_date'], // grabs dayOfWeek or date, month year
                 ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
             },
-            end_time   = {
+            off_end_time   = {
                 ... newSchedule['schedule']['start_date'],
                 ... newSchedule['schedule']['end_time'] 
                 
             }
-            let start_schedule = {
+            let on_schedule = { // on schedule
                 ... newSchedule,
-                schedule: start_time,
+                schedule: on_start_time,
                 device: device_start
                 
             },
-            end_schedule   = {
+            off_schedule   = { // off schedule
                 ... newSchedule, 
-                schedule: end_time,
+                schedule: off_end_time,
                 device: device_end
             }
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
@@ -141,9 +141,10 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 
             let start_time_timestamp = new Date(),
                 end_time_timestamp = new Date();
+
             
-            start_time_timestamp.setHours(start_time['hour'], start_time['minute'], start_time['second']); 
-            end_time_timestamp.setHours(end_time['hour'], end_time['minute'], end_time['second']); 
+            start_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
+            end_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
             
             if(start_time_timestamp > end_time_timestamp)
                 throw new Error("start_time must be less than end_time")
@@ -151,21 +152,21 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 throw new Error("start_time must not be equal to the end_time")
             else{
                 // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
-                scheduleController.isScheduleOverlapping(start_schedule, end_schedule);
-                scheduleController.isScheduleConflicting(end_schedule);
-                scheduleController.isScheduleConflicting(start_schedule);
+                scheduleController.isScheduleOverlapping(on_schedule, off_schedule);
+                scheduleController.isScheduleConflicting(off_schedule);
+                scheduleController.isScheduleConflicting(on_schedule);
                 
                 // create the off schedule and grab the id
-                let offScheduleId = await scheduleController.createSchedule(end_schedule, outletController.activateRelay, outletController);
-                start_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                let offScheduleId = await scheduleController.createSchedule(off_schedule, outletController.activateRelay, outletController);
+                on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
             
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                let onScheduleId = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
-                end_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
+                off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                scheduleController.editSchedule(offScheduleId, end_schedule, outletController.activateRelay, outletController);    
+                scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);    
             
-                let offEndScheduleId,
+                let endScheduleId,
                     onEndScheduleId;
             }
 
