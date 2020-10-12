@@ -799,17 +799,15 @@ var scheduleObj = {
                 throw err;
             }
             else{
-                console.log(`Array contents Before: `);
-                self.scheduleArr.forEach(function(schedule){
-                    console.log(`${JSON.stringify(schedule)}`);
-                })
+                if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
+                    let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
+                    console.log("End schedule found");
+                    let endScheduleIndex = self.findScheduleIndex(endScheduleId);
+                    console.log(`endScheduleIndex: ${endScheduleIndex}`);
+                }
                 self.scheduleArr[index]['job'].cancel();
                 console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                 self.scheduleArr.splice(index, 1);
-                console.log(`Array contents After: `);
-                self.scheduleArr.forEach(function(schedule){
-                    console.log(`${JSON.stringify(schedule)}`);
-                })
                 console.log(`Size of array after removal: ${self.scheduleArr.length}`);
             }
         });
