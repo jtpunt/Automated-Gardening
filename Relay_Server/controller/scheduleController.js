@@ -794,7 +794,7 @@ var scheduleObj = {
                 throw err;
             }
             else{
-                self.cancelSchedule(scheduleId);
+                self.cancelSchedule(schedule_id);
                 self.scheduleArr.splice(index, 1);
                 console.log(`Size of array: ${self.scheduleArr.length}`);
             }
