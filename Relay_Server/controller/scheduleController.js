@@ -608,10 +608,9 @@ var scheduleObj = {
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = self.buildJob(
                                     schedule_config, 
-                                    self.deleteSchedules, 
+                                    self.deleteSchedule, 
                                     self,
-                                    schedule_config['schedule']['startScheduleId'].toString(),
-                                    schedule_config['_id'].toString()
+                                    schedule_config['schedule']['startScheduleId'].toString()
                                 );
                                 var obj = {"schedule_config": schedule_config, job};
                                 console.log(`obj: ${JSON.stringify(obj)}`);
