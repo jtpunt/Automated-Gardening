@@ -26,6 +26,10 @@ var scheduleSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
         }, 
+        startScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Scheduler"
+        },
         endScheduleId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
