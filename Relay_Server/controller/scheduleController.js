@@ -814,7 +814,9 @@ var scheduleObj = {
                     throw err;
                 }
                 else{
+                    console.log("Canceling schedule");
                     self.cancelSchedule(schedule_id);
+                    console.log("Back in deleteSchedules fn from cancelSchedule fn");
                     self.scheduleArr.splice(index, 1);
                     console.log(`Size of array: ${self.scheduleArr.length}`);
                 }
