@@ -182,7 +182,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
                 off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
 
-                let offEndScheduleId = await scheduleController.createEndSchedule(off_end_schedule, scheduleController.deleteSchedules, scheduleController, offScheduleId);
+                let offEndScheduleId = await scheduleController.createEndSchedule(off_end_schedule, scheduleController.deleteSchedule, scheduleController, offScheduleId);
                 off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
 
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'

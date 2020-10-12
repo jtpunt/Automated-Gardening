@@ -787,14 +787,14 @@ var scheduleObj = {
             
         console.log(`Deleting Schedule Function: ${index}`);
         console.log(`Match found at index: ${index}`);
-        
+
+        self.cancelSchedule(schedule_id);
         Scheduler.findByIdAndRemove(schedule_id, (err) => {
             if(err){
                 console.log(err);
                 throw err;
             }
             else{
-                self.cancelSchedule(schedule_id);
                 self.scheduleArr.splice(index, 1);
                 console.log(`Size of array: ${self.scheduleArr.length}`);
             }
@@ -821,7 +821,7 @@ var scheduleObj = {
     findScheduleIndex: function(schedule_id){
         let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
         if(index === -1)
-            throw "Schedule not found!";
+            throw `Schedule id: ${schedule_id} not found!`;
         return index;
     }
 }
