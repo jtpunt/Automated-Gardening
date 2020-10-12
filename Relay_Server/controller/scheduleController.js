@@ -608,7 +608,7 @@ var scheduleObj = {
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = self.buildJob(
                                     schedule_config, 
-                                    self.cancelSchedule, 
+                                    self.deleteSchedule, 
                                     self,
                                     schedule_config['schedule']['startScheduleId'].toString()
                                 );
@@ -794,6 +794,7 @@ var scheduleObj = {
                 throw err;
             }
             else{
+                self.cancelSchedule(scheduleId);
                 self.scheduleArr.splice(index, 1);
                 console.log(`Size of array: ${self.scheduleArr.length}`);
             }

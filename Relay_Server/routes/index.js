@@ -182,7 +182,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
                 off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
 
-                let offEndScheduleId = await scheduleController.createEndSchedule(off_end_schedule, scheduleController.cancelSchedule, scheduleController, offScheduleId);
+                let offEndScheduleId = await scheduleController.createEndSchedule(off_end_schedule, scheduleController.deleteSchedule, scheduleController, offScheduleId);
                 off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
 
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
@@ -190,7 +190,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
                 on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
 
-                let onEndScheduleId = await scheduleController.createEndSchedule(on_end_schedule, scheduleController.cancelSchedule, scheduleController, onScheduleId);
+                let onEndScheduleId = await scheduleController.createEndSchedule(on_end_schedule, scheduleController.deleteSchedule, scheduleController, onScheduleId);
                 on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);    
@@ -276,7 +276,7 @@ router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     try{
-        scheduleController.cancelSchedule(schedule_id);
+        //scheduleController.cancelSchedule(schedule_id);
         scheduleController.deleteSchedule(schedule_id);
         console.log("Successfully Deleted!");
         res.status(200).end();
