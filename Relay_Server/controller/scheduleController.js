@@ -788,7 +788,7 @@ var scheduleObj = {
         })
         console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this,
-            index = self.findScheduleIndex(schedule_id);
+            index = self.findScheduleIndex(schedule_id.toString());
             
         console.log(`Match found at index: ${index}`);
 
