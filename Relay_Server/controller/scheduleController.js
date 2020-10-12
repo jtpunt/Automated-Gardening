@@ -821,7 +821,7 @@ var scheduleObj = {
                             console.log(`Size of array after removal: ${self.scheduleArr.length}`);
                         }
                     });
-                }else if(elf.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
+                }else if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
                     let startScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId'];
                     console.log("End schedule found");
                     let startScheduleIndex = self.findScheduleIndex(startScheduleId);
