@@ -121,7 +121,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
             },
             end_time   = {
-                ... newSchedule['schedule']['end_date'],
+                ... newSchedule['schedule']['start_date'],
                 ... newSchedule['schedule']['end_time'] 
                 
             }
