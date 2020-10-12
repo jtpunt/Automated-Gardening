@@ -73,27 +73,59 @@ function buildSchedule(mySchedule){
             year     = myDate.getFullYear(), // returns a 4 digit year
             currYear = date.getFullYear();
 
+        obj['schedule']['start_date'] = {};
         // date = 1 - 31
         if(day >= 1 && day <= 31)
-            obj['schedule']['date'] = day;
+            obj['schedule']['start_date']['date'] = day;
         else 
             throw new Error("Invalid date input.");
-        console.log(`Day: ${obj['schedule']['date']}`);
+        console.log(`Day: ${obj['schedule']['start_date']['date']}`);
         // month = 0 - 11
         if(month >= 0 && month <= 11)
-            obj['schedule']['month'] = month;
+            obj['schedule']['start_date']['month'] = month;
         else 
             throw new Error("Invalid month input.");
-        console.log(`Month: ${obj['schedule']['month']}`);
+        console.log(`Month: ${obj['schedule']['start_date']['month']}`);
         // year = current year or above
         if(year >= currYear)
-            obj['schedule']['year'] = year;
+            obj['schedule']['start_date']['year'] = year;
         else 
             throw new Error("Invalid year input.");
-        console.log(`Year: ${obj['schedule']['year']}`);
+        console.log(`Year: ${obj['schedule']['start_date']['year']}`);
         console.log(`myDate: ${myDate}`);
         if(myDate < new Date()) 
             throw new Error("Schedule must occur in the future!");
+    }
+    if(mySchedule['schedule']['end_date'] !== null && mySchedule['schedule']['end_date'] !== undefined && mySchedule['schedule']['end_date'] !== '' && mySchedule.EndDateCheckBox === "on"){
+        // the replace method changes '-' (iso format) to '/', etc. "2020-10-11" to "2020/10/11"
+        // without this, JS would create date objects that were 1 day off
+        let myDate   = new Date(mySchedule['schedule']['end_date'].replace(/-/g, '\/')), 
+            day      = myDate.getDate(), // 1 - 31
+            month    = myDate.getMonth(), // 0 - 11
+            year     = myDate.getFullYear(), // returns a 4 digit year
+            currYear = date.getFullYear();
+        obj['schedule']['end_date'] = {};
+        // date = 1 - 31
+        if(day >= 1 && day <= 31)
+            obj['schedule']['end_date']['date'] = day;
+        else 
+            throw new Error("Invalid date input.");
+        console.log(`Day: ${obj['schedule']['start_date']['date']}`);
+        // month = 0 - 11
+        if(month >= 0 && month <= 11)
+            obj['schedule']['end_date']['month'] = month;
+        else 
+            throw new Error("Invalid month input.");
+        console.log(`Month: ${obj['schedule']['end_date']['month']}`);
+        // year = current year or above
+        if(year >= currYear)
+            obj['schedule']['end_date']['year'] = year;
+        else 
+            throw new Error("Invalid year input.");
+        console.log(`Year: ${obj['schedule']['end_date']['year']}`);
+        console.log(`myDate: ${myDate}`);
+        if(myDate > new Date()) 
+            throw new Error("Schedule is past the end date!");
     }
     if(mySchedule['schedule']['dayOfWeek'] && mySchedule['DayOfWeekCheckBox'] === "on"){
         let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){
