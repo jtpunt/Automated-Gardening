@@ -782,10 +782,10 @@ var scheduleObj = {
         });
     },
     deleteSchedule: function(schedule_id){
+        console.log(`Deleting Schedule Function: ${index}`);
         let self = this,
             index = self.findScheduleIndex(schedule_id);
             
-        console.log(`Deleting Schedule Function: ${index}`);
         console.log(`Match found at index: ${index}`);
 
         self.cancelSchedule(schedule_id);
