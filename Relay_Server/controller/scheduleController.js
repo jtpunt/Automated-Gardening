@@ -804,6 +804,17 @@ var scheduleObj = {
                     console.log("End schedule found");
                     let endScheduleIndex = self.findScheduleIndex(endScheduleId);
                     console.log(`endScheduleIndex: ${endScheduleIndex}`);
+                    self.scheduleArr[endScheduleIndex]['job'].cancel();
+                    Scheduler.findByIdAndRemove(endScheduleId, (err) => {
+                        if(err){
+                            console.log(err);
+                            throw err;
+                        }else{
+                            console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                            self.scheduleArr.splice(endScheduleIndex, 1);
+                            console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                        }
+                    });
                 }
                 self.scheduleArr[index]['job'].cancel();
                 console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
