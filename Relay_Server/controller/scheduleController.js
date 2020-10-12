@@ -127,7 +127,7 @@ var scheduleObj = {
         let myScheduleObj = this.buildSchedule(schedule_config);
 
         let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
-        
+        console.log(`next invocation: ${job.nextInvocation()}`);
         return job;
     },
     getScheduleObjById: function(schedule_id){
