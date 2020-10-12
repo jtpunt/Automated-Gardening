@@ -782,6 +782,10 @@ var scheduleObj = {
         });
     },
     deleteSchedule: function(schedule_id){
+        console.log(`Array contents Before Delete Function: `);
+        self.scheduleArr.forEach(function(schedule){
+            console.log(`${JSON.stringify(schedule)}`);
+        })
         console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this,
             index = self.findScheduleIndex(schedule_id);
