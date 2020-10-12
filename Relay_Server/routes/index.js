@@ -140,11 +140,17 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 schedule: off_end_time,
                 device: device_end
             },
-            end_schedule = {
+            on_end_schedule = {
+                ... newSchedule,
+                schedule: end_schedule_time,
+                device: device_start
+            },
+            off_end_schedule = {
                 ... newSchedule,
                 schedule: end_schedule_time,
                 device: device_end
             }
+
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
             //     new_off_schedule = scheduleController.buildSchedule(end_time);
                 
@@ -177,8 +183,12 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);    
             
-                let endScheduleId = await scheduleController.createEndSchedule(end_schedule, scheduleController.cancelSchedule, scheduleController, onScheduleId);
-                console.log(`endScheduleId: ${endScheduleId}`);
+                let onEndScheduleId = await scheduleController.createEndSchedule(on_end_schedule, scheduleController.cancelSchedule, scheduleController, onScheduleId);
+
+                let offEndScheduleId = await scheduleController.createEndSchedule(off_end_schedule, scheduleController.cancelSchedule, scheduleController, offScheduleId);
+                
+                console.log(`endScheduleId: ${onEndScheduleId}`);
+                console.log(`offScheduleId: ${offEndScheduleId}`);
             }
 
         }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time

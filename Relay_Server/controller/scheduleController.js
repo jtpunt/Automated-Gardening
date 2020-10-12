@@ -246,13 +246,13 @@ var scheduleObj = {
             return newScheduleResponse["_id"];
         }
     },
-    createEndSchedule: async function(new_schedule_config, fn, context, onScheduleId, offScheduleId){
+    createEndSchedule: async function(new_schedule_config, fn, context, scheduleId){
         let self                = this;
         let job                 = self.buildJob(
             new_schedule_config, 
             fn, 
             context, 
-            onScheduleId
+            scheduleId
         );
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
     
