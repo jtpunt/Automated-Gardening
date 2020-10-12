@@ -795,8 +795,11 @@ var scheduleObj = {
                 throw err;
             }
             else{
+                console.log(`Array contents Before: ${JSON.stringify(self.scheduleArr)}`);
+                console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                 self.scheduleArr.splice(index, 1);
-                console.log(`Size of array: ${self.scheduleArr.length}`);
+                console.log(`Array contents After: ${JSON.stringify(self.scheduleArr)}`);
+                console.log(`Size of array after removal: ${self.scheduleArr.length}`);
             }
         });
     },
