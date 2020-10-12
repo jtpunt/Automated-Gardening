@@ -177,8 +177,8 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);    
             
-                let endScheduleId,
-                    onEndScheduleId;
+                let endScheduleId = await scheduleController.createEndSchedule(end_schedule, scheduleController.cancelSchedule, scheduleController, onScheduleId);
+                console.log(`endScheduleId: ${endScheduleId}`);
             }
 
         }else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time

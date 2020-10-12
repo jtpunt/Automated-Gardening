@@ -246,6 +246,25 @@ var scheduleObj = {
             return newScheduleResponse["_id"];
         }
     },
+    createEndSchedule: async function(new_schedule_config, fn, context, onScheduleId, offScheduleId){
+        let self                = this;
+        let job                 = self.buildJob(
+            new_schedule_config, 
+            fn, 
+            context, 
+            onScheduleId
+        );
+        let newScheduleResponse = await Scheduler.create(new_schedule_config);
+    
+        if(newScheduleResponse === undefined)
+            return newScheduleResponse;
+        else{
+            console.log(`await result: ${newScheduleResponse}`);
+            var obj = { "schedule_config": newScheduleResponse, job };
+            self.setSchedule(obj);
+            return newScheduleResponse["_id"];
+        }
+    },
     findSameDaySchedulesAndRetIdxs: function(schedule_config){
         let self      = this,
             second    = Number(schedule_config['schedule']['second'])|| undefined,
