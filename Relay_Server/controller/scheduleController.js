@@ -604,16 +604,30 @@ var scheduleObj = {
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
-                            let job = self.buildJob(
-                                schedule_config, 
-                                activateRelayFn, 
-                                context, 
-                                Number(schedule_config['device']['gpio']), 
-                                Boolean(schedule_config['device']['desired_state'])
-                            );
-                            var obj = {"schedule_config": schedule_config, job};
-                            console.log(`obj: ${JSON.stringify(obj)}`);
-                            self.setSchedule(obj);
+                            if(schedule_config['schedule']['startScheduleId']){
+                                console.log("PROCESSING END SCHEDULE");
+                                let job = self.buildJob(
+                                    schedule_config, 
+                                    self.cancelSchedule, 
+                                    self,
+                                    schedule_config['schedule']['startScheduleId'].toString()
+                                );
+                                var obj = {"schedule_config": schedule_config, job};
+                                console.log(`obj: ${JSON.stringify(obj)}`);
+                                self.setSchedule(obj);
+                            }else{
+                                let job = self.buildJob(
+                                    schedule_config, 
+                                    activateRelayFn, 
+                                    context, 
+                                    Number(schedule_config['device']['gpio']), 
+                                    Boolean(schedule_config['device']['desired_state'])
+                                );
+                                var obj = {"schedule_config": schedule_config, job};
+                                console.log(`obj: ${JSON.stringify(obj)}`);
+                                self.setSchedule(obj);
+                            }
+         
                         });
                         console.log(`Done processing schedules: ${self.scheduleArr.length}`);
                         self.startActiveSchedules(activateRelayFn, context);
