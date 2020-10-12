@@ -93,8 +93,8 @@ function buildSchedule(mySchedule){
             throw new Error("Invalid year input.");
         console.log(`Year: ${obj['schedule']['start_date']['year']}`);
         console.log(`myDate: ${myDate}`);
-        if(myDate < new Date()) 
-            throw new Error("Schedule must occur in the future!");
+        // if(myDate < new Date()) 
+        //     throw new Error("Schedule must occur in the future!");
     }
     if(mySchedule['schedule']['end_date'] !== null && mySchedule['schedule']['end_date'] !== undefined && mySchedule['schedule']['end_date'] !== '' && mySchedule.EndDateCheckBox === "on"){
         // the replace method changes '-' (iso format) to '/', etc. "2020-10-11" to "2020/10/11"
@@ -124,8 +124,8 @@ function buildSchedule(mySchedule){
             throw new Error("Invalid year input.");
         console.log(`Year: ${obj['schedule']['end_date']['year']}`);
         console.log(`myDate: ${myDate}`);
-        if(myDate < new Date()) 
-            throw new Error("Schedule is past the end date!");
+        // if(myDate < new Date()) 
+        //     throw new Error("Schedule is past the end date!");
     }
     if(mySchedule['schedule']['dayOfWeek'] && mySchedule['DayOfWeekCheckBox'] === "on"){
         let dayOfWeek = Array.from(mySchedule['schedule']['dayOfWeek']).map(function(day){

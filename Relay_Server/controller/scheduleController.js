@@ -608,9 +608,10 @@ var scheduleObj = {
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = self.buildJob(
                                     schedule_config, 
-                                    self.deleteSchedule, 
+                                    self.deleteSchedules, 
                                     self,
-                                    schedule_config['schedule']['startScheduleId'].toString()
+                                    schedule_config['schedule']['startScheduleId'].toString(),
+                                    schedule_config['_id'].toString()
                                 );
                                 var obj = {"schedule_config": schedule_config, job};
                                 console.log(`obj: ${JSON.stringify(obj)}`);
@@ -798,6 +799,24 @@ var scheduleObj = {
                 self.scheduleArr.splice(index, 1);
                 console.log(`Size of array: ${self.scheduleArr.length}`);
             }
+        });
+    },
+    deleteSchedules: function(...schedule_ids){
+        let self = this;
+
+        schedule_ids.forEach(function(schedule_id){
+            let index = self.findScheduleIndex(schedule_id);
+            Scheduler.findByIdAndRemove(schedule_id, (err) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                }
+                else{
+                    self.cancelSchedule(schedule_id);
+                    self.scheduleArr.splice(index, 1);
+                    console.log(`Size of array: ${self.scheduleArr.length}`);
+                }
+            });
         });
     },
     findScheduleIndex: function(schedule_id){
