@@ -158,7 +158,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 off_time_timestamp = new Date(),
                 end_date_timestamp = new Date();
 
-            console.log(`end_schedule: ${JSON.stringify(end_schedule)}`);
+            console.log(`end_schedule: ${JSON.stringify(on_end_schedule)}`);
             
             on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
             off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
