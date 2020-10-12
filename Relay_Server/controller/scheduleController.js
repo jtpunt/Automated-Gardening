@@ -803,6 +803,7 @@ var scheduleObj = {
                 self.scheduleArr.forEach(function(schedule){
                     console.log(`${JSON.stringify(schedule)}`);
                 })
+                self.scheduleArr[index]['job'].cancel();
                 console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                 self.scheduleArr.splice(index, 1);
                 console.log(`Array contents After: `);
