@@ -124,6 +124,10 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ... newSchedule['schedule']['start_date'],
                 ... newSchedule['schedule']['end_time'] 
                 
+            },
+            end_schedule_time = {
+                ... newSchedule['schedule']['end_date'],
+                ... newSchedule['schedule']['end_time'] 
             }
             let on_schedule = { // on schedule
                 ... newSchedule,
@@ -135,20 +139,27 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ... newSchedule, 
                 schedule: off_end_time,
                 device: device_end
+            },
+            end_schedule = {
+                ... newSchedule,
+                schedule: end_schedule_time,
+                device: device_end
             }
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
             //     new_off_schedule = scheduleController.buildSchedule(end_time);
                 
-            let start_time_timestamp = new Date(),
-                end_time_timestamp = new Date();
+            let on_time_timestamp = new Date(),
+                off_time_timestamp = new Date(),
+                end_date_timestamp = new Date();
+
 
             
-            start_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
-            end_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
+            on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
+            off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
             
-            if(start_time_timestamp > end_time_timestamp)
+            if(on_time_timestamp > off_time_timestamp)
                 throw new Error("start_time must be less than end_time")
-            else if(start_time_timestamp === end_time_timestamp)
+            else if(on_time_timestamp === off_time_timestamp)
                 throw new Error("start_time must not be equal to the end_time")
             else{
                 // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
