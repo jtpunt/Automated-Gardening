@@ -821,6 +821,28 @@ var scheduleObj = {
                             console.log(`Size of array after removal: ${self.scheduleArr.length}`);
                         }
                     });
+                }else if(elf.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
+                    let startScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId'];
+                    console.log("End schedule found");
+                    let startScheduleIndex = self.findScheduleIndex(startScheduleId);
+                    console.log(`endScheduleIndex: ${endScheduleIndex}`);
+
+                    self.scheduleArr[startScheduleIndex]['job'].cancel();
+                    Scheduler.findByIdAndRemove(startScheduleId, (err) => {
+                        if(err){
+                            console.log(err);
+                            throw err;
+                        }else{
+                            console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                            self.scheduleArr.splice(startScheduleIndex, 1);
+                            console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+
+                            self.scheduleArr[index]['job'].cancel();
+                            console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                            self.scheduleArr.splice(startScheduleIndex, 1);
+                            console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                        }
+                    });
                 }else{
                     self.scheduleArr[index]['job'].cancel();
                     console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
