@@ -117,11 +117,11 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
             }
             let start_time = {
-                ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
+                ... newSchedule['schedule']['start_date'], // grabs dayOfWeek or date, month year
                 ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
             },
             end_time   = {
-                ... newSchedule['schedule'],
+                ... newSchedule['schedule']['end_date'],
                 ... newSchedule['schedule']['end_time'] 
                 
             }

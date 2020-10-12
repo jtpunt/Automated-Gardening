@@ -124,7 +124,7 @@ function buildSchedule(mySchedule){
             throw new Error("Invalid year input.");
         console.log(`Year: ${obj['schedule']['end_date']['year']}`);
         console.log(`myDate: ${myDate}`);
-        if(myDate > new Date()) 
+        if(myDate < new Date()) 
             throw new Error("Schedule is past the end date!");
     }
     if(mySchedule['schedule']['dayOfWeek'] && mySchedule['DayOfWeekCheckBox'] === "on"){
