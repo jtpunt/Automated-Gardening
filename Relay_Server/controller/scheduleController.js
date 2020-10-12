@@ -782,7 +782,7 @@ var scheduleObj = {
         });
     },
     deleteSchedule: function(schedule_id){
-        console.log(`In deleteSchedule Function`);
+        console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this,
             index = self.findScheduleIndex(schedule_id);
             
@@ -795,10 +795,16 @@ var scheduleObj = {
                 throw err;
             }
             else{
-                console.log(`Array contents Before: ${JSON.stringify(self.scheduleArr)}`);
+                console.log(`Array contents Before: `);
+                self.scheduleArr.forEach(function(schedule){
+                    console.log(`${JSON.stringify(schedule)}`);
+                })
                 console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                 self.scheduleArr.splice(index, 1);
-                console.log(`Array contents After: ${JSON.stringify(self.scheduleArr)}`);
+                console.log(`Array contents After: `);
+                self.scheduleArr.forEach(function(schedule){
+                    console.log(`${JSON.stringify(schedule)}`);
+                })
                 console.log(`Size of array after removal: ${self.scheduleArr.length}`);
             }
         });
