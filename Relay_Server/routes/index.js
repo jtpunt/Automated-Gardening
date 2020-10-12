@@ -142,7 +142,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
             },
             on_end_schedule = {
                 ... newSchedule,
-                schedule: on_schedule_time,
+                schedule: end_schedule_time,
                 device: device_start
             },
             off_end_schedule = {
