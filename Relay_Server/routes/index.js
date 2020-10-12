@@ -193,7 +193,8 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 let onEndScheduleId = await scheduleController.createEndSchedule(on_end_schedule, scheduleController.deleteSchedule, scheduleController, onScheduleId);
                 on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
 
-                scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);    
+                scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
             
 
             
