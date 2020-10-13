@@ -799,7 +799,30 @@ var scheduleObj = {
                 throw err;
             }
             else{
-                if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
+                if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
+                    let startScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId'];
+                    console.log("start schedule found");
+                    let endScheduleIndex = self.findScheduleIndex(startScheduleId);
+                    console.log(`endScheduleIndex: ${startScheduleIndex}`);
+
+                    self.scheduleArr[startScheduleIndex]['job'].cancel();
+                    Scheduler.findByIdAndRemove(startScheduleId, (err) => {
+                        if(err){
+                            console.log(err);
+                            //throw err;
+                        }else{
+                            console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                            self.scheduleArr.splice(startScheduleIndex, 1);
+                            console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+
+                            self.scheduleArr[index]['job'].cancel();
+                            console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                            self.scheduleArr.splice(index, 1);
+                            console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                        }
+                    });
+                }
+                else if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
                     let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
                     console.log("End schedule found");
                     let endScheduleIndex = self.findScheduleIndex(endScheduleId);
