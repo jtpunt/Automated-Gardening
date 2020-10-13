@@ -809,7 +809,7 @@ var scheduleObj = {
                     Scheduler.findByIdAndRemove(endScheduleId, (err) => {
                         if(err){
                             console.log(err);
-                            throw err;
+                            //throw err;
                         }else{
                             console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                             self.scheduleArr.splice(endScheduleIndex, 1);
