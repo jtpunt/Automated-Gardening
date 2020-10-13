@@ -169,7 +169,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
             }
         }
         // you can set a schedule with a start time, end time, and start date
-        if(
+        else if(
             newSchedule['schedule']['start_time'] !== undefined && 
             newSchedule['schedule']['end_time']   !== undefined &&
             newSchedule['schedule']['start_date'] !== undefined
@@ -235,7 +235,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
 
             }
         }
-        // you can set a schedule with a start and end time
+        // you can set a schedule with a start_time, end_time, start_date and end_date
         else if(
             newSchedule['schedule']['start_time'] !== undefined && 
             newSchedule['schedule']['end_time']   !== undefined &&  
