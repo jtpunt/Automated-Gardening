@@ -134,18 +134,19 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 
             },
             on_end_schedule_time = {
+                ... newSchedule['schedule'],
                 ... newSchedule['schedule']['end_date'],
                 ... newSchedule['schedule']['start_time'] 
             },
             off_end_schedule_time = {
+                ... newSchedule['schedule'],
                 ... newSchedule['schedule']['end_date'],
                 ... newSchedule['schedule']['end_time'] 
             }
             let on_schedule = { // on schedule
                 ... newSchedule,
                 schedule: on_start_time,
-                device: device_start
-                
+                device: device_start 
             },
             off_schedule   = { // off schedule
                 ... newSchedule, 
@@ -228,10 +229,12 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
             }
             let on_start_time = {
+                ... newSchedule['schedule'],
                 ... newSchedule['schedule']['start_date'], // grabs dayOfWeek or date, month year
                 ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
             },
             off_end_time   = {
+                ... newSchedule['schedule'],
                 ... newSchedule['schedule']['start_date'],
                 ... newSchedule['schedule']['end_time'] 
                 
@@ -294,9 +297,11 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
             }
             let on_start_time = {
+                ... newSchedule['schedule'],
                 ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
             },
             off_end_time   = {
+                ... newSchedule['schedule'],
                 ... newSchedule['schedule']['end_time'] 
             };
 
