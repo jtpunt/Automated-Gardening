@@ -52,6 +52,16 @@ var middleware = {
         //             minute: 30
         //             hour: 12
         //         },
+        //         start_date: {
+        //              date: 15,
+        //              month: 9,
+        //              year: 2020,
+        //         },
+        //         end_date: {
+        //              date: 15,
+        //              month: 9,
+        //              year: 2020,
+        //         },
         //         dayOfWeek: [0, 1, 4]
         //     },
         //     device: {
@@ -86,23 +96,35 @@ var middleware = {
                     if(newSchedule['schedule']['start_time']['hour'] === undefined)
                         throw new Error("End Time hour configuration details not found.")
                 }
+                // Check For Date Based Scheduling Details
+                if(newSchedule['schedule']['start_date'] !== undefined){
+                    // Make sure the rest of the Date Based Scheduling Details were not left out
+                    if(newSchedule['schedule']['start_date']['date'] === undefined)
+                        throw new Error("Date input required for date-based scheduling");
+                    if(newSchedule['schedule']['start_date']['month'] === undefined)
+                        throw new Error("Month input required for date-based scheduling");
+                    if(newSchedule['schedule']['start_date']['year'] === undefined)
+                        throw new Error("Year input requried for date-based scheduling")
+                }
+                // Check For Date Based Scheduling Details
+                if(newSchedule['schedule']['end_date'] !== undefined){
+                    // Make sure the rest of the Date Based Scheduling Details were not left out
+                    if(newSchedule['schedule']['start_date']['date'] === undefined)
+                        throw new Error("Month input required for date-based scheduling");
+                    if(newSchedule['schedule']['end_date']['month'] === undefined)
+                        throw new Error("Month input required for date-based scheduling");
+                    if(newSchedule['schedule']['end_date']['year'] === undefined)
+                        throw new Error("Year input requried for date-based scheduling")
+                }
                 // Check For Recurrence Based Scheduling details
                 if(newSchedule['schedule']['dayOfWeek'] !== undefined){
                     // Date-Based Scheduling Details can not be included with Recurrence Based Scheduling Details
-                    if(newSchedule['schedule']['date'] !== undefined)
+                    if(newSchedule['schedule']['start_date']['date'] !== undefined)
                         throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                    if(newSchedule['schedule']['month'] !== undefined)
+                    if(newSchedule['schedule']['start_date']['month'] !== undefined)
                         throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                    if(newSchedule['schedule']['year'] !== undefined)
+                    if(newSchedule['schedule']['start_date']['year'] !== undefined)
                         throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                }
-                // Check For Date Based Scheduling Details
-                if(newSchedule['schedule']['date'] !== undefined){
-                    // Make sure the rest of the Date Based Scheduling Details were not left out
-                    if(newSchedule['schedule']['month'] === undefined)
-                        throw new Error("Month input required for date-based scheduling");
-                    if(newSchedule['schedule']['year'] === undefined)
-                        throw new Error("Year input requried for date-based scheduling")
                 }
             }
             // device details are required
