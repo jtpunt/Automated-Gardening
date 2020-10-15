@@ -184,60 +184,52 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 scheduleController.isScheduleConflicting(off_schedule);
                 scheduleController.isScheduleConflicting(on_schedule);
                 
-                // create the off schedule and grab the id
                 let off_schedule_args = [
                     off_schedule, 
                     outletController.activateRelay, 
                     outletController,
                     Number(off_schedule['device']['gpio']), 
                     Boolean(off_schedule['device']['desired_state'])
-                ]
-           
-        
-                let offScheduleId = await scheduleController.createSchedule(...off_schedule_args);
-                on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
-                off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
-
-                
-                let off_end_schedule_args = [
+                ], 
+                off_end_schedule_args = [
                     off_end_schedule, 
                     scheduleController.deleteSchedule, 
                     scheduleController, 
                     offScheduleId
-                ]
-
-
-                let offEndScheduleId = await scheduleController.createSchedule(...off_end_schedule_args);
-                off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
-
-                let on_schedule_args = [
+                ],
+                on_schedule_args = [
                     on_schedule, 
                     outletController.activateRelay, 
                     outletController,
                     Number(on_schedule['device']['gpio']), 
                     Boolean(on_schedule['device']['desired_state'])
-                ]
+                ],
+                on_end_schedule_args = [
+                    on_end_schedule, 
+                    scheduleController.deleteSchedule, 
+                    scheduleController, 
+                    onScheduleId
+                ];
+
+                // create the off schedule and grab the id
+                let offScheduleId = await scheduleController.createSchedule(...off_schedule_args);
+                on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
+
+                let offEndScheduleId = await scheduleController.createSchedule(...off_end_schedule_args);
+                off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
+
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                 let onScheduleId = await scheduleController.createSchedule(...on_schedule_args);
                 off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
                 on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
 
-                
-                let on_end_schedule_args = [
-                    on_end_schedule, 
-                    scheduleController.deleteSchedule, 
-                    scheduleController, 
-                    onScheduleId
-                ]
                 let onEndScheduleId = await scheduleController.createSchedule(...on_end_schedule_args);
                 on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
                 scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
             
-
-            
-                
                 console.log(`endScheduleId: ${onEndScheduleId}`);
                 console.log(`offScheduleId: ${offEndScheduleId}`);
             }
