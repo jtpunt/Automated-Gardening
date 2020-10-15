@@ -167,15 +167,17 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 
             let on_time_timestamp = new Date(),
                 off_time_timestamp = new Date(),
-                end_date_timestamp = new Date();
+                start_date_timestamp = new Date(newSchedule['schedule']['start_date']),
+                end_date_timestamp = new Date(newSchedule['schedule']['end_date']);
 
             console.log(`end_schedule: ${JSON.stringify(on_end_schedule)}`);
             
             on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
             off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
             
-            if(on_time_timestamp > off_time_timestamp)
-                throw new Error("start_time must be less than end_time")
+            // if(on_time_timestamp > off_time_timestamp)
+            if(start_date_timestamp > end_date_timestamp)
+                throw new Error("start_date must be less than end_date")
             else if(on_time_timestamp === off_time_timestamp)
                 throw new Error("start_time must not be equal to the end_time")
             else{

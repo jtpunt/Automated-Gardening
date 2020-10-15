@@ -825,6 +825,9 @@ var scheduleObj = {
                 //         }
                 //     });
                 // }else{
+
+                    // check to see if the schedule is currently active
+
                     self.scheduleArr[index]['job'].cancel();
                     console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                     self.scheduleArr.splice(index, 1);
