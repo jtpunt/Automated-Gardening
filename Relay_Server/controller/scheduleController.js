@@ -246,6 +246,25 @@ var scheduleObj = {
             return newScheduleResponse["_id"];
         }
     },
+    createScheduleTest: async function(new_schedule_config, fn, context, ...args){
+        let self                = this;
+        let job                 = self.buildJob(
+            new_schedule_config, 
+            activateRelayFn, 
+            context, 
+            ...args
+        );
+        let newScheduleResponse = await Scheduler.create(new_schedule_config);
+    
+        if(newScheduleResponse === undefined)
+            return newScheduleResponse;
+        else{
+            console.log(`await result: ${newScheduleResponse}`);
+            var obj = { "schedule_config": newScheduleResponse, job };
+            self.setSchedule(obj);
+            return newScheduleResponse["_id"];
+        }
+    },
     createEndSchedule: async function(new_schedule_config, fn, context, scheduleId){
         let self                = this;
         let job                 = self.buildJob(
