@@ -161,14 +161,15 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 schedule: off_end_schedule_time,
                 device: device_end
             }
-
+            let start_date = newSchedule['schedule']['start_date'],
+                end_date   = newSchedule['schedule']['end_date'];
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
             //     new_off_schedule = scheduleController.buildSchedule(end_time);
                 
             let on_time_timestamp = new Date(),
                 off_time_timestamp = new Date(),
-                start_date_timestamp = new Date(newSchedule['schedule']['start_date']),
-                end_date_timestamp = new Date(newSchedule['schedule']['end_date']);
+                start_date_timestamp = new Date(start_date['year'], start_date['month'], start_date['date']),
+                end_date_timestamp = new Date(end_date['year'], end_date['month'], end_date['date']);
 
             console.log(`end_schedule: ${JSON.stringify(on_end_schedule)}`);
             
