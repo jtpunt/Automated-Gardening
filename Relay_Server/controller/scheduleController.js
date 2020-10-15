@@ -250,7 +250,7 @@ var scheduleObj = {
         let self                = this;
         let job                 = self.buildJob(
             new_schedule_config, 
-            activateRelayFn, 
+            fn, 
             context, 
             ...args
         );
