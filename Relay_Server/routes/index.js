@@ -183,7 +183,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 scheduleController.isScheduleOverlapping(on_schedule, off_schedule);
                 scheduleController.isScheduleConflicting(off_schedule);
                 scheduleController.isScheduleConflicting(on_schedule);
-                
+
                 let off_schedule_args = [
                     off_schedule, 
                     outletController.activateRelay, 
@@ -197,14 +197,12 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
                 off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
 
-                
                 let off_end_schedule_args = [
                     off_end_schedule, 
                     scheduleController.deleteSchedule, 
                     scheduleController, 
                     offScheduleId
                 ]
-
 
                 let offEndScheduleId = await scheduleController.createSchedule(...off_end_schedule_args);
                 off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
@@ -221,7 +219,6 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
                 on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
 
-                
                 let on_end_schedule_args = [
                     on_end_schedule, 
                     scheduleController.deleteSchedule, 
@@ -234,9 +231,6 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
                 scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
             
-
-            
-                
                 console.log(`endScheduleId: ${onEndScheduleId}`);
                 console.log(`offScheduleId: ${offEndScheduleId}`);
             }
