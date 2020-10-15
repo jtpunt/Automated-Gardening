@@ -191,7 +191,6 @@ var scheduleObj = {
                 nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
                 device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
             
-            console.log("REGULAR SCHEDULING");
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
