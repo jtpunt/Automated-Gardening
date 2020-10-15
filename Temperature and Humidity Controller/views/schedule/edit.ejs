@@ -260,6 +260,75 @@ input:checked + .slider:before {
             		<% }) %>
                 	</select>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Set Associated Start Schedule</label>
+                    <select class="col-sm-20" name="schedule[startScheduleId]">
+                        <option value="-1" disabled>Select Your Start Schedule</option>
+                        <option value="0">None</option>
+                        <% deviceSchedules.forEach(function(deviceSchedule){ 
+                            // we need to prevent associating a schedule with itself
+                            if(deviceSchedule['schedule']['endScheduleId']){
+                                if(deviceSchedule['_id'].toString() !== schedule['_id'].toString()){
+                                    let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
+                                    let minute = deviceSchedule['schedule']['minute'];
+                                    let second = deviceSchedule['schedule']['second'];
+                                    let selected = false;
+                                    if(deviceSchedule['schedule']['minute'] < 10){ 
+                                        minute = "0" + deviceSchedule['schedule']['minute'];
+                                    }
+                                    if(deviceSchedule['schedule']['second'] < 10){
+                                        second = "0" + deviceSchedule['schedule']['second'];
+                                    }
+                                    if(schedule['schedule']['startScheduleId'] && deviceSchedule['_id'].toString() === schedule['schedule']['startScheduleId'].toString()){
+                                        console.log("startScheduleId matched");
+                                        selected = true;
+                                    }
+                                %>
+                                <% if(selected === true){ %> 
+                                    <option value="<%=deviceSchedule['_id']%>" selected='selected'><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%> - Start</option>
+                                <% }else{ %>
+                                    <option value="<%=deviceSchedule['_id']%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%> - Start</option>
+                                <% }
+                                }
+                            }
+                        }) %>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label">Set Associated End Schedule</label>
+                    <select class="col-sm-20" name="schedule[endScheduleId]">
+                        <option value="-1" disabled>Select Your End Schedule</option>
+                        <option value="0">None</option>
+                        <% deviceSchedules.forEach(function(deviceSchedule){ 
+                            // we need to prevent associating a schedule with itself
+                            if(deviceSchedule['schedule']['startScheduleId']){
+                                if(deviceSchedule['_id'].toString() !== schedule['_id'].toString()){
+                                    let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
+                                    let minute = deviceSchedule['schedule']['minute'];
+                                    let second = deviceSchedule['schedule']['second'];
+                                    let selected = false;
+                                    if(deviceSchedule['schedule']['minute'] < 10){ 
+                                        minute = "0" + deviceSchedule['schedule']['minute'];
+                                    }
+                                    if(deviceSchedule['schedule']['second'] < 10){
+                                        second = "0" + deviceSchedule['schedule']['second'];
+                                    }
+                                    if(schedule['schedule']['endScheduleId'] && deviceSchedule['_id'].toString() === schedule['schedule']['endScheduleId'].toString()){
+                                        console.log("endScheduleId matched");
+                                        selected = true;
+                                    }
+                                %>
+                                <% if(selected === true){ %> 
+              
+                                    <option value="<%=deviceSchedule['_id']%>" selected='selected'><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - End</option>
+                                <% } else { %>
+                                    <option value="<%=deviceSchedule['_id']%>"><%=deviceSchedule['schedule']['hour']%>:<%=minute%>:<%=second%> - <%=desired_state%></option>
+                                <% }
+                            }
+                        }
+                    }) %>
+                    </select>
+                </div>
                 <div class="form-group row" hidden>
       	            <label for="weekDays-selector" class="col-sm-6 col-form-label">On or Off? </label>
       	            <div class="col-sm-20">
