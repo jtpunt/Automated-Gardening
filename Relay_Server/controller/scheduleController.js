@@ -779,12 +779,18 @@ var scheduleObj = {
             }
             else{
                 if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
+                    let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
+                    console.log(`prevScheduleId: ${prevScheduleId}`);
                     console.log(`Associated On Schedule Found`);
                     if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
                         console.log(`Associated End Schedule Found`);
                         // end schedule wont have a set prev or next schedule
-                    }
+                        let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
+                        console.log(`endScheduleId: ${endScheduleId}`);
+                    }   
                 }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId']){
+                    let nextScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId'];
+                    console.log(`nextScheduleId: ${nextScheduleId}`);
                     console.log(`Associated Off Schedule Found`);
                     if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
                         console.log(`Associated End Schedule Found`);
