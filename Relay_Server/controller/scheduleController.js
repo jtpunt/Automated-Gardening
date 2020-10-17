@@ -791,16 +791,16 @@ var scheduleObj = {
 
                             let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
                             console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
-                            Scheduler.findByIdAndRemove(endScheduleId, (err) => {
-                                if(err){
-                                    console.log(err.toString());
-                                }else{
-                                    self.scheduleArr[endScheduleIndex]['job'].cancel();
-                                    console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
-                                    self.scheduleArr.splice(endScheduleIndex, 1);
-                                    console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                                }
-                            });
+                            // Scheduler.findByIdAndRemove(endScheduleId, (err) => {
+                            //     if(err){
+                            //         console.log(err.toString());
+                            //     }else{
+                            //         self.scheduleArr[endScheduleIndex]['job'].cancel();
+                            //         console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                            //         self.scheduleArr.splice(endScheduleIndex, 1);
+                            //         console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                            //     }
+                            // });
                            
                         }   
                     }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextSchedul eId']){
