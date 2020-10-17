@@ -778,10 +778,14 @@ var scheduleObj = {
                 throw err;
             }
             else{
-                if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
-                    console.log(`Start Schedule Found`);
+                if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
+                    console.log(`Associated On Schedule Found`);
+                }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId']){
+                    console.log(`Associated Off Schedule Found`);
+                }else if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
+                    console.log(`Associated Start Schedule Found`);
                 }else if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
-                    console.log(`End Schedule Found`);
+                    console.log(`Associated End Schedule Found`);
                 }else{
                     console.log(`Unknown schedule found`);
                 }
