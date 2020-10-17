@@ -848,7 +848,7 @@ var scheduleObj = {
 
                             let nextScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
                             console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                            if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleIndex']){
+                            if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
                                 let endScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
                                 schedules.push(endScheduleId.toString());
                             }
@@ -861,7 +861,7 @@ var scheduleObj = {
 
                             let prevScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
                             console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                            if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleIndex']){
+                            if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
                                 let endScheduleId = self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
                                 schedules.push(endScheduleId.toString());
                             }
@@ -888,7 +888,7 @@ var scheduleObj = {
 
                             let nextScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
                             console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                            if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleIndex']){
+                            if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
                                 let endScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
                                 schedules.push(endScheduleId.toString());
                             }
@@ -901,7 +901,7 @@ var scheduleObj = {
 
                             let prevScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
                             console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                            if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleIndex']){
+                            if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
                                 let endScheduleId = self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
                                 schedules.push(endScheduleId.toString());
                             }
