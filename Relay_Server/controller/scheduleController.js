@@ -843,7 +843,7 @@ var scheduleObj = {
                         if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
                             // end schedule wont have a set prev or next schedule
                             let nextScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
-                            console.log(`endScheduleId: ${nextScheduleId}`);
+                            console.log(`nextScheduleId: ${nextScheduleId}`);
                             schedules.push(nextScheduleId);
 
                             let nextScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
@@ -912,11 +912,11 @@ var scheduleObj = {
                         console.log(`Unknown schedule found`);
 
                     }
-                    console.log(`associated schedules found: ${schedules.toString()}`);
-                    self.scheduleArr[index]['job'].cancel();
-                    console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
-                    self.scheduleArr.splice(index, 1);
-                    console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                    // console.log(`associated schedules found: ${schedules.toString()}`);
+                    // self.scheduleArr[index]['job'].cancel();
+                    // console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                    // self.scheduleArr.splice(index, 1);
+                    // console.log(`Size of array after removal: ${self.scheduleArr.length}`);
                 }catch(err){
                     console.log(`Error: ${err.toString()}`);
                 }
