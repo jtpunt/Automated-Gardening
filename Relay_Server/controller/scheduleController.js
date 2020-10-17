@@ -860,7 +860,7 @@ var scheduleObj = {
                             schedules.push(prevScheduleId);
 
                             let prevScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
-                            console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
+                            console.log(`Associated End Schedule Index Found: ${prevScheduleIndex}`);
                             if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
                                 let endScheduleId = self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
                                 schedules.push(endScheduleId.toString());
