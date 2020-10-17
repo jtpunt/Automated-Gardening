@@ -790,8 +790,12 @@ var scheduleObj = {
                             console.log(`endScheduleId: ${endScheduleId}`);
 
                             let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
-
                             console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
+
+                            self.scheduleArr[endScheduleIndex]['job'].cancel();
+                            console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                            self.scheduleArr.splice(endScheduleIndex, 1);
+                            console.log(`Size of array after removal: ${self.scheduleArr.length}`);
                         }   
                     }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextSchedul eId']){
                         let nextScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId'];
