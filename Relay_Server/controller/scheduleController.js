@@ -782,14 +782,14 @@ var scheduleObj = {
                     if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
                         let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
                         console.log(`prevScheduleId: ${prevScheduleId}`);
-                        let onSchedule = self.findScheduleIndex(prevScheduleId);
+                        let onSchedule = self.findScheduleIndex(prevScheduleId.toString());
                         console.log(`Associated On Schedule Found: ${JSON.stringify(onSchedule)}`);
                         if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
                             // end schedule wont have a set prev or next schedule
                             let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
                             console.log(`endScheduleId: ${endScheduleId}`);
 
-                            let endSchedule = self.findScheduleIndex(endScheduleId);
+                            let endSchedule = self.findScheduleIndex(endScheduleId.toString());
                             console.log(`Associated End Schedule Found: ${JSON.stringify(endSchedule)}`);
                         }   
                     }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId']){
@@ -801,7 +801,7 @@ var scheduleObj = {
                             let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
                             console.log(`endScheduleId: ${endScheduleId}`);
 
-                            let endSchedule = self.findScheduleIndex(endScheduleId);
+                            let endSchedule = self.findScheduleIndex(endScheduleId.toString());
                             console.log(`Associated End Schedule Found: ${JSON.stringify(endSchedule)}`);
                         }
                     }else if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
@@ -810,7 +810,7 @@ var scheduleObj = {
                         let startScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId'];
                         console.log(`startScheduleId: ${startScheduleId}`);
 
-                        let startSchedule = self.findScheduleIndex(startScheduleId);
+                        let startSchedule = self.findScheduleIndex(startScheduleId.toString());
                         console.log(`Associated Start Schedule Found: ${JSON.stringify(startSchedule)}`);
                         // get the schedule associated with the startScheduleId
                         // see if the schedule is associated with an on or off schedule
@@ -821,7 +821,7 @@ var scheduleObj = {
                         let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
                         console.log(`endScheduleId: ${endScheduleId}`);
 
-                        let endSchedule = self.findScheduleIndex(endScheduleId);
+                        let endSchedule = self.findScheduleIndex(endScheduleId.toString());
                         console.log(`Associated End Schedule Found: ${JSON.stringify(endSchedule)}`);
                     }else{
                         console.log(`Unknown schedule found`);
