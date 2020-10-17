@@ -779,7 +779,7 @@ var scheduleObj = {
             }
             else{
                 try{
-                    let schedules = [];
+                    let schedules = [schedule_id];
                     if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
                         let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
                         console.log(`prevScheduleId: ${prevScheduleId}`);
