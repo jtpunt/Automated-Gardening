@@ -780,12 +780,27 @@ var scheduleObj = {
             else{
                 if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
                     console.log(`Associated On Schedule Found`);
+                    if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
+                        console.log(`Associated End Schedule Found`);
+                        // end schedule wont have a set prev or next schedule
+                    }
                 }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId']){
                     console.log(`Associated Off Schedule Found`);
+                    if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
+                        console.log(`Associated End Schedule Found`);
+                        // end schedule wont have a set prev or next schedule
+                    }
                 }else if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
                     console.log(`Associated Start Schedule Found`);
+                    // start schedule wont have a set prev or next schedule since it would mess up a lot of functions in this file
+
+                    // get the schedule associated with the startScheduleId
+                    // see if the schedule is associated with an on or off schedule
+                    // retrieve that on or off schedule if it exists and delete it
                 }else if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
                     console.log(`Associated End Schedule Found`);
+                    // end schedule wont have a set prev or next schedule
+                
                 }else{
                     console.log(`Unknown schedule found`);
                 }
