@@ -919,6 +919,11 @@ var scheduleObj = {
                     console.log(`Size of array after removal: ${self.scheduleArr.length}`);
                 }catch(err){
                     console.log(`Error: ${err.toString()}`);
+                    console.log(`associated schedules found: ${schedules.toString()}`);
+                    self.scheduleArr[index]['job'].cancel();
+                    console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                    self.scheduleArr.splice(index, 1);
+                    console.log(`Size of array after removal: ${self.scheduleArr.length}`);
                 }
                 
                 // }else{
