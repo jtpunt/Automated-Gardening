@@ -842,7 +842,7 @@ var scheduleObj = {
                         }
                         if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
                             // end schedule wont have a set prev or next schedule
-                            let nextScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId'];
+                            let nextScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
                             console.log(`endScheduleId: ${nextScheduleId}`);
                             schedules.push(nextScheduleId);
 
@@ -855,7 +855,7 @@ var scheduleObj = {
                         }
                         if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['prevScheduleId']){
                             // end schedule wont have a set prev or next schedule
-                            let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
+                            let prevScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['prevScheduleId'];
                             console.log(`endScheduleId: ${prevScheduleId}`);
                             schedules.push(prevScheduleId);
 
@@ -877,12 +877,12 @@ var scheduleObj = {
                         console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
                     
                         if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                            let endScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
+                            let endScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
                             schedules.push(endScheduleId.toString());
                         }
                         if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
                             // end schedule wont have a set prev or next schedule
-                            let nextScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId'];
+                            let nextScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
                             console.log(`endScheduleId: ${nextScheduleId}`);
                             schedules.push(nextScheduleId);
 
@@ -895,7 +895,7 @@ var scheduleObj = {
                         }
                         if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['prevScheduleId']){
                             // end schedule wont have a set prev or next schedule
-                            let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
+                            let prevScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['prevScheduleId'];
                             console.log(`endScheduleId: ${prevScheduleId}`);
                             schedules.push(prevScheduleId);
 
