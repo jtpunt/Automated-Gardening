@@ -834,12 +834,7 @@ var scheduleObj = {
                         console.log(`Associated Start Schedule Index Found: ${startScheduleIndex}`);
                         // get the schedule associated with the startScheduleId
                         // see if the schedule is associated with an on or off schedule
-                        // retrieve that on or off schedule if it exists and delete it
-                    
-                        // if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                        //     let endScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                        //     schedules.push(endScheduleId.toString());
-                        // }
+                        // retrieve that on or off schedule if it exists and delete it       
                         if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
                             // end schedule wont have a set prev or next schedule
                             let nextScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
@@ -876,10 +871,6 @@ var scheduleObj = {
                         let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
                         console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
                     
-                        // if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                        //     let endScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                        //     schedules.push(endScheduleId.toString());
-                        // }
                         if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
                             // end schedule wont have a set prev or next schedule
                             let nextScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
