@@ -803,7 +803,7 @@ var scheduleObj = {
                             console.log(`endScheduleId: ${endScheduleId}`);
 
                             let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
-                            console.log(`Associated End Schedule Index Found: ${endScheduleIndex)}`);
+                            console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
                         }
                     }else if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
                         console.log(`Associated Start Schedule Found`);
