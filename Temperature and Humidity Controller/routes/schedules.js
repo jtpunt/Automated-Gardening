@@ -3,6 +3,7 @@ var express       = require("express"),
     Device        = require("../models/device"),
     Scheduler     = require("../models/scheduler"),
     User          = require("../models/user"),
+    RelaySettings = require("../models/relaySettings"),
     middleware    = require("../middleware"),
     querystring   = require('querystring'),
     async         = require("asyncawait/async"),
@@ -188,6 +189,10 @@ async function getSchedules(){
     //     "length: " + schedules.length;
     return schedules;
 }
+async function getRelaySettings(){
+    let relaySettings = await RelaySettings.find({});
+    return relaySettings;
+}
 async function getAdminCredentions(){
     let adminCredentials = await User.findOne({"username": "admin"});
     return adminCredentials;
@@ -207,19 +212,21 @@ function addLocalIPsToSchedules(schedules, relayDevices){
 router.get("/", middleware.isLoggedIn, async (req, res) =>{
     let page_name = "schedules",
         relayDevices,
-        schedules;
+        schedules,
+        relaySettings;
     
     try{
         relayDevices    = await getRelayDevices();
         schedules       = await getSchedules();
-        
+        relaySettings   = await getRelaySettings();
+
         if(!relayDevices){
             throw new Error("relay devices not valid!");
         }
         if(!schedules){
             throw new Error(("schedules not valid!"));
         }
-
+        console.log(`RelaySettings: ${JSON.stringify(relaySettings)}`);
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
         // remove our periods between each octet to get an integer value and then sort
