@@ -239,6 +239,7 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
             page_name: page_name,
             schedules: schedulesByIp, 
             devices: relayDevices, 
+            relaySettings: relaySettings,
             stylesheets: ["/static/css/table.css"]
         });
         res.status(200).end();

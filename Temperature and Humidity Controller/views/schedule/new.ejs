@@ -14,9 +14,34 @@
             	<label for="gpio">Set GPIO: </label>
   				<select name="device[gpio]">
             		<option value="-1" selected="selected" disabled>Select Your GPIO:</option>
-					<% device['gpio'].forEach(function(myGpio){%>
-						<option value=<%=myGpio%>><%=myGpio%></option>
-					<% }) %>
+
+					<% 
+                        /* 
+                         * For each gpio set up with the current device, find out if the current devices gpio has
+                         * additional settings in the relaySettings (array) so that we use those settings to show 
+                         * what that GPIO turns on/off (water pump, light, ac unit).
+                         *
+                         * if no matches are found, the device's GPIO is used by default
+                         */
+                        device['gpio'].forEach(function(myGpio){
+                            let matchFound = false;
+                            relaySettings.forEach(function(relaySetting){ 
+                                if(relaySetting['relayId'].toString() === device['_id'].toString() &&
+                                   relaySetting['gpio'] === myGpio
+                                ){
+                                    matchFound = true;
+                    %>
+                        <option value=<%=myGpio%>><%=relaySetting['relayType']%></option>
+                    <%
+                                }
+                            });
+                            if(matchFound === false){
+                    %>
+                        <option value=<%=myGpio%>><%=myGpio%></option>
+                    <%
+                            }
+                        })
+                    %>
   				</select>
   			</div>
   			<div class="form-group">
