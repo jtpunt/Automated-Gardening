@@ -87,9 +87,14 @@
                     <i class="fa fa-fw fa-calendar" ></i> Schedule
                 </a>
             </li>
-            <li class="nav-item <%= page_name === 'journals' && 'active' %>">
+            <li class="nav-item <%= page_name === 'journal' && 'active' %>">
                 <a class="nav-link" href="/journal">
                     <i class="fa fa-fw fa-calendar" ></i> Journal
+                </a>
+            </li>
+            <li class="nav-item <%= page_name === 'room' && 'active' %>">
+                <a class="nav-link" href="/room">
+                    <i class="fa fa-fw fa-calendar" ></i> Room
                 </a>
             </li>
         <% } %>

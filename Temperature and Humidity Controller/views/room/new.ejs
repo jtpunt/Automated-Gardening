@@ -1,0 +1,153 @@
+
+<script type="text/javascript">
+    function deleteEle(e){
+        console.log("event called!", e);
+        console.log(e.parentNode);
+        var form_group = e.parentNode;
+        form_group.parentNode.removeChild(form_group);
+    }
+    function getSelectForm(htmlFor, labelText, selectText){
+        console.log("in getSelectForm");
+
+        var form_group = document.createElement("div");
+        var label      = document.createElement("label");
+        var select     = document.createElement("select");
+        var option     = document.createElement("option");
+        
+        var delBtn     = document.createElement("button");
+
+        form_group.className = "form-group";
+        label.htmlFor        = htmlFor;
+        label.innerText      = labelText;
+        select.name          = htmlFor;
+        delBtn.className     = "btn btn-warning";
+        delBtn.innerText     = "Delete";
+
+        option.value = -1;
+        option.disabled;
+        option.innerText = selectText;
+
+        form_group.appendChild(label);
+        form_group.appendChild(select);
+        form_group.appendChild(delBtn);
+        select.appendChild(option);
+
+        var option = document.createElement("option"); 
+
+        option.value = "test";
+        option.innerText = "test";
+        select.appendChild(option);
+
+        delBtn.onclick = function(e){
+            form_group.parentNode.removeChild(form_group);
+        }
+        return form_group;
+    }
+    document.onreadystatechange = () => {
+        console.log("On ready state change..");
+        var addRelayBtn = document.getElementById("addRelayBtn"),
+            addDht11Btn = document.getElementById("addDht11Btn"),
+            addDht22Btn = document.getElementById("addDht22Btn"),
+            addWaterBtn = document.getElementById("addWaterBtn"),
+            addSoilBtn  = document.getElementById("addSoilBtn");
+
+
+        addRelayBtn.onclick = function(e){
+            let htmlFor = "roomRelayIds",
+                labelText = "Room Smart Outlets",
+                selectText = "Select Your Smart Outlet";
+            console.log("in btn fn")
+            let selectForm = getSelectForm(htmlFor, labelText, selectText);
+            this.parentNode.insertBefore(selectForm, this);
+        }
+        addDht11Btn.onclick = function(e){
+            let htmlFor = "dht11Ids",
+                labelText = "DHT11 Temp/Humid Sensors",
+                selectText = "Select Your DHT11 Sensor";
+            console.log("in btn fn")
+            let selectForm = getSelectForm(htmlFor, labelText, selectText);
+            this.parentNode.insertBefore(selectForm, this);
+        }
+        addDht22Btn.onclick = function(e){
+            let htmlFor = "dht22Ids",
+                labelText = "DHT22 Temp/Humid Sensors",
+                selectText = "Select Your DHT22 Sensor";
+            console.log("in btn fn")
+            let selectForm = getSelectForm(htmlFor, labelText, selectText);
+            this.parentNode.insertBefore(selectForm, this);
+        }
+        addWaterBtn.onclick = function(e){
+            let htmlFor = "waterIds",
+                labelText = "Water Sensors",
+                selectText = "Select Your Water Sensor";
+            console.log("in btn fn")
+            let selectForm = getSelectForm(htmlFor, labelText, selectText);
+            this.parentNode.insertBefore(selectForm, this);
+        }
+        addSoilBtn.onclick = function(e){
+            let htmlFor = "soilIds",
+                labelText = "Soil Sensors",
+                selectText = "Select Your Soil Sensor";
+            console.log("in btn fn")
+            let selectForm = getSelectForm(htmlFor, labelText, selectText);
+            this.parentNode.insertBefore(selectForm, this);
+        }
+        
+    }
+</script>
+<div class="collapse" id="collapseNew">
+    <div class="well" style="border-left: 5px solid #00C851;">
+        <!--If the user is logged in, show the new schedule form-->
+        <h4>Add your room details <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
+        <form id="add-comment-form" action="/room" method="POST">
+            <div class="form-group">
+                <label for="roomName">Room Name</label>
+            	<input type="text" id="id" name="roomName" required>
+            </div>
+            <div class="form-group">
+                <label for="roomRelayIds">Room Smart Outlets</label>
+                <select name="roomRelayIds">
+                    <option value="-1" selected="selected" disabled>Select Your Smart Outlet</option>
+                </select>
+                 <button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
+            </div>
+            <button id="addRelayBtn" type="button">Add Smart Outlet</button>
+            <div class="form-group">
+                <label for="dht11Ids">DHT11 Temp/Humid Sensors</label>
+                <select name="dht11Ids">
+                    <option value="-1" selected="selected" disabled>Select Your DHT11 Sensor</option>
+                </select>
+                 <button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
+            </div>
+            <button id="addDht11Btn" type="button">Add DHT11 Device</button>
+            <div class="form-group">
+                <label for="dht22Ids">DHT22 Temp/Humid Sensors</label>
+                <select name="dht22Ids">
+                    <option value="-1" selected="selected" disabled>Select Your DHT22 Sensor</option>
+                </select>
+                 <button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
+            </div>
+            <button id="addDht22Btn" type="button">Add DHT22 Device</button>
+            <div class="form-group">
+                <label for="waterIds">Water Sensors</label>
+                <select name="waterIds">
+                    <option value="-1" selected="selected" disabled>Select Your Water Sensor</option>
+                </select>
+                 <button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
+            </div>
+            <button id="addWaterBtn" type="button">Add Water Sensor</button>
+            <div class="form-group">
+                <label for="soilIds">Soil Sensors</label>
+                <select name="soilIds">
+                    <option value="-1" selected="selected" disabled>Select Your Soil Sensor</option>
+                </select>
+                 <button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
+            </div>
+            <button id="addSoilBtn" type="button">Add Soil Sensor</button>
+            <div class="form-group">
+                <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--Collapse Add a schedule form END-->

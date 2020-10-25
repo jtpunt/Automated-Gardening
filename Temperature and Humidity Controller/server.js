@@ -22,6 +22,7 @@ var indexRoutes   = require("./routes/index"),
     chartRoutes   = require("./routes/charts"),
     deviceRoutes  = require("./routes/devices"),
     journalRoutes = require("./routes/journal"),
+    roomRoutes    = require("./routes/room"),
     schedRoutes   = require("./routes/schedules"),
     sensorRoutes  = require("./routes/sensors"),
     soilRoutes    = require("./routes/soil");
@@ -97,6 +98,7 @@ app.use("/camera", cameraRoutes);
 app.use("/charts", chartRoutes);
 app.use("/device", deviceRoutes);
 app.use("/journal", journalRoutes);
+app.use("/room", roomRoutes);
 app.use("/schedule", schedRoutes);
 app.use("/sensors", sensorRoutes);
 app.use("/soil", soilRoutes);
