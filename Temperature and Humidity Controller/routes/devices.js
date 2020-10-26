@@ -9,6 +9,7 @@ var express    = require("express"),
 // Shows all devices
 router.get("/", middleware.isLoggedIn, (req, res) =>{
     let page_name = "device";
+    // ** maybe there's a way to retrieve these device types from our mongo device model?
     var deviceObj = { 
         'DHT11 Sensor': [],
         'DHT22 Sensor': [],

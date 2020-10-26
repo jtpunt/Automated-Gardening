@@ -43,6 +43,16 @@
         }
         return form_group;
     }
+    function btnFn(e, arr){
+        console.log('in btn Fn with: ' + e + this);
+        console.log(e.id);
+        //console.log(arr);
+        // let deviceObj = JSON.stringify('<%-deviceObj%>');
+        // console.log(deviceObj);
+        // for(const deviceNameKey in deviceObj){
+        //     console.log(deviceNameKey);
+        // }
+    }
     document.onreadystatechange = () => {
         console.log("On ready state change..");
         var addRelayBtn = document.getElementById("addRelayBtn"),
@@ -95,6 +105,28 @@
         
     }
 </script>
+    <% 
+    for(const deviceNameKey in deviceObj){
+        /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
+        let deviceNameStr = deviceNameKey.replace(/\s/g,'');
+        let devices = [];
+    %>
+        <div class="form-group">
+                <label for="roomRelayIds">Room <%=deviceNameKey%></label>
+                <select name="roomRelayIds">
+                    <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
+                    <% deviceObj[deviceNameKey].forEach(function(device){ 
+                        devices.push({_id: device['_id'] ,deviceName: device['deviceName']});
+                    %>
+                        <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
+                    <% }); %>
+                </select>
+                 <button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
+        </div>
+        <button id="<%=deviceNameKey%>" type="button" onclick="btnFn(this)">Add <%=deviceNameKey%> Device</button>
+    <%        
+    }
+    %>  
 <div class="collapse" id="collapseNew">
     <div class="well" style="border-left: 5px solid #00C851;">
         <!--If the user is logged in, show the new schedule form-->

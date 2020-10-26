@@ -5,7 +5,14 @@ var deviceSchema = new mongoose.Schema({
     deviceName: String,
     deviceType: {
         type: String,
-        enum: ['DHT11 Sensor', 'DHT22 Sensor', 'Relay Server', 'Soil Moisture Sensor', 'Water Sensor', 'Camera']
+        enum: [
+            'DHT11 Sensor', 
+            'DHT22 Sensor', 
+            'Relay Server', 
+            'Soil Moisture Sensor', 
+            'Water Sensor', 
+            'Camera'
+        ]
     },
     gpio: [ {
         type: Number,

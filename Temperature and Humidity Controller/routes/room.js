@@ -9,14 +9,34 @@ var express    = require("express"),
 
     // Shows all devices
 router.get("/", middleware.isLoggedIn, (req, res) =>{
-    let page_name = "room";
+    let page_name = "room",
+        deviceObj = { 
+            'DHT11 Sensor': [],
+            'DHT22 Sensor': [],
+            'Relay Server': [] ,
+            'Soil Moisture Sensor': [],
+            'Water Sensor' : [],
+            'Camera': []
+        };
 
-    res.render("room/index", {
-        page_name: page_name,
-        stylesheets: ["/static/css/table.css"]
+    Device.find( (err, devices)=>{
+        if(err) console.log(err);
+        else{
+            devices.forEach(function(device){
+                if(!device['deviceType'] in deviceObj)
+                    deviceObj[device['deviceType']] = [];
+                else
+                    console.log("device is already in the deviceObj");
+                deviceObj[device['deviceType']].push(device);
+            })
+            res.render("room/index", {
+                page_name: page_name,
+                deviceObj: deviceObj,
+                stylesheets: ["/static/css/table.css"]
+            });
+            res.status(200).end();
+        }
     });
-    res.status(200).end();
-
 });
 router.get("/:room_id", (req, res) => {
 
