@@ -25,12 +25,29 @@
 						<!-- Room Name to be added in at a later point, to easily include all devices that are in that room to our 	    journal					
 							<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
 						-->
-						<div class="rTableHead"><span style="font-weight: bold;">List of Smart Outlets</div>
-						<div class="rTableHead"><span style="font-weight: bold;">List of Temp/Humid Sensors</div>	
-						<div class="rTableHead"><span style="font-weight: bold;">List of Water Sensors</div>
+						<div class="rTableHead"><span style="font-weight: bold;">List of Devices in Room</div>
 					</div>
 					<!-- Do we have any rooms set up? -->
-	
+					<%
+						if(rooms){
+							rooms.forEach(function(room){
+
+
+						
+					%>
+						<div class="rTableRow">
+							<div class="rTableCell"><%=room['roomName']%></div>
+							<div class="rTableCell"><%=room['roomDeviceIds']%></div>
+		
+							<a class="btn btn-warning" href="/room/<%=room['_id']%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
+					        <form action="/room/<%=room['_id']%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">
+					            <button class="btn btn-danger">Delete</button>
+					        </form>
+				    	</div>
+					<%
+							})
+						}
+					%>
 					<!--Setting up the add new room button that is used for collapsing-->
 			        <div class="text-right">
 			            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapseNew" aria-expanded="false" aria-controls="collapseNew">
