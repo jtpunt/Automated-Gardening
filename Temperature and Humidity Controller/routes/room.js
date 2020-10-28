@@ -33,6 +33,8 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                             console.log("device is already in the deviceObj");
                         deviceObj[device['deviceType']].push(device);
                     })
+                    console.log(`DeviceObj: ${JSON.stringify(deviceObj)}`);
+                    console.log(`Rooms: ${JSON.stringify(rooms)}`);
                     res.render("room/index", {
                         page_name: page_name,
                         rooms: rooms,

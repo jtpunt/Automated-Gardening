@@ -4,7 +4,6 @@
     <h1 style="text-align: center;">Edit Room <%=room['roomName']%></h1>
     <div style="width: 50%; margin:25px auto;">
         <form action="/room/<%=room['_id']%>/?_method=PUT" method="POST" class="update-form">
-
         	<div class="form-group">
                 <label for="roomName">Room Name</label>
             	<input type="text" id="id" name="roomName" value="<%=room['roomName']%>"required>

@@ -25,20 +25,40 @@
 						<!-- Room Name to be added in at a later point, to easily include all devices that are in that room to our 	    journal					
 							<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
 						-->
-						<div class="rTableHead"><span style="font-weight: bold;">List of Devices in Room</div>
+				         <% 
+			                for(const deviceNameKey in deviceObj){
+			                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
+			                    let deviceNameStr = deviceNameKey.replace(/\s/g,'');
+		                %>
+		                	<div class="rTableHead"><span style="font-weight: bold;"><%=deviceNameKey%></div>
+		                <%
+		                	}
+		                %>	
 					</div>
 					<!-- Do we have any rooms set up? -->
 					<%
 						if(rooms){
 							rooms.forEach(function(room){
-
-
-						
 					%>
 						<div class="rTableRow">
 							<div class="rTableCell"><%=room['roomName']%></div>
-							<div class="rTableCell"><%=room['roomDeviceIds']%></div>
-		
+						<% 
+			                for(const deviceNameKey in deviceObj){
+			                	let deviceMatches = []
+			                	deviceObj[deviceNameKey].forEach(function(device){
+
+			                		if(room['roomDeviceIds'].includes(device['_id'])){
+			                			console.log("EJS: Room device match found");
+			                			deviceMatches.push(device['deviceName']);
+			                		}
+			                	});
+			            %>
+
+							<div class="rTableCell"><%=deviceMatches%></div>
+
+						<%  
+							}  
+						%>	
 							<a class="btn btn-warning" href="/room/<%=room['_id']%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
 					        <form action="/room/<%=room['_id']%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">
 					            <button class="btn btn-danger">Delete</button>
