@@ -45,9 +45,6 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
         }
     });
 });
-router.get("/:room_id", middleware.isLoggedIn, (req, res) => {
-
-});
 router.post("/", middleware.isLoggedIn, (req, res) => {
     console.log(`in POST -> /room with body: ${JSON.stringify(req.body)}`);
     let body = req.body,
@@ -60,12 +57,49 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         if(err) console.log(err.toString());
         else{
             console.log("New Room created: " + newRoom);
+            res.redirect("/room");
             res.status(200).end();
         }
     })
 });
+
+router.get("/:room_id", middleware.isLoggedIn, (req, res) => {
+
+});
 router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
-    console.log("in ")
+    console.log(`in PUT -> /room with body: ${JSON.stringify(req.body)}`);
+    let room_id = req.params.room_id,
+        updated_room_config = req.body;
+
+    Room.findByIdAndUpdate(room_id, {$set: updated_room_config}, (err, room) => {
+        if(err){
+            console.log(err.toString());
+            res.write("404: ", JSON.stringify(err));
+            res.status(404).end();
+        }else{
+            console.log("Room successfully updated");
+            res.redirect("/room");
+            res.status(200).end();
+        }
+    });
+});
+router.delete("/:room_id", middleware.isLoggedIn, (req, res) =>{
+    console.log("In room delete");
+    let room_id = req.params.room_id;
+
+    Room.findByIdAndRemove(room_id, (err) => {
+        if(err){
+            console.log(err.toString());
+            res.write("404: ", JSON.stringify(err));
+            res.status(404).end();
+        } 
+        else{
+            console.log("Room successfully removed");
+            console.log("Successfully Deleted!");
+            res.redirect("/room");
+            res.status(200).end();
+        }
+    });
 });
 router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
     console.log("in room edit");
@@ -114,5 +148,4 @@ router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
         }
     });
 });
-
 module.exports = router;
