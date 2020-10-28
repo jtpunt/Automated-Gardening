@@ -69,7 +69,50 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
 });
 router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
     console.log("in room edit");
-    res.status(200).end();
+    let page_name = "Room Edit",
+        room_id = req.params.room_id,
+        deviceObj = { 
+            'DHT11 Sensor': [],
+            'DHT22 Sensor': [],
+            'Relay Server': [] ,
+            'Soil Moisture Sensor': [],
+            'Water Sensor' : [],
+            'Camera': []
+        };
+    Device.find( (err, devices)=>{
+        if(err) console.log(err);
+        else{
+            Room.findById(room_id, function(err, room){
+                if(err) console.log(err.toString());
+                else{
+                    console.log(`Room Found: ${JSON.stringify(room)}`);
+                    Room.find( (err, rooms) => {
+                        if(err) console.log(err.toString());
+                        else{
+                            console.log(`Rooms found: ${JSON.stringify(rooms)}`);
+                            devices.forEach(function(device){
+                                if(!device['deviceType'] in deviceObj)
+                                    deviceObj[device['deviceType']] = [];
+                                else
+                                    console.log("device is already in the deviceObj");
+                                deviceObj[device['deviceType']].push(device);
+                            })
+                        }
+                        res.render("room/edit", {
+                            page_name: page_name,
+                            deviceObj: deviceObj,
+                            room: room,
+                            rooms: rooms,
+                            stylesheets: ["/static/css/table.css"]
+                        });
+                        res.status(200).end();
+                    });
+                }
+            })
+
+            
+        }
+    });
 });
 
 module.exports = router;
