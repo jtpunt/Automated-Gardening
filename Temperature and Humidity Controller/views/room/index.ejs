@@ -46,16 +46,12 @@
 			                for(const deviceNameKey in deviceObj){
 			                	let deviceMatches = []
 			                	deviceObj[deviceNameKey].forEach(function(device){
-
 			                		if(room['roomDeviceIds'].includes(device['_id'])){
-			                			console.log("EJS: Room device match found");
 			                			deviceMatches.push(device['deviceName']);
 			                		}
 			                	});
 			            %>
-
 							<div class="rTableCell"><%=deviceMatches%></div>
-
 						<%  
 							}  
 						%>	
