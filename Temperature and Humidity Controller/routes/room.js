@@ -10,14 +10,17 @@ var express    = require("express"),
     // Shows all devices
 router.get("/", middleware.isLoggedIn, (req, res) =>{
     let page_name = "room",
-        deviceObj = { 
+        allDevicesObj = { 
             'DHT11 Sensor': [],
             'DHT22 Sensor': [],
             'Relay Server': [] ,
             'Soil Moisture Sensor': [],
             'Water Sensor' : [],
             'Camera': []
-        };
+        },
+        // create a new object that copies allDeviceObj, but is not a reference
+        // to allDevicesObj
+        availableDevicesObj = JSON.parse(JSON.stringify(allDevicesObj));
 
     Device.find( (err, devices)=>{
         if(err) console.log(err);
@@ -26,19 +29,23 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                 if(err) console.log(err.toString());
                 else{
                     console.log(`Rooms found: ${JSON.stringify(rooms)}`);
+                    let unavailableDevices = [];
                     devices.forEach(function(device){
-                        if(!device['deviceType'] in deviceObj)
-                            deviceObj[device['deviceType']] = [];
-                        else
-                            console.log("device is already in the deviceObj");
-                        deviceObj[device['deviceType']].push(device);
+                        rooms.forEach(function(room){
+                            const foundDeviceId = room['roomDeviceIds'].includes(device['_id']);
+                            if(foundDeviceId){
+                                unavailableDevices.push(device['_id']);
+                            }
+                        });
+                        if(!unavailableDevices.includes(device['_id']))
+                            availableDevicesObj[device['deviceType']].push(device);
+                        allDevicesObj[device['deviceType']].push(device);
                     })
-                    console.log(`DeviceObj: ${JSON.stringify(deviceObj)}`);
-                    console.log(`Rooms: ${JSON.stringify(rooms)}`);
                     res.render("room/index", {
                         page_name: page_name,
                         rooms: rooms,
-                        deviceObj: deviceObj,
+                        allDevicesObj: allDevicesObj,
+                        availableDevicesObj: availableDevicesObj,
                         stylesheets: ["/static/css/table.css"]
                     });
                     res.status(200).end();

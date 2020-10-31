@@ -9,7 +9,7 @@
             	<input type="text" id="id" name="roomName" required>
             </div>
             <% 
-                for(const deviceNameKey in deviceObj){
+                for(const deviceNameKey in availableDevicesObj){
                     /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
                     let deviceNameStr = deviceNameKey.replace(/\s/g,'');
                 %>
@@ -17,7 +17,7 @@
                         <label for="roomDeviceIds"><%=deviceNameKey%></label>
                         <select name="roomDeviceIds" multiple="true">
                             <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
-                            <% deviceObj[deviceNameKey].forEach(function(device){ 
+                            <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
                             %>
                                 <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
                             <% }); %>

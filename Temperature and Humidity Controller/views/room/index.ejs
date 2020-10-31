@@ -26,7 +26,7 @@
 							<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
 						-->
 				         <% 
-			                for(const deviceNameKey in deviceObj){
+			                for(const deviceNameKey in allDevicesObj){
 			                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
 			                    let deviceNameStr = deviceNameKey.replace(/\s/g,'');
 		                %>
@@ -43,9 +43,9 @@
 						<div class="rTableRow">
 							<div class="rTableCell"><%=room['roomName']%></div>
 						<% 
-			                for(const deviceNameKey in deviceObj){
+			                for(const deviceNameKey in allDevicesObj){
 			                	let deviceMatches = []
-			                	deviceObj[deviceNameKey].forEach(function(device){
+			                	allDevicesObj[deviceNameKey].forEach(function(device){
 			                		if(room['roomDeviceIds'].includes(device['_id'])){
 			                			deviceMatches.push(device['deviceName']);
 			                		}
