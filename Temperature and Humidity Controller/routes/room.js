@@ -58,18 +58,46 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     console.log(`in POST -> /room with body: ${JSON.stringify(req.body)}`);
     let body = req.body,
         roomName = body.roomName,
-        roomDeviceIds = Array.from(body.roomDeviceIds);
+        roomDeviceIds = body.roomDeviceIds;
 
     console.log(`room name: ${roomName}`);
     console.log(`roomDeviceIds: ${roomDeviceIds}`);
-    Room.create({roomName: roomName, roomDeviceIds: roomDeviceIds}, (err, newRoom) => {
+    // we need to make sure that the device ids that we are adding to the current room don't
+    // already belong to another room that already exists
+    Room.find( (err, rooms) => {
         if(err) console.log(err.toString());
         else{
-            console.log("New Room created: " + newRoom);
-            res.redirect("/room");
-            res.status(200).end();
+            console.log(`Rooms found: ${JSON.stringify(rooms)}`);
+            let foundDeviceIds = [];
+            rooms.forEach(function(room){
+                room['roomDeviceIds'].forEach(function(roomDeviceId){
+                    console.log(`current roomDeviceId: ${roomDeviceId}`);
+                    const foundDeviceId = roomDeviceIds.includes(roomDeviceId.toString());
+                    console.log(`foundDeviceId: ${foundDeviceId}`);
+                    if(foundDeviceId){
+                        foundDeviceIds.push(roomDeviceId);
+                    }
+                });
+            });
+            console.log("Room Create Statement");
+            if(foundDeviceIds.length > 0){
+                req.flash("error", "The devices that you are trying to add belongs to another room");
+                res.redirect("/room");
+                res.status(400).end();
+            }else{
+                Room.create({roomName: roomName, roomDeviceIds: roomDeviceIds}, (err, newRoom) => {
+                    if(err) console.log(err.toString());
+                    else{
+                        console.log("New Room created: " + newRoom);
+                        req.flash("success", "Room was successfully created");
+                        res.redirect("/room");
+                        res.status(200).end();
+                    }
+                })
+            }
+
         }
-    })
+    });
 });
 
 router.get("/:room_id", middleware.isLoggedIn, (req, res) => {
