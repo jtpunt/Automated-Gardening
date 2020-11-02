@@ -21,7 +21,13 @@
         	<div class="collapse" id="collapse">
         		<div class="rTable">
 					<div class="rTableRow">
-						<div class="rTableHead"><span style="font-weight: bold;">Room Name</span></div>
+						<div class="rTableHead">
+							<span style="font-weight: bold;">Room Name</span>
+						</div>
+						<div class="rTableHead">
+							<span style="font-weight: bold;">Room Type</span>
+						</div>
+
 						<!-- Room Name to be added in at a later point, to easily include all devices that are in that room to our 	    journal					
 							<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
 						-->
@@ -30,7 +36,9 @@
 			                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
 			                    let deviceNameStr = deviceNameKey.replace(/\s/g,'');
 		                %>
-		                	<div class="rTableHead"><span style="font-weight: bold;"><%=deviceNameKey%></div>
+		                	<div class="rTableHead">
+		                		<span style="font-weight: bold;"><%=deviceNameKey%></span>
+		                	</div>
 		                <%
 		                	}
 		                %>	
@@ -42,6 +50,7 @@
 					%>
 						<div class="rTableRow">
 							<div class="rTableCell"><%=room['roomName']%></div>
+							<div class="rTableCell"><%=room['roomType']%></div>
 						<% 
 			                for(const deviceNameKey in allDevicesObj){
 			                	let deviceMatches = []

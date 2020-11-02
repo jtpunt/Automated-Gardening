@@ -8,6 +8,28 @@
                 <label for="roomName">Room Name</label>
             	<input type="text" id="id" name="roomName" value="<%=room['roomName']%>"required>
             </div>
+            <div class="form-group">
+                <label for="roomType">Room Type</label>
+                <select name="roomType">
+                    <option value="-1" selected="selected" disabled>Select Your Room Type</option>
+                    <% if(room['roomType'] === "Vegetative and Flowering"){%>
+                        <option value="Vegetative and Flowering" selected="selected">Vegetative and Flowering</option>
+                    <% } else { %>
+                        <option value="Vegetative and Flowering">Vegetative and Flowering</option>
+                    <% }
+                        if(room['roomType'] === "Vegetative"){ %>
+                        <option value="Vegetative" selected="selected">Vegetative</option>
+                    <% } else { %>
+                        <option value="Vegetative">Vegetative</option>
+                    <% }
+                        if(room['roomType'] === "Flowering"){ %>
+                         %>
+                        <option value="Flowering" selected="selected">Flowering</option>
+                    <% } else { %>
+                        <option value="Flowering">Flowering</option>
+                    <% } %>
+                </select>
+            </div>
              <% 
                 for(const deviceNameKey in deviceObj){
                     /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */

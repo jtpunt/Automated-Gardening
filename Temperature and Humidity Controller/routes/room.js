@@ -58,6 +58,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     console.log(`in POST -> /room with body: ${JSON.stringify(req.body)}`);
     let body = req.body,
         roomName = body.roomName,
+        roomType = body.roomType,
         roomDeviceIds = body.roomDeviceIds;
 
     console.log(`room name: ${roomName}`);
@@ -85,7 +86,11 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
                 res.redirect("/room");
                 res.status(400).end();
             }else{
-                Room.create({roomName: roomName, roomDeviceIds: roomDeviceIds}, (err, newRoom) => {
+                Room.create({
+                    roomName: roomName, 
+                    roomType: roomType,
+                    roomDeviceIds: roomDeviceIds
+                }, (err, newRoom) => {
                     if(err) console.log(err.toString());
                     else{
                         console.log("New Room created: " + newRoom);
@@ -106,7 +111,7 @@ router.get("/:room_id", middleware.isLoggedIn, (req, res) => {
 router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
     console.log(`in PUT -> /room with body: ${JSON.stringify(req.body)}`);
     let room_id = req.params.room_id,
-        updated_room_config = req.body;
+        updated_room_config = req.body,
         roomDeviceIds = req.body.roomDeviceIds;
 
      Room.find( (err, rooms) => {
@@ -115,14 +120,16 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
             console.log(`Rooms found: ${JSON.stringify(rooms)}`);
             let foundDeviceIds = [];
             rooms.forEach(function(room){
-                room['roomDeviceIds'].forEach(function(roomDeviceId){
-                    console.log(`current roomDeviceId: ${roomDeviceId}`);
-                    const foundDeviceId = roomDeviceIds.includes(roomDeviceId.toString());
-                    console.log(`foundDeviceId: ${foundDeviceId}`);
-                    if(foundDeviceId){
-                        foundDeviceIds.push(roomDeviceId);
-                    }
-                });
+                if(room["_id"].toString() !== room_id){ 
+                    room['roomDeviceIds'].forEach(function(roomDeviceId){
+                        console.log(`current roomDeviceId: ${roomDeviceId}`);
+                        const foundDeviceId = roomDeviceIds.includes(roomDeviceId.toString());
+                        console.log(`foundDeviceId: ${foundDeviceId}`);
+                        if(foundDeviceId){
+                            foundDeviceIds.push(roomDeviceId);
+                        }
+                    });
+                }
             });
             console.log("Room Create Statement");
             if(foundDeviceIds.length > 0){
@@ -137,6 +144,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
                         res.status(404).end();
                     }else{
                         console.log("Room successfully updated");
+                        req.flash("success", "The room was successfully updated!");
                         res.redirect("/room");
                         res.status(200).end();
                     }
