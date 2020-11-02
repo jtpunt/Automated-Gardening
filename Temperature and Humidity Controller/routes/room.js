@@ -107,16 +107,41 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
     console.log(`in PUT -> /room with body: ${JSON.stringify(req.body)}`);
     let room_id = req.params.room_id,
         updated_room_config = req.body;
+        roomDeviceIds = req.body.roomDeviceIds;
 
-    Room.findByIdAndUpdate(room_id, {$set: updated_room_config}, (err, room) => {
-        if(err){
-            console.log(err.toString());
-            res.write("404: ", JSON.stringify(err));
-            res.status(404).end();
-        }else{
-            console.log("Room successfully updated");
-            res.redirect("/room");
-            res.status(200).end();
+     Room.find( (err, rooms) => {
+        if(err) console.log(err.toString());
+        else{
+            console.log(`Rooms found: ${JSON.stringify(rooms)}`);
+            let foundDeviceIds = [];
+            rooms.forEach(function(room){
+                room['roomDeviceIds'].forEach(function(roomDeviceId){
+                    console.log(`current roomDeviceId: ${roomDeviceId}`);
+                    const foundDeviceId = roomDeviceIds.includes(roomDeviceId.toString());
+                    console.log(`foundDeviceId: ${foundDeviceId}`);
+                    if(foundDeviceId){
+                        foundDeviceIds.push(roomDeviceId);
+                    }
+                });
+            });
+            console.log("Room Create Statement");
+            if(foundDeviceIds.length > 0){
+                req.flash("error", "The devices that you are trying to add belongs to another room");
+                res.redirect("/room");
+                res.status(400).end();
+            }else{
+                Room.findByIdAndUpdate(room_id, {$set: updated_room_config}, (err, room) => {
+                    if(err){
+                        console.log(err.toString());
+                        res.write("404: ", JSON.stringify(err));
+                        res.status(404).end();
+                    }else{
+                        console.log("Room successfully updated");
+                        res.redirect("/room");
+                        res.status(200).end();
+                    }
+                });
+            }
         }
     });
 });
@@ -138,6 +163,9 @@ router.delete("/:room_id", middleware.isLoggedIn, (req, res) =>{
         }
     });
 });
+// edit page will show the devices that are currently set up in the room we
+// are trying to update along with additional devices that are available to be
+// added to the room
 router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
     console.log("in room edit");
     let page_name = "Room Edit",
@@ -161,13 +189,23 @@ router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
                         if(err) console.log(err.toString());
                         else{
                             console.log(`Rooms found: ${JSON.stringify(rooms)}`);
+                            let unavailableDevices = [];
                             devices.forEach(function(device){
-                                if(!device['deviceType'] in deviceObj)
-                                    deviceObj[device['deviceType']] = [];
-                                else
-                                    console.log("device is already in the deviceObj");
-                                deviceObj[device['deviceType']].push(device);
-                            })
+                                rooms.forEach(function(room){
+                                    // look at the devices being used in other rooms to see what is 
+                                    // available to be added to our room that we are trying to update
+                                    if(room["_id"].toString() !== room_id){ 
+                                        console.log("diff room found: " + room["_id"] + " " + room_id);
+                                        const foundDeviceId = room['roomDeviceIds'].includes(device['_id']);
+                                        if(foundDeviceId){
+                                            unavailableDevices.push(device['_id']);
+                                        }
+                                    }
+                                });
+                                if(!unavailableDevices.includes(device['_id'])){
+                                    deviceObj[device['deviceType']].push(device);
+                                }
+                            });
                         }
                         res.render("room/edit", {
                             page_name: page_name,
@@ -179,9 +217,7 @@ router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
                         res.status(200).end();
                     });
                 }
-            })
-
-            
+            });
         }
     });
 });
