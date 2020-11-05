@@ -15,10 +15,12 @@
         
         var delBtn     = document.createElement("button");
 
-        form_group.className = "form-group";
+        form_group.className = "form-group row";
         label.htmlFor        = "gpio";
         label.innerText      = "GPIO #";
+        label.className      = "col-sm-6 col-form-label";
         select.name          = "gpio";
+        select.className     = "col-sm-20";
         delBtn.className     = "btn btn-warning";
         delBtn.innerText     = "Delete";
 
@@ -49,10 +51,12 @@
                 optionRelayType     = document.createElement("option");
             relayTypesArr = ['air conditioner', 'light', 'water pump'];
 
-            form_group_relay_type.className = "form-group";
-            labelRelaytype.htmlFor        = "gpio";
-            labelRelaytype.innerText      = "Relay Type";
-            selectRelayType.name          = "relayType";
+            form_group_relay_type.className = "form-group row";
+            labelRelaytype.htmlFor          = "gpio";
+            labelRelaytype.innerText        = "Relay Type";
+            labelRelaytype.className        = "col-sm-6 col-form-label";
+            selectRelayType.name            = "relayType";
+            selectRelayType.className       = "col-sm-20"
 
             optionRelayType.value = -1;
             optionRelayType.disabled;
@@ -91,66 +95,68 @@
 <div class="container">
     <div class="row">
         <h1 style="text-align: center;">Edit <%=device.deviceType%></h1>
-        <div style="width: 30%; margin:25px auto;">
+        <div style="width: 50%; margin:25px auto;">
             <form action="/device/<%=device._id%>/?_method=PUT" method="post">
-                <div class="form-group">
-                    <label for="deviceName">Device Name</label>
-                    <input class="form-control" type="text" id="deviceName" name="deviceName" value="<%=device.deviceName%>" maxlength="30" required>
+                <div class="form-group  row">
+                    <label class="col-sm-6 col-form-label" for="deviceName">Device Name</label>
+                    <input class="col-sm-20" type="text" id="deviceName" name="deviceName" value="<%=device.deviceName%>" maxlength="30" required>
                 </div>
-               <div class="form-group">
-                    <label for="local_ip">Local IP</label>
-                    <input class="form-control" type="text" id="local_ip" name="local_ip" value="<%=device.local_ip%>" maxlength="30" required>
+               <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="local_ip">Local IP</label>
+                    <input class="col-sm-20" type="text" id="local_ip" name="local_ip" value="<%=device.local_ip%>" maxlength="30" required>
                 </div>
                 <% 
                 if(device['gpio'] && device['deviceType'] !== "Camera"){ 
                     let acceptedGpios = [2, 3, 4, 5, 6, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];  
                     device['gpio'].forEach(function(myGpio, i){ console.log(myGpio) %>
-                    <div class="form-group">
-                        <label for="gpio">GPIO #</label>      
-        				<select name="gpio">
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="gpio">GPIO #</label>      
+        				<select class="col-sm-20" name="gpio">
                     		<option value="-1" selected="selected" disabled>Select Your GPIO Pin #:</option>
                         <% acceptedGpios.forEach(function(acceptedGpio){ %>
                             <option value="<%=acceptedGpio%>" <% if (myGpio == acceptedGpio) { %>selected="selected"<% } %> ><%=acceptedGpio%></option>
                         <% }); %>
         				</select>
         				<button class="btn btn-warning" onclick="deleteEle(this)" type="button">Delete</button>
-                        <% if(device['deviceType'] === "Relay Server") { %>
-
-                            <div class="form-group">
-                                <label for="relaySettings[relayType]">Relay Type</label>      
-                                <select name="relaySettings[relayType]">
-                                    <option value="air conditioner" <% if (relayTypeArr[i] == "air conditioner") { %>selected="selected"<% } %>>Air Conditioner</option>
-                                    <option value="light" <% if (relayTypeArr[i] == "light") { %>selected="selected"<% } %>>Light</option>
-                                    <option value="water pump" <% if (relayTypeArr[i] == "water pump") { %>selected="selected"<% } %>>Water Pump</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="relaySettings[direction]">Direction</label>      
-                                <select name="relaySettings[direction]">
-                                    <option value="in" <% if (directionArr[i] == "in") { %>selected="selected"<% } %>>in</option>
-                                    <option value="out" <% if (directionArr[i] == "out") { %>selected="selected"<% } %>>out</option>
-                                    <option value="high" <% if (directionArr[i] == "high") { %>selected="selected"<% } %>>high</option>
-                                    <option value="low" <% if (directionArr[i] == "low") { %>selected="selected"<% } %>>low</option>
-                                </select>
-                            </div>
-                        <% } %>
-    			    </div>
-                <% });
+                    </div>
+                    <% if(device['deviceType'] === "Relay Server") { 
+                        let relayTypes = ["air conditioner", "light", "water pump"]        
+                    %>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="relaySettings[relayType]">Relay Type</label>      
+                            <select class="col-sm-20" name="relaySettings[relayType]">
+                        <%  relayTypes.forEach(function(relayType){ %>
+                                <option value="<%=relayType%>" <% if (relayTypeArr[i] == relayType) { %>selected="selected"<% } %>><%=relayType%></option>
+                        <%  }) %>
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="relaySettings[direction]">Direction</label>      
+                            <select class="col-sm-20" name="relaySettings[direction]">
+                                <option value="in" <% if (directionArr[i] == "in") { %>selected="selected"<% } %>>in</option>
+                                <option value="out" <% if (directionArr[i] == "out") { %>selected="selected"<% } %>>out</option>
+                                <option value="high" <% if (directionArr[i] == "high") { %>selected="selected"<% } %>>high</option>
+                                <option value="low" <% if (directionArr[i] == "low") { %>selected="selected"<% } %>>low</option>
+                            </select>
+                        </div>
+                    <% } %>
+                <% }); %>
+                <button id="addGpioBtn" type="button">Add GPIO</button>
+                <%
                 }
                 %>
-                <button id="addGpioBtn" type="button">Add GPIO</button>
                 <% if(device['deviceType'] === "Camera"){ %>
-                    <div class="form-group">
-                        <label for="cameraWidth">Camera Width</label>
-                        <input class="form-control" type="text" id="cameraWidth" name="cameraWidth" value="<%=cameraSettings.width%>" maxlength="5" required>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="cameraWidth">Camera Width</label>
+                        <input class="col-sm-20" type="text" id="cameraWidth" name="cameraWidth" value="<%=cameraSettings.width%>" maxlength="5" required>
                     </div>
-                    <div class="form-group">
-                        <label for="cameraWidth">Camera Height</label>
-                        <input class="form-control" type="text" id="cameraHeight" name="cameraHeight" value="<%=cameraSettings.height%>" maxlength="5" required>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="cameraWidth">Camera Height</label>
+                        <input class="col-sm-20" type="text" id="cameraHeight" name="cameraHeight" value="<%=cameraSettings.height%>" maxlength="5" required>
                     </div>
-                    <div class="form-group">
-                        <label for="rotation">Camera Rotation</label>      
-                        <select name="rotation">
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="rotation">Camera Rotation</label>
+                        <select class="col-sm-20" name="rotation">
                             <option value="0" <% if (cameraSettings.rotation == 0) { %>selected="selected"<% } %>>0</option>
                             <option value="90" <% if (cameraSettings.rotation == 90) { %>selected="selected"<% } %>>90</option>
                             <option value="180" <% if (cameraSettings.rotation == 180) { %>selected="selected"<% } %>>180</option>
@@ -159,9 +165,8 @@
                     </div>
                 <% } %>
                 <% if(device['deviceType'] === "Water Sensor"){ %>
-                    <div class="form-group">
-                        <label for="relayId">Device To Turn Off</label>      
-                        <select name="relayId">
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="relayId">Device To Turn Off</label>  <select class="col-sm-20" name="relayId">
                             <% relay_devices.forEach(function(relay_device){ %>
                                 <option value="<%=relay_device['_id']%>" 
                                     <% if (water_config['relayId'].toString() === relay_device['_id'].toString()) { %>selected="selected"<% } %>
@@ -171,28 +176,28 @@
                             <% }); %>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="checkMinsBefore">Check Mins Before Watering Sessions</label>      
-                        <select name="checkMinsBefore">
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="checkMinsBefore">Check Mins Before Watering Sessions</label>      
+                        <select class="col-sm-20" name="checkMinsBefore">
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="15">15</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="checkMinsAfter">Check Mins After Watering Sessions</label>      
-                        <select name="checkMinsAfter">
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="checkMinsAfter">Check Mins After Watering Sessions</label>      
+                        <select class="col-sm-20" name="checkMinsAfter">
                             <option value="5">5</option>
                             <option value="10">10</option>
                             <option value="15">15</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group row">
                         <label for="DayOfWeekCheckBox"> Cancel Watering Session?</label>
                         <input type="checkbox" name="cancelWater">
                     </div>
                 <% } %>
-                <div class="form-group">
+                <div class="form-group row">
                     <button class="btn btn-lg btn-primary btn-block">Submit!</button>
                 </div>
             </form>

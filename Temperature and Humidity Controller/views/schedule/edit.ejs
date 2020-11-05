@@ -156,14 +156,11 @@ input:checked + .slider:before {
                             minute = schedule['schedule']['minute'],
                             hour   = schedule['schedule']['hour'];
 
-                        if(second < 10) 
-                            second = "0" + second;
-                        if(minute < 10) 
-                            minute = "0" + minute;
-                        if(hour < 10) 
-                            hour = "0" + hour;
+                        if(second < 10) second = "0" + second;
+                        if(minute < 10) minute = "0" + minute;
+                        if(hour < 10) hour = "0" + hour;
       				 %>
-					<input type="time" id="time" class="col-sm-20" name="schedule[start_time]" value="<%=hour%>:<%=minute%>:<%=second%>" step="1" required>
+					<input class="col-sm-20" type="time" id="time" class="col-sm-20" name="schedule[start_time]" value="<%=hour%>:<%=minute%>:<%=second%>" step="1" required>
                 </div>
                  
                 <div class="form-group row">
@@ -330,7 +327,7 @@ input:checked + .slider:before {
                     </select>
                 </div>
                 <div class="form-group row" hidden>
-      	            <label for="weekDays-selector" class="col-sm-6 col-form-label">On or Off? </label>
+      	            <label for="weekDays-selector">On or Off? </label>
       	            <div class="col-sm-20">
       	                <%
       	                    if(schedule['device']['desired_state'] === true){
@@ -360,14 +357,14 @@ input:checked + .slider:before {
                         <input type="checkbox" name="DayOfWeekCheckBox" onclick="myFunction('<%=ipStr%>DayOfWeek')" unchecked>
                     </div>
                 </div>
-                <div class="form-device[group r]ow" id="<%=ipStr%>Date" style="display:none">
-                	<label for="date" class="col-sm-10 col-form-label">Set Date: </label>
+                <div class="form-group row" id="<%=ipStr%>Date" style="display:none">
+                	<label class="col-sm-6 col-form-label" for="date">Set Date: </label>
                 	<div class="col-sm-20">
                 	    <input type="date" name="schedule[date]">
                 	</div>
                 </div>
-                <div class="form-group" id="<%=ipStr%>DayOfWeek" style="display:none">
-                	<label for="weekDays-selector">Select day of week: </label>
+                <div class="form-group row" id="<%=ipStr%>DayOfWeek" style="display:none">
+                	<label class="col-sm-6 col-form-label" for="weekDays-selector">Select day of week: </label>
                 	<div class="weekDays-selector" id="weekDays-selector">
                 		<label for="<%=ipStr%>weekday-sun" id='<%=ipStr%>sun' class="<%= foundSun !== -1 ? 'deselectedCheckbox selectedCheckbox' : 'deselectedCheckbox' %>">S</label>
       					<input type="checkbox" id="<%=ipStr%>weekday-sun" name="schedule[dayOfWeek]" onclick="selectCheckbox('<%=ipStr%>sun')" class="weekday" value="0" <% if(foundSun !== -1){ %>checked="true" <% }%>/>
