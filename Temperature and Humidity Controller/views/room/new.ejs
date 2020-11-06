@@ -21,12 +21,14 @@
                 for(const deviceNameKey in availableDevicesObj){
                     /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
                     let deviceNameStr = deviceNameKey.replace(/\s/g,'');
+                    
                 %>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
                         <select class="col-sm-20" name="roomDeviceIds" multiple="true">
                             <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
                             <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
+                                if(device['relayType'] === "water pump") { waterPumpRelays.push(device);}
                             %>
                                 <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
                             <% }); %>
@@ -35,6 +37,11 @@
                 <%        
                 }
             %>  
+            <% if(waterPumps) { %>
+                <p>Water Pumps Found: <%=waterPumps.length %></p>
+            <% 
+                }
+            %>
             <div class="form-group row">
                 <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
             </div>
