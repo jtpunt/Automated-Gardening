@@ -8,6 +8,14 @@ var roomSchema = new mongoose.Schema({
     roomDeviceIds: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Device"
-    }]
+    }],
+    roomWaterDetails: {[
+		relayId: { // deviceType: 'water pump'
+	    	type: mongoose.Schema.Types.ObjectId,
+	    	ref: "Device"
+		},
+    	containerSize: Number,
+    	numOfWaterLines: Number
+    ]}
 });
 module.exports = mongoose.model('Room', roomSchema, 'rooms');
