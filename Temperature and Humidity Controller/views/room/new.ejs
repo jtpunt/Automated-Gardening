@@ -1,7 +1,9 @@
 <script type="text/javascript">
 
-    function relaySelectFn(waterDetailsId) {
+    function relaySelectFn(event, waterDetailsId) {
         let waterDetailsContainer = document.getElementById("waterDetailsContainer");
+        let relayServerSelect = document.getElementById("relayServerSelect");
+        console.log(event);
         if(waterDetailsId){
             // add divs to get water pump info - relayId, container size, # of lines
             let waterDetailsEle = document.getElementById(waterDetailsId);
@@ -13,6 +15,9 @@
             // remove divs
             // need to find all divs for each water pump we are trying to get information on from the user and see if all are hidden, then we will make their parent container 'waterDetailsContainer' hidden,
             // otherwise, we need to hide just the water details that's associated with the relay server that was selected
+            //console.log(waterDetailsContainer);
+            console.log(relayServerSelect);
+            console.log(relayServerSelect.options);
             waterDetailsContainer.hidden = true;
             console.log("Empty string?");
         }
@@ -48,7 +53,7 @@
                 %>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select onchange="relaySelectFn(this.value)" id="roomDeviceIds" class="col-sm-20" name="roomDeviceIds" multiple="true">
+                        <select onchange="relaySelectFn(this, this.value)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true">
                             <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
                             <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
                             %>
@@ -57,6 +62,44 @@
                         </select>
                     </div>
                     <hr style="border: 1px solid black;">
+                    <div id="waterDetailsContainer">
+                    <% 
+                        if(availableWaterPumps.length > 0) { 
+                            availableWaterPumps.forEach(function(waterPump){
+                            let relayName = "";
+                            availableDevicesObj[deviceNameKey].forEach(function(device){ 
+                                if(device['_id'].toString() === waterPump['relayId'].toString()){
+                                    console.log("Ejs Found Device: " + device);
+                                    relayName = device['deviceName'];
+                                }
+                            });
+                            
+                        %>
+                        <div id="<%=waterPump['relayId']%>" hidden>
+
+                            <div class="form-group row">
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%></label>
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size</label>
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfLines]">
+                            </div>
+                            <hr style="border: 1px solid black;">
+                        </div>
+                        <%
+
+                            }) 
+                        %>
+                    <% 
+                        }
+                    %>
+                    </div>
+
                 <%
                     } else {
                 %>
@@ -75,35 +118,7 @@
                     }   
                 }
             %>  
-            <div id="waterDetailsContainer">
-            <% 
-                if(availableWaterPumps.length > 0) { 
-                    availableWaterPumps.forEach(function(waterPump){
-                %>
-                <div id="<%=waterPump['relayId']%>" hidden>
-
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details</label>
-                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size</label>
-                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]">
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
-                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfLines]">
-                    </div>
-                    <hr style="border: 1px solid black;">
-                </div>
-                <%
-
-                    }) 
-                %>
-            <% 
-                }
-            %>
-            </div>
+        
             <div class="form-group row">
                 <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
             </div>
