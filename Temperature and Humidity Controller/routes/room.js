@@ -26,8 +26,9 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
         if(err) console.log(err);
         else{
             let devicesProcessed = 0;
-            let myWaterPumps = [];
+            let availableWaterPumps = [];
             let callback = function(){
+                console.log(`in callback with waterpumps: ${JSON.stringify(availableWaterPumps)}`);
                 Room.find({}, (err, rooms) => {
                     if(err) console.log(err.toString());
                     else{
@@ -35,9 +36,18 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                         devices.forEach(function(device, i){
                             rooms.forEach(function(room){
                                 const foundDeviceId = room['roomDeviceIds'].includes(device['_id']);
+                                
                                 if(foundDeviceId){
                                     unavailableDevices.push(device['_id']);
+                                    if(device['deviceType'] === "Relay Server"){
+                                        let index = availableWaterPumps.findIndex((waterPump) => waterPump['relayId'].toString() === device['_id'].toString());
+                                        if(index !== -1){
+                                            availableWaterPumps.splice(index, 1);
+                                        }
+                                        console.log("Water Pump already in use? - " + index);
+                                    }
                                 }
+
                             });
                             if(!unavailableDevices.includes(device['_id'])){
                                 availableDevicesObj[device['deviceType']].push(device);
@@ -51,13 +61,14 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                         res.status(200).render("room/index", 
                             {
                                 page_name: page_name,
-                                waterPumps: myWaterPumps,
+                                waterPumps: availableWaterPumps,
                                 rooms: rooms,
                                 allDevicesObj: allDevicesObj,
                                 availableDevicesObj: availableDevicesObj,
                                 stylesheets: ["/static/css/table.css"]
                             }, (err, html) => {
                                 // fix: https://stackoverflow.com/questions/52122272/err-http-headers-sent-cannot-set-headers-after-they-are-sent-to-the-client
+                                if(err) return;
                                 res.send(html);
                             }
 
@@ -78,16 +89,16 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                             relaySettings.forEach(function(relaySetting){
                                 if(relaySetting['relayType'] === 'water pump'){
                                     console.log(`Water pump found!!!`);
-                                    myWaterPumps.push(relaySetting);
+                                    availableWaterPumps.push(relaySetting);
                                 }
                             });
                             console.log(`relayType: ${relaySettings}`);
-                            devices[i]['relayType'] = relaySettings['relayType'];
+                            // devices[i]['relayType'] = relaySettings['relayType'];
                             console.log(`Relay Server Found: ${JSON.stringify(devices[i])} `);
                         }
 
                         console.log(`devicesProcessed: ${devicesProcessed}, devices.length: ${devices.length}`);
-                        if(devicesProcessed == devices.length){
+                        if(devicesProcessed === devices.length){
                             console.log("done Processing extra device settings..");
                             callback();
                         }
