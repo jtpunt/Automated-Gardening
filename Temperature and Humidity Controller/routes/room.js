@@ -61,7 +61,7 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                         res.status(200).render("room/index", 
                             {
                                 page_name: page_name,
-                                waterPumps: availableWaterPumps,
+                                availableWaterPumps: availableWaterPumps,
                                 rooms: rooms,
                                 allDevicesObj: allDevicesObj,
                                 availableDevicesObj: availableDevicesObj,
@@ -70,6 +70,7 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                                 // fix: https://stackoverflow.com/questions/52122272/err-http-headers-sent-cannot-set-headers-after-they-are-sent-to-the-client
                                 if(err) return;
                                 res.send(html);
+                                res.end();
                             }
 
                         );
@@ -115,10 +116,12 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     let body = req.body,
         roomName = body.roomName,
         roomType = body.roomType,
-        roomDeviceIds = body.roomDeviceIds;
+        roomDeviceIds = body.roomDeviceIds,
+        roomWaterDetails = req.body.roomWaterDetails;
 
     console.log(`room name: ${roomName}`);
     console.log(`roomDeviceIds: ${roomDeviceIds}`);
+    console.log(`roomWaterDetails: ${roomWaterDetails}`);
     // we need to make sure that the device ids that we are adding to the current room don't
     // already belong to another room that already exists
     Room.find( (err, rooms) => {
@@ -168,7 +171,8 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
     console.log(`in PUT -> /room with body: ${JSON.stringify(req.body)}`);
     let room_id = req.params.room_id,
         updated_room_config = req.body,
-        roomDeviceIds = req.body.roomDeviceIds;
+        roomDeviceIds = req.body.roomDeviceIds,
+        roomWaterDetails = req.body.roomWaterDetails;
 
      Room.find( (err, rooms) => {
         if(err) console.log(err.toString());
