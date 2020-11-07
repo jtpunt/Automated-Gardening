@@ -1,25 +1,41 @@
 <script type="text/javascript">
+    function getSelectForm(deviceName){
+        var form_group_relayId  = document.createElement("div"),
+            labelRelayId        = document.createElement("label"),
+            selectRelayId       = document.createElement("select"),
+            optionRelayId       = document.createElement("option");
 
-    function relaySelectFn(event, waterDetailsId) {
+        form_group_relayId.className = "form-group row";
+        labelRelayId.htmlFor          = "roomWaterDetails[relayId]";
+        labelRelayId.innerText        = "Water Pump Details for " + deviceName;
+        labelRelayId.className        = "col-sm-6 col-form-label";
+        selectRelayId.name            = "roomWaterDetails[relayId]";
+        selectRelayId.className       = "col-sm-20"
+    }
+    function relaySelectFn(event) {
         let waterDetailsContainer = document.getElementById("waterDetailsContainer");
         let relayServerSelect = document.getElementById("relayServerSelect");
         console.log(event);
-        if(waterDetailsId){
-            // add divs to get water pump info - relayId, container size, # of lines
-            let waterDetailsEle = document.getElementById(waterDetailsId);
-            waterDetailsContainer.hidden = false;
-            waterDetailsEle.hidden = false;
-            console.log(waterDetailsEle);
-            console.log(waterDetailsId);
-        }else{
-            // remove divs
-            // need to find all divs for each water pump we are trying to get information on from the user and see if all are hidden, then we will make their parent container 'waterDetailsContainer' hidden,
-            // otherwise, we need to hide just the water details that's associated with the relay server that was selected
-            //console.log(waterDetailsContainer);
-            console.log(relayServerSelect);
-            console.log(relayServerSelect.options);
+        console.log(event.options);
+        let isOneEleVisible = false;
+        for(let i = 0; i < event.options.length; i++){
+            console.log(event.options[i]);
+            let waterDetailsId = event.options[i].value;
+            if(waterDetailsId !== "-1"){
+                let waterDetailsEle = document.getElementById(waterDetailsId);
+                if(event.options[i].selected){
+                    waterDetailsContainer.hidden = false;
+                    waterDetailsEle.hidden = false;
+
+                    isOneEleVisible = true;
+                }else{
+                    waterDetailsContainer.hidden = false
+                    waterDetailsEle.hidden = true;
+                }   
+            }
+        }
+        if(isOneEleVisible === false){
             waterDetailsContainer.hidden = true;
-            console.log("Empty string?");
         }
     }
 </script>
@@ -53,7 +69,7 @@
                 %>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select onchange="relaySelectFn(this, this.value)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true">
+                        <select onchange="relaySelectFn(this)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true">
                             <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
                             <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
                             %>
