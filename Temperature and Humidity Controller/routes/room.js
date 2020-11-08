@@ -119,6 +119,46 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         roomDeviceIds = body.roomDeviceIds,
         roomWaterDetails = req.body.roomWaterDetails;
 
+    let roomWaterDetailsArr = [];
+
+    let validInput = true,
+        inputType = typeof roomWaterDetails['relayId'],
+        validInputArr = [
+            roomWaterDetails['relayId'], 
+            roomWaterDetails['containerSize'], 
+            roomWaterDetails['numOfWaterLines']
+        ]
+
+    let count = validInputArr.length - 1;
+    validInputArr.forEach(function(input, i, array){
+        inputType = typeof input;
+        if(input === 'object'){   
+            if(input.length !== array[count--].length){
+                validInput = false;
+            }
+        }
+    })
+
+    if(inputType === 'object'){
+        roomWaterDetails['relayId'].forEach(function(relayId, i){
+            let roomWaterDetail = {
+                "relayId": relayId,
+                "containerSize": roomWaterDetails['containerSize'][i],
+                "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
+            }
+            roomWaterDetailsArr.push(roomWaterDetail);
+        })
+    }else if(inputType === 'string'){
+        let roomWaterDetail = {
+            "relayId": roomWaterDetails['relayId'],
+            "containerSize": roomWaterDetails['containerSize'],
+            "numOfWaterLines": roomWaterDetails['numOfWaterLines']
+        }
+        roomWaterDetailsArr.push(roomWaterDetail);
+    }else{
+        console.log("Invalid input given for required water details");
+    }
+
     console.log(`room name: ${roomName}`);
     console.log(`roomDeviceIds: ${roomDeviceIds}`);
     console.log(`roomWaterDetails: ${roomWaterDetails}`);
@@ -148,7 +188,8 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
                 Room.create({
                     roomName: roomName, 
                     roomType: roomType,
-                    roomDeviceIds: roomDeviceIds
+                    roomDeviceIds: roomDeviceIds,
+                    roomWaterDetails: roomWaterDetailsArr,
                 }, (err, newRoom) => {
                     if(err) console.log(err.toString());
                     else{
