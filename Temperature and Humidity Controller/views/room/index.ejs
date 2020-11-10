@@ -27,7 +27,9 @@
 						<div class="rTableHead">
 							<span style="font-weight: bold;">Room Type</span>
 						</div>
-
+						<div class="rTableHead">
+							<span style="font-weight: bold;">Room Water Pump Details</span>
+						</div>
 						<!-- Room Name to be added in at a later point, to easily include all devices that are in that room to our 	    journal					
 							<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
 						-->
@@ -51,6 +53,19 @@
 						<div class="rTableRow">
 							<div class="rTableCell"><%=room['roomName']%></div>
 							<div class="rTableCell"><%=room['roomType']%></div>
+							<div class="rTableCell">
+							<% 
+
+								room['roomWaterDetails'].forEach(function(pumpDetails){
+							%>
+								Container Size: <%=pumpDetails['containerSize']%><br/>
+								Number of Water Lines: <%=pumpDetails['numOfWaterLines']%></br>
+
+							<%
+								})
+
+							%>
+							</div>
 						<% 
 			                for(const deviceNameKey in allDevicesObj){
 			                	let deviceMatches = []
