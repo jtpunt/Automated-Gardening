@@ -133,7 +133,7 @@
                     device['gpio'].forEach(function(myGpio, i){ console.log(myGpio) %>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="gpio">GPIO #</label>      
-        				<select class="col-sm-20" name="gpio">
+        				<select class="col-sm-20" name="gpio" required>
                     		<option value="-1" selected="selected" disabled>Select Your GPIO Pin #:</option>
                         <% acceptedGpios.forEach(function(acceptedGpio){ %>
                             <option value="<%=acceptedGpio%>" <% if (myGpio == acceptedGpio) { %>selected="selected"<% } %> ><%=acceptedGpio%></option>
@@ -146,7 +146,7 @@
                     %>
                         <div class="form-group row">
                             <label class="col-sm-6 col-form-label" for="relaySettings[relayType]">Relay Type</label>      
-                            <select class="col-sm-20" name="relaySettings[relayType]">
+                            <select class="col-sm-20" name="relaySettings[relayType]" required>
                         <%  relayTypes.forEach(function(relayType){ %>
                                 <option value="<%=relayType%>" <% if (relayTypeArr[i] == relayType) { %>selected="selected"<% } %>><%=relayType%></option>
                         <%  }) %>
@@ -154,7 +154,7 @@
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-6 col-form-label" for="relaySettings[direction]">Direction</label>      
-                            <select class="col-sm-20" name="relaySettings[direction]">
+                            <select class="col-sm-20" name="relaySettings[direction]" required>
                                 <option value="in" <% if (directionArr[i] == "in") { %>selected="selected"<% } %>>in</option>
                                 <option value="out" <% if (directionArr[i] == "out") { %>selected="selected"<% } %>>out</option>
                                 <option value="high" <% if (directionArr[i] == "high") { %>selected="selected"<% } %>>high</option>
@@ -178,7 +178,7 @@
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="rotation">Camera Rotation</label>
-                        <select class="col-sm-20" name="rotation">
+                        <select class="col-sm-20" name="rotation" required>
                             <option value="0" <% if (cameraSettings.rotation == 0) { %>selected="selected"<% } %>>0</option>
                             <option value="90" <% if (cameraSettings.rotation == 90) { %>selected="selected"<% } %>>90</option>
                             <option value="180" <% if (cameraSettings.rotation == 180) { %>selected="selected"<% } %>>180</option>

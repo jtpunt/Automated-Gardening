@@ -87,7 +87,7 @@
             <hr style="border: 1px solid black;">
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomType">Room Type</label>
-                <select class="col-sm-20" name="roomType">
+                <select class="col-sm-20" name="roomType" required>
                     <option value="-1" selected="selected" disabled>Select Your Room Type</option>
                     <option value="Vegetative and Flowering">Vegetative and Flowering</option>
                     <option value="Vegetative">Vegetative</option>
@@ -99,12 +99,13 @@
                 for(const deviceNameKey in availableDevicesObj){
                     /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
                     let deviceNameStr = deviceNameKey.replace(/\s/g,''); 
-
-                    if(deviceNameKey === "Relay Server"){
+                    /* Relay Server is the only device type that's required to create a room
+                    */
+                    if(deviceNameKey === "Relay Server"){ 
                 %>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select onchange="relaySelectFn(this)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true">
+                        <select onchange="relaySelectFn(this)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true" required>
                             <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
                             <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
                             %>

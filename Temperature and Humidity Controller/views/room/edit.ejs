@@ -1,16 +1,94 @@
 <% include ../partials/header %>
+<script type="text/javascript">
+    // When a user selects a Relay Server from the multiselect form and it is determined (from 
+    // EJS code below) that this relay is associated with a 'water pump' device, this function
+    // will target extra inputs that are hidden below the Relay Server multiselect form
+    // and make them visible to the user. This will offer a dynamic way to gather more data
+    // on the water pump being used, the container size it's in, and how many lines are being used
+    // If a user selects multiple Relay Servers that powers a water pump, this function will
+    // display as many additional inputs as needed.
+    // If a user deselects a Relay Server that powers a water pump, that the additional
+    // inputs that were displayed are hidden and disabled to prevent that data from being posted
+    // back to the server.
+    function relaySelectFn(event) {
+        let waterDetailsContainer = document.getElementById("waterDetailsContainer");
+        let relayServerSelect = document.getElementById("relayServerSelect");
+
+        let isOneEleVisible = false;
+        for(let i = 0; i < event.options.length; i++){
+            let waterDetailsId = event.options[i].value;
+            if(waterDetailsId !== "-1"){
+                let waterDetailsEle = document.getElementById(waterDetailsId);
+                if(waterDetailsEle !== null){
+
+                    let waterDetailsChildren = waterDetailsEle.children;
+        
+                    if(event.options[i].selected){
+                        waterDetailsContainer.hidden = false;
+                        waterDetailsEle.hidden = false;
+
+                        isOneEleVisible = true;
+                        // 3x <div class="form-group row">
+                        // 1x <hr style="border: 1px solid black;">
+                        for(let k = 0; k < waterDetailsChildren.length; k++){
+                            // our divs have child nodes, but the hr does not
+                            // the divs contain our inputs which we need to enable
+                            // so that they can be posted back to the server
+                            if(waterDetailsChildren[k].children.length){
+                                let waterDetailsNestedChildren = waterDetailsChildren[k].children;
+                                for(let j = 0; j < waterDetailsNestedChildren.length; j++){
+                                    if(waterDetailsNestedChildren[j].tagName.toLowerCase() === 'input'){
+                                        let input = waterDetailsNestedChildren[j];
+                                        input.disabled = false;
+
+                                    }
+                                }
+                            }
+                        }
+                    }else{
+                        waterDetailsContainer.hidden = false
+                        waterDetailsEle.hidden = true;
+
+                        // 3x <div class="form-group row">
+                        // 1x <hr style="border: 1px solid black;">
+                        for(let k = 0; k < waterDetailsChildren.length; k++){
+                            // our divs have child nodes, but the hr does not
+                            // the divs contain our inputs which we need to enable
+                            // so that they can be posted back to the server
+                            if(waterDetailsChildren[k].children.length){
+                                let waterDetailsNestedChildren = waterDetailsChildren[k].children;
+                                for(let j = 0; j < waterDetailsNestedChildren.length; j++){
+                                    if(waterDetailsNestedChildren[j].tagName.toLowerCase() === 'input'){
+                                        let input = waterDetailsNestedChildren[j];
+                                        input.disabled = true;
+
+                                    }
+                                }
+                            }
+                        }
+                    }   
+                }
+            }
+        }
+        if(isOneEleVisible === false){
+            waterDetailsContainer.hidden = true;
+        }
+    }
+</script>
 <div class="container">
 <div class="row">
     <h1 style="text-align: center;">Edit Room <%=room['roomName']%></h1>
     <div style="width: 50%; margin:25px auto;">
         <form action="/room/<%=room['_id']%>/?_method=PUT" method="POST" class="update-form">
+            <hr style="border: 1px solid black;">
         	<div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomName">Room Name</label>
             	<input class="col-sm-20" type="text" id="id" name="roomName" value="<%=room['roomName']%>"required>
             </div>
+            <hr style="border: 1px solid black;">
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomType">Room Type</label>
-                <select class="col-sm-20" name="roomType">
+                <select class="col-sm-20" name="roomType" required>
                     <option value="-1" selected="selected" disabled>Select Your Room Type</option>
                     <%  let roomTypes = ["Vegetative and Flowering", "Vegetative", "Flowering"]
                         roomTypes.forEach(function(roomType){ 
@@ -19,14 +97,16 @@
                     <%  }) %>
                 </select>
             </div>
+            <hr style="border: 1px solid black;">
              <% 
                 for(const deviceNameKey in deviceObj){
                     /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
                     let deviceNameStr = deviceNameKey.replace(/\s/g,'');
+                    if(deviceNameKey === "Relay Server"){ 
                 %>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select class="col-sm-20" name="roomDeviceIds" multiple="true">
+                        <select onchange="relaySelectFn(this)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true" required>
                             <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
                             <% 
                                 deviceObj[deviceNameKey].forEach(function(device){ 
@@ -41,7 +121,69 @@
                             %>
                         </select>
                     </div>
-                <%        
+                    <hr style="border: 1px solid black;">
+                    <div id="waterDetailsContainer">
+                    <% 
+                        if(availableWaterPumps.length > 0) { 
+                            availableWaterPumps.forEach(function(waterPump){
+                            let relayName = "";
+                            deviceObj[deviceNameKey].forEach(function(device){ 
+                                if(device['_id'].toString() === waterPump['relayId'].toString()){
+                                    console.log("Ejs Found Device: " + device);
+                                    relayName = device['deviceName'];
+                                }
+                            });
+                            console.log("Ejs: waterPump " + waterPump);
+                            
+                        %>
+                        <div id="<%=waterPump['relayId']%>" <% if(!room['roomDeviceIds'].includes(waterPump['relayId'].toString())) { %> hidden <% } %>>
+
+                            <div class="form-group row">
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%></label>
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden disabled="true">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size</label>
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" value="<%=waterPump['containerSize']%>" disabled="true">
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]" value="<%=waterPump['numOfWaterLines']%>" disabled="true">
+                            </div>
+                            <hr style="border: 1px solid black;">
+                        </div>
+                        <%
+
+                            }) 
+                        %>
+                    <% 
+                        }
+                    %>
+                    </div>
+                <%  
+                    } else {
+                %>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
+                        <select class="col-sm-20" name="roomDeviceIds" multiple="true" required>
+                            <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
+                            <% 
+                                deviceObj[deviceNameKey].forEach(function(device){ 
+                                   if(room['roomDeviceIds'].includes(device['_id'])){
+                            %>
+                                <option value="<%=device['_id']%>" selected='true'><%=device['deviceName']%></option>
+                            <%      } else { %>
+                                <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
+                            <%
+                                    }
+                                });
+                            %>
+                        </select>
+                    </div>
+                    <hr style="border: 1px solid black;">
+                <%
+
+                    }      
                 }
             %>  
             <div class="form-group row">

@@ -22,33 +22,80 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
         // to allDevicesObj
         availableDevicesObj = JSON.parse(JSON.stringify(allDevicesObj));
 
-    Device.find( (err, devices)=>{
+    // find all devices in the database
+    Device.find({}, (err, devices)=>{
         if(err) console.log(err);
         else{
             let devicesProcessed = 0;
             let availableWaterPumps = [];
+            
+            // Find Relay Servers, grab their additional relay settings so we can find which relay servers
+            // are set up as a water pump and add those devices into the availableWaterPumps array.
+            // Once we have processed all devices, call the callback function where we will figure out
+            // which devices are unavailable before rendering the device page
+            devices.forEach(function(device, i){
+                devicesProcessed++;
+                // find additional relay settings
+                if(device['deviceType'] === 'Relay Server'){
+                    console.log(`Relay Server Found: ${JSON.stringify(device)}`);
+                    RelaySettings.find( {relayId: device['_id']}, function(err, relaySettings){
+                        if(err){
+                            console.log(`Error: did not find Relay Settings: ${err.toString()}`); 
+                        } 
+                        else{
+                            relaySettings.forEach(function(relaySetting){
+                                if(relaySetting['relayType'] === 'water pump'){
+                                    console.log(`Water pump found!!!`);
+                                    availableWaterPumps.push(relaySetting);
+                                }
+                            });
+                        }
+                        // Have we processed all devices?
+                        if(devicesProcessed === devices.length){
+                            callback();
+                        }
+                    });
+                }
+
+            });
+            // This callback is the last function to be called to help breakup nested callbacks
             let callback = function(){
                 console.log(`in callback with waterpumps: ${JSON.stringify(availableWaterPumps)}`);
+                // find all rooms in the database
                 Room.find({}, (err, rooms) => {
                     if(err) console.log(err.toString());
                     else{
                         let unavailableDevices = [];
+                        // Find out which devices are already set up in a room
+                        /* 11/11/2020 - Futher code improvement: each room has the key 'roomDeviceIds',
+                         * an array of device id's that the room is using. We could merge each room's 'roomDeviceIds'
+                         * array into 1 array, before processing which devices are available to be added to a new room
+                         */
                         devices.forEach(function(device, i){
                             rooms.forEach(function(room){
+                                 // if a device is already set up in one of our rooms, this means that this 
+                                 // device is unavailable to be added to a new room
                                 const foundDeviceId = room['roomDeviceIds'].includes(device['_id']);
                                 
-                                if(foundDeviceId){
-                                    unavailableDevices.push(device['_id']);
+                                if(foundDeviceId){ // device belongs to another room
+                                    // keep track of what device is unavailable
+                                    unavailableDevices.push(device['_id']); 
+                                    // See if the device is a Relay Server that's set up as a water pump
                                     if(device['deviceType'] === "Relay Server"){
+                                        // availableWaterPumps includes all Relay Server water pumps that are set up in the database
+                                        // if availableWaterPumps contains the id of the device that's unavailable, we then need
+                                        // to remove the water pump from the availableWaterPumps array since that water pump is 
+                                        // also unavailable
                                         let index = availableWaterPumps.findIndex((waterPump) => waterPump['relayId'].toString() === device['_id'].toString());
                                         if(index !== -1){
                                             availableWaterPumps.splice(index, 1);
                                         }
-                                        console.log("Water Pump already in use? - " + index);
                                     }
                                 }
 
                             });
+                            // if our unavailableDevices array does not include our device id,
+                            // then this means that the device is available to be used in a new room
                             if(!unavailableDevices.includes(device['_id'])){
                                 availableDevicesObj[device['deviceType']].push(device);
                             }
@@ -77,37 +124,6 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                     }
                 })
             }
-            devices.forEach(function(device, i){
-                devicesProcessed++;
-                // find additional relay settings
-                if(device['deviceType'] === 'Relay Server'){
-                    console.log(`Relay Server Found: ${JSON.stringify(device)}`);
-                    RelaySettings.find( {relayId: device['_id']}, function(err, relaySettings){
-                        if(err){
-                            console.log(`Error: did not find Relay Settings: ${err.toString()}`); 
-                        } 
-                        else{
-                            relaySettings.forEach(function(relaySetting){
-                                if(relaySetting['relayType'] === 'water pump'){
-                                    console.log(`Water pump found!!!`);
-                                    availableWaterPumps.push(relaySetting);
-                                }
-                            });
-                            console.log(`relayType: ${relaySettings}`);
-                            // devices[i]['relayType'] = relaySettings['relayType'];
-                            console.log(`Relay Server Found: ${JSON.stringify(devices[i])} `);
-                        }
-
-                        console.log(`devicesProcessed: ${devicesProcessed}, devices.length: ${devices.length}`);
-                        if(devicesProcessed === devices.length){
-                            console.log("done Processing extra device settings..");
-                            callback();
-                        }
-                    });
-                }
-
-            });
-
         }
     });
 });
@@ -132,7 +148,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     let count = validInputArr.length - 1;
     validInputArr.forEach(function(input, i, array){
         inputType = typeof input;
-        if(input === 'object'){   
+        if(inputType === 'object'){   
             if(input.length !== array[count--].length){
                 validInput = false;
             }
@@ -213,8 +229,9 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
     let room_id = req.params.room_id,
         updated_room_config = req.body,
         roomDeviceIds = req.body.roomDeviceIds,
-        roomWaterDetails = req.body.roomWaterDetails;
+        roomWaterDetails = req.body.roomWaterDetails || undefined;
 
+    console.log(`roomWaterDetails: ${roomWaterDetails}`);
      Room.find( (err, rooms) => {
         if(err) console.log(err.toString());
         else{
@@ -287,44 +304,97 @@ router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
             'Water Sensor' : [],
             'Camera': []
         };
-    Device.find( (err, devices)=>{
+    Device.find({}, (err, devices)=>{
         if(err) console.log(err);
         else{
             Room.findById(room_id, function(err, room){
                 if(err) console.log(err.toString());
                 else{
+                    let devicesProcessed = 0;
+                    let availableWaterPumps = [];
                     console.log(`Room Found: ${JSON.stringify(room)}`);
-                    Room.find( (err, rooms) => {
-                        if(err) console.log(err.toString());
-                        else{
-                            console.log(`Rooms found: ${JSON.stringify(rooms)}`);
-                            let unavailableDevices = [];
-                            devices.forEach(function(device){
-                                rooms.forEach(function(room){
-                                    // look at the devices being used in other rooms to see what is 
-                                    // available to be added to our room that we are trying to update
-                                    if(room["_id"].toString() !== room_id){ 
-                                        console.log("diff room found: " + room["_id"] + " " + room_id);
-                                        const foundDeviceId = room['roomDeviceIds'].includes(device['_id']);
-                                        if(foundDeviceId){
-                                            unavailableDevices.push(device['_id']);
+                    // Find Relay Servers, grab their additional relay settings so we can find which relay servers
+                    // are set up as a water pump and add those devices into the availableWaterPumps array.
+                    // Once we have processed all devices, call the callback function where we will figure out
+                    // which devices are unavailable before rendering the device page
+                    devices.forEach(function(device, i){
+                        devicesProcessed++;
+                        // find additional relay settings
+                        if(device['deviceType'] === 'Relay Server'){
+                            console.log(`Relay Server Found: ${JSON.stringify(device)}`);
+                            RelaySettings.find( {relayId: device['_id']}, function(err, relaySettings){
+                                if(err){
+                                    console.log(`Error: did not find Relay Settings: ${err.toString()}`); 
+                                } 
+                                else{
+                                    relaySettings.forEach(function(relaySetting){
+                                        if(relaySetting['relayType'] === 'water pump'){
+                                            console.log(`Water pump found!!!`);
+                                            availableWaterPumps.push(relaySetting);
                                         }
-                                    }
-                                });
-                                if(!unavailableDevices.includes(device['_id'])){
-                                    deviceObj[device['deviceType']].push(device);
+                                    });
+                                }
+                                // Have we processed all devices?
+                                if(devicesProcessed === devices.length){
+                                    callback();
                                 }
                             });
                         }
-                        res.render("room/edit", {
-                            page_name: page_name,
-                            deviceObj: deviceObj,
-                            room: room,
-                            rooms: rooms,
-                            stylesheets: ["/static/css/table.css"]
-                        });
-                        res.status(200).end();
+
                     });
+                    let callback = function(){
+                        Room.find({}, (err, rooms) => {
+                            if(err) console.log(err.toString());
+                            else{
+                                console.log(`Rooms found: ${JSON.stringify(rooms)}`);
+                                let unavailableDevices = [];
+                                devices.forEach(function(device){
+                                    rooms.forEach(function(room){
+                                        // look at the devices being used in other rooms to see what is 
+                                        // available to be added to our room that we are trying to update
+                                        if(room["_id"].toString() !== room_id){ 
+                                            console.log("diff room found: " + room["_id"] + " " + room_id);
+                                            const foundDeviceId = room['roomDeviceIds'].includes(device['_id']);
+                                            if(foundDeviceId){
+                                                // keep track of what device is unavailable
+                                                unavailableDevices.push(device['_id']); 
+                                                // See if the device is a Relay Server that's set up as a water pump
+                                                if(device['deviceType'] === "Relay Server"){
+                                                    // availableWaterPumps includes all Relay Server water pumps that are set up in the database
+                                                    // if availableWaterPumps contains the id of the device that's unavailable, we then need
+                                                    // to remove the water pump from the availableWaterPumps array since that water pump is 
+                                                    // also unavailable
+                                                    let index = availableWaterPumps.findIndex((waterPump) => waterPump['relayId'].toString() === device['_id'].toString());
+                                                    if(index !== -1){
+                                                        availableWaterPumps.splice(index, 1);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                    if(!unavailableDevices.includes(device['_id'])){
+                                        deviceObj[device['deviceType']].push(device);
+                                    }
+                                });
+                            }
+                            res.status(200).render("room/edit", 
+                            {
+                                availableWaterPumps: availableWaterPumps,
+                                page_name: page_name,
+                                deviceObj: deviceObj,
+                                room: room,
+                                rooms: rooms,
+                                stylesheets: ["/static/css/table.css"]
+                            }, (err, html) => {
+                                // fix: https://stackoverflow.com/questions/52122272/err-http-headers-sent-cannot-set-headers-after-they-are-sent-to-the-client
+                                if(err) return;
+                                res.send(html);
+                                res.end();
+                            }
+
+                        );
+                        });
+                    }    
                 }
             });
         }
