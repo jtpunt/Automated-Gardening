@@ -124,19 +124,39 @@
                     <hr style="border: 1px solid black;">
                     <div id="waterDetailsContainer">
                     <% 
+                        // are there any water pumps available?
                         if(availableWaterPumps.length > 0) { 
+                            // loop through each water pump to display on the screen
                             availableWaterPumps.forEach(function(waterPump){
-                            let relayName = "";
+                            let relayName = "",
+                                isPumpInRoom = false,
+                                waterDetailsIdx = -1,
+                                containerSize = undefined,
+                                numOfWaterLines;
+
+                            // we need to grab the relay name to display extra water configs on screen
                             deviceObj[deviceNameKey].forEach(function(device){ 
                                 if(device['_id'].toString() === waterPump['relayId'].toString()){
-                                    console.log("Ejs Found Device: " + device);
                                     relayName = device['deviceName'];
                                 }
                             });
                             console.log("Ejs: waterPump " + waterPump);
+                            // Does the current room include this water pump?
+                            if(room['roomDeviceIds'].includes(waterPump['relayId'].toString())){
+                                // we will display the extra HTML below to allow the user configure extra water settings for the current water pump
+                                isPumpInRoom = true; 
+                                console.log("Ejs -> id of water pump found: " + waterPump['relayId']);
+                                console.log("EJS -> room: " + room);
+
+                                waterDetailsIdx = room['roomWaterDetails'].findIndex(function(water_config){ 
+
+                                    return water_config['relayId'].toString() === waterPump['relayId'].toString()
+                                })
+                                console.log("EJS: waterDetailsIdx: " + waterDetailsIdx);
+                            }
                             
                         %>
-                        <div id="<%=waterPump['relayId']%>" <% if(!room['roomDeviceIds'].includes(waterPump['relayId'].toString())) { %> hidden <% } %>>
+                        <div id="<%=waterPump['relayId']%>" <% if(!isPumpInRoom) { %> hidden <% } %>>
 
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%></label>
@@ -144,11 +164,14 @@
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size</label>
-                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" value="<%=waterPump['containerSize']%>" disabled="true">
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" 
+                                <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['containerSize']%>" <% } %>  disabled="true">
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
-                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]" value="<%=waterPump['numOfWaterLines']%>" disabled="true">
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]"
+                                <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['numOfWaterLines']%>" <% } %> 
+                                disabled="true">
                             </div>
                             <hr style="border: 1px solid black;">
                         </div>
@@ -165,7 +188,7 @@
                 %>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select class="col-sm-20" name="roomDeviceIds" multiple="true" required>
+                        <select class="col-sm-20" name="roomDeviceIds" multiple="true">
                             <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
                             <% 
                                 deviceObj[deviceNameKey].forEach(function(device){ 

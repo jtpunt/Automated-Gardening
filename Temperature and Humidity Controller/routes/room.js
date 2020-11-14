@@ -227,12 +227,52 @@ router.get("/:room_id", middleware.isLoggedIn, (req, res) => {
 router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
     console.log(`in PUT -> /room with body: ${JSON.stringify(req.body)}`);
     let room_id = req.params.room_id,
-        updated_room_config = req.body,
-        roomDeviceIds = req.body.roomDeviceIds,
-        roomWaterDetails = req.body.roomWaterDetails || undefined;
+        body = req.body,
+        roomName = body.roomName,
+        roomType = body.roomType,
+        roomDeviceIds = body.roomDeviceIds,
+        roomWaterDetails = req.body.roomWaterDetails;
 
-    console.log(`roomWaterDetails: ${roomWaterDetails}`);
-     Room.find( (err, rooms) => {
+    let roomWaterDetailsArr = [];
+
+    let validInput = true,
+        inputType = typeof roomWaterDetails['relayId'],
+        validInputArr = [
+            roomWaterDetails['relayId'], 
+            roomWaterDetails['containerSize'], 
+            roomWaterDetails['numOfWaterLines']
+        ]
+
+    let count = validInputArr.length - 1;
+    validInputArr.forEach(function(input, i, array){
+        inputType = typeof input;
+        if(inputType === 'object'){   
+            if(input.length !== array[count--].length){
+                validInput = false;
+            }
+        }
+    })
+
+    if(inputType === 'object'){
+        roomWaterDetails['relayId'].forEach(function(relayId, i){
+            let roomWaterDetail = {
+                "relayId": relayId,
+                "containerSize": roomWaterDetails['containerSize'][i],
+                "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
+            }
+            roomWaterDetailsArr.push(roomWaterDetail);
+        })
+    }else if(inputType === 'string'){
+        let roomWaterDetail = {
+            "relayId": roomWaterDetails['relayId'],
+            "containerSize": roomWaterDetails['containerSize'],
+            "numOfWaterLines": roomWaterDetails['numOfWaterLines']
+        }
+        roomWaterDetailsArr.push(roomWaterDetail);
+    }else{
+        console.log("Invalid input given for required water details");
+    }
+    Room.find( (err, rooms) => {
         if(err) console.log(err.toString());
         else{
             console.log(`Rooms found: ${JSON.stringify(rooms)}`);
@@ -255,7 +295,12 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
                 res.redirect("/room");
                 res.status(400).end();
             }else{
-                Room.findByIdAndUpdate(room_id, {$set: updated_room_config}, (err, room) => {
+                Room.findByIdAndUpdate(room_id, {
+                    roomName: roomName, 
+                    roomType: roomType,
+                    roomDeviceIds: roomDeviceIds,
+                    roomWaterDetails: roomWaterDetailsArr,
+                }, (err, room) => {
                     if(err){
                         console.log(err.toString());
                         res.write("404: ", JSON.stringify(err));
