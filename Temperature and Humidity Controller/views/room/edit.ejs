@@ -163,6 +163,11 @@
                                 <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden disabled="true">
                             </div>
                             <div class="form-group row">
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[waterFlowRate]">Water Flow Rate (GPH)</label>
+                                <input class="col-sm-20" type="text" id="waterFlowRate" name="roomWaterDetails[waterFlowRate]" 
+                                <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['waterFlowRate']%>" <% } %>  disabled="true">
+                            </div>
+                            <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size</label>
                                 <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" 
                                 <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['containerSize']%>" <% } %>  disabled="true">

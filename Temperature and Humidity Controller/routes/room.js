@@ -141,6 +141,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         inputType = typeof roomWaterDetails['relayId'],
         validInputArr = [
             roomWaterDetails['relayId'], 
+            roomWaterDetails['waterFlowRate'],
             roomWaterDetails['containerSize'], 
             roomWaterDetails['numOfWaterLines']
         ]
@@ -159,6 +160,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         roomWaterDetails['relayId'].forEach(function(relayId, i){
             let roomWaterDetail = {
                 "relayId": relayId,
+                "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
                 "containerSize": roomWaterDetails['containerSize'][i],
                 "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
             }
@@ -167,6 +169,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     }else if(inputType === 'string'){
         let roomWaterDetail = {
             "relayId": roomWaterDetails['relayId'],
+            "waterFlowRate": roomWaterDetails['waterFlowRate'],
             "containerSize": roomWaterDetails['containerSize'],
             "numOfWaterLines": roomWaterDetails['numOfWaterLines']
         }
@@ -239,6 +242,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
         inputType = typeof roomWaterDetails['relayId'],
         validInputArr = [
             roomWaterDetails['relayId'], 
+            roomWaterDetails['waterFlowRate'],
             roomWaterDetails['containerSize'], 
             roomWaterDetails['numOfWaterLines']
         ]
@@ -257,6 +261,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
         roomWaterDetails['relayId'].forEach(function(relayId, i){
             let roomWaterDetail = {
                 "relayId": relayId,
+                "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
                 "containerSize": roomWaterDetails['containerSize'][i],
                 "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
             }
@@ -265,6 +270,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
     }else if(inputType === 'string'){
         let roomWaterDetail = {
             "relayId": roomWaterDetails['relayId'],
+            "waterFlowRate": roomWaterDetails['waterFlowRate'],
             "containerSize": roomWaterDetails['containerSize'],
             "numOfWaterLines": roomWaterDetails['numOfWaterLines']
         }
@@ -422,22 +428,20 @@ router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
                                     }
                                 });
                             }
-                            res.status(200).render("room/edit", 
-                            {
-                                availableWaterPumps: availableWaterPumps,
-                                page_name: page_name,
-                                deviceObj: deviceObj,
-                                room: room,
-                                rooms: rooms,
-                                stylesheets: ["/static/css/table.css"]
-                            }, (err, html) => {
-                                // fix: https://stackoverflow.com/questions/52122272/err-http-headers-sent-cannot-set-headers-after-they-are-sent-to-the-client
-                                if(err) return;
-                                res.send(html);
-                                res.end();
-                            }
-
-                        );
+                            res.status(200).render("room/edit",{
+                                    availableWaterPumps: availableWaterPumps,
+                                    page_name: page_name,
+                                    deviceObj: deviceObj,
+                                    room: room,
+                                    rooms: rooms,
+                                    stylesheets: ["/static/css/table.css"]
+                                }, (err, html) => {
+                                    // fix: https://stackoverflow.com/questions/52122272/err-http-headers-sent-cannot-set-headers-after-they-are-sent-to-the-client
+                                    if(err) return;
+                                    res.send(html);
+                                    res.end();
+                                }
+                            );
                         });
                     }    
                 }

@@ -14,6 +14,7 @@ var roomSchema = new mongoose.Schema({
 	    	type: mongoose.Schema.Types.ObjectId,
 	    	ref: "Device"
 		},
+        waterFlowRate: Number, // Gallons Per Hour
     	containerSize: Number,
     	numOfWaterLines: Number
     }]
