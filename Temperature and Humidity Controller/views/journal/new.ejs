@@ -1,3 +1,12 @@
+<script type="text/javascript">
+    function roomSelectFn(event){
+        console.log(event.value);
+        let roomType = event.value;
+        let roomTypeContent = document.getElementById(roomType + "Content");
+        console.log(roomTypeContent);
+        roomTypeContent.hidden = false;
+    }
+</script>
 <div class="collapse" id="collapseNew">
     <div class="well" style="border-left: 5px solid #00C851;">
         <!--If the user is logged in, show the new schedule form-->
@@ -9,13 +18,33 @@
             </div>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomId">Set Room</label>
-                <select class="col-sm-20" name="roomId">
-                    <option value="-1" disabled>Select Your Room:</option>
-                    <% rooms.forEach(function(room){ %>
-                        <option value="<%=room['_id']%>"><%=room['roomName']%></option>
-                    <% });%>
+                <select onchange="roomSelectFn(this)" class="col-sm-20" name="roomId">
+                    <option value="-1" selected disabled>Select Your Room:</option>
+                    <% 
+                        let waterPumpSettingsFound = false;
+                        rooms.forEach(function(room){ 
+                            if(room['roomWaterDetails'].length){
+                                waterPumpSettingsFound = true;
+                            }
+                    %>
+                            <option value="<%=room['roomType']%>"><%=room['roomName']%></option>
+                    <% 
+                        });
+                    %>
                 </select>
             </div>
+            <% 
+                let roomTypes = ["Vegetative and Flowering", "Vegetative", "Flowering"] 
+                roomTypes.forEach(function(roomType){
+            %>
+                <div id="<%=roomType%>Content" class="form-group row" hidden>
+                    <label class="col-sm-6 col-form-label" for="<%=roomType%>"><%=roomType%></label>
+                    <input class="col-sm-20" type="text" name="<%=roomType%>" required>
+                </div>
+            <%
+                })
+            %>
+
             <fieldset class="form-group">
                 <div class="row">
                     <legend class="col-sm-6 col-form-label">Select Time Mode</legend>
@@ -30,20 +59,8 @@
                 </div>
             </fieldset>
             <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="vegStartDate">Set Vegetative Start Date: </label>
+                <label class="col-sm-6 col-form-label" for="vegStartDate">Set Start Date: </label>
                 <input class="col-sm-20" type="date" id="vegStartDate" name="vegetative[start_date]"required>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="vegStartDate">Set Vegetative End Date: </label>
-                <input class="col-sm-20" type="date" id="vegEndDate" name="vegetative[start_date]"required>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="vegStartDate">Set Flowering Start Date: </label>
-                <input class="col-sm-20" type="date" id="floweringStartDate" name="flowering[start_date]" required>
-            </div>
-            <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="vegStartDate">Set Flowering End Date: </label>
-                <input class="col-sm-20" type="date" id="floweringStartDate" name="flowering[end_date]" required>
             </div>
             <div class="form-group row">
                 <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>

@@ -107,7 +107,7 @@
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
                         <select onchange="relaySelectFn(this)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true" required>
-                            <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
+                            <option value="-1" disabled>Select Your <%=deviceNameKey%></option>
                             <% 
                                 deviceObj[deviceNameKey].forEach(function(device){ 
                             	   if(room['roomDeviceIds'].includes(device['_id'])){
@@ -160,23 +160,23 @@
 
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%></label>
-                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden disabled="true">
+                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden <% if(!isPumpInRoom) { %> disabled="true" <% } %>>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[waterFlowRate]">Water Flow Rate (GPH)</label>
                                 <input class="col-sm-20" type="text" id="waterFlowRate" name="roomWaterDetails[waterFlowRate]" 
-                                <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['waterFlowRate']%>" <% } %>  disabled="true">
+                                <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['waterFlowRate']%>" <% } %>  <% if(!isPumpInRoom) { %> disabled="true" <% } %>>
                             </div>
                             <div class="form-group row">
-                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size</label>
+                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size (Gallons)</label>
                                 <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" 
-                                <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['containerSize']%>" <% } %>  disabled="true">
+                                <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['containerSize']%>" <% } %>  <% if(!isPumpInRoom) { %> disabled="true" <% } %>>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
                                 <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]"
                                 <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['numOfWaterLines']%>" <% } %> 
-                                disabled="true">
+                                <% if(!isPumpInRoom) { %> disabled="true" <% } %>>
                             </div>
                             <hr style="border: 1px solid black;">
                         </div>

@@ -10,7 +10,7 @@ var express    = require("express"),
     // Shows all devices
 router.get("/", middleware.isLoggedIn, (req, res) =>{
     let page_name = "journal";
-
+    // will need to retrieve all journals to see which rooms are already in use
     Room.find( (err, rooms) => {
         if(err) console.log(err.toString());
         else{
