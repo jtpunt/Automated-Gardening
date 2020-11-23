@@ -1,6 +1,7 @@
 var express        = require("express"),
     bodyParser     = require("body-parser"),
     flash          = require("connect-flash"),
+    mongoose       = require("mongoose"),
     MongoClient    = require("mongodb").MongoClient,
     passport       = require("passport"),
     LocalStrategy  = require("passport-local"),
@@ -31,21 +32,24 @@ var localIP = ip.address(),
     connStr = config.getConnStr();
     
 
-const client = new MongoClient(connStr, { useNewUrlParser: true });
-client.connect(err => {
-    if(err){
-        console.log(`err? ${err}`);
-    }
-    console.log(`successfully connected?`);
-});
-// mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
+// const client = new MongoClient(connStr, { useNewUrlParser: true, useUnifiedTopology: true});
+// client.connect(err => {
 //     if(err){
-//         console.log("Error connecting to mongodb", err);
-//         // default schedule here
+//         console.log(`err? ${err}`);
 //     }else{
-//         console.log("No errors occured");
+//         console.log(connStr);
+//         console.log(`successfully connected?`);
+//         //client.close();
 //     }
 // });
+mongoose.connect(connStr,{ useNewUrlParser: true, useUnifiedTopology: true }, function(err){
+    if(err){
+        console.log("Error connecting to mongodb", err);
+        // default schedule here
+    }else{
+        console.log("No errors occured");
+    }
+});
 // seedDB();
 
 app.set('view engine', 'ejs');

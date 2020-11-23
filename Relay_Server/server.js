@@ -7,7 +7,8 @@
 * The tools needed for this web application
 **********************************************************************/
 var express     = require('express'),
-    MongoClient    = require("mongodb").MongoClient,
+    // MongoClient    = require("mongodb").MongoClient,
+    mongoose    = require("mongoose"),
     bodyParser  = require('body-parser'), // body parser middleware
     Device      = require("./models/device"),
     ip          = require("ip"),
@@ -43,8 +44,7 @@ let options = {
         autoReconnect : true
     }
 }
-const client = new MongoClient(connStr, options, { useNewUrlParser: true });
-client.connect(err => {
+mongoose.connect(connStr,{ useNewUrlParser: true, useUnifiedTopology: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
