@@ -39,12 +39,13 @@ app.use(bodyParser.json());
 let options = {
     server : {
         useNewUrlParser: true,
+        useUnifiedTopology: true,
         reconnectTries : 300,
         reconnectInterval: 60000,
         autoReconnect : true
     }
 }
-mongoose.connect(connStr,{ useNewUrlParser: true, useUnifiedTopology: true }, function(err){
+mongoose.connect(connStr, options, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here

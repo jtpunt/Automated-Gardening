@@ -30,11 +30,23 @@ var indexRoutes   = require("./routes/index"),
 var localIP = ip.address(),
     port    = config.server.port,
     connStr = config.getConnStr();
-    
-mongoose.connect(connStr,{ useNewUrlParser: true, useUnifiedTopology: true }, function(err){
+
+let options = {
+    server : {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        reconnectTries : 300,
+        reconnectInterval: 60000,
+        autoReconnect : true
+    }
+}
+mongoose.connect(connStr, options, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
+        setTimeout(function() {
+            console.log('Connection failed. Retrying in 30 seconds.');
+        }, 30000);
     }else{
         console.log("No errors occured");
     }
