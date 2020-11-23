@@ -11,8 +11,6 @@ var express = require("express"),
     middleware = require("../middleware"),
     ip = require("ip"),
     localIP = ip.address(),
-    async         = require("asyncawait/async"),
-    await         = require("asyncawait/await"),
     router    = express.Router();
 var APPROVED_GPIO = [2, 3];
 

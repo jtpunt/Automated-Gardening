@@ -31,17 +31,6 @@ var localIP = ip.address(),
     port    = config.server.port,
     connStr = config.getConnStr();
     
-
-// const client = new MongoClient(connStr, { useNewUrlParser: true, useUnifiedTopology: true});
-// client.connect(err => {
-//     if(err){
-//         console.log(`err? ${err}`);
-//     }else{
-//         console.log(connStr);
-//         console.log(`successfully connected?`);
-//         //client.close();
-//     }
-// });
 mongoose.connect(connStr,{ useNewUrlParser: true, useUnifiedTopology: true }, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
