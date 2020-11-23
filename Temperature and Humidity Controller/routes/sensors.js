@@ -1,7 +1,7 @@
 var express    = require("express"),
     // dhtSensor  = require('node-dht-sensor'),
-    async      = require("asyncawait/async"),
-    await      = require("asyncawait/await"),
+    // async      = require("asyncawait/async"),
+    // await      = require("asyncawait/await"),
     Sensor     = require("../models/sensor"),
     router     = express.Router();
 

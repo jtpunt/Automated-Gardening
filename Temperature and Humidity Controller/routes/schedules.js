@@ -6,8 +6,8 @@ var express       = require("express"),
     RelaySettings = require("../models/relaySettings"),
     middleware    = require("../middleware"),
     querystring   = require('querystring'),
-    async         = require("asyncawait/async"),
-    await         = require("asyncawait/await"),
+    // async         = require("asyncawait/async"),
+    // await         = require("asyncawait/await"),
     router        = express.Router();
     
  

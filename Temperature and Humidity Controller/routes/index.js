@@ -1,6 +1,4 @@
 var express = require("express"),
-    async = require("asyncawait/async"),
-    await = require("asyncawait/await"),
     Sensor = require("../models/sensor"),
     Device = require("../models/device"),
     User   = require("../models/user"),

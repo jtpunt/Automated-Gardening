@@ -7,7 +7,7 @@
 * The tools needed for this web application
 **********************************************************************/
 var express     = require('express'),
-    mongoose    = require("mongoose"),
+    MongoClient    = require("mongodb").MongoClient,
     bodyParser  = require('body-parser'), // body parser middleware
     Device      = require("./models/device"),
     ip          = require("ip"),
@@ -43,7 +43,8 @@ let options = {
         autoReconnect : true
     }
 }
-mongoose.connect(connStr, options, function(err){
+const client = new MongoClient(connStr, options, { useNewUrlParser: true });
+client.connect(err => {
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
@@ -62,8 +63,10 @@ mongoose.connect(connStr, options, function(err){
         * Start The Server
         **********************************************************************/
         app.listen(port, function() {
-          	console.log('Express started on http://localhost:' + port + '; press Ctrl-C to terminate.');
+            console.log('Express started on http://localhost:' + port + '; press Ctrl-C to terminate.');
         });
     }
+    console.log(`successfully connected?`);
 });
+
 

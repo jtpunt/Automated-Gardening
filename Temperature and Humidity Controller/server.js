@@ -1,11 +1,10 @@
 var express        = require("express"),
     bodyParser     = require("body-parser"),
     flash          = require("connect-flash"),
-    mongoose       = require("mongoose"),
+    MongoClient    = require("mongodb").MongoClient,
     passport       = require("passport"),
     LocalStrategy  = require("passport-local"),
     methodOverride = require("method-override"),
-    // sensor         = require('node-dht-sensor'),
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
     Device         = require("./models/device"),
@@ -32,14 +31,21 @@ var localIP = ip.address(),
     connStr = config.getConnStr();
     
 
-mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
+const client = new MongoClient(connStr, { useNewUrlParser: true });
+client.connect(err => {
     if(err){
-        console.log("Error connecting to mongodb", err);
-        // default schedule here
-    }else{
-        console.log("No errors occured");
+        console.log(`err? ${err}`);
     }
+    console.log(`successfully connected?`);
 });
+// mongoose.connect(connStr,{ useNewUrlParser: true }, function(err){
+//     if(err){
+//         console.log("Error connecting to mongodb", err);
+//         // default schedule here
+//     }else{
+//         console.log("No errors occured");
+//     }
+// });
 // seedDB();
 
 app.set('view engine', 'ejs');
