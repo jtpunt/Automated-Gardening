@@ -44,9 +44,9 @@ mongoose.connect(connStr, options, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
-        setTimeout(function() {
-            console.log('Connection failed. Retrying in 30 seconds.');
-        }, 30000);
+        // setTimeout(function() {
+        //     console.log('Connection failed. Retrying in 30 seconds.');
+        // }, 30000);
     }else{
         console.log("No errors occured");
     }
