@@ -36,12 +36,55 @@
             <% 
                 let roomTypes = ["Vegetative and Flowering", "Vegetative", "Flowering"] 
                 roomTypes.forEach(function(roomType){
+                    if(roomType === "Vegetative and Flowering"){
             %>
+                <fieldset class="form-group" id="<%=roomType%>Content" hidden>
+                    <div  class="row">
+                        <legend class="col-sm-6 col-form-label"><%=roomType%> Additional Settings</legend>
+                        <div>
+                            <label class="col-sm-6 col-form-label" for="<%=roomType%>GrowLength">Total Grow Length (weeks)</label>
+                            <input class="col-sm-20" type="number" min="16" max="52" name="<%=roomType%>GrowLength" required> 
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Week #</th>
+                                    <th scope="col">Total Cups Dispersed Per Line</th>
+                                    <th scope="col">Relay Run Time</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weeklyTbody">
+                                <tr>
+                                    <th>1</th>
+                                    <td><input type="number" min="16" max="52" required></td>
+                                    <td><input type="number" min="16" max="52" step=".5" required></td>
+                                </tr>
+                                <tr>
+                                    <th>2</th>
+                                    <td><input type="number" min="16" max="52" required></td>
+                                    <td><input type="number" min="16" max="52" step=".5" required></td>
+                                </tr>
+                                <tr>
+                                    <th>3</th>
+                                    <td><input type="number" min="16" max="52" required></td>
+                                    <td><input type="number" min="16" max="52" step=".5" required></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                </fieldset>
+            <%
+                    } else { 
+            %>
+
                 <div id="<%=roomType%>Content" class="form-group row" hidden>
                     <label class="col-sm-6 col-form-label" for="<%=roomType%>"><%=roomType%></label>
                     <input class="col-sm-20" type="text" name="<%=roomType%>" required>
                 </div>
             <%
+                    }
                 })
             %>
 
