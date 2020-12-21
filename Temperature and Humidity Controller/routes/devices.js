@@ -70,6 +70,12 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                     if(err) console.log(err.toString());
                     else{
                         let waterId = device['_id'];
+                        // We need to see which room this device is in to retrieve the room's grow system
+                        // if the grow system is soil - the water sensor will check before a watering session
+                        // and cancel the next watering session if water is detected
+                        // if the grow system is ebb and flow - the water sensor will be placed in a control bucket,
+                        // where if water is detected, this means it's time to drain the water from the control bucket
+                        // back into the main water feeding bucket 
                         WaterSettings.findOne({waterId: waterId}, function(err, water_config){
                             if(err) {console.log(err.toString());
                                 console.log(`Relay Devices ${relay_devices}`)
