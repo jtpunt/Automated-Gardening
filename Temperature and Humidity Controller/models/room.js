@@ -5,6 +5,10 @@ var roomSchema = new mongoose.Schema({
     	type: String,
     	enum: ['Vegetative and Flowering', 'Vegetative', 'Flowering']
     }, 
+    roomGrowSystem: {
+        type: String,
+        enum: ['Soil', 'Ebb and Flow']
+    },
     roomDeviceIds: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Device"

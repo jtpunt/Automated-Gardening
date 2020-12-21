@@ -75,8 +75,8 @@
         }
     }
 </script>
-<div class="container">
-<div class="row">
+<div class="container" style="width: 100%;">
+<div class="row" style="width: 100%;">
     <h1 style="text-align: center;">Edit Room <%=room['roomName']%></h1>
     <div style="width: 50%; margin:25px auto;">
         <form action="/room/<%=room['_id']%>/?_method=PUT" method="POST" class="update-form">
@@ -94,6 +94,18 @@
                         roomTypes.forEach(function(roomType){ 
                     %>
                     <option value="<%=roomType%>" <% if (room['roomType'] === roomType) { %>selected="selected"<% } %>><%=roomType%></option>
+                    <%  }) %>
+                </select>
+            </div>
+            <hr style="border: 1px solid black;">
+            <div class="form-group row">
+                <label class="col-sm-6 col-form-label" for="roomGrowSystem">Room Grow System</label>
+                <select class="col-sm-20" name="roomGrowSystem" required>
+                    <option value="-1" selected="selected" disabled>Select Your Room's Grow System</option>
+                    <%  let roomGrowSystem = ["Soil", "Ebb and Flow"]
+                        roomGrowSystem.forEach(function(growSystem){ 
+                    %>
+                        <option value="<%=growSystem%>" <% if (room['roomGrowSystem'] === growSystem) { %>selected="selected"<% } %>><%=growSystem%></option>
                     <%  }) %>
                 </select>
             </div>

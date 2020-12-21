@@ -95,6 +95,15 @@
                 </select>
             </div>
             <hr style="border: 1px solid black;">
+            <div class="form-group row">
+                <label class="col-sm-6 col-form-label" for="roomGrowSystem">Room Grow System</label>
+                <select class="col-sm-20" name="roomGrowSystem" required>
+                    <option value="-1" selected="selected" disabled>Select Your Room's Grow System</option>
+                    <option value="Soil">Soil</option>
+                    <option value="Ebb and Flow">Ebb and Flow</option>
+                </select>
+            </div>
+            <hr style="border: 1px solid black;">
             <% 
                 for(const deviceNameKey in availableDevicesObj){
                     /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */

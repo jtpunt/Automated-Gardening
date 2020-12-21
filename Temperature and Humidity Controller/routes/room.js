@@ -132,6 +132,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     let body = req.body,
         roomName = body.roomName,
         roomType = body.roomType,
+        roomGrowSystem = body.roomGrowSystem,
         roomDeviceIds = body.roomDeviceIds,
         roomWaterDetails = req.body.roomWaterDetails;
 
@@ -207,6 +208,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
                 Room.create({
                     roomName: roomName, 
                     roomType: roomType,
+                    roomGrowSystem: roomGrowSystem,
                     roomDeviceIds: roomDeviceIds,
                     roomWaterDetails: roomWaterDetailsArr,
                 }, (err, newRoom) => {
@@ -233,6 +235,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
         body = req.body,
         roomName = body.roomName,
         roomType = body.roomType,
+        roomGrowSystem = body.roomGrowSystem,
         roomDeviceIds = body.roomDeviceIds,
         roomWaterDetails = req.body.roomWaterDetails;
 
@@ -304,6 +307,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
                 Room.findByIdAndUpdate(room_id, {
                     roomName: roomName, 
                     roomType: roomType,
+                    roomGrowSystem: roomGrowSystem,
                     roomDeviceIds: roomDeviceIds,
                     roomWaterDetails: roomWaterDetailsArr,
                 }, (err, room) => {
