@@ -3,7 +3,34 @@
 	schedules[device['local_ip']].forEach(function(schedule){
 %>
 <div class="rTableRow">
-	<div class="rTableCell"><%=schedule['device']['gpio']%></div>
+
+	<% 
+        /* 
+         * Find additional Relay Settings for the current device so we use those settings to show 
+         * what each GPIO turns on/off (water pump, light, ac unit).
+         *
+         * if no matches are found, the device's GPIO is used by default
+         */
+
+            let matchFound = false;
+            relaySettings.forEach(function(relaySetting){ 
+                if(relaySetting['relayId'].toString() === device['_id'].toString() &&
+                   relaySetting['gpio'] === schedule['device']['gpio']
+                ){
+                    matchFound = true;
+    %>
+    	<div class="rTableCell"><%=relaySetting['relayType']%></div>
+    <%
+                }
+            });
+            if(matchFound === false){
+    %>
+        <div class="rTableCell"><%=schedule['device']['gpio']%></div>
+    <%
+            }
+      
+    %>
+
 	<div class="rTableCell"><%=schedule['schedule']['hour']%>:<%=schedule['schedule']['minute']%>:<%=schedule['schedule']['second']%></div>
 	<% if(schedule['schedule']['dayOfWeek'] && schedule['schedule']['dayOfWeek'].length) { 
 		schedule['schedule']['dayOfWeek'] = schedule['schedule']['dayOfWeek'].map(function(day){

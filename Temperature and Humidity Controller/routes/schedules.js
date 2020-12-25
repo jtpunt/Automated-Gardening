@@ -255,10 +255,8 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
         res.status(400).end();
     }
 });
-router.get("/:relay_id", (req, res) => {
-   // return all the schedules for that relay
-    // Shows all active schedules
-});
+
+
 router.post("/", middleware.isLoggedIn, async (req, res) => {
     let adminCredentials;
     try{
@@ -316,6 +314,7 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
         res.status(500).end();
     }
 });
+
 //EDIT
 router.get("/:schedule_id/edit", middleware.isLoggedIn, (req, res) => {
     console.log(`in get EDIT route with ${req.params.schedule_id}`);
