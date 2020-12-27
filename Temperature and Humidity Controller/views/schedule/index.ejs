@@ -23,32 +23,31 @@
 			x.checked = true;
 		}
 	}
-	// There are two boostrap collapse menus, when 1 is toggled, the other menu should collapse and vice versa
-	// so that both menus are not displayed at the same time
+	// There are two boostrap collapse menus, when 1 is toggled, the other menu should collapse and vice versa, so that both menus are not displayed at the same time
 	function collapseMenu(id){
 		$('#' + id).collapse('hide');
 	}
 </script>
 <style>
-.weekDays-selector input {
-  display: none!important;
-}
+	.weekDays-selector input {
+	  display: none!important;
+	}
 
-.selectedCheckbox {
-  background: #2AD705 !important;
-  color: #ffffff !important;
-}
-.deselectedCheckbox {
-  display: inline-block;
-  border-radius: 6px;
-  background: #dddddd;
-  height: 40px;
-  width: 30px;
-  margin-right: 3px;
-  line-height: 40px;
-  text-align: center;
-  cursor: pointer;
-}
+	.selectedCheckbox {
+	  background: #2AD705 !important;
+	  color: #ffffff !important;
+	}
+	.deselectedCheckbox {
+	  display: inline-block;
+	  border-radius: 6px;
+	  background: #dddddd;
+	  height: 40px;
+	  width: 30px;
+	  margin-right: 3px;
+	  line-height: 40px;
+	  text-align: center;
+	  cursor: pointer;
+	}
 </style>
 <div class="container">
 <div class="row" style="margin: auto;
@@ -84,10 +83,10 @@
 					<!--Setting up the add new schedule button that is used for collapsing-->
 			        <div class="text-right">
 			            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>New" data-target="#collapse<%=ipStr%>New" aria-expanded="false" aria-controls="collapse<%=ipStr%>New" onclick="collapseMenu('collapse<%=ipStr%>NewTest')">
-			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Schedule</a>
+			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Manual Schedule</a>
 			    
 			            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>NewTest" data-target="#collapse<%=ipStr%>NewTest" aria-expanded="false" aria-controls="collapse<%=ipStr%>NewTest" onclick="collapseMenu('collapse<%=ipStr%>New')">
-			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Schedule</a>
+			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Smart Schedule</a>
 			        </div>
 			   
 				</div>

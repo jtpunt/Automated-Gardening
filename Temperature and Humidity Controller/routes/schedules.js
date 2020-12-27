@@ -4,6 +4,7 @@ var express       = require("express"),
     Scheduler     = require("../models/scheduler"),
     User          = require("../models/user"),
     RelaySettings = require("../models/relaySettings"),
+    Room          = require("../models/room"),
     middleware    = require("../middleware"),
     querystring   = require('querystring'),
     // async         = require("asyncawait/async"),
@@ -197,6 +198,10 @@ async function getAdminCredentions(){
     let adminCredentials = await User.findOne({"username": "admin"});
     return adminCredentials;
 }
+async function getRooms(){
+    let rooms = await Room.find({});
+    return rooms;
+}
 function addLocalIPsToSchedules(schedules, relayDevices){
     schedules.forEach(function(schedule){
         let found = relayDevices.find(function(device) { 
@@ -213,20 +218,26 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
     let page_name = "schedules",
         relayDevices,
         schedules,
-        relaySettings;
+        relaySettings,
+        rooms;
     
     try{
         relayDevices    = await getRelayDevices();
         schedules       = await getSchedules();
         relaySettings   = await getRelaySettings();
+        rooms           = await getRooms();
 
         if(!relayDevices){
             throw new Error("relay devices not valid!");
         }
         if(!schedules){
-            throw new Error(("schedules not valid!"));
+            throw new Error("schedules not valid!");
+        }
+        if(!rooms){
+            throw new Error("rooms not valid!");
         }
         console.log(`RelaySettings: ${JSON.stringify(relaySettings)}`);
+        console.log(`rooms: ${JSON.stringify(rooms)}`);
         addLocalIPsToSchedules(schedules, relayDevices);
         let schedulesByIp = groupBy(schedules, 'device', 'local_ip');
         // remove our periods between each octet to get an integer value and then sort
@@ -240,6 +251,7 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
             schedules: schedulesByIp, 
             devices: relayDevices, 
             relaySettings: relaySettings,
+            rooms: rooms,
             stylesheets: ["/static/css/table.css"]
         });
         res.status(200).end();
@@ -248,7 +260,9 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
         console.log("exc: " + exc.toString());
         res.render("schedule/index", {
             schedules: [], 
-            devices: [], 
+            devices: [],
+            relaySettings: [],
+            rooms: [],
             stylesheets: ["/static/css/table.css"]
         });
         req.flash("error", exc.toString());
