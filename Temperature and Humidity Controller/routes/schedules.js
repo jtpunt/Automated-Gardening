@@ -328,7 +328,9 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
         res.status(500).end();
     }
 });
-
+router.post("/smart", middleware.isLoggedIn, async (req, res) => {
+    console.log(`Body: ${JSON.stringify(req.body)}`);
+});
 //EDIT
 router.get("/:schedule_id/edit", middleware.isLoggedIn, (req, res) => {
     console.log(`in get EDIT route with ${req.params.schedule_id}`);

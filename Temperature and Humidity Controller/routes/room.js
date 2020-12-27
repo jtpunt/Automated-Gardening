@@ -37,7 +37,7 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                 devicesProcessed++;
                 // find additional relay settings
                 if(device['deviceType'] === 'Relay Server'){
-                    console.log(`Relay Server Found: ${JSON.stringify(device)}`);
+                    //console.log(`Relay Server Found: ${JSON.stringify(device)}`);
                     RelaySettings.find( {relayId: device['_id']}, function(err, relaySettings){
                         if(err){
                             console.log(`Error: did not find Relay Settings: ${err.toString()}`); 
@@ -102,9 +102,8 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
                             allDevicesObj[device['deviceType']].push(device);
                         })
 
-                        console.log(`All Devices Found: ${JSON.stringify(allDevicesObj)}`)
-                        console.log(`All Devices available: ${JSON.stringify(availableDevicesObj)}`);
-                        
+                        // console.log(`All Devices Found: ${JSON.stringify(allDevicesObj)}`)
+                        // console.log(`All Devices available: ${JSON.stringify(availableDevicesObj)}`);
                         res.status(200).render("room/index", 
                             {
                                 page_name: page_name,
