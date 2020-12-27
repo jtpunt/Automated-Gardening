@@ -244,12 +244,23 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                                 relayType: relayTypeArr[i]
                             }
                             console.log(`relay_config: ${JSON.stringify(relay_config)}`);
-                            RelaySettings.findOneAndUpdate({ relayId: device['id'], gpio: myGpio}, {$set: relay_config}, (err, updated_relay_settings) => {
+                            let find = {
+                                relayId: device['id'], 
+                                gpio: myGpio
+                            },
+                            update = {
+                                $set: relay_config
+                            },
+                            options = {
+                                returnOriginal: false
+                            }
+                            RelaySettings.findOneAndUpdate(find, update, options, (err, original_relay_settings) => {
                                 if(err){
                                     console.log(err.toString());
                                     // req.flash("error", err.toString());
                                     // res.redirect("back");
                                 }else{
+                                    console.log(`original_relay_settings: ${original_relay_settings}`);
                                     if(updated_relay_settings === null){
                                         console.log("updated_relay_settings is null");
                                         RelaySettings.create(relay_config, (err, new_relay_setting) => {
