@@ -18,6 +18,10 @@ var roomSchema = new mongoose.Schema({
 	    	type: mongoose.Schema.Types.ObjectId,
 	    	ref: "Device"
 		},
+        relaySettingsId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "RelaySettings"
+        },
         waterFlowRate: Number, // Gallons Per Hour
     	containerSize: Number,
     	numOfWaterLines: Number

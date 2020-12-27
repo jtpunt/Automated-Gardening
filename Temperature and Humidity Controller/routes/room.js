@@ -141,6 +141,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         inputType = typeof roomWaterDetails['relayId'],
         validInputArr = [
             roomWaterDetails['relayId'], 
+            roomWaterDetails['relaySettingsId'],
             roomWaterDetails['waterFlowRate'],
             roomWaterDetails['containerSize'], 
             roomWaterDetails['numOfWaterLines']
@@ -160,6 +161,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         roomWaterDetails['relayId'].forEach(function(relayId, i){
             let roomWaterDetail = {
                 "relayId": relayId,
+                "relaySettingsId": roomWaterDetails['relaySettingsId'][i],
                 "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
                 "containerSize": roomWaterDetails['containerSize'][i],
                 "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
@@ -169,6 +171,7 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
     }else if(inputType === 'string'){
         let roomWaterDetail = {
             "relayId": roomWaterDetails['relayId'],
+            "relaySettingsId": roomWaterDetails['relaySettingsId'],
             "waterFlowRate": roomWaterDetails['waterFlowRate'],
             "containerSize": roomWaterDetails['containerSize'],
             "numOfWaterLines": roomWaterDetails['numOfWaterLines']
@@ -244,6 +247,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
         inputType = typeof roomWaterDetails['relayId'],
         validInputArr = [
             roomWaterDetails['relayId'], 
+            roomWaterDetails['relaySettingsId'],
             roomWaterDetails['waterFlowRate'],
             roomWaterDetails['containerSize'], 
             roomWaterDetails['numOfWaterLines']
@@ -263,6 +267,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
         roomWaterDetails['relayId'].forEach(function(relayId, i){
             let roomWaterDetail = {
                 "relayId": relayId,
+                "relaySettingsId": roomWaterDetails['relaySettingsId'][i],
                 "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
                 "containerSize": roomWaterDetails['containerSize'][i],
                 "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
@@ -272,6 +277,7 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
     }else if(inputType === 'string'){
         let roomWaterDetail = {
             "relayId": roomWaterDetails['relayId'],
+            "relaySettingsId": roomWaterDetails['relaySettingsId'],
             "waterFlowRate": roomWaterDetails['waterFlowRate'],
             "containerSize": roomWaterDetails['containerSize'],
             "numOfWaterLines": roomWaterDetails['numOfWaterLines']

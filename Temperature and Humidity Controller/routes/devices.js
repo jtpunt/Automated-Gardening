@@ -261,7 +261,7 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                                     // res.redirect("back");
                                 }else{
                                     console.log(`original_relay_settings: ${original_relay_settings}`);
-                                    if(updated_relay_settings === null){
+                                    if(original_relay_settings === null){
                                         console.log("updated_relay_settings is null");
                                         RelaySettings.create(relay_config, (err, new_relay_setting) => {
                                             if(err) console.log(`Error Creating Relay Settings ${err}`);
@@ -271,6 +271,9 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                                             }
                                         });
                                     }else{
+                                        if(original_relay_settings['relayType'] === 'water pump' && relay_config['relayType'] !== 'water pump'){
+                                            console.log("original relay type is no longer a water pump");
+                                        }
                                         console.log("no error on relaySettings update");
                                         console.log(`Successfully updated ${JSON.stringify(device)}`)
                                     }
