@@ -136,51 +136,51 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
         roomWaterDetails = req.body.roomWaterDetails;
 
     let roomWaterDetailsArr = [];
+    if(roomWaterDetails !== undefined){
+        let validInput = true,
+            inputType = typeof roomWaterDetails['relayId'],
+            validInputArr = [
+                roomWaterDetails['relayId'], 
+                roomWaterDetails['relaySettingsId'],
+                roomWaterDetails['waterFlowRate'],
+                roomWaterDetails['containerSize'], 
+                roomWaterDetails['numOfWaterLines']
+            ]
 
-    let validInput = true,
-        inputType = typeof roomWaterDetails['relayId'],
-        validInputArr = [
-            roomWaterDetails['relayId'], 
-            roomWaterDetails['relaySettingsId'],
-            roomWaterDetails['waterFlowRate'],
-            roomWaterDetails['containerSize'], 
-            roomWaterDetails['numOfWaterLines']
-        ]
-
-    let count = validInputArr.length - 1;
-    validInputArr.forEach(function(input, i, array){
-        inputType = typeof input;
-        if(inputType === 'object'){   
-            if(input.length !== array[count--].length){
-                validInput = false;
+        let count = validInputArr.length - 1;
+        validInputArr.forEach(function(input, i, array){
+            inputType = typeof input;
+            if(inputType === 'object'){   
+                if(input.length !== array[count--].length){
+                    validInput = false;
+                }
             }
-        }
-    })
+        })
 
-    if(inputType === 'object'){
-        roomWaterDetails['relayId'].forEach(function(relayId, i){
+        if(inputType === 'object'){
+            roomWaterDetails['relayId'].forEach(function(relayId, i){
+                let roomWaterDetail = {
+                    "relayId": relayId,
+                    "relaySettingsId": roomWaterDetails['relaySettingsId'][i],
+                    "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
+                    "containerSize": roomWaterDetails['containerSize'][i],
+                    "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
+                }
+                roomWaterDetailsArr.push(roomWaterDetail);
+            })
+        }else if(inputType === 'string'){
             let roomWaterDetail = {
-                "relayId": relayId,
-                "relaySettingsId": roomWaterDetails['relaySettingsId'][i],
-                "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
-                "containerSize": roomWaterDetails['containerSize'][i],
-                "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
+                "relayId": roomWaterDetails['relayId'],
+                "relaySettingsId": roomWaterDetails['relaySettingsId'],
+                "waterFlowRate": roomWaterDetails['waterFlowRate'],
+                "containerSize": roomWaterDetails['containerSize'],
+                "numOfWaterLines": roomWaterDetails['numOfWaterLines']
             }
             roomWaterDetailsArr.push(roomWaterDetail);
-        })
-    }else if(inputType === 'string'){
-        let roomWaterDetail = {
-            "relayId": roomWaterDetails['relayId'],
-            "relaySettingsId": roomWaterDetails['relaySettingsId'],
-            "waterFlowRate": roomWaterDetails['waterFlowRate'],
-            "containerSize": roomWaterDetails['containerSize'],
-            "numOfWaterLines": roomWaterDetails['numOfWaterLines']
+        }else{
+            console.log("Invalid input given for required water details");
         }
-        roomWaterDetailsArr.push(roomWaterDetail);
-    }else{
-        console.log("Invalid input given for required water details");
     }
-
     console.log(`room name: ${roomName}`);
     console.log(`roomDeviceIds: ${roomDeviceIds}`);
     console.log(`roomWaterDetails: ${roomWaterDetails}`);
