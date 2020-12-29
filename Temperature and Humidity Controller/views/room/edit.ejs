@@ -176,7 +176,7 @@
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[relaySettingsId]"></label>
-                                <input class="col-sm-20" type="text" id="relaySettingsId" name="roomWaterDetails[relaySettingsId]" value="<%=waterPump['_id']%>" required readonly hidden>
+                                <input class="col-sm-20" type="text" id="relaySettingsId" name="roomWaterDetails[relaySettingsId]" value="<%=waterPump['_id']%>" <% if(!isPumpInRoom) { %> disabled="true" <% } %> required readonly hidden>
                             </div>
                             <div class="form-group row">
                                 <label class="col-sm-6 col-form-label" for="roomWaterDetails[waterFlowRate]">Water Flow Rate (GPH)</label>

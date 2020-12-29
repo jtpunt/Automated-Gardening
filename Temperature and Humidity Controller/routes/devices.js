@@ -4,6 +4,7 @@ var express    = require("express"),
     Camera     = require("../models/cameraSettings"),
     WaterSettings = require("../models/waterSettings"),
     RelaySettings = require("../models/relaySettings"),
+    Room       = require("../models/room"),
     router     = express.Router();
 
 // Shows all devices
@@ -273,9 +274,32 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                                     }else{
                                         if(original_relay_settings['relayType'] === 'water pump' && relay_config['relayType'] !== 'water pump'){
                                             console.log("original relay type is no longer a water pump");
+                                            // find the room that is using our relay device by looking for it's id the array of device id's (AKA roomDeviceIds)
+                                            let query = {
+                                                roomDeviceIds: {
+                                                    $in: [original_relay_settings['relayId']]
+                                                }
+                                            }
+                                            // find the matching relaySettingsId located in the roomWaterDetails array
+                                            // and then remove it since it is no longer a water pump device
+                                            let update = {
+                                                $pull: {
+                                                    roomWaterDetails: { 
+                                                        relaySettingsId: original_relay_settings['_id'].toString()
+                                                    }
+                                                }
+                                            }
+                                            Room.updateOne(query, update, function(err, field){
+                                                if(err){
+                                                    console.log(err.toString());
+                                                }else{
+                                                    console.log(`success?: ${JSON.stringify(field)}`);
+                                                }
+                                            });
+                                        }else{
+                                            console.log("no error on relaySettings update");
+                                            console.log(`Successfully updated ${JSON.stringify(device)}`)
                                         }
-                                        console.log("no error on relaySettings update");
-                                        console.log(`Successfully updated ${JSON.stringify(device)}`)
                                     }
                                 }
                             });
