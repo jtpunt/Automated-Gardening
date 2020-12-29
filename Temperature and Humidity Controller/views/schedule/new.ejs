@@ -34,13 +34,13 @@
                                 ){
                                     matchFound = true;
                     %>
-                        <option value=<%=myGpio%>><%=relaySetting['relayType']%></option>
+                                    <option value=<%=myGpio%>><%=relaySetting['relayType']%></option>
                     <%
                                 }
                             });
                             if(matchFound === false){
                     %>
-                        <option value=<%=myGpio%>><%=myGpio%></option>
+                                <option value=<%=myGpio%>><%=myGpio%></option>
                     <%
                             }
                         })
@@ -116,6 +116,7 @@
 <div class="well" style="border-left: 5px solid #00C851;">
     <form id="add-comment-form" action="/schedule/smart" method="POST">
         <fieldset>
+            <section>
             <legend>
                 <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span>
                 Add your new schedule details
@@ -138,84 +139,103 @@
                     if(room['roomDeviceIds'].includes(device['_id'])){
                         let minGrowWeeks = 4,
                             maxGrowWeeks = 26;
-                        switch(room['roomType']){
-                            case 'Vegetative and Flowering':
-                                %>
+                        if(room['roomType'] === "Vegetative and Flowering" || room['roomType'] === "Vegetative"){  
+            %>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="vegLength">Set Vegetative Grow Length (weeks): </label>
                 <select class="col-sm-20" name="vegLength">
                     <option value="-1" selected="selected" disabled>Select Your Grow Length:</option>
-                    <% 
-                        for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
+                        <% 
+                            for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
+                            %>
+                                <option value=<%=i%>><%=i%> Weeks</option>
+                            <%
+                            }
+                            if(room['roomType'] === "Vegetative"){
                         %>
-                             <option value=<%=i%>><%=i%> Weeks</option>
-                        <%
-                        }
-                    %>
+                                <option value="<%=Number.POSITIVE_INFINITY%>"><%= Number.POSITIVE_INFINITY%> Weeks</option>
+                        <% 
+                            }
+                        %>
                 </select>
             </div>
+            <% 
+                        }
+                        if(room['roomType'] === "Vegetative and Flowering" || room['roomType'] === "Flowering"){
+            %>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="flowerLength">Set Flowering Grow Length (weeks): </label>
                 <select class="col-sm-20" name="flowerLength">
                     <option value="-1" selected="selected" disabled>Select Your Grow Length:</option>
-                    <% 
-                        for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
+                        <% 
+                            for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
                         %>
-                             <option value=<%=i%>><%=i%> Weeks</option>
+                                <option value=<%=i%>><%=i%> Weeks</option>
                         <%
-                        }
-                    %>
+                            }
+                            if(room['roomType'] === "Vegetative"){
+                        %>
+                                <option value="<%=Number.POSITIVE_INFINITY%>"><%= Number.POSITIVE_INFINITY%> Weeks</option>
+                        <% 
+                            }
+                        %>
                 </select>
             </div>
-                                <%
-                                break;
-                            case 'Vegetative':
-                                %>
-            <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="vegLength">Set Vegetative Grow Length (weeks): </label>
-                <select class="col-sm-20" name="vegLength">
-                    <option value="-1" selected="selected" disabled>Select Your Grow Length:</option>
-                    <% 
-                        for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
-                        %>
-                             <option value=<%=i%>><%=i%> Weeks</option>
-                        <%
-                        }
-                    %>
-                    <option value="<%=Number.POSITIVE_INFINITY%>"><%= Number.POSITIVE_INFINITY%> Weeks</option>
-                </select>
-            </div>
-                                <%
-                                break;
-                            case 'Flowering':
-                                %>
-            <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="flowerLength">Set Flowering Grow Length (weeks): </label>
-                <select class="col-sm-20" name="flowerLength">
-                    <option value="-1" selected="selected" disabled>Select Your Grow Length:</option>
-                    <% 
-                        for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
-                        %>
-                             <option value=<%=i%>><%=i%> Weeks</option>
-                        <%
-                        }
-                    %>
-                    <option value="<%= Number.POSITIVE_INFINITY%>"><%= Number.POSITIVE_INFINITY%> Weeks</option>
-                </select>
-            </div>
-                                <%
-                                break;
+            <%
                         }   
-                    }
-                    if(room['roomWaterDetails'].length){
-                    %>
-                        <p>Water Details found</p>
-                    <%
-
                     }
                 })
             } 
             %>
+        </fieldset>
+        <% 
+            if(rooms.length) { 
+                rooms.forEach(function(room){
+                    if(room['roomDeviceIds'].includes(device['_id'])){
+                        if(room['roomType'] === "Vegetative and Flowering" || room['roomType'] === "Vegetative"){
+        %>
+        <fieldset>
+            <legend>
+                🌱
+                Add your vegetative water schedule details
+            </legend>
+        </fieldset>
+                    <%
+                        }
+
+                    %>
+        <%
+                        if(room['roomType'] === "Vegetative and Flowering" || room['roomType'] === "Flowering"){
+                    %>
+        <fieldset>
+            <legend>
+                🌻
+                Add your flowering water schedule details
+            </legend>
+
+        </fieldset>
+
+                      
+                
+        <% 
+                        }
+                    }
+                });
+            } 
+        %>
+        <fieldset>
+            <legend>
+                <i class="fa fa-fw fa-glasses"></i>
+                Review your new schedule details
+            </legend>
+            
+        </fieldset>
+        <fieldset>
+            <legend>
+                <i class="fa fa-fw fa-check"></i>
+                Submit your new schedule details
+            </legend>
+         
             <div class="form-group row">
                 <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
             </div>
