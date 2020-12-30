@@ -108,10 +108,8 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                     else{
                         let directionArr = [],
                             relayTypeArr = [];
-                        relaySettings.forEach(function(relay_config){
-                            directionArr.push(relay_config['direction']);
-                            relayTypeArr.push(relay_config['relayType']);
-                        });
+                        console.log(`relaySettings: ${JSON.stringify(relaySettings)}`);
+  
                        let query = {
                             roomDeviceIds: {
                                 $in: [device['_id']]
@@ -131,8 +129,7 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                         res.render("device/edit", {
                             page_name: page_name,
                             device: device,
-                            directionArr: directionArr,
-                            relayTypeArr: relayTypeArr
+                            relaySettings: relaySettings
                         });
                     }
                 });
@@ -140,7 +137,8 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                 console.log(device);
                 res.render("device/edit", {
                     page_name: page_name,
-                    device: device
+                    device: device,
+                    relaySettings: []
                 });
             }
         }
