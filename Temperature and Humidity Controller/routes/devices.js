@@ -112,6 +112,18 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                             directionArr.push(relay_config['direction']);
                             relayTypeArr.push(relay_config['relayType']);
                         });
+                       let query = {
+                            roomDeviceIds: {
+                                $in: [device['_id']]
+                            }
+                        }
+                        Room.findOne(query, function(err, room){
+                            if(err){
+                                console.log(err.toString());
+                            }else{
+                                console.log(`Room found with relay device: ${JSON.stringify(room)}`);
+                            }
+                        })
                         console.log(`directArr: ${directionArr}`);
                         console.log(`relayTypeArr: ${relayTypeArr}`);
 
