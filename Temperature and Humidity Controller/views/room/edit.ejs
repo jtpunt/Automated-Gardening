@@ -75,41 +75,58 @@
         }
     }
 </script>
+<style>
+    fieldset {
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow:  0px 0px 0px 0px #000;
+                box-shadow:  0px 0px 0px 0px #000;
+    }
+
+    legend {
+        width:inherit; /* Or auto */
+        padding:0 10px; /* To give a bit of padding on the left and right */
+        border-bottom:none;
+    }   
+
+</style>
 <div class="container" style="width: 100%;">
 <div class="row" style="width: 100%;">
     <h1 style="text-align: center;">Edit Room <%=room['roomName']%></h1>
     <div style="width: 50%; margin:25px auto;">
         <form action="/room/<%=room['_id']%>/?_method=PUT" method="POST" class="update-form">
-            <hr style="border: 1px solid black;">
-        	<div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="roomName">Room Name</label>
-            	<input class="col-sm-20" type="text" id="id" name="roomName" value="<%=room['roomName']%>"required>
-            </div>
-            <hr style="border: 1px solid black;">
-            <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="roomType">Room Type</label>
-                <select class="col-sm-20" name="roomType" required>
-                    <option value="-1" selected="selected" disabled>Select Your Room Type</option>
-                    <%  let roomTypes = ["Vegetative and Flowering", "Vegetative", "Flowering"]
-                        roomTypes.forEach(function(roomType){ 
-                    %>
-                    <option value="<%=roomType%>" <% if (room['roomType'] === roomType) { %>selected="selected"<% } %>><%=roomType%></option>
-                    <%  }) %>
-                </select>
-            </div>
-            <hr style="border: 1px solid black;">
-            <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="roomGrowSystem">Room Grow System</label>
-                <select class="col-sm-20" name="roomGrowSystem" required>
-                    <option value="-1" selected="selected" disabled>Select Your Room's Grow System</option>
-                    <%  let roomGrowSystem = ["Soil", "Ebb and Flow"]
-                        roomGrowSystem.forEach(function(growSystem){ 
-                    %>
-                        <option value="<%=growSystem%>" <% if (room['roomGrowSystem'] === growSystem) { %>selected="selected"<% } %>><%=growSystem%></option>
-                    <%  }) %>
-                </select>
-            </div>
-            <hr style="border: 1px solid black;">
+            <fieldset>
+                <legend>Room Details</legend>
+            	<div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="roomName">Room Name</label>
+                	<input class="col-sm-20" type="text" id="id" name="roomName" value="<%=room['roomName']%>"required>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="roomType">Room Type</label>
+                    <select class="col-sm-20" name="roomType" required>
+                        <option value="-1" selected="selected" disabled>Select Your Room Type</option>
+                        <%  let roomTypes = ["Vegetative and Flowering", "Vegetative", "Flowering"]
+                            roomTypes.forEach(function(roomType){ 
+                        %>
+                        <option value="<%=roomType%>" <% if (room['roomType'] === roomType) { %>selected="selected"<% } %>><%=roomType%></option>
+                        <%  }) %>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="roomGrowSystem">Room Grow System</label>
+                    <select class="col-sm-20" name="roomGrowSystem" required>
+                        <option value="-1" selected="selected" disabled>Select Your Room's Grow System</option>
+                        <%  let roomGrowSystem = ["Soil", "Ebb and Flow"]
+                            roomGrowSystem.forEach(function(growSystem){ 
+                        %>
+                            <option value="<%=growSystem%>" <% if (room['roomGrowSystem'] === growSystem) { %>selected="selected"<% } %>><%=growSystem%></option>
+                        <%  }) %>
+                    </select>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Room Device Details</legend>
              <% 
                 for(const deviceNameKey in deviceObj){
                     /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
@@ -133,7 +150,6 @@
                             %>
                         </select>
                     </div>
-                    <hr style="border: 1px solid black;">
                     <div id="waterDetailsContainer">
                     <% 
                         // are there any water pumps available?
@@ -194,7 +210,6 @@
                                 <% if(waterDetailsIdx !== -1) { %> value="<%=room['roomWaterDetails'][waterDetailsIdx]['numOfWaterLines']%>" <% } %> 
                                 <% if(!isPumpInRoom) { %> disabled="true" <% } %>>
                             </div>
-                            <hr style="border: 1px solid black;">
                         </div>
                         <%
 
@@ -224,12 +239,12 @@
                             %>
                         </select>
                     </div>
-                    <hr style="border: 1px solid black;">
                 <%
 
                     }      
                 }
             %>  
+            </fieldset>
             <div class="form-group row">
                 <button class="btn btn-lg btn-primary btn-block">Submit!</button>
             </div>

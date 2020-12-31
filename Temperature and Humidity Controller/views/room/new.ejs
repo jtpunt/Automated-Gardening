@@ -84,17 +84,33 @@
         }
     }
 </script>
+<style>
+    fieldset {
+        border: 1px groove #ddd !important;
+        padding: 0 1.4em 1.4em 1.4em !important;
+        margin: 0 0 1.5em 0 !important;
+        -webkit-box-shadow:  0px 0px 0px 0px #000;
+                box-shadow:  0px 0px 0px 0px #000;
+    }
+
+    legend {
+        width:inherit; /* Or auto */
+        padding:0 10px; /* To give a bit of padding on the left and right */
+        border-bottom:none;
+    }   
+
+</style>
 <div class="collapse" id="collapseNew">
-    <div class="well" style="border-left: 5px solid #00C851;">
-        <!--If the user is logged in, show the new schedule form-->
-        <h4>Add your room details <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
-        <form id="add-comment-form" action="/room" method="POST">
-            <hr style="border: 1px solid black;">
+<div class="well" style="border-left: 5px solid #00C851;">
+    <!--If the user is logged in, show the new schedule form-->
+    <h4>Add your room details <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
+    <form id="add-comment-form" action="/room" method="POST">
+        <fieldset>
+            <legend>Room Details</legend>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomName">Room Name</label>
             	<input class="col-sm-20" type="text" id="id" name="roomName" required>
             </div>
-            <hr style="border: 1px solid black;">
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomType">Room Type</label>
                 <select class="col-sm-20" name="roomType" required>
@@ -104,7 +120,6 @@
                     <option value="Flowering">Flowering</option>
                 </select>
             </div>
-            <hr style="border: 1px solid black;">
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomGrowSystem">Room Grow System</label>
                 <select class="col-sm-20" name="roomGrowSystem" required>
@@ -113,95 +128,95 @@
                     <option value="Ebb and Flow">Ebb and Flow</option>
                 </select>
             </div>
-            <hr style="border: 1px solid black;">
-            <% 
-                for(const deviceNameKey in availableDevicesObj){
-                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
-                    let deviceNameStr = deviceNameKey.replace(/\s/g,''); 
-                    /* Relay Server is the only device type that's required to create a room
-                    */
-                    if(deviceNameKey === "Relay Server"){ 
-                %>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select onchange="relaySelectFn(this)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true" required>
-                            <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
-                            <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
-                            %>
-                                <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
-                            <% }); %>
-                        </select>
-                    </div>
-                    <hr style="border: 1px solid black;">
-                    <div id="waterDetailsContainer">
-                    <% 
-                        if(availableWaterPumps.length > 0) { 
-                            availableWaterPumps.forEach(function(waterPump){
-                            let relayName = "";
-                            availableDevicesObj[deviceNameKey].forEach(function(device){ 
-                                if(device['_id'].toString() === waterPump['relayId'].toString()){
-                                    console.log('GPIO' + waterPump['gpio']);
-                                    relayName = device['deviceName'];
-                                }
-                            });
-                            
+        </fieldset>
+        <fieldset>
+            <legend>Room Device Details</legend>
+        <% 
+            for(const deviceNameKey in availableDevicesObj){
+                /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
+                let deviceNameStr = deviceNameKey.replace(/\s/g,''); 
+                /* Relay Server is the only device type that's required to create a room
+                */
+                if(deviceNameKey === "Relay Server"){ 
+            %>
+            
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
+                    <select onchange="relaySelectFn(this)" id="relayServerSelect" class="col-sm-20" name="roomDeviceIds" multiple="true" required>
+                        <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
+                        <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
                         %>
-                        <div id="<%=waterPump['relayId']%>" class="<%=waterPump['relayId']%>" hidden>
-                            <div class="form-group row">
-                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%> - GPIO - <%=waterPump['gpio']%></label>
-                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden disabled="true">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[relaySettingsId]"></label>
-                                <input class="col-sm-20" type="text" id="relaySettingsId" name="roomWaterDetails[relaySettingsId]" value="<%=waterPump['_id']%>" required readonly hidden disabled="true">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[waterFlowRate]">Water Pump's Water Flow Rate (GPH)</label>
-                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[waterFlowRate]" disabled="true">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size (gallons)</label>
-                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" disabled="true">
-                            </div>
-                            <div class="form-group row">
-                                <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
-                                <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]" disabled="true">
-                            </div>
-                            <hr style="border: 1px solid black;">
-                        </div>
-                        <%
-
-                            }) 
-                        %>
-                    <% 
-                        }
+                            <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div id="waterDetailsContainer">
+                <% 
+                    if(availableWaterPumps.length > 0) { 
+                        availableWaterPumps.forEach(function(waterPump){
+                        let relayName = "";
+                        availableDevicesObj[deviceNameKey].forEach(function(device){ 
+                            if(device['_id'].toString() === waterPump['relayId'].toString()){
+                                console.log('GPIO' + waterPump['gpio']);
+                                relayName = device['deviceName'];
+                            }
+                        });
+                        
                     %>
+                    <div id="<%=waterPump['relayId']%>" class="<%=waterPump['relayId']%>" hidden>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%> - GPIO - <%=waterPump['gpio']%></label>
+                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden disabled="true">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[relaySettingsId]"></label>
+                            <input class="col-sm-20" type="text" id="relaySettingsId" name="roomWaterDetails[relaySettingsId]" value="<%=waterPump['_id']%>" required readonly hidden disabled="true">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[waterFlowRate]">Water Pump's Water Flow Rate (GPH)</label>
+                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[waterFlowRate]" disabled="true">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size (gallons)</label>
+                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" disabled="true">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
+                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]" disabled="true">
+                        </div>
                     </div>
+                    <%
 
-                <%
-                    } else {
+                        }) 
+                    %>
+                <% 
+                    }
                 %>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select id="roomDeviceIds" class="col-sm-20" name="roomDeviceIds" multiple="true">
-                            <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
-                            <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
-                            %>
-                                <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
-                            <% }); %>
-                        </select>
-                    </div>
-                    <hr style="border: 1px solid black;">
-                <%  
-                    }   
-                }
-            %>  
-        
-            <div class="form-group row">
-                <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
-            </div>
-        </form>
-    </div>
+                </div>
+
+            <%
+                } else {
+            %>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
+                    <select id="roomDeviceIds" class="col-sm-20" name="roomDeviceIds" multiple="true">
+                        <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
+                        <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
+                        %>
+                            <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
+                        <% }); %>
+                    </select>
+                </div>
+            <%  
+                }   
+            }
+        %>  
+        </fieldset>
+        <div class="form-group row">
+            <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
+        </div>
+    </form>
+</div>
 </div>
 
 <!--Collapse Add a schedule form END-->
