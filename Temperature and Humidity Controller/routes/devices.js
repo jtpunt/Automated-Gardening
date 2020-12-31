@@ -35,7 +35,7 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
             res.render("device/index", {
                 page_name: page_name,
                 deviceObj: deviceObj,
-                stylesheets: ["/static/css/table.css"]
+                stylesheets: ["/static/css/common/table.css"]
             });
             res.status(200).end();
         }
@@ -62,7 +62,8 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                         res.render("device/edit", {
                             cameraSettings: camera,
                             page_name: page_name,
-                            device: device
+                            device: device,
+                            scripts: ["/static/js/device/edit.js"]
                         }); 
                     }
                 });
@@ -83,7 +84,9 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                                 res.render("device/edit", {
                                     relay_devices: relay_devices,
                                     page_name: page_name,
-                                    device: device
+                                    device: device,
+                                    scripts: ["/static/js/device/edit.js"],
+                                    stylesheets: ["/static/css/common/form.css"]
                                 }); 
                             }
                             else{
@@ -92,7 +95,9 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                                     water_config: water_config,
                                     relay_devices: relay_devices,
                                     page_name: page_name,
-                                    device: device
+                                    device: device,
+                                    scripts: ["/static/js/device/edit.js"],
+                                    stylesheets: ["/static/css/common/form.css"]
                                 }); 
                             }
                         });
@@ -129,7 +134,9 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                         res.render("device/edit", {
                             page_name: page_name,
                             device: device,
-                            relaySettings: relaySettings
+                            relaySettings: relaySettings,
+                            scripts: ["/static/js/device/edit.js"],
+                            stylesheets: ["/static/css/common/form.css"]
                         });
                     }
                 });
@@ -138,7 +145,9 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
                 res.render("device/edit", {
                     page_name: page_name,
                     device: device,
-                    relaySettings: []
+                    relaySettings: [],
+                    scripts: ["/static/js/device/edit.js"],
+                    stylesheets: ["/static/css/common/form.css"]
                 });
             }
         }

@@ -51,7 +51,7 @@ router.get("/", middleware.isLoggedIn, (req, res) =>{
             res.render("journal/index", {
                 page_name: page_name,
                 rooms: rooms,
-                stylesheets: ["/static/css/table.css"]
+                stylesheets: ["/static/css/common/table.css"]
             });
             res.status(200).end();
         }

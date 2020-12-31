@@ -252,7 +252,8 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
             devices: relayDevices, 
             relaySettings: relaySettings,
             rooms: rooms,
-            stylesheets: ["/static/css/table.css"]
+            scripts: ["/static/js/schedule/common.js"],
+            stylesheets: ["/static/css/common/table.css", "/static/css/common/form.css"]
         });
         res.status(200).end();
         
@@ -263,7 +264,7 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
             devices: [],
             relaySettings: [],
             rooms: [],
-            stylesheets: ["/static/css/table.css"]
+            stylesheets: ["/static/css/common/table.css", "/static/css/common/form.css"]
         });
         req.flash("error", exc.toString());
         res.status(400).end();
@@ -351,7 +352,8 @@ router.get("/:schedule_id/edit", middleware.isLoggedIn, (req, res) => {
                         schedule: foundSchedule, 
                         device: foundDevice, 
                         deviceSchedules: foundSchedules,  
-                        stylesheets: ["/static/css/table.css"]
+                        scripts: ["/static/js/schedule/common.js"],
+                        stylesheets: ["/static/css/common/table.css", "/static/css/common/form.css"]
                     });
                     res.status(200).end();
                 });
@@ -477,7 +479,8 @@ router.delete("/:schedule_id/local_ip/:local_ip", middleware.isLoggedIn, async (
             devices: [], 
             errors: exc.toString(), 
             success: [],
-            stylesheets: ["/static/css/table.css"]
+            scripts: ["/static/js/schedule/common.js"],
+            stylesheets: ["/static/css/common/table.css", "/static/css/common/form.css"]
         });
         req.flash("error", exc.toString());
         res.redirect("/schedule");
