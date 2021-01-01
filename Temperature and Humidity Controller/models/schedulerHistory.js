@@ -1,0 +1,40 @@
+var mongoose = require("mongoose");
+var scheduleSchema = new mongoose.Schema({
+    device: {
+        id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Device"
+        },
+        gpio: Number,
+        desired_state: Boolean // TO DO - take this code out, moved to new 'relaySettings.js' schema
+    }, 
+    schedule: {
+        second: Number,
+        minute: Number,
+        hour: Number,
+        date: Number,
+        month: Number,
+        year: Number,
+        dayOfWeek: [],
+        // TO DO - change to 'onScheduleId'
+        prevScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SchedulerHistory"
+        },
+        // TO DO - change to 'offScheduleId'
+        nextScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SchedulerHistory"
+        }, 
+        startScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SchedulerHistory"
+        },
+        endScheduleId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "SchedulerHistory"
+        }
+    }
+    
+});
+module.exports = mongoose.model('SchedulerHistory', scheduleSchema, 'scheduleHistory');

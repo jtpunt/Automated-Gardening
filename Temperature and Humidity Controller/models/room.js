@@ -27,6 +27,51 @@ var roomSchema = new mongoose.Schema({
     	containerSize: Number,
     	numOfWaterLines: Number,
         numOfWaterLinesUsed: Number
+    }],
+    roomActiveSchedules: {
+        lightSchedules: {
+            vegSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Scheduler"
+            }],
+            flowerSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Scheduler"
+            }]
+        },
+        waterSchedules: {
+            vegSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Scheduler"
+            }],
+            flowerSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Scheduler"
+            }]
+        }
+    },
+    roomScheduleHistory: [{
+        dateOfChange: Date,
+        lightSchedules: {
+            vegSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "SchedulerHistory"
+            }],
+            flowerSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "SchedulerHistory"
+            }]
+        },
+        waterSchedules: {
+            vegSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "SchedulerHistory"
+            }],
+            flowerSchedules: [{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "SchedulerHistory"
+            }]
+        }
     }]
 });
 module.exports = mongoose.model('Room', roomSchema, 'rooms');
