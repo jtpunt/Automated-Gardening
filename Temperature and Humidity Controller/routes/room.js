@@ -143,9 +143,11 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
             validInputArr = [
                 roomWaterDetails['relayId'], 
                 roomWaterDetails['relaySettingsId'],
-                roomWaterDetails['waterFlowRate'],
+                roomWaterDetails['pumpWaterFlowRate'],
+                roomWaterDetails['manifoldPortWaterFlowRate'],
                 roomWaterDetails['containerSize'], 
-                roomWaterDetails['numOfWaterLines']
+                roomWaterDetails['numOfWaterLines'],
+                roomWaterDetails['numOfWaterLinesUsed']
             ]
 
         let count = validInputArr.length - 1;
@@ -163,9 +165,11 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
                 let roomWaterDetail = {
                     "relayId": relayId,
                     "relaySettingsId": roomWaterDetails['relaySettingsId'][i],
-                    "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
+                    "pumpWaterFlowRate": roomWaterDetails['pumpWaterFlowRate'][i],
+                    "manifoldPortWaterFlowRate": roomWaterDetails['manifoldPortWaterFlowRate'][i],
                     "containerSize": roomWaterDetails['containerSize'][i],
-                    "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
+                    "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i],
+                    "numOfWaterLinesUsed": roomWaterDetails['numOfWaterLinesUsed'][i]
                 }
                 roomWaterDetailsArr.push(roomWaterDetail);
             })
@@ -173,9 +177,11 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
             let roomWaterDetail = {
                 "relayId": roomWaterDetails['relayId'],
                 "relaySettingsId": roomWaterDetails['relaySettingsId'],
-                "waterFlowRate": roomWaterDetails['waterFlowRate'],
+                "pumpWaterFlowRate": roomWaterDetails['pumpWaterFlowRate'],
+                "manifoldPortWaterFlowRate": roomWaterDetails['manifoldPortWaterFlowRate'],
                 "containerSize": roomWaterDetails['containerSize'],
-                "numOfWaterLines": roomWaterDetails['numOfWaterLines']
+                "numOfWaterLines": roomWaterDetails['numOfWaterLines'],
+                "numOfWaterLinesUsed": roomWaterDetails['numOfWaterLinesUsed']
             }
             roomWaterDetailsArr.push(roomWaterDetail);
         }else{
@@ -249,9 +255,11 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
         validInputArr = [
             roomWaterDetails['relayId'], 
             roomWaterDetails['relaySettingsId'],
-            roomWaterDetails['waterFlowRate'],
+            roomWaterDetails['pumpWaterFlowRate'],
+            roomWaterDetails['manifoldPortWaterFlowRate'],
             roomWaterDetails['containerSize'], 
-            roomWaterDetails['numOfWaterLines']
+            roomWaterDetails['numOfWaterLines'],
+            roomWaterDetails['numOfWaterLinesUsed']
         ]
 
         let count = validInputArr.length - 1;
@@ -269,9 +277,11 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
                 let roomWaterDetail = {
                     "relayId": relayId,
                     "relaySettingsId": roomWaterDetails['relaySettingsId'][i],
-                    "waterFlowRate": roomWaterDetails['waterFlowRate'][i],
+                    "pumpWaterFlowRate": roomWaterDetails['pumpWaterFlowRate'][i],
+                    "manifoldPortWaterFlowRate": roomWaterDetails['manifoldPortWaterFlowRate'][i],
                     "containerSize": roomWaterDetails['containerSize'][i],
-                    "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i]
+                    "numOfWaterLines": roomWaterDetails['numOfWaterLines'][i],
+                    "numOfWaterLinesUsed": roomWaterDetails['numOfWaterLinesUsed'][i]
                 }
                 roomWaterDetailsArr.push(roomWaterDetail);
             })
@@ -279,9 +289,11 @@ router.put("/:room_id", middleware.isLoggedIn, (req, res) =>{
             let roomWaterDetail = {
                 "relayId": roomWaterDetails['relayId'],
                 "relaySettingsId": roomWaterDetails['relaySettingsId'],
-                "waterFlowRate": roomWaterDetails['waterFlowRate'],
+                "pumpWaterFlowRate": roomWaterDetails['pumpWaterFlowRate'],
+                "manifoldPortWaterFlowRate": roomWaterDetails['manifoldPortWaterFlowRate'],
                 "containerSize": roomWaterDetails['containerSize'],
-                "numOfWaterLines": roomWaterDetails['numOfWaterLines']
+                "numOfWaterLines": roomWaterDetails['numOfWaterLines'],
+                "numOfWaterLinesUsed": roomWaterDetails['numOfWaterLinesUsed']
             }
             roomWaterDetailsArr.push(roomWaterDetail);
         }else{

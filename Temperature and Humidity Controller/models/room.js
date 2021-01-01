@@ -22,9 +22,11 @@ var roomSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "RelaySettings"
         },
-        waterFlowRate: Number, // Gallons Per Hour
+        pumpWaterFlowRate: Number, // Gallons Per Hour
+        manifoldPortWaterFlowRate: Number, 
     	containerSize: Number,
-    	numOfWaterLines: Number
+    	numOfWaterLines: Number,
+        numOfWaterLinesUsed: Number
     }]
 });
 module.exports = mongoose.model('Room', roomSchema, 'rooms');

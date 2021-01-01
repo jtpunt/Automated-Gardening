@@ -71,8 +71,12 @@
                             <input class="col-sm-20" type="text" id="relaySettingsId" name="roomWaterDetails[relaySettingsId]" value="<%=waterPump['_id']%>" required readonly hidden disabled="true">
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[waterFlowRate]">Water Pump's Water Flow Rate (GPH)</label>
-                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[waterFlowRate]" disabled="true">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[pumpWaterFlowRate]">Water Pump's Water Flow Rate (GPH)</label>
+                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[pumpWaterFlowRate]" disabled="true">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[manifoldPortWaterFlowRate]">Manifold Port Water Flow Rate (GPH)</label>
+                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[manifoldPortWaterFlowRate]" disabled="true">
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size (gallons)</label>
@@ -81,6 +85,10 @@
                         <div class="form-group row">
                             <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
                             <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]" disabled="true">
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLinesUsed]">Number of Water Lines in Use</label>
+                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLinesUsed]" disabled="true">
                         </div>
                     </div>
                     <%

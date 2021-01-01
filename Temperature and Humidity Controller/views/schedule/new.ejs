@@ -23,6 +23,11 @@
   background-color: #4CAF50;
 }
 </style>
+<script type='text/javascript'>
+    function vegSelectChanged(e){
+        console.log(e);
+    }
+</script>
 <div class="collapse" id="collapse<%=ipStr%>New">
 <div class="well" style="border-left: 5px solid #00C851;">
     <form id="add-comment-form" action="/schedule" method="POST">
@@ -145,12 +150,12 @@
                 Add your new schedule details
             </legend>
             <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="time">Set Start Time: </label>
-                <input class="col-sm-20" type="time" id="time" name="schedule[start_time]" value="10:00:00" step="1" required>
+                <label class="col-sm-6 col-form-label" for="time">Set Lighting Start Time: </label>
+                <input class="col-sm-20" type="time" id="time" name="schedule[lighting_start_time]" value="10:00:00" step="1" required>
             </div>
             <div class="form-group row">
-                <label class="col-sm-6 col-form-label" for="time">Set End Time: </label>
-                <input class="col-sm-20" type="time" id="time" name="schedule[end_time]" value="13:30:00" step="1" required>
+                <label class="col-sm-6 col-form-label" for="time">Set Lighting End Time: </label>
+                <input class="col-sm-20" type="time" id="time" name="schedule[lighting_end_time]" value="13:30:00" step="1" required>
             </div>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="vegStartDate">Set Start Date: </label>
@@ -166,7 +171,7 @@
             %>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="vegLength">Set Vegetative Grow Length (weeks): </label>
-                <select class="col-sm-20" name="vegLength">
+                <select class="col-sm-20" name="vegLength" onchange="vegSelectChanged(this)">
                     <option value="-1" selected="selected" disabled>Select Your Grow Length:</option>
                         <% 
                             for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
@@ -222,6 +227,7 @@
                 🌱
                 Add your vegetative water schedule details
             </legend>
+
             <div class="form-group row" id="veg<%=ipStr%>DayOfWeek" value="2020-10-13">
                 <label class="col-sm-6 col-form-label" for="weekDays-selector">Select day of week: </label>
                 <div class="weekDays-selector" id="weekDays-selector">
@@ -261,6 +267,10 @@
                 🌻
                 Add your flowering water schedule details
             </legend>
+            <div class="form-group row">
+                <label class="col-sm-6 col-form-label" for="time">Set Watering Start Time: </label>
+                <input class="col-sm-20" type="time" id="time" name="schedule[lighting_start_time]" value="10:00:00" step="1" required>
+            </div>
             <div class="form-group row" id="flo<%=ipStr%>DayOfWeek" value="2020-10-13">
                 <label class="col-sm-6 col-form-label" for="weekDays-selector">Select day of week: </label>
                 <div class="weekDays-selector" id="weekDays-selector">
@@ -287,6 +297,22 @@
                     
                 </div>
             </div>
+            <div class="rTable">
+                <div class="rTableRow">
+                    <div class="rTableHead"><span style="font-weight: bold;">Week #</span></div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Dates</span></div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Pump Run Time</div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Inches of Water</div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Cups of Water</div>
+                </div>
+                <div class="rTableRow">
+                    <div class="rTableCell">Week 1</div>
+                    <div class="rTableCell"></div>
+                    <div class="rTableCell"></div>
+                    <div class="rTableCell"></div>
+                    <div class="rTableCell"></div>
+                </div>
+            </span>
         </fieldset>
 
                       
