@@ -49,7 +49,7 @@
         				<button class="btn btn-warning" onclick="handleDelete(this)" type="button">Delete</button>
                     </div>
                     <% 
-                        if(device['deviceType'] === "Relay Server") { 
+                        if(device['deviceType'] === "Relay Server" && index !== -1) { 
                             let relayTypes = ["air conditioner", "light", "water pump"],
                                 directionTypes = ["in", "out", "high", "low"];       
                     %>
@@ -85,12 +85,12 @@
                 <% 
                     }); 
                 %>
-                <button id="addGpioBtn" type="button">Add GPIO</button>
+<!--                 <button id="addGpioBtn" type="button">Add GPIO</button> -->
 
             <%
                 }
             %>
-           
+            <button id="addGpioBtn" type="button">Add GPIO</button>
             <% 
                 if(device['deviceType'] === "Camera"){ %>
                 <fieldset>

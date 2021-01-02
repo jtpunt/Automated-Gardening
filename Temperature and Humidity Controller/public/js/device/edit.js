@@ -62,10 +62,10 @@ function getGpioSelectForm(deviceType){
             directionArr          = ['in', 'out', 'high', 'low'];
 
         form_group_relay_type.className = "form-group row";
-        labelRelaytype.htmlFor          = "gpio";
+        labelRelaytype.htmlFor          = "relaySettings[relayType]";
         labelRelaytype.innerText        = "Relay Type";
         labelRelaytype.className        = "col-sm-6 col-form-label";
-        selectRelayType.name            = "relayType";
+        selectRelayType.name            = "relaySettings[relayType]";
         selectRelayType.className       = "col-sm-20"
 
         optionRelayType.value = -1;

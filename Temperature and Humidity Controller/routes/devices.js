@@ -156,17 +156,22 @@ router.get("/:device_id/edit", middleware.isLoggedIn, (req, res) => {
 // UPDATE
 router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
     console.log(`In put request with: ${JSON.stringify(req.body)}`);
-     
+    let gpio = req.body.gpio;
+    if(typeof gpio === 'string')
+        gpio = [gpio];
+
+    console.log(gpio)
     let newData = {
         local_ip: req.body.local_ip, 
         deviceName: req.body.deviceName, 
-        gpio: req.body.gpio
+        gpio: gpio
     };
     Device.findByIdAndUpdate(req.params.device_id, {$set: newData}, (err, device) => {
         if(err){
             req.flash("error", err.toString());
             res.redirect("back");
         } else {
+            console.log(`device updated: ${JSON.stringify(device)}`);
             if(device['deviceType'] === 'Camera'){
                 let cameraData = {
                     camera_id: device['id'],
@@ -248,15 +253,30 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                     console.log("relaySettings is valid")
                     let directionArr = relaySettings['direction'],
                         relayTypeArr = relaySettings['relayType'];
+                    console.log(typeof directionArr)
+                    console.log(typeof relayTypeArr);
+                    console.log(typeof device['gpio'], device['gpio'])
+
+                    if(typeof directionArr === 'string')
+                        directionArr = [directionArr];
+                    if(typeof relayTypeArr === 'string') 
+                        relayTypeArr = [relayTypeArr];
+                    // if(typeof device['gpio'] === 'object')
+                    //     device['gpio'] = [device['gpio']];
+
                     console.log("Relay Settings: " + relaySettings);
                     console.log("DirectionArr: " + directionArr);
                     console.log("RelayTypeArr: " + relayTypeArr);
-                    if(directionArr.length === relayTypeArr.length && directionArr.length === device['gpio'].length){
+                    console.log(`directionArr.length - ${directionArr.length}`);
+                    console.log(`relayTypeArr.length - ${relayTypeArr.length}`);
+                    console.log(`directionArr.length - ${directionArr.length}`);
+                    //console.log(`device['gpio'].length - ${device['gpio'].length}`);
+                    if(directionArr.length === relayTypeArr.length && directionArr.length === gpio.length){
                         console.log(`DirectionArr: ${directionArr}`);
                         console.log(`RelayTypeArr: ${relayTypeArr}`);
                         console.log(`GPIO: ${device['gpio']}`);
 
-                        device['gpio'].forEach(function(myGpio, i){
+                        gpio.forEach(function(myGpio, i){
                             let relay_config = {
                                 relayId: device["_id"],
                                 direction: directionArr[i],
@@ -327,7 +347,23 @@ router.put("/:device_id", middleware.isLoggedIn, (req, res) => {
                         res.redirect("/device");
                         res.status(200).end();
                     }
-                }
+                }else{
+                    console.log("no relay settings found");
+                    let find = {
+                        relayId: device['id'], 
+                    }
+                    RelaySettings.deleteMany(find, function(err, relaySettings){
+                        if(err){
+                            console.log(err.toString());
+                        }else{
+                            console.log(`success? - ${JSON.stringify(relaySettings)}`);
+                            console.log(`Successfully updated ${JSON.stringify(device)}`)
+                            console.log("Successfully Updated!");
+                            res.redirect("/device");
+                            res.status(200).end();
+                        }
+                    })
+                }   
             }else{
                 console.log(`Successfully updated ${JSON.stringify(device)}`)
                 console.log("Successfully Updated!");
