@@ -24,8 +24,57 @@
 }
 </style>
 <script type='text/javascript'>
-    function vegSelectChanged(e){
-        console.log(e);
+    // tableId = vegWaterTable or floWaterTable
+    function waterSelectChanged(e, tableId){
+        let tableEle = document.getElementById(tableId),
+            numOfRows = e.value,
+            i = 0,
+            curRows = tableEle.children.length - 1; // minus the table headers
+
+        console.log(`numOfRows: ${numOfRows}`);
+        console.log(`curRows: ${curRows}`);
+        if(curRows >= 0 && numOfRows > curRows){
+            console.log(curRows);
+            i = curRows;
+            for(; i < numOfRows; i++){
+                let divRow   = document.createElement("div"), // <div class="rTableRow">
+                    divCellWeek = document.createElement("div"), // <div class="rTableCell">Week 1</div>
+                    divCellDates = document.createElement("div"), // <div class="rTableCell">Dates</div>
+                    divCellPumpTime = document.createElement("div"), // <div class="rTableCell">Pump Run Time</div>
+                    divCellInchesOfWater = document.createElement("div"), // <div class="rTableCell">Inches of Water</div>
+                    divCellCupsOfWater = document.createElement("div"); //<div class="rTableCell">Cups of Water</div>
+            
+                divRow.className = "rTableRow";
+                divCellWeek.className = "rTableCell";
+                divCellDates.className = "rTableCell";
+                divCellPumpTime.className = "rTableCell";
+                divCellInchesOfWater.className = "rTableCell";
+                divCellCupsOfWater.className = "rTableCell";
+
+                divCellWeek.innerText = "Week " + (i + 1);
+
+                tableEle.appendChild(divRow);
+                divRow.appendChild(divCellWeek);
+                divRow.appendChild(divCellDates);
+                divRow.appendChild(divCellPumpTime);
+                divRow.appendChild(divCellInchesOfWater);
+                divRow.appendChild(divCellCupsOfWater);
+            }
+        }else{
+            let rowsToRemove = curRows - numOfRows;
+
+            console.log(`We need to remove ${rowsToRemove} rows`);
+            console.log(tableEle.children);
+            for(let j = curRows; j > curRows - rowsToRemove; j--){
+                console.log("Removing row?");
+                console.log(`j = ${j}`);
+                console.log(`curRows = ${curRows}`);
+                tableEle.removeChild(tableEle.children[j]);
+            }
+        }
+    
+
+        console.log(tableEle);
     }
 </script>
 <div class="collapse" id="collapse<%=ipStr%>New">
@@ -171,7 +220,7 @@
             %>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="vegLength">Set Vegetative Grow Length (weeks): </label>
-                <select class="col-sm-20" name="vegLength" onchange="vegSelectChanged(this)">
+                <select class="col-sm-20" name="vegLength" onchange="waterSelectChanged(this, 'vegWaterTable')">
                     <option value="-1" selected="selected" disabled>Select Your Grow Length:</option>
                         <% 
                             for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
@@ -193,7 +242,7 @@
             %>
             <div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="flowerLength">Set Flowering Grow Length (weeks): </label>
-                <select class="col-sm-20" name="flowerLength">
+                <select class="col-sm-20" name="flowerLength" onchange="waterSelectChanged(this, 'floWaterTable')">
                     <option value="-1" selected="selected" disabled>Select Your Grow Length:</option>
                         <% 
                             for(let i=minGrowWeeks; i <= maxGrowWeeks; i++){
@@ -254,6 +303,16 @@
                     
                 </div>
             </div>
+            <div class="rTable" id="vegWaterTable">
+                <div class="rTableRow">
+                    <div class="rTableHead"><span style="font-weight: bold;">Week #</span></div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Dates</span></div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Pump Run Time</div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Inches of Water</div>
+                    <div class="rTableHead"><span style="font-weight: bold;">Cups of Water</div>
+                </div>
+
+            </div>
         </fieldset>
                     <%
                         }
@@ -297,7 +356,7 @@
                     
                 </div>
             </div>
-            <div class="rTable">
+            <div class="rTable" id="floWaterTable">
                 <div class="rTableRow">
                     <div class="rTableHead"><span style="font-weight: bold;">Week #</span></div>
                     <div class="rTableHead"><span style="font-weight: bold;">Dates</span></div>
@@ -305,14 +364,8 @@
                     <div class="rTableHead"><span style="font-weight: bold;">Inches of Water</div>
                     <div class="rTableHead"><span style="font-weight: bold;">Cups of Water</div>
                 </div>
-                <div class="rTableRow">
-                    <div class="rTableCell">Week 1</div>
-                    <div class="rTableCell"></div>
-                    <div class="rTableCell"></div>
-                    <div class="rTableCell"></div>
-                    <div class="rTableCell"></div>
-                </div>
-            </span>
+
+            </div>
         </fieldset>
 
                       
