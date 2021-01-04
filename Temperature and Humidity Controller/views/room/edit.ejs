@@ -58,8 +58,41 @@
                             %>
                         </select>
                     </div>
-                    <div id="waterDetailsContainer">
-                    <% 
+
+                <%  
+                    } else {
+                %>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
+                        <select class="col-sm-20" name="roomDeviceIds" multiple="true">
+                            <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
+                            <% 
+                                deviceObj[deviceNameKey].forEach(function(device){ 
+                                   if(room['roomDeviceIds'].includes(device['_id'])){
+                            %>
+                                <option value="<%=device['_id']%>" selected='true'><%=device['deviceName']%></option>
+                            <%      } else { %>
+                                <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
+                            <%
+                                    }
+                                });
+                            %>
+                        </select>
+                    </div>
+                <%
+
+                    }      
+                }
+            %>  
+            </fieldset>
+            <fieldset id="waterDetailsContainer">
+                <legend>Water Pump Details</legend>
+                <% 
+                        
+                for(const deviceNameKey in deviceObj){
+                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
+                    let deviceNameStr = deviceNameKey.replace(/\s/g,'');
+                    if(deviceNameKey === "Relay Server"){ 
                         // are there any water pumps available?
                         if(availableWaterPumps.length > 0) { 
                             // loop through each water pump to display on the screen
@@ -133,36 +166,12 @@
                         <%
 
                             }) 
-                        %>
-                    <% 
                         }
-                    %>
-                    </div>
-                <%  
-                    } else {
-                %>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                        <select class="col-sm-20" name="roomDeviceIds" multiple="true">
-                            <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
-                            <% 
-                                deviceObj[deviceNameKey].forEach(function(device){ 
-                                   if(room['roomDeviceIds'].includes(device['_id'])){
-                            %>
-                                <option value="<%=device['_id']%>" selected='true'><%=device['deviceName']%></option>
-                            <%      } else { %>
-                                <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
-                            <%
-                                    }
-                                });
-                            %>
-                        </select>
-                    </div>
-                <%
 
                     }      
                 }
-            %>  
+                %>  
+                
             </fieldset>
             <div class="form-group row">
                 <button class="btn btn-lg btn-primary btn-block">Submit!</button>

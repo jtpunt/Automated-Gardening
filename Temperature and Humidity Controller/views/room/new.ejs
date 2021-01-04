@@ -48,8 +48,35 @@
                         <% }); %>
                     </select>
                 </div>
-                <div id="waterDetailsContainer">
-                <% 
+
+            <%
+                } else {
+            %>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
+                    <select id="roomDeviceIds" class="col-sm-20" name="roomDeviceIds" multiple="true">
+                        <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
+                        <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
+                        %>
+                            <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
+                        <% }); %>
+                    </select>
+                </div>
+            <%  
+                }   
+            }
+        %>  
+        </fieldset>
+        <fieldset id="waterDetailsContainer">
+            <legend>Water Pump Details</legend>
+            
+            <% 
+            for(const deviceNameKey in availableDevicesObj){
+                /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
+                let deviceNameStr = deviceNameKey.replace(/\s/g,''); 
+                /* Relay Server is the only device type that's required to create a room
+                */
+                if(deviceNameKey === "Relay Server"){ 
                     if(availableWaterPumps.length > 0) { 
                         availableWaterPumps.forEach(function(waterPump){
                         let relayName = "";
@@ -94,29 +121,10 @@
                     <%
 
                         }) 
-                    %>
-                <% 
                     }
-                %>
-                </div>
-
-            <%
-                } else {
-            %>
-                <div class="form-group row">
-                    <label class="col-sm-6 col-form-label" for="roomDeviceIds"><%=deviceNameKey%></label>
-                    <select id="roomDeviceIds" class="col-sm-20" name="roomDeviceIds" multiple="true">
-                        <option value="-1" selected="selected" disabled>Select Your <%=deviceNameKey%></option>
-                        <% availableDevicesObj[deviceNameKey].forEach(function(device){ 
-                        %>
-                            <option value="<%=device['_id']%>"><%=device['deviceName']%></option>
-                        <% }); %>
-                    </select>
-                </div>
-            <%  
-                }   
+                }
             }
-        %>  
+            %>
         </fieldset>
         <div class="form-group row">
             <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
