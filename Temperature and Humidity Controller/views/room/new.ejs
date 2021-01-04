@@ -67,18 +67,13 @@
             }
         %>  
         </fieldset>
-        <fieldset id="waterDetailsContainer">
+        <fieldset id="waterDetailsContainer" hidden>
             <legend>Water Pump Details</legend>
             
             <% 
-            for(const deviceNameKey in availableDevicesObj){
-                /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
-                let deviceNameStr = deviceNameKey.replace(/\s/g,''); 
-                /* Relay Server is the only device type that's required to create a room
-                */
-                if(deviceNameKey === "Relay Server"){ 
-                    if(availableWaterPumps.length > 0) { 
-                        availableWaterPumps.forEach(function(waterPump){
+                let deviceNameKey = "Relay Server"
+                if(deviceNameKey in availableDevicesObj && availableWaterPumps.length > 0) { 
+                    availableWaterPumps.forEach(function(waterPump){
                         let relayName = "";
                         availableDevicesObj[deviceNameKey].forEach(function(device){ 
                             if(device['_id'].toString() === waterPump['relayId'].toString()){
@@ -86,44 +81,42 @@
                                 relayName = device['deviceName'];
                             }
                         });
-                        
-                    %>
-                    <div id="<%=waterPump['relayId']%>" class="<%=waterPump['relayId']%>" hidden>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%> - GPIO - <%=waterPump['gpio']%></label>
-                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden disabled="true">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[relaySettingsId]"></label>
-                            <input class="col-sm-20" type="text" id="relaySettingsId" name="roomWaterDetails[relaySettingsId]" value="<%=waterPump['_id']%>" required readonly hidden disabled="true">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[pumpWaterFlowRate]">Water Pump's Water Flow Rate (GPH)</label>
-                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[pumpWaterFlowRate]" disabled="true">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[manifoldPortWaterFlowRate]">Manifold Port Water Flow Rate (GPH)</label>
-                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[manifoldPortWaterFlowRate]" disabled="true">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size (gallons)</label>
-                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" disabled="true">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
-                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]" disabled="true">
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLinesUsed]">Number of Water Lines in Use</label>
-                            <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLinesUsed]" disabled="true">
-                        </div>
+                    
+                %>
+                <div id="<%=waterPump['relayId']%>" class="<%=waterPump['relayId']%>" hidden>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%> - GPIO - <%=waterPump['gpio']%></label>
+                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[relayId]" value="<%=waterPump['relayId']%>" required readonly hidden disabled="true">
                     </div>
-                    <%
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[relaySettingsId]"></label>
+                        <input class="col-sm-20" type="text" id="relaySettingsId" name="roomWaterDetails[relaySettingsId]" value="<%=waterPump['_id']%>" required readonly hidden disabled="true">
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[pumpWaterFlowRate]">Water Pump's Water Flow Rate (GPH)</label>
+                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[pumpWaterFlowRate]" disabled="true">
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[manifoldPortWaterFlowRate]">Manifold Port Water Flow Rate (GPH)</label>
+                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[manifoldPortWaterFlowRate]" disabled="true">
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[containerSize]">Container Size (gallons)</label>
+                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[containerSize]" disabled="true">
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLines]">Number of Water Lines</label>
+                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLines]" disabled="true">
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="roomWaterDetails[numOfLinesUsed]">Number of Water Lines in Use</label>
+                        <input class="col-sm-20" type="text" id="relayId" name="roomWaterDetails[numOfWaterLinesUsed]" disabled="true">
+                    </div>
+                </div>
+                <%
 
-                        }) 
-                    }
+                    }) 
                 }
-            }
             %>
         </fieldset>
         <div class="form-group row">
