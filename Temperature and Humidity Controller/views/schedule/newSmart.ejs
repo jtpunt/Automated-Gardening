@@ -195,20 +195,12 @@
         </legend>
         
     </fieldset>
-    <fieldset id="confirmFieldset" hidden>
-        <legend>
-            <i class="fa fa-fw fa-check"></i>
-            Submit your new schedule details
-        </legend>
-     
-        <div class="form-group row">
-            <button class="btn btn-success btn-sm">Add Room <i class="fa fa-calendar" aria-hidden="true"></i></button>
-        </div>
-    </fieldset>
+
     <div style="overflow:auto;">
       <div style="float:right;">
         <button class="btn btn-success btn-sm" type="button" id="prevBtn" onclick="nextPrev(this, -1)" style="display: none">Previous</button>
         <button class="btn btn-success btn-sm" type="button" id="nextBtn" onclick="nextPrev(this, 1)">Next</button>
+        <button class="btn btn-success btn-sm" id="submitBtn" style="display: none;">Submit <i class="fa fa-calendar" aria-hidden="true" ></i></button>
       </div>
     </div>
     <!-- Circles which indicates the steps of the form: -->
@@ -222,9 +214,7 @@
 
             }
         %>
-        <span id="step<%=1+extraFieldSets%>" class="step"></span>
-        <span id="step<%=2+extraFieldSets%>" class="step"></span>
-        
+        <span id="step<%=1+extraFieldSets%>" class="step"></span>     
     </div>
 </form>
 </div>
