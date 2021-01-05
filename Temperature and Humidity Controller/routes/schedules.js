@@ -252,7 +252,7 @@ router.get("/", middleware.isLoggedIn, async (req, res) =>{
             devices: relayDevices, 
             relaySettings: relaySettings,
             rooms: rooms,
-            scripts: ["/static/js/schedule/common.js"],
+            scripts: ["/static/js/schedule/common.js", "/static/js/common/multiStepForm.js"],
             stylesheets: ["/static/css/common/table.css", "/static/css/common/form.css"]
         });
         res.status(200).end();

@@ -9,68 +9,82 @@
 // inputs that were displayed are hidden and disabled to prevent that data from being posted
 // back to the server.
 function relaySelectFn(event) {
-        let waterDetailsContainer = document.getElementById("waterDetailsContainer");
-        let relayServerSelect = document.getElementById("relayServerSelect");
-        let isOneEleVisible = false;
-        for(let i = 0; i < event.options.length; i++){
-            let waterDetailsId = event.options[i].value;
-            if(waterDetailsId !== "-1"){
-                //let waterDetailsEle = document.getElementById(waterDetailsId);
-                //let waterDetailsElements = [...document.getElementsByClassName(waterDetailsId)];
-                let waterDetailsElements = document.getElementsByClassName(waterDetailsId);
-                console.log("waterDetailsClass: " + waterDetailsElements);
-                console.log("waterDetails Length: " + waterDetailsElements.length);
-                for(let x = 0; x < waterDetailsElements.length; x++){
-                    let waterDetailsEle = waterDetailsElements[x];
-                    console.log(waterDetailsEle);
-                    if(waterDetailsEle !== null){
-                        let waterDetailsChildren = waterDetailsEle.children;
-                        if(event.options[i].selected){
-                            waterDetailsContainer.hidden = false;
-                            waterDetailsEle.hidden = false;
-            
-                            isOneEleVisible = true;
-                            // 3x <div class="form-group row">
-                            // 1x <hr style="border: 1px solid black;">
-                            for(let k = 0; k < waterDetailsChildren.length; k++){
-                                // our divs have child nodes, but the hr does not
-                                // the divs contain our inputs which we need to enable
-                                // so that they can be posted back to the server
-                                if(waterDetailsChildren[k].children.length){
-                                    let waterDetailsNestedChildren = waterDetailsChildren[k].children;
-                                    for(let j = 0; j < waterDetailsNestedChildren.length; j++){
-                                        if(waterDetailsNestedChildren[j].tagName.toLowerCase() === 'input'){
-                                            let input = waterDetailsNestedChildren[j];
-                                            input.disabled = false;
-                                        }
+    let waterDetailsContainer = document.getElementById("waterDetailsContainer");
+    let relayServerSelect = document.getElementById("relayServerSelect");
+    let isOneEleVisible = false;
+    for(let i = 0; i < event.options.length; i++){
+        let waterDetailsId = event.options[i].value;
+        if(waterDetailsId !== "-1"){
+            //let waterDetailsEle = document.getElementById(waterDetailsId);
+            //let waterDetailsElements = [...document.getElementsByClassName(waterDetailsId)];
+            let waterDetailsElements = document.getElementsByClassName(waterDetailsId);
+            console.log("waterDetailsClass: " + waterDetailsElements);
+            console.log("waterDetails Length: " + waterDetailsElements.length);
+            for(let x = 0; x < waterDetailsElements.length; x++){
+                let waterDetailsEle = waterDetailsElements[x];
+                console.log(waterDetailsEle);
+                if(waterDetailsEle !== null){
+                    let waterDetailsChildren = waterDetailsEle.children;
+                    if(event.options[i].selected){
+                        //waterDetailsContainer.hidden = false;
+                        waterDetailsEle.hidden = false;
+        
+                        isOneEleVisible = true;
+                        // 3x <div class="form-group row">
+                        // 1x <hr style="border: 1px solid black;">
+                        for(let k = 0; k < waterDetailsChildren.length; k++){
+                            // our divs have child nodes, but the hr does not
+                            // the divs contain our inputs which we need to enable
+                            // so that they can be posted back to the server
+                            if(waterDetailsChildren[k].children.length){
+                                let waterDetailsNestedChildren = waterDetailsChildren[k].children;
+                                for(let j = 0; j < waterDetailsNestedChildren.length; j++){
+                                    if(waterDetailsNestedChildren[j].tagName.toLowerCase() === 'input'){
+                                        let input = waterDetailsNestedChildren[j];
+                                        input.disabled = false;
                                     }
                                 }
                             }
-                        }else{
-                            waterDetailsContainer.hidden = false
-                            waterDetailsEle.hidden = true;
-                            // 3x <div class="form-group row">
-                            // 1x <hr style="border: 1px solid black;">
-                            for(let k = 0; k < waterDetailsChildren.length; k++){
-                                // our divs have child nodes, but the hr does not
-                                // the divs contain our inputs which we need to enable
-                                // so that they can be posted back to the server
-                                if(waterDetailsChildren[k].children.length){
-                                    let waterDetailsNestedChildren = waterDetailsChildren[k].children;
-                                    for(let j = 0; j < waterDetailsNestedChildren.length; j++){
-                                        if(waterDetailsNestedChildren[j].tagName.toLowerCase() === 'input'){
-                                            let input = waterDetailsNestedChildren[j];
-                                            input.disabled = true;
-                                        }
+                        }
+                    }else{
+                        waterDetailsContainer.hidden = false
+                        waterDetailsEle.hidden = true;
+                        // 3x <div class="form-group row">
+                        // 1x <hr style="border: 1px solid black;">
+                        for(let k = 0; k < waterDetailsChildren.length; k++){
+                            // our divs have child nodes, but the hr does not
+                            // the divs contain our inputs which we need to enable
+                            // so that they can be posted back to the server
+                            if(waterDetailsChildren[k].children.length){
+                                let waterDetailsNestedChildren = waterDetailsChildren[k].children;
+                                for(let j = 0; j < waterDetailsNestedChildren.length; j++){
+                                    if(waterDetailsNestedChildren[j].tagName.toLowerCase() === 'input'){
+                                        let input = waterDetailsNestedChildren[j];
+                                        input.disabled = true;
                                     }
                                 }
                             }
-                        }   
-                    }
+                        }
+                    }   
                 }
             }
         }
-        if(isOneEleVisible === false){
-            waterDetailsContainer.hidden = true;
-        }
     }
+    if(isOneEleVisible === false){
+        //waterDetailsContainer.hidden = true;
+    }
+}
+function handleMultiStepForm(e, operand){
+    let ids = [
+        "roomDetails", 
+        "roomDeviceDetails",
+        "waterDetailsContainer", 
+        "reviewFieldset"
+    ]
+    /* 
+     * Based on the room type - veg and/or flowering sections may not be generated by EJS.
+     * Remove ids of elements that don't exist on the page    
+     */
+    ids = ids.filter(id => document.getElementById(id) !== null);
+    nextPrev(e, operand, ids);
+}
