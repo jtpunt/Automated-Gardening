@@ -22,74 +22,79 @@
 	}
 </style>
 <div class="container">
-<div class="row" style="margin: auto;
-    width: 100%;
-    padding: 10px;">
-	<div class="col-md-12">
-		<h2>My Schedules</h2>
-		<!-- Show schedules for each relay device - sorted by local ip address -->
-		<!-- Remove periods from our local ip address so that the bootstrap collapse class works correctly -->
-		<% devices.forEach(function(device){ let ipStr = device['local_ip'].replace(/\./g,''); %>
-		<div class="well col-md-12">
-			<!--Setting up the add new schedule button that is used for collapsing-->
-	        <div class="text-right">
-	            <a class="btn btn-info pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>" aria-expanded="false" aria-controls="collapse<%=ipStr%>">
-	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Schedules</a>
-	        </div>
-	        <div>
-	        <%
-	        	let targetRelayDevice = device['_id'].toString(),
-	        		exists = (room) => room['roomDeviceIds'].includes(targetRelayDevice);
-	        	    isDeviceInRoom = rooms.some(exists);
-	        %>
-	    	</div>
+	<h2>My Schedules</h2>
+	<!-- Show schedules for each relay device - sorted by local ip address -->
+	<!-- Remove periods from our local ip address so that the bootstrap collapse class works correctly -->
+	<% devices.forEach(function(device){ let ipStr = device['local_ip'].replace(/\./g,''); %>
+	<div class="well">
+        <%
+        	let targetRelayDevice = device['_id'].toString(),
+        		exists = (room) => room['roomDeviceIds'].includes(targetRelayDevice);
+        	    isDeviceInRoom = rooms.some(exists);
+        	if(isDeviceInRoom === false){
+        %>
+        <div class="row">
+	    	<div class="text-left col-md-3">
+	        	<h4><strong><%=device['deviceName']%></strong></h4>
+	        	<strong>Schedules for <%=device["local_ip"]%> <i class="fa fa-calendar" aria-hidden="true"></i></strong>
+	        	
+    		</div>
+    		<div class="text-center col-md-6">
+    			<span class="alert alert-danger" role="alert">&#10071 This relay server needs to be set up in a room!</span>
+    		</div>
+	      	<div class="text-right col-md-3">
+				<a class="btn btn-warning" href="/room" >Go To Rooms Page</a>
+			</div>
+		</div>
+        <%
+    		} else {
+    	%>
+    	<div class="row">
 	        <!--Schedule section-->
-	    	<div class="text-left">
+	    	<div class="text-left col-md-3">
 	        	<h4><strong><%=device['deviceName']%></strong></h4>
 	        	<strong>Schedules for <%=device["local_ip"]%> <i class="fa fa-calendar" aria-hidden="true"></i></strong>
 	    	</div>
-        	<div class="collapse" id="collapse<%=ipStr%>">
-	    	<% 
-	    		if(isDeviceInRoom === false){
-	    	%>
-	    		<div>This relay server needs to be set up in a room!</div>
-		      	<div style="float:right;">
-					<a class="btn btn-warning" href="/room" >Go To Rooms Page</a>
-				</div>
-	        <%
-	    		} else {
-	    	%>
-        		<div class="rTable">
-					<div class="rTableRow">
-						<div class="rTableHead"><span style="font-weight: bold;">Device or GPIO Pin #</span></div>
-						<div class="rTableHead"><span style="font-weight: bold;">Time</div>
-						<div class="rTableHead"><span style="font-weight: bold;">Day of Week</div>
-						<div class="rTableHead"><span style="font-weight: bold;">Date</div>
-						<div class="rTableHead"><span style="font-weight: bold;">On/Off</div>
-					</div>
-					<!-- Do we have any schedules set up for the current device? -->
-					<% include ./show %>
-					<!--Setting up the add new schedule button that is used for collapsing-->
-			        <div class="text-right">
-			            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>New" data-target="#collapse<%=ipStr%>New" aria-expanded="false" aria-controls="collapse<%=ipStr%>New" onclick="collapseMenu('collapse<%=ipStr%>NewTest')">
-			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Manual Schedule</a>
-			    
-			            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>NewTest" data-target="#collapse<%=ipStr%>NewTest" aria-expanded="false" aria-controls="collapse<%=ipStr%>NewTest" onclick="collapseMenu('collapse<%=ipStr%>New')">
-			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Smart Schedule</a>
-			        </div>
-			   
-				</div>
-        	</div>
-	        <!--Collapse Add a schedule form START-->
-			<% include ./new %>
-	        <!--Collapse Add a schedule form END-->
-	    	<%
-	    		}
-	    	%>
-		</div>
-		<% }); %>
+			<!--Setting up the add new schedule button that is used for collapsing-->
+	        <div class="text-right col-md-9">
+	            <a class="btn btn-info pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>" aria-expanded="false" aria-controls="collapse<%=ipStr%>">
+	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Schedules</a>
+	        </div>
+    	</div>
+    	<div class="row collapse" id="collapse<%=ipStr%>">
+	    	<table class="table table-dark">
+	    		<thead>
+	    			<tr>
+	    				<th scope="col">Device</th>
+	    				<th scope="col">Time</th>
+	    				<th scope="col">Day of Week</th>
+	    				<th scope="col">Date</th>
+	    				<th scope="col">On/Off</th>
+	    				<th>Actions</th>
+	    			</tr>
+	    		</thead>
+				<!-- Do we have any schedules set up for the current device? -->
+				<% include ./show %>
+				<!--Setting up the add new schedule button that is used for collapsing-->
+		   
+			</table>
+	        <div class="text-right">
+	            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>New" data-target="#collapse<%=ipStr%>New" aria-expanded="false" aria-controls="collapse<%=ipStr%>New" onclick="collapseMenu('collapse<%=ipStr%>NewTest')">
+	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Manual Schedule</a>
+	    
+	            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>NewTest" data-target="#collapse<%=ipStr%>NewTest" aria-expanded="false" aria-controls="collapse<%=ipStr%>NewTest" onclick="collapseMenu('collapse<%=ipStr%>New')">
+	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Smart Schedule</a>
+	        </div>
+    	</div>
+        <!--Collapse Add a schedule form START-->
+		<% include ./new %>
+        <!--Collapse Add a schedule form END-->
+    	<%
+    		}
+    	%>
 	</div>
-</div>
+	<!-- END Div Well -->
+	<% }); %>
 </div>
 
 <script type="text/javascript">
