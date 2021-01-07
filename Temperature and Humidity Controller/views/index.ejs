@@ -31,29 +31,29 @@
 	})	
 </script>
 <div id="load"></div>
-<div class="container" id="contents" style='  margin: auto; width: 75%;'>
-	<h3 style='text-align: center'>CURRENT CONDITIONS</h3>
+<div class="container" id="contents">
+	<h3 >CURRENT CONDITIONS</h3>
+	<div class="row">
 	<% sensors.forEach(function(sensor, i, sensorArr){ %>
-		<div class="row">
-		<%  /*************************************************************************************
-				Purpose - We want to show our temperature and humidity gauges grouped by device name
-				- if i is 0, show the device name as it's a device we haven't processed yet,
-				- otherwise, if i is greater than 0 and our current device doesn't have the same name as the previous device that was processed in the array, then that means we are at a new device and should show our device name on the page
-			 *************************************************************************************/
-			if(i === 0 || i > 0 && sensor.deviceName !== sensorArr[i-1].deviceName){
-		%>
-			<h3 style='text-align: center'><%=sensor.deviceName%></h3>
-		<% } %>
-			<div class="col-sm-6" id="<%=sensor.tempId%>" align="center"></div>
-			<div class="col-sm-6" id="<%=sensor.humidId%>" align="center"></div>
+		<div class="col-lg-3">
+			<div class="card text-center">
+			  	<div class="card-header"><small><%=sensor.deviceName%></small>
+				    
+			  	</div>
+			  	<div class="card-body">
+					<div id="<%=sensor.tempId%>" align="center"></div>
+					<div id="<%=sensor.humidId%>" align="center"></div> 
+				</div>
+			</div>
 		</div>
 		<script type='text/javascript'>
 			// set the gauges initially to 0
 			drawGauge("0", 0, "<%=sensor.tempId%>");
-			drawGauge("0", 1, "<%=sensor.humidId%>")
+			drawGauge("0", 1, "<%=sensor.humidId%>");
 		</script>
 	<% 
 	}); %>
+	</div>
 </div>
 
 <% include ./partials/footer %>
