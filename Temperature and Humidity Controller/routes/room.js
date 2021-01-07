@@ -458,7 +458,7 @@ router.get("/:room_id/edit", middleware.isLoggedIn, (req, res) =>{
                                     deviceObj: deviceObj,
                                     room: room,
                                     rooms: rooms,
-                                    scripts: ["/static/js/room/common.js"],
+                                    scripts: ["/static/js/room/common.js", "/static/js/common/multiStepForm.js"],
                                     stylesheets: ["/static/css/common/table.css", "/static/css/common/form.css"]
                                 }, (err, html) => {
                                     // fix: https://stackoverflow.com/questions/52122272/err-http-headers-sent-cannot-set-headers-after-they-are-sent-to-the-client

@@ -47,7 +47,7 @@ function relaySelectFn(event) {
                             }
                         }
                     }else{
-                        waterDetailsContainer.hidden = false
+                        //waterDetailsContainer.hidden = false
                         waterDetailsEle.hidden = true;
                         // 3x <div class="form-group row">
                         // 1x <hr style="border: 1px solid black;">

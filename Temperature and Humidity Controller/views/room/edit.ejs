@@ -6,7 +6,7 @@
 <div class="card-body">
 <h5 class="card-title text-center">Edit Room <%=room['roomName']%></h5>
     <form action="/room/<%=room['_id']%>/?_method=PUT" method="POST" class="update-form">
-        <fieldset>
+        <fieldset id="roomDetails">
             <legend>Room Details</legend>
         	<div class="form-group row">
                 <label class="col-sm-6 col-form-label" for="roomName">Room Name</label>
@@ -35,9 +35,10 @@
                 </select>
             </div>
         </fieldset>
-        <fieldset>
+        <fieldset id="roomDeviceDetails" hidden>
             <legend>Room Device Details</legend>
          <% 
+            let extraFieldSets = 0;
             for(const deviceNameKey in deviceObj){
                 /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
                 let deviceNameStr = deviceNameKey.replace(/\s/g,'');
@@ -87,12 +88,12 @@
             }
         %>  
         </fieldset>
-        <fieldset id="waterDetailsContainer">
+        <fieldset id="waterDetailsContainer" hidden>
             <legend>Water Pump Details</legend>
             <% 
                     
                 let deviceNameKey = "Relay Server"
-
+                extraFieldSets++;
                 // are there any water pumps available?
                 if(deviceNameKey in deviceObj && availableWaterPumps.length > 0) { 
                     // loop through each water pump to display on the screen
@@ -168,9 +169,33 @@
         
             %>  
         </fieldset>
+        <fieldset id="reviewFieldset" hidden>
+            <legend>
+                <i class="fa fa-fw fa-glasses"></i>
+                Review your new rooms details
+            </legend>
+        </fieldset>
+        <div style="overflow:auto;">
+            <div style="float:right;">
+                <button class="btn btn-success btn-sm" type="button" id="prevBtn" onclick="handleMultiStepForm(this, -1)" style="display: none">Previous</button>
+                <button class="btn btn-success btn-sm" type="button" id="nextBtn" onclick="handleMultiStepForm(this, 1)">Next</button>
+                <button class="btn btn-success btn-sm" id="submitBtn" style="display: none;">Submit <i class="fa fa-calendar" aria-hidden="true" ></i></button>
+            </div>
+        </div>
+            <!-- Circles which indicates the steps of the form: -->
+        <div style="text-align:center;margin-top:40px;">
+            <span id="step0" class="step active"></span>
+            <span id="step1" class="step"></span>
+            <% 
+                for(let i = 0; i < extraFieldSets; i++){
+            %>
+            <span id="step<%=i + 2%>" class="step"></span>
+            <%
 
-        <button class="btn btn-lg btn-primary">Submit!</button>
-
+                }
+            %>
+            <span id="step<%=2+extraFieldSets%>" class="step"></span>     
+        </div>
     </form>
     <a href="/room">Go Back</a>
 </div>
