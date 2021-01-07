@@ -121,7 +121,7 @@
                         }
                     
                 %>
-                <div id="<%=waterPump['relayId']%>" <% if(!isPumpInRoom) { %> hidden <% } %>>
+                <div id="<%=waterPump['relayId']%>" class="<%=waterPump['relayId']%>" <% if(!isPumpInRoom) { %> hidden <% } %>>
 
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="roomWaterDetails[relayId]">Water Pump Details for <%=relayName%> - GPIO - <%=waterPump['gpio']%></label>

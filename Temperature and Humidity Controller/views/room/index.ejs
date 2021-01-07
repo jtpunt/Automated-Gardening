@@ -27,11 +27,8 @@
 			    				<th scope="col">Room Name</th>
 			    				<th scope="col">Room Type</th>
 			    				<th scope="col">Room Grow System</th>
-			    				<th scope="col">Room Water Pump Details</th>
-			    				<!-- Room Name to be added in at a later point, to easily include all devices that are in that room to our 	    journal					
-								<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
-							-->
-				         	<% 
+			    				<!-- <th scope="col">Room Water Pump Details</th> -->
+		<!-- 		         	<% 
 				                for(const deviceNameKey in allDevicesObj){
 				                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
 				                    let deviceNameStr = deviceNameKey.replace(/\s/g,'');
@@ -39,7 +36,8 @@
 			                	<th scope="col"><%=deviceNameKey%></th>
 	                        <%
 			                	}
-			                %>	
+			                %>	 -->
+			                	<th scope="col">Device</th>
 			    				<th scope="col">Actions</th>
 			    			</tr>
 			    		</thead>
@@ -54,7 +52,7 @@
 			                	<td><%=room['roomName']%></td>
 			                	<td><%=room['roomType']%></td>
 			                	<td><%=room['roomGrowSystem']%></td>
-			                	<td>
+			    <!--             	<td>
 								<% 
 									room['roomWaterDetails'].forEach(function(pumpDetails){
 								%>
@@ -65,20 +63,22 @@
 									})
 
 								%>
-			                	</td>
+			                	</td> -->
     							<% 
+    								let deviceMatches = []
 					                for(const deviceNameKey in allDevicesObj){
-					                	let deviceMatches = []
+					                	
 					                	allDevicesObj[deviceNameKey].forEach(function(device){
 					                		if(room['roomDeviceIds'].includes(device['_id'])){
-					                			deviceMatches.push(device['deviceName']);
+					                			deviceMatches.push(" " + device['deviceName']);
 					                		}
 					                	});
 					            %>
-						        <td><%=deviceMatches%></td>
+						       
 					        	<% 
 					        		}
 					        	%>
+				        	 	<td><%=deviceMatches%></td>
 			    				<td>
 									<table>
 										<tbody>
