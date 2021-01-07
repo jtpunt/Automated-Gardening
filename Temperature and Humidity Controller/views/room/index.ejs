@@ -1,103 +1,115 @@
 <% include ../partials/header %>
 <div class="container">
-<div class="row" style="margin: auto;
-    width: 100%;
-    padding: 10px;">
+<div class="row">
 	<div class="col-md-12">
 		<h2>My Rooms</h2>
 		<!-- Show Journals -->
 
-		<div class="well col-md-12">
+		<div class="card">
+			<div class="card-header">
 			<!--Setting up the add new schedule button that is used for collapsing-->
-	        <div class="text-right">
-	            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapse">
-	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Rooms</a>
-	        </div>
-	        <!--Schedule section-->
-	    	<div class="text-left">
-	        	<h4><strong>Room Example</strong></h4>
-	        	<strong>Room Details For Example <i class="fa fa-calendar" aria-hidden="true"></i></strong>
+		        <div class="text-right">
+		            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapse">
+		            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Rooms</a>
+		        </div>
+		        <!--Schedule section-->
+		    	<div class="text-left">
+		        	<h4><strong>Room Example</strong></h4>
+		        	<strong>Room Details For Example <i class="fa fa-calendar" aria-hidden="true"></i></strong>
+		    	</div>
 	    	</div>
-        	<div class="collapse" id="collapse">
-        		<div class="rTable">
-					<div class="rTableRow">
-						<div class="rTableHead">
-							<span style="font-weight: bold;">Room Name</span>
-						</div>
-						<div class="rTableHead">
-							<span style="font-weight: bold;">Room Type</span>
-						</div>
-						<div class="rTableHead">
-							<span style="font-weight: bold;">Room Grow System</span>
-						</div>
-						<div class="rTableHead">
-							<span style="font-weight: bold;">Room Water Pump Details</span>
-						</div>
-						<!-- Room Name to be added in at a later point, to easily include all devices that are in that room to our 	    journal					
-							<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
-						-->
-				         <% 
-			                for(const deviceNameKey in allDevicesObj){
-			                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
-			                    let deviceNameStr = deviceNameKey.replace(/\s/g,'');
-		                %>
-		                	<div class="rTableHead">
-		                		<span style="font-weight: bold;"><%=deviceNameKey%></span>
-		                	</div>
-		                <%
-		                	}
-		                %>	
-					</div>
-					<!-- Do we have any rooms set up? -->
-					<%
-						if(rooms){
-							rooms.forEach(function(room){
-					%>
-						<div class="rTableRow">
-							<div class="rTableCell"><%=room['roomName']%></div>
-							<div class="rTableCell"><%=room['roomType']%></div>
-							<div class="rTableCell"><%=room['roomGrowSystem']%></div>
-							<div class="rTableCell">
-							<% 
 
-								room['roomWaterDetails'].forEach(function(pumpDetails){
+        	<div class="collapse" id="collapse">
+        		<div class="card-body">
+        			<table class="table">
+			    		<thead>
+			    			<tr>
+			    				<th scope="col">Room Name</th>
+			    				<th scope="col">Room Type</th>
+			    				<th scope="col">Room Grow System</th>
+			    				<th scope="col">Room Water Pump Details</th>
+			    				<!-- Room Name to be added in at a later point, to easily include all devices that are in that room to our 	    journal					
+								<div class="rTableHead"><span style="font-weight: bold;">Room Name</div> 
+							-->
+				         	<% 
+				                for(const deviceNameKey in allDevicesObj){
+				                    /* Remove spaces from device name so that the bootstrap collapse class will work correctly  */
+				                    let deviceNameStr = deviceNameKey.replace(/\s/g,'');
+			                %>	
+			                	<th scope="col"><%=deviceNameKey%></th>
+	                        <%
+			                	}
+			                %>	
+			    				<th scope="col">Actions</th>
+			    			</tr>
+			    		</thead>
+
+			    		<tbody>
+			    								<!-- Do we have any rooms set up? -->
+							<%
+								if(rooms){
+									rooms.forEach(function(room){
 							%>
+			    			<tr>
+			                	<td><%=room['roomName']%></td>
+			                	<td><%=room['roomType']%></td>
+			                	<td><%=room['roomGrowSystem']%></td>
+			                	<td>
+								<% 
+									room['roomWaterDetails'].forEach(function(pumpDetails){
+								%>
 								Water Flow Rate(GPH): <%=pumpDetails['waterFlowRate']%><br/>
 								Container Size: <%=pumpDetails['containerSize']%><br/>
 								Number of Water Lines: <%=pumpDetails['numOfWaterLines']%></br>
+								<%
+									})
 
+								%>
+			                	</td>
+    							<% 
+					                for(const deviceNameKey in allDevicesObj){
+					                	let deviceMatches = []
+					                	allDevicesObj[deviceNameKey].forEach(function(device){
+					                		if(room['roomDeviceIds'].includes(device['_id'])){
+					                			deviceMatches.push(device['deviceName']);
+					                		}
+					                	});
+					            %>
+						        <td><%=deviceMatches%></td>
+					        	<% 
+					        		}
+					        	%>
+			    				<td>
+									<table>
+										<tbody>
+											<tr>
+												<td>
+													<a class="btn btn-warning" href="/room/<%=room['_id']%>/edit">Edit</a>
+												</td>
+												<td>
+											       <form action="/room/<%=room['_id']%>/?_method=DELETE" method="POST" class="delete-form">
+											            <button class="btn btn-danger">Delete</button>
+											        </form>
+											    </td>
+											</tr>
+										</tbody>
+									</table>
+							
+								</td>
+			    			</tr>
 							<%
-								})
-
+									});
+								}
 							%>
-							</div>
-						<% 
-			                for(const deviceNameKey in allDevicesObj){
-			                	let deviceMatches = []
-			                	allDevicesObj[deviceNameKey].forEach(function(device){
-			                		if(room['roomDeviceIds'].includes(device['_id'])){
-			                			deviceMatches.push(device['deviceName']);
-			                		}
-			                	});
-			            %>
-							<div class="rTableCell"><%=deviceMatches%></div>
-						<%  
-							}  
-						%>	
-							<a class="btn btn-warning" href="/room/<%=room['_id']%>/edit" style="float:left;margin-left: 2.5%">Edit</a>
-					        <form action="/room/<%=room['_id']%>/?_method=DELETE" method="POST" class="delete-form" style="float:left;margin-left: 2.5%">
-					            <button class="btn btn-danger">Delete</button>
-					        </form>
-				    	</div>
-					<%
-							});
-						}
-					%>
-					<!--Setting up the add new room button that is used for collapsing-->
-			        <div class="text-right">
-			            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapseNew" aria-expanded="false" aria-controls="collapseNew">
-			            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Rooms</a>
-			        </div>
+			    		</tbody>
+			    	</table>
+	        		
+						<!--Setting up the add new room button that is used for collapsing-->
+				        <div class="text-right">
+				            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapseNew" aria-expanded="false" aria-controls="collapseNew">
+				            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Rooms</a>
+				        </div>
+					</div>
 				</div>
         	</div>
         	<!--Collapse Add a schedule form START-->
