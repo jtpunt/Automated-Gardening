@@ -1,22 +1,29 @@
 <% include ../partials/header %>
+<style>
+	.card-header .fa {
+		transition: .3s transform ease-in-out;
+	}
+	.card-header .collapsed .fa {
+		transform: rotate(90deg);
+	}
+</style>
 <div class="container">
 <div class="row">
 	<div class="col-md-12">
-		<h2>My Rooms</h2>
 		<!-- Show Journals -->
-
 		<div class="card">
 			<div class="card-header">
 			<!--Setting up the add new schedule button that is used for collapsing-->
-		        <div class="text-right">
-		            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapse">
-		            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Show Rooms</a>
-		        </div>
-		        <!--Schedule section-->
-		    	<div class="text-left">
-		        	<h4><strong>Room Example</strong></h4>
-		        	<strong>Room Details For Example <i class="fa fa-calendar" aria-hidden="true"></i></strong>
+		    	<div class="float-left">
+		        	<h4 class="card-title">
+		        		<strong><i class="fas fa-building"></i> Room Details</strong>
+		        	</h4>
+		        	
 		    	</div>
+		        <div class="float-right">
+		            <a class="collapsed d-block btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse" aria-expanded="false" aria-controls="collapse">
+		            <i class="fa fa-chevron-down pull-right"></i> Show Rooms</a>
+		        </div>
 	    	</div>
 
         	<div class="collapse" id="collapse">
@@ -103,18 +110,21 @@
 							%>
 			    		</tbody>
 			    	</table>
-	        		
-						<!--Setting up the add new room button that is used for collapsing-->
-				        <div class="text-right">
-				            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapseNew" aria-expanded="false" aria-controls="collapseNew">
-				            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Rooms</a>
-				        </div>
-					</div>
 				</div>
         	</div>
-        	<!--Collapse Add a schedule form START-->
-			<% include ./new %>
-	        <!--Collapse Add a schedule form END-->
+		    <div class="card-footer ">
+				<!--Setting up the add new room button that is used for collapsing-->
+		        <div class="text-right">
+		            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapseNew" aria-expanded="false" aria-controls="collapseNew">
+		            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add New Rooms</a>
+		        </div>
+	        	<!--Collapse Add a room form START-->
+	        	<div class="collapse" id="collapseNew">
+					<% include ./new %>
+		    
+		    	</div>
+		    	<!--Collapse Add a room form END-->
+		    </div>
 		</div>
 
 	</div>

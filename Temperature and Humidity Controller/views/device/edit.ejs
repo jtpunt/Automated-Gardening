@@ -12,150 +12,152 @@
 </script>
 <div class="container">
 <div class="row">
-    <h1 style="text-align: center;">Edit <%=device.deviceType%></h1>
-    <div style="width: 50%; margin:25px auto;">
-        <form action="/device/<%=device._id%>/?_method=PUT" method="post">
+<div class="col-12">
+<div class="card">
+<div class="card-body">
+<h5 class="card-title text-center">Edit <%=device.deviceType%></h5>
+    <form action="/device/<%=device._id%>/?_method=PUT" method="post">
+        <fieldset>
+            <legend>Device Information</legend>
+            <div class="form-group row">
+                <label class="col-sm-6 col-form-label" for="deviceName">Device Name</label>
+                <input class="col-sm-20" type="text" id="deviceName" name="deviceName" value="<%=device.deviceName%>" maxlength="30" required>
+            </div>
+           <div class="form-group row">
+                <label class="col-sm-6 col-form-label" for="local_ip">Local IP</label>
+                <input class="col-sm-20" type="text" id="local_ip" name="local_ip" value="<%=device.local_ip%>" maxlength="30" required>
+            </div>
+        </fieldset>
+        <% 
+            if(device['gpio'] && device['deviceType'] !== "Camera"){ 
+                let acceptedGpios = [2, 3, 4, 5, 6, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];  
+                device['gpio'].forEach(function(myGpio, i){ 
+                    let index = relaySettings.findIndex( (relaySetting) => relaySetting['gpio'] === myGpio);
+        %>
             <fieldset>
-                <legend>Device Information</legend>
+                <legend>GPIO Information</legend>
                 <div class="form-group row">
-                    <label class="col-sm-6 col-form-label" for="deviceName">Device Name</label>
-                    <input class="col-sm-20" type="text" id="deviceName" name="deviceName" value="<%=device.deviceName%>" maxlength="30" required>
+                    <label class="col-sm-6 col-form-label" for="gpio">GPIO #</label>      
+    				<select class="col-sm-20" name="gpio" required>
+                		<option value="-1" selected="selected" disabled>Select Your GPIO Pin #:</option>
+                    <% 
+                        acceptedGpios.forEach(function(acceptedGpio){ 
+                    %>
+                        <option value="<%=acceptedGpio%>" <% if (myGpio == acceptedGpio) { %>selected="selected"<% } %> ><%=acceptedGpio%></option>
+                    <% 
+                        }); 
+                    %>
+    				</select>
+    				<button class="btn btn-warning" onclick="handleDelete(this)" type="button">Delete</button>
                 </div>
-               <div class="form-group row">
-                    <label class="col-sm-6 col-form-label" for="local_ip">Local IP</label>
-                    <input class="col-sm-20" type="text" id="local_ip" name="local_ip" value="<%=device.local_ip%>" maxlength="30" required>
-                </div>
-            </fieldset>
-            <% 
-                if(device['gpio'] && device['deviceType'] !== "Camera"){ 
-                    let acceptedGpios = [2, 3, 4, 5, 6, 12, 13, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27];  
-                    device['gpio'].forEach(function(myGpio, i){ 
-                        let index = relaySettings.findIndex( (relaySetting) => relaySetting['gpio'] === myGpio);
-            %>
-                <fieldset>
-                    <legend>GPIO Information</legend>
+                <% 
+                    if(device['deviceType'] === "Relay Server" && index !== -1) { 
+                        let relayTypes = ["air conditioner", "light", "water pump"],
+                            directionTypes = ["in", "out", "high", "low"];       
+                %>
                     <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="gpio">GPIO #</label>      
-        				<select class="col-sm-20" name="gpio" required>
-                    		<option value="-1" selected="selected" disabled>Select Your GPIO Pin #:</option>
-                        <% 
-                            acceptedGpios.forEach(function(acceptedGpio){ 
+                        <label class="col-sm-6 col-form-label" for="relaySettings[relayType]">Relay Type</label>      
+                        <select class="col-sm-20" name="relaySettings[relayType]" required>
+                        <%  
+                            relayTypes.forEach(function(relayType){ 
                         %>
-                            <option value="<%=acceptedGpio%>" <% if (myGpio == acceptedGpio) { %>selected="selected"<% } %> ><%=acceptedGpio%></option>
-                        <% 
+                            <option value="<%=relayType%>" <%if(relaySettings[index]['relayType'] == relayType) { %>selected="selected"<% } %>><%=relayType%></option>
+                        <%  
                             }); 
                         %>
-        				</select>
-        				<button class="btn btn-warning" onclick="handleDelete(this)" type="button">Delete</button>
+                        </select>
                     </div>
-                    <% 
-                        if(device['deviceType'] === "Relay Server" && index !== -1) { 
-                            let relayTypes = ["air conditioner", "light", "water pump"],
-                                directionTypes = ["in", "out", "high", "low"];       
-                    %>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="relaySettings[relayType]">Relay Type</label>      
-                            <select class="col-sm-20" name="relaySettings[relayType]" required>
-                            <%  
-                                relayTypes.forEach(function(relayType){ 
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label" for="relaySettings[direction]">Direction</label>      
+                        <select class="col-sm-20" name="relaySettings[direction]" required>
+                            <% 
+                                directionTypes.forEach(function(direction){
                             %>
-                                <option value="<%=relayType%>" <%if(relaySettings[index]['relayType'] == relayType) { %>selected="selected"<% } %>><%=relayType%></option>
-                            <%  
-                                }); 
+                                 <option value="<%=direction%>" <% if(relaySettings[index]['direction'] == direction) { %>selected="selected"<% } %>><%=direction%></option>
+                            <%
+                                });
                             %>
-                            </select>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-sm-6 col-form-label" for="relaySettings[direction]">Direction</label>      
-                            <select class="col-sm-20" name="relaySettings[direction]" required>
-                                <% 
-                                    directionTypes.forEach(function(direction){
-                                %>
-                                     <option value="<%=direction%>" <% if(relaySettings[index]['direction'] == direction) { %>selected="selected"<% } %>><%=direction%></option>
-                                <%
-                                    });
-                                %>
-                            </select>
-                        </div>
-                    
-                    <% 
-                        } 
-                    %>
-                    </fieldset>
+                        </select>
+                    </div>
+                
                 <% 
-                    }); 
+                    } 
                 %>
+                </fieldset>
+            <% 
+                }); 
+            %>
 <!--                 <button id="addGpioBtn" type="button">Add GPIO</button> -->
 
-            <%
-                }
-            %>
-            <button id="addGpioBtn" type="button">Add GPIO</button>
-            <% 
-                if(device['deviceType'] === "Camera"){ %>
-                <fieldset>
-                    <legend>Camera Information</legend>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="cameraWidth">Camera Width</label>
-                        <input class="col-sm-20" type="text" id="cameraWidth" name="cameraWidth" value="<%=cameraSettings.width%>" maxlength="5" required>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="cameraWidth">Camera Height</label>
-                        <input class="col-sm-20" type="text" id="cameraHeight" name="cameraHeight" value="<%=cameraSettings.height%>" maxlength="5" required>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="rotation">Camera Rotation</label>
-                        <select class="col-sm-20" name="rotation" required>
-                            <option value="0" <% if (cameraSettings.rotation == 0) { %>selected="selected"<% } %>>0</option>
-                            <option value="90" <% if (cameraSettings.rotation == 90) { %>selected="selected"<% } %>>90</option>
-                            <option value="180" <% if (cameraSettings.rotation == 180) { %>selected="selected"<% } %>>180</option>
-                            <option value="240" <% if (cameraSettings.rotation === 240) { %>selected="selected"<% } %>>240</option>
-                        </select>
-                    </div>
-                </fieldset>
-            <% } %>
-            <% if(device['deviceType'] === "Water Sensor"){ %>
-                <fieldset>
-                    <legend>Water Sensor Information</legend>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="relayId">Device To Turn Off</label>  <select class="col-sm-20" name="relayId">
-                            <% relay_devices.forEach(function(relay_device){ %>
-                                <option value="<%=relay_device['_id']%>" 
-                                    <% if (water_config['relayId'].toString() === relay_device['_id'].toString()) { %>selected="selected"<% } %>
+        <%
+            }
+        %>
+        <button id="addGpioBtn" type="button">Add GPIO</button>
+        <% 
+            if(device['deviceType'] === "Camera"){ %>
+            <fieldset>
+                <legend>Camera Information</legend>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="cameraWidth">Camera Width</label>
+                    <input class="col-sm-20" type="text" id="cameraWidth" name="cameraWidth" value="<%=cameraSettings.width%>" maxlength="5" required>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="cameraWidth">Camera Height</label>
+                    <input class="col-sm-20" type="text" id="cameraHeight" name="cameraHeight" value="<%=cameraSettings.height%>" maxlength="5" required>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="rotation">Camera Rotation</label>
+                    <select class="col-sm-20" name="rotation" required>
+                        <option value="0" <% if (cameraSettings.rotation == 0) { %>selected="selected"<% } %>>0</option>
+                        <option value="90" <% if (cameraSettings.rotation == 90) { %>selected="selected"<% } %>>90</option>
+                        <option value="180" <% if (cameraSettings.rotation == 180) { %>selected="selected"<% } %>>180</option>
+                        <option value="240" <% if (cameraSettings.rotation === 240) { %>selected="selected"<% } %>>240</option>
+                    </select>
+                </div>
+            </fieldset>
+        <% } %>
+        <% if(device['deviceType'] === "Water Sensor"){ %>
+            <fieldset>
+                <legend>Water Sensor Information</legend>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="relayId">Device To Turn Off</label>  <select class="col-sm-20" name="relayId">
+                        <% relay_devices.forEach(function(relay_device){ %>
+                            <option value="<%=relay_device['_id']%>" 
+                                <% if (water_config['relayId'].toString() === relay_device['_id'].toString()) { %>selected="selected"<% } %>
 
 
-                                    ><%=relay_device['deviceName']%></option>
-                            <% }); %>
-                        </select>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="checkMinsBefore">Check Mins Before Watering Sessions</label>      
-                        <select class="col-sm-20" name="checkMinsBefore">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                        </select>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="checkMinsAfter">Check Mins After Watering Sessions</label>      
-                        <select class="col-sm-20" name="checkMinsAfter">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="15">15</option>
-                        </select>
-                    </div>
-                    <div class="form-group row">
-                        <label for="DayOfWeekCheckBox"> Cancel Watering Session?</label>
-                        <input type="checkbox" name="cancelWater">
-                    </div>
-                </fieldset>
-            <% } %>
-            <div class="form-group row">
-                <button class="btn btn-lg btn-primary btn-block">Submit!</button>
-            </div>
-        </form>
-        <a href="/device">Go Back</a>
-    </div>
+                                ><%=relay_device['deviceName']%></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="checkMinsBefore">Check Mins Before Watering Sessions</label>      
+                    <select class="col-sm-20" name="checkMinsBefore">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-6 col-form-label" for="checkMinsAfter">Check Mins After Watering Sessions</label>      
+                    <select class="col-sm-20" name="checkMinsAfter">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+                <div class="form-group row">
+                    <label for="DayOfWeekCheckBox"> Cancel Watering Session?</label>
+                    <input type="checkbox" name="cancelWater">
+                </div>
+            </fieldset>
+        <% } %>
+        <button class="btn btn-lg btn-primary float-right">Submit!</button>
+    </form>
+    <a href="/device">Go Back</a>
+</div>
+</div>
+</div>
 </div>
 </div>
 <% include ../partials/footer %>

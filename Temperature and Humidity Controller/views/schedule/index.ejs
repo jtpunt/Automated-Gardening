@@ -47,8 +47,8 @@
 	    %>
         <div class="card-header bg-warning">
 	    	<div class="float-left">
-	        	<h4><strong><%=device['deviceName']%></strong></h4>
-	        	<strong>Schedules for <%=device["local_ip"]%> <i class="fa fa-calendar" aria-hidden="true"></i></strong>
+	        	<h4 class="card-title"><strong><%=device['deviceName']%></strong></h4>
+	        	<strong><i class="fa fa-calendar" aria-hidden="true"></i> Schedules for <%=device["local_ip"]%></strong>
     		</div>
 	
 		</div>
@@ -66,8 +66,8 @@
     	<div class="card-header bg-success">
 	        <!--Schedule section-->
 	    	<div class="float-left">
-	        	<h4><strong><%=device['deviceName']%></strong></h4>
-	        	<strong>Schedules for <%=device["local_ip"]%> <i class="fa fa-calendar" aria-hidden="true"></i></strong>
+	        	<h4 class="card-title"><strong><%=device['deviceName']%></strong></h4>
+	        	<strong><i class="fa fa-calendar" aria-hidden="true"></i> Schedules for <%=device["local_ip"]%></strong>
 	    	</div>
 	        <div class="float-right">
 	            <a class="collapsed d-block btn btn-info pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>" aria-expanded="false" aria-controls="collapse<%=ipStr%>">
@@ -99,15 +99,20 @@
     	</div>
 	    <div class="card-footer border-info">
         	<div class="text-right">
-	            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>New" data-target="#collapse<%=ipStr%>New" aria-expanded="false" aria-controls="collapse<%=ipStr%>New" onclick="collapseMenu('collapse<%=ipStr%>NewTest')">
+	            <a class="btn btn-success pull-left" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>NewManual" data-target="#collapse<%=ipStr%>NewManual" aria-expanded="false" aria-controls="collapse<%=ipStr%>NewManual" onclick="collapseMenu('collapse<%=ipStr%>NewSmart')">
 	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Manual Schedule</a>
 	    
-	            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>NewTest" data-target="#collapse<%=ipStr%>NewTest" aria-expanded="false" aria-controls="collapse<%=ipStr%>NewTest" onclick="collapseMenu('collapse<%=ipStr%>New')">
+	            <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapse<%=ipStr%>NewSmart" data-target="#collapse<%=ipStr%>NewSmart" aria-expanded="false" aria-controls="collapse<%=ipStr%>NewSmart" onclick="collapseMenu('collapse<%=ipStr%>NewManual')">
 	            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add Smart Schedule</a>
 	        </div>
-        <!--Collapse Add a schedule form START-->
-		<% include ./new %>
-        <!--Collapse Add a schedule form END-->
+	        <!--Collapse Add a schedule form START-->
+	        <div class="collapse col-md-12" id="collapse<%=ipStr%>NewManual">
+				<% include ./newManual %>
+			</div>
+	        <!--Collapse Add a schedule form END-->
+	        <div class="collapse" id="collapse<%=ipStr%>NewSmart">
+	        	<% include ./newSmart %>
+	        </div>
         </div>
     	<%
     		}
