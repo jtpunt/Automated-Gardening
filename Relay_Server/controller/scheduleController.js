@@ -564,6 +564,8 @@ var scheduleObj = {
         }
         return result;
     },
+    // gets all the schedules for this device from the database and stores them in the scheduleArr
+    // if the schedule is active, then it is activated
     getSchedules: function(activateRelayFn, context){
         let self = this,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -622,6 +624,8 @@ var scheduleObj = {
             }
         });
     },
+    // Receives a new schedule configuration to replace an old configuration at an index in the scheduleArr,
+    // or pushes it into the scheduleArr if an index is not specified
     setSchedule: function(new_schedule_config, index){
         let self = this;
         if(index !== undefined){
@@ -637,6 +641,12 @@ var scheduleObj = {
             self.scheduleArr.push(new_schedule_config);
         }
     },
+    // schedule_id - the mongo id of the schedule we are trying to access and update
+    // updated_schedule_config - the updated schedule configuration
+    // activateRelayFn - the function that turns the outlet on/off
+    // context - refers to the context that the activateRelayFn function resides in, without the context, activateRelayFn does not work
+    // Updates a schedule by id, updates the schedule config in the scheduleArr and then places the associated outlet in the correct state
+    // (on/off) since the new schedule details may require it to turn on or off based on whatever state the associated outlet was in beforehand
     editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
         let self              = this,
             schedule_conflict = false,
@@ -762,6 +772,9 @@ var scheduleObj = {
             }
         });
     },
+    // schedule_id - the mongo id of the schedule we are trying to access and delete
+    // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
+    // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
     deleteSchedule: function(schedule_id){
         console.log(`Array contents Before Delete Function: `);
         this.scheduleArr.forEach(function(schedule){

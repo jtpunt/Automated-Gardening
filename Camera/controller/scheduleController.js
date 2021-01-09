@@ -27,6 +27,8 @@ var scheduleObj = {
     // schedule_config: {
     //     
     // }
+    // schedule_config - the schedule config we are trying to make sure is free of errors
+    // This function receives a schedule_config, rebuilds it and returns it after verifing that the inputs are correct
     buildSchedule: function(schedule_config){
         var scheduleObj = {};
         if(schedule_config['schedule']){
@@ -102,9 +104,10 @@ var scheduleObj = {
         return scheduleObj;
     },
     // params 1: schedule_config
-    // params 2:
-    // params 3:
-    // params 4: desired_state is 0 (off) or 1(on)
+    // params 2: activateRelayFn - the function which turns the outlet on/off
+    // params 3: context - the context that the actiaveRelayFn resides in - required for activateRelayFn or it will not work
+    // params 4: gpio_pin - the gpio which will active our outlet on/off
+    // params 5: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
     buildJob: function(schedule_config, activateRelayFn, context, gpio_pin, desired_state){
@@ -124,6 +127,7 @@ var scheduleObj = {
             index = self.findScheduleIndex(schedule_id);
         return self.scheduleArr[index]['job'];
     },
+    // 1/8/2021 - returns a copy?
     getScheduleConfigById: function(schedule_id){
         let self  = this,
             index = self.findScheduleIndex(schedule_id);
@@ -135,16 +139,6 @@ var scheduleObj = {
             nextInvocationDate = job.nextInvocation();
         return nextInvocationDate;
     },
-    setScheduleConfigById: function(schedule_id, schedule_config){
-        let self   = this,
-            config = self.getScheduleConfigById(schedule_id);
-        config = schedule_config;
-    },
-    setScheduleJobById: function(schedule_id, job){
-        let self     = this,
-            schedule_job = self.getScheduleJobById(schedule_id);
-        schedule_job = job;
-    },
     // invalidates the next planned invocation or the job
     cancelNextSchedule: function(schedule_id, activateRelayFn, context){
         let self  = this,
@@ -154,7 +148,7 @@ var scheduleObj = {
         job.cancelNext();
         console.log("Has been successfully canceled");
     },
-        // invalidates any job. All  planned invocations will be canceled
+    // invalidates any job. All planned invocations will be canceled
     cancelSchedule: function(schedule_id){
         let self  = this,
             job   = self.getScheduleJobById(schedule_id);
@@ -189,10 +183,6 @@ var scheduleObj = {
             today           = new Date(),
             index           = self.findScheduleIndex(schedule_id),
             schedule_config = self.scheduleArr[index]['schedule_config'];
-            
-            // schedule_config = self.getScheduleConfigById(schedule_id),
-            // schedule_job    = self.getScheduleJobById(schedule_id);
-
             
         // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
         let job = self.buildJob(
