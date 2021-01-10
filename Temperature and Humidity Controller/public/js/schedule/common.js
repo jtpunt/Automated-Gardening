@@ -78,9 +78,6 @@ function handleTimeElapsed(startTimeEle, endTimeEle, timeElapsedEle){
     timeElapsedEle.value = timeDiff;
     
 }
-function calcElapsedTime(time1, time2){
-
-}
 function showExtraInputs(id) {
 	console.log(id, this);
 	var x = document.getElementById(id);
@@ -108,13 +105,22 @@ function selectCheckbox(id){
 function collapseMenu(id){
 	$('#' + id).collapse('hide');
 }
+function createDayOfWeekInput(){
+    let div,
+        label;
+
+}
 // tableId = vegWaterTable or floWaterTable
 function waterSelectChanged(e, tableId){
-    let tableEle = document.getElementById(tableId),
+    let startDateId = "startDate",
+        startDateEle = document.getElementById(startDateId),
+        tableEle = document.getElementById(tableId),
+        startDate = new Date((startDateEle.value).replace(/-/g, '\/')),
         numOfRows = e.value,
         i = 0,
         curRows = tableEle.children.length - 1; // minus the table headers
 
+    console.log(`startDateEle: ${startDate}`);
     console.log(`numOfRows: ${numOfRows}`);
     console.log(`curRows: ${curRows}`);
     if(curRows >= 0 && numOfRows > curRows){
@@ -125,18 +131,22 @@ function waterSelectChanged(e, tableId){
                 divCellWeek = document.createElement("div"), // <div class="rTableCell">Week 1</div>
                 divCellDates = document.createElement("div"), // <div class="rTableCell">Dates</div>
                 divCellCupsOfWater = document.createElement("div"); //<div class="rTableCell">Cups of Water</div>
-                divCellPumpTime = document.createElement("div"); // <div class="rTableCell">Pump Run Time</div>
+                divCellPumpTime = document.createElement("div"), // <div class="rTableCell">Pump Run Time</div>
+                weekStartDate = new Date(startDate),
+                weekEndDate = new Date(startDate);
                 // divCellInchesOfWater = document.createElement("div"), // <div class="rTableCell">Inches of Water</div>
-        
+            
             divRow.className = "rTableRow";
             divCellWeek.className = "rTableCell";
             divCellDates.className = "rTableCell";
             divCellCupsOfWater.className = "rTableCell";
             divCellPumpTime.className = "rTableCell";
-            divCellInchesOfWater.className = "rTableCell";
+            //divCellInchesOfWater.className = "rTableCell";
 
+            weekStartDate.setDate(weekStartDate.getDate() + i * 7);
+            weekEndDate.setDate(weekEndDate.getDate() + (i + 1) * 7 - 1);
             divCellWeek.innerText = "Week " + (i + 1);
-
+            divCellDates.innerText = weekStartDate.toDateString() + " - " + weekEndDate.toDateString();
             tableEle.appendChild(divRow);
             divRow.appendChild(divCellWeek);
             divRow.appendChild(divCellDates);
@@ -160,11 +170,19 @@ function waterSelectChanged(e, tableId){
 
     console.log(tableEle);
 }
-function handleMultiStepForm(e, operand){
+function handleMultiStepForm(e, operand, roomPumpsLength){
+    let vegWaterFieldSetIds = [],
+        floWaterFieldsetIds = [];
+    for(let i = 1; i <= roomPumpsLength; i++){
+        let vegWaterFieldSetId = "vegWaterFieldset" + i,
+            floWaterFieldsetId = "floWaterFieldset" + i;
+        vegWaterFieldSetIds.push(vegWaterFieldSetId);
+        floWaterFieldsetIds.push(floWaterFieldsetId);
+    }
     let ids = [
         "scheduleFieldset", 
-        "vegWaterFieldset",
-        "floWaterFieldset", 
+        ...vegWaterFieldSetIds,
+        ...floWaterFieldsetIds,
         "reviewFieldset", 
         "confirmFieldset"
     ]

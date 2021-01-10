@@ -1,3 +1,4 @@
+
 <form id="add-comment-form" action="/schedule/smart" method="POST">
     <fieldset id="scheduleFieldset">
         <legend>
@@ -5,8 +6,8 @@
             Add your new schedule details
         </legend>
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label" for="vegStartDate">Set Start Date: </label>
-            <input class="col-sm-20" type="date" id="vegStartDate" name="vegetative[start_date]"required>
+            <label class="col-sm-6 col-form-label" for="startDate">Set Start Date: </label>
+            <input class="col-sm-20" type="date" id="startDate" name="vegetative[start_date]"required>
         </div>
         <% 
         let extraFieldSets = 0;
@@ -93,15 +94,18 @@
             rooms.forEach(function(room){
                 if(room['roomDeviceIds'].includes(device['_id'])){
                     if(room['roomType'] === "Vegetative and Flowering" || room['roomType'] === "Vegetative"){
-                        extraFieldSets = extraFieldSets + 1;
+                        room['roomWaterDetails'].forEach(function(waterDetail, i){ 
+                            extraFieldSets = extraFieldSets + 1;
+
+
     %>
-    <fieldset id="vegWaterFieldset" hidden>
+    <fieldset id="vegWaterFieldset<%=i + 1%>" hidden>
         <legend>
             🌱
-            Add your vegetative water schedule details
+            Add your vegetative water schedule details for pump <%=i + 1%>
         </legend>
 
-        <div class="form-group row" id="veg<%=ipStr%>DayOfWeek" value="2020-10-13">
+        <div class="form-group row" id="veg<%=ipStr%>DayOfWeek">
             <label class="col-sm-6 col-form-label" for="weekDays-selector">Select day of week: </label>
             <div class="weekDays-selector" id="weekDays-selector">
                 <label for="veg<%=ipStr%>weekday-sun" id='veg<%=ipStr%>sun' class="deselectedCheckbox">S</label>
@@ -131,14 +135,14 @@
             <div class="rTableRow">
                 <div class="rTableHead"><span style="font-weight: bold;">Week #</span></div>
                 <div class="rTableHead"><span style="font-weight: bold;">Dates</span></div>
-                <div class="rTableHead"><span style="font-weight: bold;">Pump Run Time</div>
-                <div class="rTableHead"><span style="font-weight: bold;">Inches of Water</div>
                 <div class="rTableHead"><span style="font-weight: bold;">Cups of Water</div>
+                <div class="rTableHead"><span style="font-weight: bold;">Pump Run Time</div>
             </div>
 
         </div>
     </fieldset>
                 <%
+                        });
                     }
 
                 %>
@@ -155,7 +159,7 @@
             <label class="col-sm-6 col-form-label" for="time">Set Watering Start Time: </label>
             <input class="col-sm-20" type="time" id="time" name="schedule[lighting_start_time]" value="10:00:00" step="1" required>
         </div>
-        <div class="form-group row" id="flo<%=ipStr%>DayOfWeek" value="2020-10-13">
+        <div class="form-group row" id="flo<%=ipStr%>DayOfWeek">
             <label class="col-sm-6 col-form-label" for="weekDays-selector">Select day of week: </label>
             <div class="weekDays-selector" id="weekDays-selector">
                 <label for="flo<%=ipStr%>weekday-sun" id='flo<%=ipStr%>sun' class="deselectedCheckbox">S</label>
@@ -197,9 +201,6 @@
             
     <% 
                     }
-                }
-            });
-        } 
     %>
     <fieldset id="reviewFieldset" hidden>
         <legend>
@@ -211,11 +212,16 @@
 
     <div style="overflow:auto;">
       <div style="float:right;">
-        <button class="btn btn-success btn-sm" type="button" id="prevBtn" onclick="handleMultiStepForm(this, -1)" style="display: none">Previous</button>
-        <button class="btn btn-success btn-sm" type="button" id="nextBtn" onclick="handleMultiStepForm(this, 1)">Next</button>
+        <button class="btn btn-success btn-sm" type="button" id="prevBtn" onclick="handleMultiStepForm(this, -1, <%=room['roomWaterDetails'].length%>)" style="display: none">Previous</button>
+        <button class="btn btn-success btn-sm" type="button" id="nextBtn" onclick="handleMultiStepForm(this, 1, <%=room['roomWaterDetails'].length%>)">Next</button>
         <button class="btn btn-success btn-sm" id="submitBtn" style="display: none;">Submit <i class="fa fa-calendar" aria-hidden="true" ></i></button>
       </div>
     </div>
+        <%
+                }
+            });
+        } 
+    %>
     <!-- Circles which indicates the steps of the form: -->
     <div style="text-align:center;margin-top:40px;">
         <span id="step0" class="step active"></span>
