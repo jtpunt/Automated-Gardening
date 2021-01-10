@@ -1,14 +1,14 @@
 <% include ../partials/header %>
 <script type="text/javascript">
     document.onreadystatechange = () => {
-    let addGpioBtn = document.getElementById("addGpioBtn");
-    addGpioBtn.onclick = function(e){
-        let deviceType = "<%=device['deviceType']%>",
-            input = document.createElement("input"),
-            gpioSelectForm = getGpioSelectForm(deviceType);
-        addGpioBtn.parentNode.insertBefore(gpioSelectForm, addGpioBtn);
-    }; 
-}
+        let addGpioBtn = document.getElementById("addGpioBtn");
+        addGpioBtn.onclick = function(e){
+            let deviceType = "<%=device['deviceType']%>",
+                input = document.createElement("input"),
+                gpioSelectForm = getGpioSelectForm(deviceType);
+            addGpioBtn.parentNode.insertBefore(gpioSelectForm, addGpioBtn);
+        }; 
+    }
 </script>
 <div class="container">
 <div class="row">
