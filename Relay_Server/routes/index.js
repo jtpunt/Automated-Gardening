@@ -296,10 +296,12 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 scheduleController.isScheduleConflicting(off_schedule);
                 scheduleController.isScheduleConflicting(on_schedule);
                 
+                console.log(`off_schedule: ${JSON.stringify(off_schedule)}`);
                 // create the off schedule and grab the id
                 let offScheduleId = await scheduleController.createSchedule(off_schedule, outletController.activateRelay, outletController);
                 on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
 
+                console.log(`on_schedule: ${JSON.stringify(on_schedule)}`);
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                 let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
                 off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
@@ -369,7 +371,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
                 off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
 
             }
         }
