@@ -1,6 +1,6 @@
 var Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
-    scheduleHelpers = require("./helpers/scheduleHelpers"),
+    scheduleHelpers = require("../controller/helpers/scheduleHelpers"),
     schedule        = require('node-schedule'),
     ip              = require("ip"),
     async           = require("asyncawait/async"),
