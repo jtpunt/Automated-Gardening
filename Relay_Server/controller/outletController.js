@@ -262,7 +262,7 @@ var outletObj = {
 
                 
             }else{
-                console.log(`index: ${index}`)
+                console.log(`index: ${index}, gpio_input: ${gpio_input}`);
             }
         },
         getStatus: function(gpio_input){
