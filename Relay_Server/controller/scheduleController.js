@@ -669,7 +669,7 @@ var scheduleObj = {
             if(offScheduleIndex === -1)
                 throw new Error("Invalid id provided for nextScheduleId");
         }
-        self.cancelSchedule(schedule_id);
+        //self.cancelSchedule(schedule_id);
         let job = self.buildJob(
             updated_schedule_config, 
             activateRelayFn, 
