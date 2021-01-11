@@ -34,8 +34,7 @@ let options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     reconnectTries : 300,
-    reconnectInterval: 60000,
-    autoReconnect : true
+    reconnectInterval: 60000
 }
 mongoose.connect(connStr, options, function(err){
     if(err){
