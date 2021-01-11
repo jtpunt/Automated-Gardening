@@ -7,22 +7,6 @@ var Scheduler       = require("../models/scheduler"),
     await           = require("asyncawait/await"),
     localIP         = ip.address();
 
-const MIN_SECOND = 0,
-      MIN_MINUTE = 0,
-      MIN_HOUR   = 0,
-      MIN_DATE   = 1,
-      MIN_MONTH  = 0,
-      MIN_YEAR   = new Date().getFullYear(),
-      MIN_DOW    = 0, // dayOfWeek
-      
-      MAX_SECOND = 59,
-      MAX_MINUTE = 59,
-      MAX_HOUR   = 23,
-      MAX_DATE   = 31,
-      MAX_MONTH  = 11,
-      MAX_DOW    = 6;
-
-
 var scheduleObj = {
     scheduleArr: [],
     // params 1: schedule_config
