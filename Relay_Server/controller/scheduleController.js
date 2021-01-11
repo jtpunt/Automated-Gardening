@@ -1,10 +1,11 @@
-var Scheduler     = require("../models/scheduler"),
-    Device        = require("../models/device"),
-    schedule      = require('node-schedule'),
-    ip            = require("ip"),
-    async         = require("asyncawait/async"),
-    await         = require("asyncawait/await"),
-    localIP       = ip.address();
+var Scheduler      = require("../models/scheduler"),
+    Device         = require("../models/device"),
+    scheduleHelper = require("./helpers/scheduleHelper"),
+    schedule       = require('node-schedule'),
+    ip             = require("ip"),
+    async          = require("asyncawait/async"),
+    await          = require("asyncawait/await"),
+    localIP        = ip.address();
 
 const MIN_SECOND = 0,
       MIN_MINUTE = 0,
@@ -31,7 +32,7 @@ var scheduleObj = {
     // pre:
     // post:
     buildJob: function(schedule_config, fn, context, ...args){
-        // let myScheduleObj = this.buildSchedule(schedule_config);
+        let myScheduleObj = buildSchedule(schedule_config);
         console.log(`in buildJob with: ${JSON.stringify(schedule_config)}`);
         let job = schedule.scheduleJob(schedule_config['schedule'], function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
