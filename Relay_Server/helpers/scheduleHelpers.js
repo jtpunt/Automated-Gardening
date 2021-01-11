@@ -103,6 +103,11 @@ let scheduleHelpers = {
         }else 
             throw new Error("Schedule details not found!");
         return scheduleObj;
+    },
+    buildJob: function(myScheduleObj, fn, context, ...args){
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
+        console.log(`next invocation: ${job.nextInvocation()}`);
+        return job;
     }
 }
 module.exports = scheduleHelpers;

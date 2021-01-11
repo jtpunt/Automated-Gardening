@@ -17,11 +17,6 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(myScheduleObj, fn, context, ...args){
-        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
-        console.log(`next invocation: ${job.nextInvocation()}`);
-        return job;
-    },
     getScheduleObjById: function(schedule_id){
         let self = this,
             index = self.findScheduleIndex(schedule_id);
@@ -105,7 +100,7 @@ var scheduleObj = {
             
         // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
         let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-        let job = self.buildJob(
+        let job = scheduleHelpers.buildJob(
             myScheduleObj, 
             activateRelayFn, 
             context, 
@@ -121,7 +116,7 @@ var scheduleObj = {
     createSchedule: async function(new_schedule_config, fn, context, ...args){
         let self                = this,
             myScheduleObj       = scheduleHelpers.buildSchedule(new_schedule_config),
-            job                 = self.buildJob(
+            job                 = scheduleHelpers.buildJob(
             myScheduleObj, 
             fn, 
             context, 
@@ -484,7 +479,7 @@ var scheduleObj = {
                             let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
                             if(schedule_config['schedule']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
-                                let job = self.buildJob(
+                                let job = scheduleHelpers.buildJob(
                                     myScheduleObj, 
                                     self.deleteSchedule, 
                                     self,
@@ -494,7 +489,7 @@ var scheduleObj = {
                                 console.log(`obj: ${JSON.stringify(obj)}`);
                                 self.setSchedule(obj);
                             }else{
-                                let job = self.buildJob(
+                                let job = scheduleHelpers.buildJob(
                                     myScheduleObj, 
                                     activateRelayFn, 
                                     context, 
@@ -566,7 +561,7 @@ var scheduleObj = {
         }
         self.cancelSchedule(schedule_id);
         let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
-        let job = self.buildJob(
+        let job = scheduleHelpers.buildJob(
             myScheduleObj, 
             activateRelayFn, 
             context, 
