@@ -197,8 +197,8 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
            
                 // create the off schedule and grab the id
                 let offScheduleId = await scheduleController.createSchedule(...off_schedule_args);
-                on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
-                off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
+                on_schedule['relational']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                off_end_schedule['relational']['startScheduleId'] = offScheduleId;
 
                 let off_end_schedule_args = [
                     off_end_schedule, 
@@ -208,7 +208,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ]
 
                 let offEndScheduleId = await scheduleController.createSchedule(...off_end_schedule_args);
-                off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
+                off_schedule['relational']['endScheduleId'] = offEndScheduleId;
 
                 let on_schedule_args = [
                     on_schedule, 
@@ -219,8 +219,8 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 ]
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                 let onScheduleId = await scheduleController.createSchedule(...on_schedule_args);
-                off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
-                on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
+                off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                on_end_schedule['relational']['startScheduleId'] = onScheduleId;
 
                 let on_end_schedule_args = [
                     on_end_schedule, 
@@ -229,7 +229,7 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                     onScheduleId
                 ]
                 let onEndScheduleId = await scheduleController.createSchedule(...on_end_schedule_args);
-                on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
+                on_schedule['relational']['endScheduleId'] = onEndScheduleId;
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
                 scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
@@ -298,11 +298,11 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 
                 // create the off schedule and grab the id
                 let offScheduleId = await scheduleController.createSchedule(off_schedule, outletController.activateRelay, outletController);
-                on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                on_schedule['relational']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
 
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                 let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
-                off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
 
@@ -363,11 +363,11 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 
                 // create the off schedule and grab the id
                 let offScheduleId = await scheduleController.createSchedule(off_schedule, outletController.activateRelay, outletController);
-                on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                on_schedule['relational']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
 
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                 let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
-                off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
 
@@ -418,8 +418,8 @@ router.put('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req
         if(outletController.findOutletByGpio(Number(updatedSchedule['device']['gpio'])) === -1){
             throw new Error("Invalid GPIO input");
         }else{
-            let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
-                nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
+            let prevScheduleId = updatedSchedule['relational']['prevScheduleId'],
+                nextScheduleId = updatedSchedule['relational']['nextScheduleId'],
                 my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
                 my_schedule = {... updatedSchedule };
             
@@ -427,10 +427,10 @@ router.put('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req
             my_schedule['schedule'] = my_time;
                 
             if(prevScheduleId !== undefined){
-                my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
+                my_schedule['relational']['prevScheduleId'] = prevScheduleId;
                 console.log("My schedule if: " + my_schedule);
             }else if(nextScheduleId !== undefined){
-                my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+                my_schedule['relational']['nextScheduleId'] = nextScheduleId;
                 console.log("My schedule else if: " + my_schedule);
             }else {
                 console.log("My schedule else:" + my_schedule);
