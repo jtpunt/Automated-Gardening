@@ -491,6 +491,8 @@ var scheduleObj = {
                                 console.log(`obj: ${JSON.stringify(obj)}`);
                                 self.setSchedule(obj);
                             }else{
+                                let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
+                                 console.log(`in getSchedules with: ${JSON.stringify(myScheduleObj)}`);
                                 let job = self.buildJob(
                                     schedule_config, 
                                     activateRelayFn, 
