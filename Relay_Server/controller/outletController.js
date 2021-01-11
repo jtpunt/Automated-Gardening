@@ -240,7 +240,7 @@ var outletObj = {
         },
         activateRelay: function(gpio_input, desired_state) {
             let self = this;
-            let index = self.findOutletByGpio(gpio_input);
+            let index = self.findOutletByGpio(Number(gpio_input));
             console.log("in activateRelay\n");
             if(index !== -1){
                 let status = self.getStatus(gpio_input);
