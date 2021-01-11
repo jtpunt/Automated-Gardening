@@ -363,12 +363,26 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 
                 console.log(`off_schedule: ${JSON.stringify(off_schedule)}`);
                 // create the off schedule and grab the id
-                let offScheduleId = await scheduleController.createSchedule(off_schedule, outletController.activateRelay, outletController);
+                let off_schedule_args = [
+                    off_schedule, 
+                    outletController.activateRelay, 
+                    outletController,
+                    Number(off_schedule['device']['gpio']), 
+                    Boolean(off_schedule['device']['desired_state'])
+                ]
+                let offScheduleId = await scheduleController.createSchedule(...off_schedule_args);
                 on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
                 
                 console.log(`on_schedule: ${JSON.stringify(on_schedule)}`);
+                let on_schedule_args = [
+                    on_schedule, 
+                    outletController.activateRelay, 
+                    outletController,
+                    Number(on_schedule['device']['gpio']), 
+                    Boolean(on_schedule['device']['desired_state'])
+                ]
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
+                let onScheduleId = await scheduleController.createSchedule(...on_schedule_args);
                 off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
