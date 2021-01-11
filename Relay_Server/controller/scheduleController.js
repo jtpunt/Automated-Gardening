@@ -16,8 +16,6 @@ var scheduleObj = {
     // pre:
     // post:
     buildJob: function(myScheduleObj, fn, context, ...args){
-        //let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-        console.log(`in buildJob with: ${JSON.stringify(myScheduleObj)}`);
         let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
         return job;
@@ -104,8 +102,9 @@ var scheduleObj = {
 
             
         // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
+        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
         let job = self.buildJob(
-            schedule_config, 
+            myScheduleObj, 
             activateRelayFn, 
             context, 
             Number(schedule_config['device']['gpio']), 
@@ -478,11 +477,11 @@ var scheduleObj = {
                     }).then(function(schedule_configs){
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
-                            console.log(`schedule_config: ${schedule_config}`);
+                            let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
                             if(schedule_config['schedule']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = self.buildJob(
-                                    schedule_config, 
+                                    myScheduleObj, 
                                     self.deleteSchedule, 
                                     self,
                                     schedule_config['schedule']['startScheduleId'].toString()
@@ -491,8 +490,6 @@ var scheduleObj = {
                                 console.log(`obj: ${JSON.stringify(obj)}`);
                                 self.setSchedule(obj);
                             }else{
-                                let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-                                console.log(`in getSchedules with: ${JSON.stringify(myScheduleObj)}`);
                                 let job = self.buildJob(
                                     myScheduleObj, 
                                     activateRelayFn, 
@@ -563,7 +560,7 @@ var scheduleObj = {
             if(offScheduleIndex === -1)
                 throw new Error("Invalid id provided for nextScheduleId");
         }
-
+        let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
         let job = self.buildJob(
             updated_schedule_config, 
             activateRelayFn, 
