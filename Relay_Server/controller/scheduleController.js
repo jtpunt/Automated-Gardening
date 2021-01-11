@@ -481,7 +481,7 @@ var scheduleObj = {
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
-                            let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config),
+                            let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
                             if(schedule_config['schedule']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = self.buildJob(
