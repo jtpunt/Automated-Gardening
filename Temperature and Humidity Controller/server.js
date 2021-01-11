@@ -33,9 +33,9 @@ var localIP = ip.address(),
 let options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    reconnectTries : 300,
-    reconnectInterval: 60000,
-    autoReconnect : true
+    // reconnectTries : 300,
+    // reconnectInterval: 60000,
+    // autoReconnect : true
 
 }
 mongoose.connect(connStr, options, function(err){
