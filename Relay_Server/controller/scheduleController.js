@@ -15,8 +15,8 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, fn, context, ...args){
-        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
+    buildJob: function(myScheduleObj, fn, context, ...args){
+        //let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
         console.log(`in buildJob with: ${JSON.stringify(myScheduleObj)}`);
         let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
@@ -492,9 +492,9 @@ var scheduleObj = {
                                 self.setSchedule(obj);
                             }else{
                                 let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-                                 console.log(`in getSchedules with: ${JSON.stringify(myScheduleObj)}`);
+                                console.log(`in getSchedules with: ${JSON.stringify(myScheduleObj)}`);
                                 let job = self.buildJob(
-                                    schedule_config, 
+                                    myScheduleObj, 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
