@@ -15,8 +15,10 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule, fn, context, ...args){
-        let job = schedule.scheduleJob(schedule, function(){ fn.call(context, ...args); });
+    buildJob: function(schedule_config, fn, context, ...args){
+        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
+        console.log(`in buildJob with: ${JSON.stringify(myScheduleObj)}`);
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
         return job;
     },
@@ -479,9 +481,8 @@ var scheduleObj = {
                             console.log(`schedule_config: ${schedule_config}`);
                             if(schedule_config['schedule']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
-                                let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
                                 let job = self.buildJob(
-                                    myScheduleObj, 
+                                    schedule_config, 
                                     self.deleteSchedule, 
                                     self,
                                     schedule_config['schedule']['startScheduleId'].toString()
@@ -490,9 +491,8 @@ var scheduleObj = {
                                 console.log(`obj: ${JSON.stringify(obj)}`);
                                 self.setSchedule(obj);
                             }else{
-                                let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
                                 let job = self.buildJob(
-                                    myScheduleObj, 
+                                    schedule_config, 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
