@@ -15,7 +15,6 @@ const MIN_SECOND = 0,
 
 let scheduleHelpers = {
     buildSchedule: function(schedule_config){
-        console.log(`in buildSchedule with: ${JSON.stringify(schedule_config)}`);
         var scheduleObj = {};
         if(schedule_config['schedule']){
             // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
