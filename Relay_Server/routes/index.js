@@ -269,12 +269,14 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
             let on_schedule = { // on schedule
                 ... newSchedule,
                 schedule: on_start_time,
-                device: device_start
+                device: device_start,
+                relational: {}
             },
             off_schedule   = { // off schedule
                 ... newSchedule, 
                 schedule: off_end_time,
-                device: device_end
+                device: device_end,
+                relational: {}
             };
 
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
@@ -334,12 +336,14 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
             let on_schedule = { // on schedule
                 ... newSchedule,
                 schedule: on_start_time,
-                device: device_start
+                device: device_start,
+                relational: {}
             },
             off_schedule   = { // off schedule
                 ... newSchedule, 
                 schedule: off_end_time,
-                device: device_end
+                device: device_end,
+                relational: {}
             };
 
             // let new_on_schedule = scheduleController.buildSchedule(start_time),
@@ -421,7 +425,10 @@ router.put('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req
             let prevScheduleId = updatedSchedule['relational']['prevScheduleId'],
                 nextScheduleId = updatedSchedule['relational']['nextScheduleId'],
                 my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
-                my_schedule = {... updatedSchedule };
+                my_schedule = {
+                    ... updatedSchedule,
+                    relational: {}
+                };
             
       
             my_schedule['schedule'] = my_time;
