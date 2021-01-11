@@ -295,13 +295,27 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
                 scheduleController.isScheduleOverlapping(on_schedule, off_schedule);
                 scheduleController.isScheduleConflicting(off_schedule);
                 scheduleController.isScheduleConflicting(on_schedule);
-                
+
+                let off_schedule_args = [
+                    off_schedule, 
+                    outletController.activateRelay, 
+                    outletController,
+                    Number(off_schedule['device']['gpio']), 
+                    Boolean(off_schedule['device']['desired_state'])
+                ]
                 // create the off schedule and grab the id
-                let offScheduleId = await scheduleController.createSchedule(off_schedule, outletController.activateRelay, outletController);
+                let offScheduleId = await scheduleController.createSchedule(...off_schedule_args);
                 on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
 
+                let on_schedule_args = [
+                    on_schedule, 
+                    outletController.activateRelay, 
+                    outletController,
+                    Number(on_schedule['device']['gpio']), 
+                    Boolean(on_schedule['device']['desired_state'])
+                ]
                 // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                let onScheduleId = await scheduleController.createSchedule(on_schedule, outletController.activateRelay, outletController);
+                let onScheduleId = await scheduleController.createSchedule(...on_schedule_args);
                 off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                 scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
@@ -389,16 +403,38 @@ router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminA
 
             }
         }
-        // you can set a schedule with just an end_time
+        // This functionality has no use for the smart gardening application, however,
+        // it would be useful for a light switch app. Example, you manually turn the lights on at 10:00pm,
+        // fall asleep and forget to turn the lights off. You can set the lights to turn off automatically at 11:00pm
+        // you can set a schedule with just an end_time 
         else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
         // example usage: we want to make sure the lights are off by 2am
             console.log("in else with start_time");
-            let start_time = newSchedule['schedule']['start_time'],
-                start_schedule = newSchedule;
-            
-            start_schedule['schedule'] = start_time;
-            scheduleController.isScheduleConflicting(start_schedule);
-            let value = await scheduleController.createSchedule(start_schedule, outletController.activateRelay, outletController);
+
+            let device_end = { // // we need to rewrite our device values for our end schedule
+                ... newSchedule['device'],
+                desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
+            },  
+                off_end_time   = {
+                ... newSchedule['schedule'],
+                ... newSchedule['schedule']['end_time'] 
+            },  
+                off_schedule   = { // off schedule
+                ... newSchedule, 
+                schedule: off_end_time,
+                device: device_end
+            };
+  
+            scheduleController.isScheduleConflicting(off_schedule);
+
+            let off_schedule_args = [
+                off_schedule, 
+                outletController.activateRelay, 
+                outletController,
+                Number(off_schedule['device']['gpio']), 
+                Boolean(off_schedule['device']['desired_state'])
+            ]
+            let value = await scheduleController.createSchedule(...off_schedule_args);
             console.log(`value returned: ${value}`);
             //value.then((value) => console.log(value));
             console.log("Schedule successfully created!\n");
