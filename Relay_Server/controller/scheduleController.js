@@ -15,10 +15,8 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, fn, context, ...args){
-        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-        console.log(`in buildJob with: ${JSON.stringify(myScheduleObj)}`);
-        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
+    buildJob: function(schedule, fn, context, ...args){
+        let job = schedule.scheduleJob(schedule, function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
         return job;
     },
