@@ -17,9 +17,7 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildJob: function(schedule_config, fn, context, ...args){
-        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-
+    buildJob: function(myScheduleObj, fn, context, ...args){
         let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
         return job;
@@ -106,8 +104,9 @@ var scheduleObj = {
 
             
         // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
+        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
         let job = self.buildJob(
-            schedule_config, 
+            myScheduleObj, 
             activateRelayFn, 
             context, 
             Number(schedule_config['device']['gpio']), 
@@ -120,9 +119,10 @@ var scheduleObj = {
         self.startActiveSchedules(activateRelayFn, context);
     },
     createSchedule: async function(new_schedule_config, fn, context, ...args){
-        let self                = this;
-        let job                 = self.buildJob(
-            new_schedule_config, 
+        let self                = this,
+            myScheduleObj       = scheduleHelpers.buildSchedule(new_schedule_config),
+            job                 = self.buildJob(
+            myScheduleObj, 
             fn, 
             context, 
             ...args
@@ -481,10 +481,11 @@ var scheduleObj = {
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
+                            let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config),
                             if(schedule_config['schedule']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = self.buildJob(
-                                    schedule_config, 
+                                    myScheduleObj, 
                                     self.deleteSchedule, 
                                     self,
                                     schedule_config['schedule']['startScheduleId'].toString()
@@ -494,7 +495,7 @@ var scheduleObj = {
                                 self.setSchedule(obj);
                             }else{
                                 let job = self.buildJob(
-                                    schedule_config, 
+                                    myScheduleObj, 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
@@ -564,8 +565,9 @@ var scheduleObj = {
                 throw new Error("Invalid id provided for nextScheduleId");
         }
         //self.cancelSchedule(schedule_id);
+        let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
         let job = self.buildJob(
-            updated_schedule_config, 
+            myScheduleObj, 
             activateRelayFn, 
             context, 
             Number(updated_schedule_config['device']['gpio']), 
