@@ -1,3 +1,4 @@
+let schedule        = require('node-schedule');
 const MIN_SECOND = 0,
       MIN_MINUTE = 0,
       MIN_HOUR   = 0,
