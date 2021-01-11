@@ -261,6 +261,8 @@ var outletObj = {
                 }
 
                 
+            }else{
+                console.log(`index: ${index}`)
             }
         },
         getStatus: function(gpio_input){
