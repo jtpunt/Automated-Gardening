@@ -1,4 +1,4 @@
-let scheduleHelper = {
+let scheduleHelpers = {
     buildSchedule: function(schedule_config){
         var scheduleObj = {};
         if(schedule_config['schedule']){
@@ -90,4 +90,4 @@ let scheduleHelper = {
         return scheduleObj;
     }
 }
-module.exports = scheduleHelper;
+module.exports = scheduleHelpers;
