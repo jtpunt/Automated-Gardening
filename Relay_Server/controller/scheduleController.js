@@ -34,7 +34,7 @@ var scheduleObj = {
     buildJob: function(schedule_config, fn, context, ...args){
         let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
         console.log(`in buildJob with: ${JSON.stringify(schedule_config)}`);
-        let job = schedule.scheduleJob(schedule_config['schedule'], function(){ fn.call(context, ...args); });
+        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
         return job;
     },
