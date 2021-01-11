@@ -655,7 +655,7 @@ var scheduleObj = {
             offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
             index             = self.findScheduleIndex(schedule_id);
         console.log(`schedule_id: ${schedule_id}`);
-        console.log(`updateSchedule: ${updated_schedule_config}`);
+        console.log(`updateSchedule: ${JSON.stringify(updated_schedule_config})`);
         console.log(`Match found at index: ${index}`);
         
 
