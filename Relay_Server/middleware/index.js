@@ -543,7 +543,14 @@ var middleware = {
                 }else {
                     console.log("My schedule else:" + my_schedule);
                 } 
-                scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
+                let update_schedule_args = [
+                    my_schedule, 
+                    outletController.activateRelay, 
+                    outletController,
+                    Number(my_schedule['device']['gpio']), 
+                    Boolean(my_schedule['device']['desired_state'])
+                ]
+                scheduleController.editSchedule(...update_schedule_args);
                 console.log("Successfully Updated!");
                 res.status(200).end();
             
