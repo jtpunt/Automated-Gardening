@@ -1,26 +1,12 @@
 var Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
-    //self = require("../helpers/self"),
-    schedule        = require('node-schedule'),
+    scheduleHelpers = require("../helpers/scheduleHelpers"),
     ip              = require("ip"),
     async           = require("asyncawait/async"),
     await           = require("asyncawait/await"),
     localIP         = ip.address();
 
-const MIN_SECOND = 0,
-      MIN_MINUTE = 0,
-      MIN_HOUR   = 0,
-      MIN_DATE   = 1,
-      MIN_MONTH  = 0,
-      MIN_YEAR   = new Date().getFullYear(),
-      MIN_DOW    = 0, // dayOfWeek
-      
-      MAX_SECOND = 59,
-      MAX_MINUTE = 59,
-      MAX_HOUR   = 23,
-      MAX_DATE   = 31,
-      MAX_MONTH  = 11,
-      MAX_DOW    = 6;
+
 
 var scheduleObj = {
     scheduleArr: [],
@@ -30,101 +16,6 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-    buildSchedule: function(schedule_config){
-        var scheduleObj = {};
-        if(schedule_config['schedule']){
-            // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
-            // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
-            let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
-            
-            const schedule  = schedule_config['schedule'] || undefined,
-                  second    = sanitize_input(schedule['second']),
-                  minute    = sanitize_input(schedule['minute']),
-                  hour      = sanitize_input(schedule['hour']),
-                  date      = Number(schedule['date'])  || undefined,
-                  month     = sanitize_input(schedule['month']),
-                  year      = Number(schedule['year']) || undefined,
-                  dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined,
-                  today     = new Date();
-
-            // Validate second input
-            if(second !== undefined && !second.isNaN && Number.isInteger(second)){
-                if(second >= MIN_SECOND && second <= MAX_SECOND)
-                    scheduleObj['second'] = second;
-                else 
-                    throw new Error(`second input must be >= ${MIN_SECOND} or <= ${MAX_SECOND}`);
-            }else 
-                throw new Error("Invalid second input!");
-            // Validate minute input
-            if(minute !== undefined && !minute.isNaN && Number.isInteger(minute)){
-                if(minute >= MIN_MINUTE && minute <= MAX_MINUTE)
-                    scheduleObj['minute'] = minute;
-                else 
-                    throw new Error(`Minute input must be >= ${MIN_MINUTE} or <= ${MAX_MINUTE}`);
-            }else 
-                throw new Error("Invalid minute input!");
-            // Validate hour input
-            if(hour !== undefined && !hour.isNaN && Number.isInteger(hour)){
-                if(hour >= MIN_HOUR && hour <= MAX_HOUR)
-                    scheduleObj['hour'] = hour;
-                else 
-                    throw new Error(`Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}`)
-            }else 
-                throw new Error("Invalid hour input!");
-                
-            // Validate Inputs for Day of Week Based Scheduling
-            if(dayOfWeek !== undefined && dayOfWeek.length){
-                let dayOfWeekArr = dayOfWeek.map(function(day){
-                    // dayOfWeek = 0 - 6
-                    if(!Number.isNaN(day) && Number(day) >= MIN_DOW && Number(day) <= MAX_DOW)
-                        return parseInt(day);
-                    else throw new Error("Invalid day of week input.");
-                });
-                scheduleObj['dayOfWeek'] = dayOfWeekArr; 
-            }
-            // valid date based scheduling details
-            else if(date !== undefined && month !== undefined && year !== undefined){
-                if(date >= MIN_DATE && date <= MAX_DATE)
-                    scheduleObj['date'] = date;
-                else 
-                    throw new Error(`Date input must be >= ${MIN_DATE} or <= ${MAX_DATE}`);
-                if(month >= MIN_MONTH && month <= MAX_MONTH)
-                    scheduleObj['month'] = month;
-                else 
-                    throw new Error(`Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}`);
-                if(year >= MIN_YEAR){
-                    scheduleObj['year'] = year;
-                    //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
-                    let scheduleTestDate = new Date(Date.UTC(year, month, date, hour, minute, second));  
-                    console.log(`hour: ${hour}`);
-                    console.log(`minute: ${minute}`);
-                    console.log(`second: ${second}`);
-                    console.log("Date Obj: ", scheduleTestDate.toISOString());
-                    console.log(`time hour: ${scheduleTestDate.getHours()}`);
-                    // if(scheduleTestObj < today) 
-                    //     throw new Error("Schedule must occur in the future!");
-                    // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
-                    if(scheduleTestDate < today){
-                        console.log(`scheduleTestDate < today`);
-                        delete scheduleObj['date'];
-                        delete scheduleObj['month'];
-                        delete scheduleObj['year'];
-                    }else{
-                        console.log(`scheduleTestDate > today`);
-                    }
-                    console.log(`scheduleObj: ${JSON.stringify(scheduleObj)}`);
-                }else 
-                    throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
-            }
-        }else 
-            throw new Error("Schedule details not found!");
-        return scheduleObj;
-    },
-    buildJob: function(myScheduleObj, fn, context, ...args){
-        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
-        console.log(`next invocation: ${job.nextInvocation()}`);
-        return job;
-    },
     getScheduleObjById: function(schedule_id){
         let self = this,
             index = self.findScheduleIndex(schedule_id);
@@ -207,8 +98,8 @@ var scheduleObj = {
 
             
         // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
-        let myScheduleObj = self.buildSchedule(schedule_config);
-        let job = self.buildJob(
+        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
+        let job = scheduleHelpers.buildJob(
             myScheduleObj, 
             activateRelayFn, 
             context, 
@@ -223,8 +114,8 @@ var scheduleObj = {
     },
     createSchedule: async function(new_schedule_config, fn, context, ...args){
         let self                = this,
-            myScheduleObj       = self.buildSchedule(new_schedule_config),
-            job                 = self.buildJob(
+            myScheduleObj       = scheduleHelpers.buildSchedule(new_schedule_config),
+            job                 = scheduleHelpers.buildJob(
             myScheduleObj, 
             fn, 
             context, 
@@ -584,10 +475,10 @@ var scheduleObj = {
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
-                            let myScheduleObj = self.buildSchedule(schedule_config);
+                            let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
                             if(schedule_config['schedule']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
-                                let job = self.buildJob(
+                                let job = scheduleHelpers.buildJob(
                                     myScheduleObj, 
                                     self.deleteSchedule, 
                                     self,
@@ -597,7 +488,7 @@ var scheduleObj = {
                                 console.log(`obj: ${JSON.stringify(obj)}`);
                                 self.setSchedule(obj);
                             }else{
-                                let job = self.buildJob(
+                                let job = scheduleHelpers.buildJob(
                                     myScheduleObj, 
                                     activateRelayFn, 
                                     context, 
@@ -645,332 +536,303 @@ var scheduleObj = {
     // context - refers to the context that the activateRelayFn function resides in, without the context, activateRelayFn does not work
     // Updates a schedule by id, updates the schedule config in the scheduleArr and then places the associated outlet in the correct state
     // (on/off) since the new schedule details may require it to turn on or off based on whatever state the associated outlet was in beforehand
-    editSchedule: function(activateRelayFn, context){
-        let self = this;
-        return function(req, res, next){
-            let schedule_id       = req.params.schedule_id,
-                updatedSchedule   = req.body,
-                prevScheduleId    = updatedSchedule['schedule']['prevScheduleId'],
-                nextScheduleId    = updatedSchedule['schedule']['nextScheduleId'],
-                my_time           = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
-                updated_schedule_config = {... updatedSchedule };
+    editSchedule: function(schedule_id, updated_schedule_config, activateRelayFn, context){
+        let self              = this,
+            schedule_conflict = false,
+            today             = new Date(),
+            onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
+            offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
+            index             = self.findScheduleIndex(schedule_id);
+        console.log(`schedule_id: ${schedule_id}`);
+        console.log(`updateSchedule: ${JSON.stringify(updated_schedule_config)}`);
+        console.log(`Match found at index: ${index}`);
+        
 
-            if(prevScheduleId !== undefined){
-                updated_schedule_config['schedule']['prevScheduleId'] = prevScheduleId;
-                console.log("My schedule if: " + updated_schedule_config);
-            }else if(nextScheduleId !== undefined){
-                updated_schedule_config['schedule']['nextScheduleId'] = nextScheduleId;
-                console.log("My schedule else if: " + updated_schedule_config);
-            }else {
-                console.log("My schedule else:" + updated_schedule_config);
-            } 
-            try{
-                let schedule_conflict = false,
-                    today             = new Date(),
-                    onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
-                    offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
-                    index             = self.findScheduleIndex(schedule_id);
-                console.log(`schedule_id: ${schedule_id}`);
-                console.log(`updateSchedule: ${JSON.stringify(updated_schedule_config)}`);
-                console.log(`Match found at index: ${index}`);
+        if(onScheduleId !== undefined){
+            let onScheduleIndex = self.findScheduleIndex(onScheduleId.toString());
+            if(onScheduleIndex === -1)
+                throw new Error("Invalid id provided for prevScheduleId");
+        }
+        if(offScheduleId !== undefined){
+            let offScheduleIndex = self.findScheduleIndex(offScheduleId.toString());
+            if(offScheduleIndex === -1)
+                throw new Error("Invalid id provided for nextScheduleId");
+        }
+        self.cancelSchedule(schedule_id);
+        let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
+        let job = scheduleHelpers.buildJob(
+            myScheduleObj, 
+            activateRelayFn, 
+            context, 
+            Number(updated_schedule_config['device']['gpio']), 
+            Boolean(updated_schedule_config['device']['desired_state'])
+        );
+
+        Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
+            if(err){
+                console.log(err);
+                throw err;
+            } else {
+                console.log("Schedule canceled and removed!");
+
+                let updated_schedule_device = updated_schedule_config['device'],
+                    updated_schedule_schedule = updated_schedule_config['schedule'];
                 
-
-                if(onScheduleId !== undefined){
-                    let onScheduleIndex = self.findScheduleIndex(onScheduleId.toString());
-                    if(onScheduleIndex === -1)
-                        throw new Error("Invalid id provided for prevScheduleId");
+                let schedule_config = {
+                    "device": updated_schedule_device,
+                    "schedule": updated_schedule_schedule,
+                    "_id": schedule['_id']
+                };
+                // self.scheduleArr[index].updateSchedule(updated_schedule_device, updated_schedule_schedule, job);
+                // let schedule_config1 = new Schedule_Config(updated_schedule_device, updated_schedule_schedule, schedule["_id"]);
+                var obj = {"schedule_config": schedule_config, job};
+                self.scheduleArr[index] = null;
+                self.scheduleArr[index] = obj;
+                //self.setSchedule(obj, index);
+                // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
+                //self.startActiveSchedules(activateRelayFn, context);
+                
+                
+                if(onScheduleId !== undefined){ // updating off schedule?
+                    console.log("updating off schedule");
+                    // get the on schedule
+                    // let onScheduleIndex  = self.findScheduleIndex(onScheduleId.toString()),
+                    //     schedule_config  = self.scheduleArr[onScheduleIndex]['schedule_config'],
+                    //     device_gpio      = schedule_config['device']['gpio'],
+                    //     desired_state    = schedule_config['device']['desired_state'],
+                    //     isScheduleActive = self.scheduleIsActive(schedule_config, today);
+                        
+                    // if(isScheduleActive === true){
+                    //     console.log("Schedule is active");
+                    //     console.log("Desired state is on");
+                    //     activateRelayFn.call(context,  device_gpio, desired_state);     
+                    // }
+                    // else{
+                    //     console.log("Schedule is not active");
+                    //     activateRelayFn.call(context, device_gpio, 0);
+                    // }
                 }
-                if(offScheduleId !== undefined){
-                    let offScheduleIndex = self.findScheduleIndex(offScheduleId.toString());
-                    if(offScheduleIndex === -1)
-                        throw new Error("Invalid id provided for nextScheduleId");
+                if(offScheduleId !== undefined){ // updating on schedule?
+                    console.log("Updating on schedule");
+                    // let schedule_config  = self.scheduleArr[index]['schedule_config'],
+                    //     device_gpio      = schedule_config['device']['gpio'],
+                    //     desired_state    = schedule_config['device']['desired_state'],
+                    //     isScheduleActive = self.scheduleIsActive(schedule_config, today);
+                    // if(isScheduleActive === true){
+                    //     console.log("Schedule is active");
+                    //     console.log("Desired state is on");
+                    //     activateRelayFn.call(context,  device_gpio, desired_state);     
+                    // }
+                    // else{
+                    //     console.log("Schedule is not active");
+                    //     activateRelayFn.call(context, device_gpio, 0);
+                    // }
                 }
-                self.cancelSchedule(schedule_id);
-                let myScheduleObj = self.buildSchedule(updated_schedule_config);
-                let job = self.buildJob(
-                    myScheduleObj, 
-                    activateRelayFn, 
-                    context, 
-                    Number(updated_schedule_config['device']['gpio']), 
-                    Boolean(updated_schedule_config['device']['desired_state'])
-                );
 
-                Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
-                    if(err){
-                        console.log(err);
-                        throw err;
-                    } else {
-                        console.log("Schedule canceled and removed!");
-
-                        let updated_schedule_device = updated_schedule_config['device'],
-                            updated_schedule_schedule = updated_schedule_config['schedule'];
-                        
-                        let schedule_config = {
-                            "device": updated_schedule_device,
-                            "schedule": updated_schedule_schedule,
-                            "_id": schedule['_id']
-                        };
-                        // self.scheduleArr[index].updateSchedule(updated_schedule_device, updated_schedule_schedule, job);
-                        // let schedule_config1 = new Schedule_Config(updated_schedule_device, updated_schedule_schedule, schedule["_id"]);
-                        var obj = {"schedule_config": schedule_config, job};
-                        self.scheduleArr[index] = null;
-                        self.scheduleArr[index] = obj;
-                        //self.setSchedule(obj, index);
-                        // CHANGE NEEDED: does not account for updating the 'ON' schedule to an earlier time that would make the schedule be active
-                        //self.startActiveSchedules(activateRelayFn, context);
-                        
-                        
-                        if(onScheduleId !== undefined){ // updating off schedule?
-                            console.log("updating off schedule");
-                            // get the on schedule
-                            // let onScheduleIndex  = self.findScheduleIndex(onScheduleId.toString()),
-                            //     schedule_config  = self.scheduleArr[onScheduleIndex]['schedule_config'],
-                            //     device_gpio      = schedule_config['device']['gpio'],
-                            //     desired_state    = schedule_config['device']['desired_state'],
-                            //     isScheduleActive = self.scheduleIsActive(schedule_config, today);
-                                
-                            // if(isScheduleActive === true){
-                            //     console.log("Schedule is active");
-                            //     console.log("Desired state is on");
-                            //     activateRelayFn.call(context,  device_gpio, desired_state);     
-                            // }
-                            // else{
-                            //     console.log("Schedule is not active");
-                            //     activateRelayFn.call(context, device_gpio, 0);
-                            // }
-                        }
-                        if(offScheduleId !== undefined){ // updating on schedule?
-                            console.log("Updating on schedule");
-                            // let schedule_config  = self.scheduleArr[index]['schedule_config'],
-                            //     device_gpio      = schedule_config['device']['gpio'],
-                            //     desired_state    = schedule_config['device']['desired_state'],
-                            //     isScheduleActive = self.scheduleIsActive(schedule_config, today);
-                            // if(isScheduleActive === true){
-                            //     console.log("Schedule is active");
-                            //     console.log("Desired state is on");
-                            //     activateRelayFn.call(context,  device_gpio, desired_state);     
-                            // }
-                            // else{
-                            //     console.log("Schedule is not active");
-                            //     activateRelayFn.call(context, device_gpio, 0);
-                            // }
-                        }
-
-                        self.startActiveSchedules(activateRelayFn, context);
-                        self.scheduleArr.forEach(function(schedule_obj){
-                            //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
-                            let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-                                prevSheduleId  = schedule_obj['schedule_config']['schedule']['prevScheduleId'],
-                                nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-                                sched_id       = schedule_obj['schedule_config']['_id'].toString(),
-                                device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
-                            
-          
-                            if(nextScheduleId === undefined)
-                                console.log("nextScheduleId is undefined");
-                            else{
-                                nextScheduleId = nextScheduleId.toString();
-                                // schedule_id is the schedule we are trying to see is active or not
-                                if(sched_id === schedule_id || nextScheduleId === schedule_id){
-                                    let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-                                    if(isScheduleActive === true && desired_state === true){
-                                        console.log("Schedule is active");
-                                        console.log("Desired state is on");
-                                        activateRelayFn.call(context,  device_gpio, desired_state);     
-                                    }
-                                    else{
-                                        console.log("Schedule is not active");
-                                        activateRelayFn.call(context, device_gpio, 0);
-                                    }    
-                                }
-                                
+                self.startActiveSchedules(activateRelayFn, context);
+                self.scheduleArr.forEach(function(schedule_obj){
+                    //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+                    let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+                        prevSheduleId  = schedule_obj['schedule_config']['schedule']['prevScheduleId'],
+                        nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+                        sched_id       = schedule_obj['schedule_config']['_id'].toString(),
+                        device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
+                    
+  
+                    if(nextScheduleId === undefined)
+                        console.log("nextScheduleId is undefined");
+                    else{
+                        nextScheduleId = nextScheduleId.toString();
+                        // schedule_id is the schedule we are trying to see is active or not
+                        if(sched_id === schedule_id || nextScheduleId === schedule_id){
+                            let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+                            if(isScheduleActive === true && desired_state === true){
+                                console.log("Schedule is active");
+                                console.log("Desired state is on");
+                                activateRelayFn.call(context,  device_gpio, desired_state);     
                             }
-                        });
-                        console.log("Successfully Updated!");
-                        res.status(200).send("Successfully updated!");
+                            else{
+                                console.log("Schedule is not active");
+                                activateRelayFn.call(context, device_gpio, 0);
+                            }    
+                        }
+                        
                     }
                 });
-            }catch(err){
-                res.status(404).send(err.toString);
             }
-
-        }
-
-
+        });
     },
     // schedule_id - the mongo id of the schedule we are trying to access and delete
     // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
     // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
-    deleteSchedule: function() {
-        let self = this;
-        console.log("in delete schedule");
-        return function(req, res, next){
+    deleteSchedule: function(schedule_id){
+        console.log(`Array contents Before Delete Function: `);
+        this.scheduleArr.forEach(function(schedule){
+            console.log(`${JSON.stringify(schedule)}`);
+        })
+        console.log(`In deleteSchedule Function with ${schedule_id}`);
+        let self = this,
+            index = self.findScheduleIndex(schedule_id.toString());
+            
+        console.log(`Match found at index: ${index}`);
 
-            var schedule_id = req.params.schedule_id;
-            console.log(`In deleteSchedule Function with ${schedule_id}`);
-            var index = self.findScheduleIndex(schedule_id.toString());
-                
-            console.log(`Match found at index: ${index}`);
-            console.log(`In deleteSchedule Function with ${schedule_id}`);
-            //self.cancelSchedule(schedule_id);
-            Scheduler.findByIdAndRemove(schedule_id, (err) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                }
-                else{
-                    try{
-                        let schedules = [schedule_id];
-                        if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
-                            let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
-                            console.log(`prevScheduleId: ${prevScheduleId}`);
-                            schedules.push(prevScheduleId.toString());
+        //self.cancelSchedule(schedule_id);
+        Scheduler.findByIdAndRemove(schedule_id, (err) => {
+            if(err){
+                console.log(err);
+                throw err;
+            }
+            else{
+                try{
+                    let schedules = [schedule_id];
+                    if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
+                        let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
+                        console.log(`prevScheduleId: ${prevScheduleId}`);
+                        schedules.push(prevScheduleId.toString());
 
-                            let onScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
-                            console.log(`Associated On Schedule Index Found: ${onScheduleIndex}`);
+                        let onScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
+                        console.log(`Associated On Schedule Index Found: ${onScheduleIndex}`);
 
-                            if(self.scheduleArr[onScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                                let endScheduleId = self.scheduleArr[onScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                                schedules.push(endScheduleId.toString());
-                            }
-                            if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
-                                // end schedule wont have a set prev or next schedule
-                                let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
-                                console.log(`endScheduleId: ${endScheduleId}`);
-                                schedules.push(endScheduleId.toString());
-                                let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
-                                console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
-
-                            }   
-                        }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId']){
-                            let nextScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId'];
-                            console.log(`nextScheduleId: ${nextScheduleId}`);
-                            console.log(`Associated Off Schedule Found`);
-                            schedules.push(nextScheduleId);
-
-                            let offScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
-                            console.log(`Associated Off Schedule Index Found: ${offScheduleIndex}`);
-                            
-                            if(self.scheduleArr[offScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                                let endScheduleId = self.scheduleArr[offScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                                schedules.push(endScheduleId.toString());
-                            }
-                            if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
-                                // end schedule wont have a set prev or next schedule
-                                let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
-                                console.log(`endScheduleId: ${endScheduleId}`);
-                                schedules.push(endScheduleId);
-
-                                let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
-                                console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
-                            }
-                        }else if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
-                            console.log(`Associated Start Schedule Found`);
-                            // start schedule wont have a set prev or next schedule since it would mess up a lot of functions in this file
-                            let startScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId'];
-                            console.log(`startScheduleId: ${startScheduleId}`);
-                            schedules.push(startScheduleId.toString());
-
-                            let startScheduleIndex = self.findScheduleIndex(startScheduleId.toString());
-                            console.log(`Associated Start Schedule Index Found: ${startScheduleIndex}`);
-                            // get the schedule associated with the startScheduleId
-                            // see if the schedule is associated with an on or off schedule
-                            // retrieve that on or off schedule if it exists and delete it       
-                            if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
-                                // end schedule wont have a set prev or next schedule
-                                let nextScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
-                                console.log(`nextScheduleId: ${nextScheduleId}`);
-                                schedules.push(nextScheduleId);
-
-                                let nextScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
-                                console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                                if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                                    let endScheduleId = self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                                    schedules.push(endScheduleId.toString());
-                                }
-                            }
-                            if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['prevScheduleId']){
-                                // end schedule wont have a set prev or next schedule
-                                let prevScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['prevScheduleId'];
-                                console.log(`endScheduleId: ${prevScheduleId}`);
-                                schedules.push(prevScheduleId);
-
-                                let prevScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
-                                console.log(`Associated End Schedule Index Found: ${prevScheduleIndex}`);
-                                if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                                    let endScheduleId = self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                                    schedules.push(endScheduleId.toString());
-                                }
-                            }
-                        }else if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
-                            console.log(`Associated End Schedule Found`);
+                        if(self.scheduleArr[onScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
+                            let endScheduleId = self.scheduleArr[onScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
+                            schedules.push(endScheduleId.toString());
+                        }
+                        if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
                             // end schedule wont have a set prev or next schedule
                             let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
                             console.log(`endScheduleId: ${endScheduleId}`);
                             schedules.push(endScheduleId.toString());
+                            let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
+                            console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
+
+                        }   
+                    }else if(self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId']){
+                        let nextScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['nextScheduleId'];
+                        console.log(`nextScheduleId: ${nextScheduleId}`);
+                        console.log(`Associated Off Schedule Found`);
+                        schedules.push(nextScheduleId);
+
+                        let offScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
+                        console.log(`Associated Off Schedule Index Found: ${offScheduleIndex}`);
+                        
+                        if(self.scheduleArr[offScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
+                            let endScheduleId = self.scheduleArr[offScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
+                            schedules.push(endScheduleId.toString());
+                        }
+                        if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
+                            // end schedule wont have a set prev or next schedule
+                            let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
+                            console.log(`endScheduleId: ${endScheduleId}`);
+                            schedules.push(endScheduleId);
 
                             let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
                             console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
-                        
-                            if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
-                                // end schedule wont have a set prev or next schedule
-                                let nextScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
-                                console.log(`endScheduleId: ${nextScheduleId}`);
-                                schedules.push(nextScheduleId);
-
-                                let nextScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
-                                console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                                if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                                    let endScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                                    schedules.push(endScheduleId.toString());
-                                }
-                            }
-                            if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['prevScheduleId']){
-                                // end schedule wont have a set prev or next schedule
-                                let prevScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['prevScheduleId'];
-                                console.log(`endScheduleId: ${prevScheduleId}`);
-                                schedules.push(prevScheduleId);
-
-                                let prevScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
-                                console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                                if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
-                                    let endScheduleId = self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
-                                    schedules.push(endScheduleId.toString());
-                                }
-                            }
-
-
-                        }else{
-                            console.log(`Unknown schedule found`);
-
                         }
-                        console.log(`associated schedules found: ${schedules.toString()}`);
-                        self.scheduleArr[index]['job'].cancel();
-                        console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
-                        self.scheduleArr.splice(index, 1);
-                        console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                    }catch(err){
-                        console.log(`Error: ${err.toString()}`);
+                    }else if(self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId']){
+                        console.log(`Associated Start Schedule Found`);
+                        // start schedule wont have a set prev or next schedule since it would mess up a lot of functions in this file
+                        let startScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['startScheduleId'];
+                        console.log(`startScheduleId: ${startScheduleId}`);
+                        schedules.push(startScheduleId.toString());
 
-                        self.scheduleArr[index]['job'].cancel();
-                        console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
-                        self.scheduleArr.splice(index, 1);
-                        console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                        res.status(400).send(err.toString());
+                        let startScheduleIndex = self.findScheduleIndex(startScheduleId.toString());
+                        console.log(`Associated Start Schedule Index Found: ${startScheduleIndex}`);
+                        // get the schedule associated with the startScheduleId
+                        // see if the schedule is associated with an on or off schedule
+                        // retrieve that on or off schedule if it exists and delete it       
+                        if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
+                            // end schedule wont have a set prev or next schedule
+                            let nextScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
+                            console.log(`nextScheduleId: ${nextScheduleId}`);
+                            schedules.push(nextScheduleId);
+
+                            let nextScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
+                            console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
+                            if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
+                                let endScheduleId = self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
+                                schedules.push(endScheduleId.toString());
+                            }
+                        }
+                        if(self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['prevScheduleId']){
+                            // end schedule wont have a set prev or next schedule
+                            let prevScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['prevScheduleId'];
+                            console.log(`endScheduleId: ${prevScheduleId}`);
+                            schedules.push(prevScheduleId);
+
+                            let prevScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
+                            console.log(`Associated End Schedule Index Found: ${prevScheduleIndex}`);
+                            if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
+                                let endScheduleId = self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
+                                schedules.push(endScheduleId.toString());
+                            }
+                        }
+                    }else if(self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId']){
+                        console.log(`Associated End Schedule Found`);
+                        // end schedule wont have a set prev or next schedule
+                        let endScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['endScheduleId'];
+                        console.log(`endScheduleId: ${endScheduleId}`);
+                        schedules.push(endScheduleId.toString());
+
+                        let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
+                        console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
+                    
+                        if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId']){
+                            // end schedule wont have a set prev or next schedule
+                            let nextScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['nextScheduleId'];
+                            console.log(`endScheduleId: ${nextScheduleId}`);
+                            schedules.push(nextScheduleId);
+
+                            let nextScheduleIndex = self.findScheduleIndex(nextScheduleId.toString());
+                            console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
+                            if(self.scheduleArr[nextScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
+                                let endScheduleId = self.scheduleArr[startScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
+                                schedules.push(endScheduleId.toString());
+                            }
+                        }
+                        if(self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['prevScheduleId']){
+                            // end schedule wont have a set prev or next schedule
+                            let prevScheduleId = self.scheduleArr[endScheduleIndex]['schedule_config']['schedule']['prevScheduleId'];
+                            console.log(`endScheduleId: ${prevScheduleId}`);
+                            schedules.push(prevScheduleId);
+
+                            let prevScheduleIndex = self.findScheduleIndex(prevScheduleId.toString());
+                            console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
+                            if(self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId']){
+                                let endScheduleId = self.scheduleArr[prevScheduleIndex]['schedule_config']['schedule']['endScheduleId'];
+                                schedules.push(endScheduleId.toString());
+                            }
+                        }
+
+
+                    }else{
+                        console.log(`Unknown schedule found`);
+
                     }
-                    res.status(200).end();
-                    // }else{
+                    console.log(`associated schedules found: ${schedules.toString()}`);
+                    self.scheduleArr[index]['job'].cancel();
+                    console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                    self.scheduleArr.splice(index, 1);
+                    console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                }catch(err){
+                    console.log(`Error: ${err.toString()}`);
 
-                        // check to see if the schedule is currently active
-
-                        // self.scheduleArr[index]['job'].cancel();
-                        // console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
-                        // self.scheduleArr.splice(index, 1);
-                        // console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                    // }
+                    self.scheduleArr[index]['job'].cancel();
+                    console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                    self.scheduleArr.splice(index, 1);
+                    console.log(`Size of array after removal: ${self.scheduleArr.length}`);
                 }
-            });
-        }
+                
+                // }else{
+
+                    // check to see if the schedule is currently active
+
+                    // self.scheduleArr[index]['job'].cancel();
+                    // console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                    // self.scheduleArr.splice(index, 1);
+                    // console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                // }
+            }
+        });
     },
     deleteSchedules: function(...schedule_ids){
         let self = this;
