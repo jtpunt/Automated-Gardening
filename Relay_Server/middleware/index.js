@@ -38,8 +38,9 @@ var middleware = {
 		
 	},
 	checkScheduleInputs(req, res, next){
-		var newSchedule = req.body;
-		// {
+        var newSchedule = req.body;
+        try{
+        // {
         //     schedule: {
         //         start_time: {
         //             second: 0,
@@ -69,88 +70,93 @@ var middleware = {
         //     }
         // }  
         if(newSchedule === undefined)
-            res.status(400).send("New schedule and device configuration details not found.")
+            throw new Error("New schedule and device configuration details not found.")
         else{
             if(newSchedule['schedule'] === undefined)
-                res.status(400).send("New schedule configuration details not found.")
+                throw new Error("New schedule configuration details not found.")
             else{
                 // end_time (off) details are required
                 if(newSchedule['schedule']['end_time'] === undefined)
-                    res.status(400).send("End time schedule configuration details not found.")
+                    throw new Error("End time schedule configuration details not found.")
                 else{
                     // Second, minute, and hour details are required for end_time (off)
                     if(newSchedule['schedule']['end_time']['second'] === undefined)
-                        res.status(400).send("End Time Second configuration details not found.")
+                        throw new Error("End Time Second configuration details not found.")
                     if(newSchedule['schedule']['end_time']['minute'] === undefined)
-                        res.status(400).send("End Time Minute configuration details not found.")
+                        throw new Error("End Time Minute configuration details not found.")
                     if(newSchedule['schedule']['end_time']['hour'] === undefined)
-                        res.status(400).send("End Time hour configuration details not found.")
+                        throw new Error("End Time hour configuration details not found.")
                 }
                 // start_time (on) details are not required
                 if(newSchedule['schedule']['start_time'] !== undefined){
                     if(newSchedule['schedule']['start_time']['second'] === undefined)
-                        res.status(400).send("End Time Second configuration details not found.")
+                        throw new Error("End Time Second configuration details not found.")
                     if(newSchedule['schedule']['start_time']['minute'] === undefined)
-                        res.status(400).send("End Time Minute configuration details not found.")
+                        throw new Error("End Time Minute configuration details not found.")
                     if(newSchedule['schedule']['start_time']['hour'] === undefined)
-                        res.status(400).send("End Time hour configuration details not found.")
+                        throw new Error("End Time hour configuration details not found.")
                 }
                 // Check For Date Based Scheduling Details
                 if(newSchedule['schedule']['start_date'] !== undefined){
                     // Make sure the rest of the Date Based Scheduling Details were not left out
                     if(newSchedule['schedule']['start_date']['date'] === undefined)
-                        res.status(400).send("Date input required for date-based scheduling");
+                        throw new Error("Date input required for date-based scheduling");
                     if(newSchedule['schedule']['start_date']['month'] === undefined)
-                        res.status(400).send("Month input required for date-based scheduling");
+                        throw new Error("Month input required for date-based scheduling");
                     if(newSchedule['schedule']['start_date']['year'] === undefined)
-                        res.status(400).send("Year input requried for date-based scheduling")
+                        throw new Error("Year input requried for date-based scheduling")
                 }
                 // Check For Date Based Scheduling Details
                 if(newSchedule['schedule']['end_date'] !== undefined){
                     // Make sure the rest of the Date Based Scheduling Details were not left out
                     if(newSchedule['schedule']['start_date']['date'] === undefined)
-                        res.status(400).send("Month input required for date-based scheduling");
+                        throw new Error("Month input required for date-based scheduling");
                     if(newSchedule['schedule']['end_date']['month'] === undefined)
-                        res.status(400).send("Month input required for date-based scheduling");
+                        throw new Error("Month input required for date-based scheduling");
                     if(newSchedule['schedule']['end_date']['year'] === undefined)
-                        res.status(400).send("Year input requried for date-based scheduling")
+                        throw new Error("Year input requried for date-based scheduling")
                 }
                 // Check For Recurrence Based Scheduling details
                 if(newSchedule['schedule']['dayOfWeek'] !== undefined){
                     // Date-Based Scheduling Details can not be included with Recurrence Based Scheduling Details
                     if(newSchedule['schedule']['start_date']['date'] !== undefined)
-                        res.status(400).send("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
                     if(newSchedule['schedule']['start_date']['month'] !== undefined)
-                        res.status(400).send("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
                     if(newSchedule['schedule']['start_date']['year'] !== undefined)
-                        res.status(400).send("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                        throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
                 }
             }
             // device details are required
             if(newSchedule['device'] === undefined){
-                res.status(400).send("New Device configurations not found");
+                throw new Error("New Device configurations not found");
             }else{
                 // id - mongodb id representing our relay device - required
                 if(newSchedule['device']['id'] === undefined)
-                    res.status(400).send("Device id not found!");
+                    throw new Error("Device id not found!");
                 else{
                     // Make sure that the id is a valid id that exists in mongodb
                 }
                 // gpio port that controls our relay switch - required
                 if(newSchedule['device']['gpio'] === undefined)
-                    res.status(400).send("Device GPIO not found!");
+                    throw new Error("Device GPIO not found!");
 
                 // 0 or 1, on or off? - required
                 if(newSchedule['device']['desired_state'] === undefined)
-                    res.status(400).send("Device desired state not found!");
+                    throw new Error("Device desired state not found!");
                 else{
                     // Make sure that only a boolean value was sent in
                     if(typeof newSchedule['device']['desired_state'] === 'boolean')
-                        res.status(400).send("Desired state must be 'true' or 'false'.")
+                        throw new Error("Desired state must be 'true' or 'false'.")
                 }
             }
         }
-        next();
+            next();
+        }catch(exc){
+                    console.log(`err: ${exc}`);
+        //res.write(err.toString());
+            res.status(404).send(exc.toString());
+        }
 	},
     isGpioConfigured: (outletController) => {
         return function(req, res, next){
