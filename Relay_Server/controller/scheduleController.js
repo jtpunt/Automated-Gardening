@@ -664,7 +664,7 @@ var scheduleObj = {
             }else {
                 console.log("My schedule else:" + updated_schedule_config);
             } 
-            try{
+            
                 let schedule_conflict = false,
                     today             = new Date(),
                     onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
@@ -792,10 +792,7 @@ var scheduleObj = {
                         res.status(200).send("Successfully updated!");
                     }
                 });
-            }catch(err){
-                res.status(404).send(err.toString);
             }
-
         }
 
 
