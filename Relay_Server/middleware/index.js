@@ -546,10 +546,10 @@ var middleware = {
 
                 scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
                 console.log("Successfully Updated!");
-                res.status(200).end();
+                res.status(200).send("Successfully updated!");
             
             }catch(err){
-                res.status(404).end();
+                res.status(404).send(err.toString);
             }
         }
     }
