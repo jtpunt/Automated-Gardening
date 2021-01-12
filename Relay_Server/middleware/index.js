@@ -170,7 +170,7 @@ var middleware = {
         }
     },
     createSchedules: (scheduleController, outletController) => {
-        return function(req, res, next){
+        return async function(req, res, next){
              var newSchedule = req.body;
              if(
                 newSchedule['schedule']['start_time'] !== undefined && 
