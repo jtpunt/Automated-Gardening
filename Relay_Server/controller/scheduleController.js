@@ -579,7 +579,12 @@ var scheduleObj = {
                 }
                 self.cancelSchedule(schedule_id);
                 console.log("Done canceling schedule")
-                let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
+                try{
+                    let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
+                }catch(exc){
+                    res.status(400).send(exc.toString());
+                }
+    
                 console.log("Back from buildSchedule");
                 let job = scheduleHelpers.buildJob(
                     myScheduleObj, 
