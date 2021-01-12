@@ -361,28 +361,32 @@ let scheduleMiddleware = {
                 newSchedule['schedule']['end_time']   !== undefined
                 ){
                 console.log("New schedule with start_time, and end_time");
+                let device_start = { // we need to rewrite our device values for our start schedule
+                    ... newSchedule['device'], // take every key: value stored in the 'device' key
+                    desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
+                },
+                device_end = { // // we need to rewrite our device values for our end schedule
+                    ... newSchedule['device'],
+                    desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
+                }
+                let on_start_time = {
+                    ... newSchedule['schedule'],
+                    ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
+                },
+                off_end_time   = {
+                    ... newSchedule['schedule'],
+                    ... newSchedule['schedule']['end_time'] 
+                };
 
                 let on_schedule = { // on schedule
                     ... newSchedule,
-                    schedule: {
-                        ... newSchedule['schedule'],
-                        ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
-                    },
-                    device: {
-                        ... newSchedule['device'], // take every key: value stored in the 'device' key
-                        desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
-                    }
+                    schedule: on_start_time,
+                    device: device_start
                 },
                 off_schedule   = { // off schedule
                     ... newSchedule, 
-                    schedule: {
-                        ... newSchedule['schedule'],
-                        ... newSchedule['schedule']['end_time'] 
-                    },
-                    device: {
-                        ... newSchedule['device'],
-                        desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
-                    }
+                    schedule: off_end_time,
+                    device: device_end
                 };
 
                 // let new_on_schedule = scheduleController.buildSchedule(start_time),
@@ -391,8 +395,8 @@ let scheduleMiddleware = {
                 let on_time_timestamp = new Date(),
                     off_time_timestamp = new Date();
                 
-                on_time_timestamp.setHours(on_schedule['schedule']['hour'], on_schedule['schedule']['minute'], on_schedule['schedule']['second']); 
-                off_time_timestamp.setHours(off_schedule['schedule']['hour'], off_schedule['schedule']['minute'], off_schedule['schedule']['second']); 
+                on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
+                off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
                 if(on_time_timestamp > off_time_timestamp)
                     res.status(404).send("start_time must be less than end_time")
