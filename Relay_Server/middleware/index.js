@@ -31,7 +31,7 @@ var middleware = {
 		    }
 		    else{
 		        console.log("user: " + user);
-		        return next();
+		        next();
 		    }
 		});
 		
@@ -150,16 +150,15 @@ var middleware = {
                 }
             }
         }
-        return next();
+        next();
 	},
     isGpioConfigured: (outletController) => {
         return function(req, res, next){
             var newSchedule = req.body;
             if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
                 res.status(404).send("Invalid GPIO input");
-            }else{
-                return next();
             }
+            next();
         }
     },
     createSchedules: (scheduleController, outletController) => {
