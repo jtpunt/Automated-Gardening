@@ -118,6 +118,7 @@ router.get('/schedule/:schedule_id', function(req, res) {
 // edit an existing schedule
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
+    middleware.checkScheduleInputs, 
     middleware.isGpioConfigured(outletController), 
     middleware.updateSchedule(scheduleController, outletController)
 );
