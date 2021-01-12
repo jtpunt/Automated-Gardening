@@ -499,10 +499,11 @@ let scheduleMiddleware = {
                     nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
                     my_schedule = {
                         ... updatedSchedule,
-                        schedule:   updatedSchedule['schedule']['start_time'] || 
-                                    updatedSchedule['schedule']['end_time'],
-                        schedule['prevScheduleId']: updatedSchedule['schedule']['prevScheduleId'],
-                        schedule['nextScheduleId']: updatedSchedule['schedule']['nextScheduleId']
+                        schedule: {  
+                            updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time']
+                            prevScheduleId: updatedSchedule['schedule']['prevScheduleId'],
+                            nextScheduleId: updatedSchedule['schedule']['nextScheduleId']
+                        }
                     };
                     
 
