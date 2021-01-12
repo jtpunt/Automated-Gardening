@@ -8,7 +8,8 @@ var express = require("express"),
     Device = require("../models/device"),
     outletController   = require("../controller/outletController.js"),
     scheduleController = require("../controller/scheduleController.js"),
-    middleware = require("../middleware"),
+    middleware = require("../middleware/index"),
+    scheduleMiddleware = require("../middleware/scheduleMiddleware"),
     ip = require("ip"),
     localIP = ip.address(),
     async         = require("asyncawait/async"),
@@ -99,9 +100,9 @@ router.get('/schedule', function(req, res) {
 // add a new chedule
 router.post('/schedule', 
     middleware.verifyAdminAccount, 
-    middleware.checkScheduleInputs, 
+    scheduleMiddleware.checkScheduleInputs, 
     middleware.isGpioConfigured(outletController), 
-    middleware.createSchedules(scheduleController, outletController)
+    scheduleMiddleware.createSchedules(scheduleController, outletController)
 );
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
@@ -151,7 +152,7 @@ router.put('/schedule/:schedule_id', middleware.verifyAdminAccount,  middleware.
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,
-    middleware.deleteSchedule(scheduleController)
+    scheduleMiddleware.deleteSchedule(scheduleController)
 );
 
 
