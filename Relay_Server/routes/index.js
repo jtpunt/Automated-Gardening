@@ -8,6 +8,7 @@ var express = require("express"),
     Device = require("../models/device"),
     outletController   = require("../controller/outletController.js"),
     scheduleController = require("../controller/scheduleController.js"),
+    scheduleHelpers = require("../helpers/scheduleHelpers"),
     middleware = require("../middleware"),
     ip = require("ip"),
     localIP = ip.address(),
@@ -119,7 +120,7 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
     middleware.isGpioConfigured(outletController), 
-    scheduleController.editSchedule(outletController.activateRelay, outletController)
+    scheduleController.editSchedule(scheduleHelpers, outletController.activateRelay, outletController)
 );
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 

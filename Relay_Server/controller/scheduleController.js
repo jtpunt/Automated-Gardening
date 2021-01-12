@@ -1,5 +1,6 @@
 var Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
+    scheduleHelpers = require("../helpers/scheduleHelpers"),
     ip              = require("ip"),
     async           = require("asyncawait/async"),
     await           = require("asyncawait/await"),
@@ -9,7 +10,6 @@ var Scheduler       = require("../models/scheduler"),
 
 var scheduleObj = {
     scheduleArr: [],
-    scheduleHelpers = require("../helpers/scheduleHelpers"),
     // params 1: schedule_config
     // params 2:
     // params 3:
@@ -536,9 +536,8 @@ var scheduleObj = {
     // context - refers to the context that the activateRelayFn function resides in, without the context, activateRelayFn does not work
     // Updates a schedule by id, updates the schedule config in the scheduleArr and then places the associated outlet in the correct state
     // (on/off) since the new schedule details may require it to turn on or off based on whatever state the associated outlet was in beforehand
-    editSchedule: function(activateRelayFn, context){
+    editSchedule: function(scheduleHelpers, activateRelayFn, context){
         let self = this,
-            scheduleHelpers = require("../helpers/scheduleHelpers");
         return function(req, res, next){
             let schedule_id       = req.params.schedule_id,
                 updatedSchedule   = req.body,
@@ -578,8 +577,8 @@ var scheduleObj = {
                         throw new Error("Invalid id provided for nextScheduleId");
                 }
                 self.cancelSchedule(schedule_id);
-                let myScheduleObj = self.scheduleHelpers.buildSchedule(updated_schedule_config);
-                let job = self.scheduleHelpers.buildJob(
+                let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
+                let job = scheduleHelpers.buildJob(
                     myScheduleObj, 
                     activateRelayFn, 
                     context, 
