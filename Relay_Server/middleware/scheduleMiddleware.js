@@ -112,7 +112,7 @@ let scheduleMiddleware = {
                 }
             }
         }
-        next();
+        return next();
 	},
 	createSchedules: (scheduleController, outletController) => {
         return async function(req, res, next){
