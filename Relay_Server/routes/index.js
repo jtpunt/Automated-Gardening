@@ -97,9 +97,12 @@ router.get('/schedule', function(req, res) {
     });
 });
 // add a new chedule
-router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminAccount, middleware.isGpioConfigured(outletController), middleware.createSchedules(scheduleController, outletController), async function(req, res){
-    
-});
+router.post('/schedule', 
+    middleware.verifyAdminAccount, 
+    middleware.checkScheduleInputs, 
+    middleware.isGpioConfigured(outletController), 
+    middleware.createSchedules(scheduleController, outletController)
+);
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
         if(err) {
@@ -113,56 +116,40 @@ router.get('/schedule/:schedule_id', function(req, res) {
     }); 
 });
 // edit an existing schedule
-router.put('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req, res){
+router.put('/schedule/:schedule_id', middleware.verifyAdminAccount,  middleware.isGpioConfigured(outletController), function(req, res){
     console.log("in put route with ", req.body);
     var schedule_id = req.params.schedule_id;
     var updatedSchedule = req.body;
     try{
         // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-        if(outletController.findOutletByGpio(Number(updatedSchedule['device']['gpio'])) === -1){
-            throw new Error("Invalid GPIO input");
-        }else{
-            let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
-                nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
-                my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
-                my_schedule = {... updatedSchedule };
+
+        let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
+            nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
+            my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
+            my_schedule = {... updatedSchedule };
+        
+  
+        my_schedule['schedule'] = my_time;
             
-      
-            my_schedule['schedule'] = my_time;
-                
-            if(prevScheduleId !== undefined){
-                my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
-                console.log("My schedule if: " + my_schedule);
-            }else if(nextScheduleId !== undefined){
-                my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
-                console.log("My schedule else if: " + my_schedule);
-            }else {
-                console.log("My schedule else:" + my_schedule);
-            } 
-            scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
-            console.log("Successfully Updated!");
-            res.status(200).end();
-        }
+        if(prevScheduleId !== undefined){
+            my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
+            console.log("My schedule if: " + my_schedule);
+        }else if(nextScheduleId !== undefined){
+            my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+            console.log("My schedule else if: " + my_schedule);
+        }else {
+            console.log("My schedule else:" + my_schedule);
+        } 
+        scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
+        console.log("Successfully Updated!");
+        res.status(200).end();
+    
     }catch(err){
         res.status(404).end();
     }
 });
 // delete an existing schedule
-router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req, res){
-    var schedule_id = req.params.schedule_id;
-    console.log(typeof schedule_id);
-    try{
-        //scheduleController.cancelSchedule(schedule_id);
-        scheduleController.deleteSchedule(schedule_id);
-        console.log("Successfully Deleted!");
-        res.status(200).end();
-    }catch(err){
-        console.log("Error caught!\n");
-        console.log(err);
-        res.write("404: ", JSON.stringify(err));
-        res.status(404).end();
-    }
-});
+router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, scheduleController.deleteSchedule);
 
 
 // Returns the date of the next planned invocation of our schedule
