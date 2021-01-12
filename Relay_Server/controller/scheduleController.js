@@ -557,7 +557,7 @@ var scheduleObj = {
             }else {
                 console.log("My schedule else:" + updated_schedule_config);
             } 
-            // try{
+            try{
                 let schedule_conflict = false,
                     today             = new Date(),
                     onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
@@ -580,11 +580,9 @@ var scheduleObj = {
                 }
                 self.cancelSchedule(schedule_id);
                 console.log("Done canceling schedule")
-                try{
-                    let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
-                }catch(exc){
-                    res.status(400).send(exc.toString());
-                }
+
+                let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
+     
     
                 console.log("Back from buildSchedule");
                 let job = scheduleHelpers.buildJob(
@@ -690,10 +688,10 @@ var scheduleObj = {
                         res.status(200).send("Successfully updated!");
                     }
                 });
-            // }
-            // catch(err){
-            //     res.status(404).send(err.toString);
-            // }
+            }
+            catch(err){
+                res.status(404).send(err.toString);
+            }
 
         }
 
