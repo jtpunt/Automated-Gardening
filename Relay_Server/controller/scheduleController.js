@@ -577,8 +577,8 @@ var scheduleObj = {
                     if(offScheduleIndex === -1)
                         throw new Error("Invalid id provided for nextScheduleId");
                 }
-                self.cancelSchedule(schedule_id);
-                console.log("Done canceling schedule")
+                //self.cancelSchedule(schedule_id);
+                //console.log("Done canceling schedule")
                 let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
                 console.log("Back from buildSchedule");
                 let job = scheduleHelpers.buildJob(
