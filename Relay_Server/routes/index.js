@@ -101,7 +101,7 @@ router.get('/schedule', function(req, res) {
 // add a new chedule
 router.post('/schedule', 
     middleware.verifyAdminAccount, 
-    middleware.checkScheduleInputs, 
+    scheduleMiddleware.checkScheduleInputs, 
     outletMiddleware.isGpioConfigured(outletController), 
     scheduleMiddleware.createSchedules(scheduleController, outletController)
 );
@@ -120,7 +120,7 @@ router.get('/schedule/:schedule_id', function(req, res) {
 // edit an existing schedule
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
-    outletMiddleware.isGpioConfigured(outletController), 
+    scheduleMiddleware.isGpioConfigured(outletController), 
     scheduleMiddleware.updateSchedule(scheduleController, outletController)
 );
 // delete an existing schedule
