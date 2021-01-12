@@ -497,11 +497,11 @@ let scheduleMiddleware = {
 
                 let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
                     nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
-                    my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
-                    my_schedule = {... updatedSchedule };
-                
-          
-                my_schedule['schedule'] = my_time;
+                    my_schedule = {
+                        ... updatedSchedule,
+                        schedule: = updatedSchedule['schedule']['start_time'] || 
+                                    updatedSchedule['schedule']['end_time'],
+                    };
                     
                 if(prevScheduleId !== undefined){
                     my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
