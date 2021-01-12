@@ -134,7 +134,7 @@ var scheduleObj = {
     },
     createSchedules: async function(req, res){
 
-    }
+    },
     // Finds schedules (by the GPIO we are checking against) that would occur on the same day
     // and returns the indices refering to those schedules in our scheduleArr
     findSameDaySchedulesAndRetIdxs: function(schedule_config){
