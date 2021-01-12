@@ -149,7 +149,7 @@ router.put('/schedule/:schedule_id', middleware.verifyAdminAccount,  middleware.
     }
 });
 // delete an existing schedule
-router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, scheduleController.deleteSchedule);
+router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, middleware.deleteSchedule);
 
 
 // Returns the date of the next planned invocation of our schedule

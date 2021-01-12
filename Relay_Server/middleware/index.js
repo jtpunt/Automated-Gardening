@@ -501,6 +501,17 @@ var middleware = {
             }
             res.status(200).end();
         }
+    }, 
+    deleteSchedule: (scheduleController) => {
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+            try{
+                scheduleController.deleteSchedule(schedule_id);
+                res.status(200).end();
+            }catch(err){
+                res.status(404).send(err.toString());
+            }
+        }
     }
 }
 module.exports = middleware
