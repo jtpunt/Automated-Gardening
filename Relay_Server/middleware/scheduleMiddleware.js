@@ -500,7 +500,7 @@ let scheduleMiddleware = {
                     my_schedule = {
                         ... updatedSchedule,
                         schedule: {  
-                            ...updatedSchedule['schedule']['start_time'] || ...updatedSchedule['schedule']['end_time'],
+                            updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
                             prevScheduleId: updatedSchedule['schedule']['prevScheduleId'],
                             nextScheduleId: updatedSchedule['schedule']['nextScheduleId']
                         }
