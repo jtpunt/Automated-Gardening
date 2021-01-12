@@ -545,7 +545,7 @@ var scheduleObj = {
                 prevScheduleId    = updatedSchedule['schedule']['prevScheduleId'],
                 nextScheduleId    = updatedSchedule['schedule']['nextScheduleId'],
                 updated_schedule_config = {
-                    ... updatedSchedule 
+                    ... updatedSchedule,
                     schedule: updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time']
                 };
 
