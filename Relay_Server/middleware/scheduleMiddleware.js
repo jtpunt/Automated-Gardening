@@ -147,11 +147,11 @@ let scheduleMiddleware = {
                     if(typeof newSchedule['device']['desired_state'] === 'boolean')
                         throw new Error("Desired state must be 'true' or 'false'.")
                 }
-                // sanitizedSchedule['device'] = {
-                //     id: newSchedule['device']['id'],
-                //     gpio: newSchedule['device']['gpio'],
-                //     desired_state: newSchedule['device']['desired_state']
-                // }
+                sanitizedSchedule['device'] = {
+                    id: newSchedule['device']['id'],
+                    gpio: newSchedule['device']['gpio'],
+                    desired_state: newSchedule['device']['desired_state']
+                }
             }
         }
             req.body = sanitizedSchedule;
