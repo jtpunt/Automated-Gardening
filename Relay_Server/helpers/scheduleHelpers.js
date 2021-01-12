@@ -18,24 +18,20 @@ let scheduleHelpers = {
     buildSchedule: function(schedule_config){
         var scheduleObj = {};
         if(schedule_config['schedule']){
-
+            // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
+            // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
+            let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+            
             const schedule  = schedule_config['schedule'] || undefined,
-                  second    = schedule['second'],
-                  minute    = schedule['minute'],
-                  hour      = schedule['hour'],
+                  second    = sanitize_input(schedule['second']),
+                  minute    = sanitize_input(schedule['minute']),
+                  hour      = sanitize_input(schedule['hour']),
                   date      = Number(schedule['date'])  || undefined,
-                  month     = schedule['month'],
+                  month     = sanitize_input(schedule['month']),
                   year      = Number(schedule['year']) || undefined,
                   dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined,
                   today     = new Date();
 
-            if(second === '00')
-                second = 0;
-            if(minute === '00')
-                minute = 0;
-            if(hour == '00')
-                hour = 0;
-            console.log(`in buildSchedule with: ${second}`);
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND)
