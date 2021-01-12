@@ -116,11 +116,38 @@ router.get('/schedule/:schedule_id', function(req, res) {
     }); 
 });
 // edit an existing schedule
-router.put('/schedule/:schedule_id', 
-    middleware.verifyAdminAccount,  
-    middleware.isGpioConfigured(outletController),
-    middleware.updateSchedule(scheduleController)
-);
+router.put('/schedule/:schedule_id', middleware.verifyAdminAccount,  middleware.isGpioConfigured(outletController), function(req, res){
+    console.log("in put route with ", req.body);
+    var schedule_id = req.params.schedule_id;
+    var updatedSchedule = req.body;
+    try{
+        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
+
+        let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
+            nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
+            my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
+            my_schedule = {... updatedSchedule };
+        
+  
+        my_schedule['schedule'] = my_time;
+            
+        if(prevScheduleId !== undefined){
+            my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
+            console.log("My schedule if: " + my_schedule);
+        }else if(nextScheduleId !== undefined){
+            my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+            console.log("My schedule else if: " + my_schedule);
+        }else {
+            console.log("My schedule else:" + my_schedule);
+        } 
+        scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
+        console.log("Successfully Updated!");
+        res.status(200).end();
+    
+    }catch(err){
+        res.status(404).end();
+    }
+});
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,
