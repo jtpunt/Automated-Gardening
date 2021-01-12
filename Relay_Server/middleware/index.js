@@ -523,7 +523,7 @@ var middleware = {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
             var updatedSchedule = req.body;
-            try{
+       
                 // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
 
                 let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
@@ -548,9 +548,7 @@ var middleware = {
                 console.log("Successfully Updated!");
                 res.status(200).send("Successfully updated!");
             
-            }catch(err){
-                res.status(404).send(err.toString);
-            }
+            
         }
     }
 }
