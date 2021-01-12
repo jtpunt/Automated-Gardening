@@ -666,7 +666,7 @@ var scheduleObj = {
     // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
     // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
     deleteSchedule: function(scheduleController) {
-        let self = scheduleController;
+        let self = this;
         console.log("in delete schedule");
         return function(req, res, next){
 
