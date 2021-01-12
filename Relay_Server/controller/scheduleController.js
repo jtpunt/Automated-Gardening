@@ -1,6 +1,5 @@
 var Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
-    scheduleHelpers = require("../helpers/scheduleHelpers"),
     ip              = require("ip"),
     async           = require("asyncawait/async"),
     await           = require("asyncawait/await"),
@@ -10,6 +9,7 @@ var Scheduler       = require("../models/scheduler"),
 
 var scheduleObj = {
     scheduleArr: [],
+    scheduleHelpers = require("../helpers/scheduleHelpers"),
     // params 1: schedule_config
     // params 2:
     // params 3:
@@ -578,8 +578,8 @@ var scheduleObj = {
                         throw new Error("Invalid id provided for nextScheduleId");
                 }
                 self.cancelSchedule(schedule_id);
-                let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
-                let job = scheduleHelpers.buildJob(
+                let myScheduleObj = self.scheduleHelpers.buildSchedule(updated_schedule_config);
+                let job = self.scheduleHelpers.buildJob(
                     myScheduleObj, 
                     activateRelayFn, 
                     context, 
