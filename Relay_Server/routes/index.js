@@ -3,18 +3,19 @@
 //var Scheduler     = require("../models/scheduler");
 // Living room lights use 'out' with an initial state of 0, otherwise, set to 'high' with an initial state of 1
 
-var express = require("express"),
-    schedule = require('node-schedule'),
-    Device = require("../models/device"),
+var express            = require("express"),
+    schedule           = require('node-schedule'),
+    Device             = require("../models/device"),
     outletController   = require("../controller/outletController.js"),
     scheduleController = require("../controller/scheduleController.js"),
-    middleware = require("../middleware/index"),
+    middleware         = require("../middleware/index"),
     scheduleMiddleware = require("../middleware/scheduleMiddleware"),
-    ip = require("ip"),
-    localIP = ip.address(),
-    async         = require("asyncawait/async"),
-    await         = require("asyncawait/await"),
-    router    = express.Router();
+    outletMiddleware   = require("../middleware/outletMiddleware"),
+    ip                 = require("ip"),
+    localIP            = ip.address(),
+    async              = require("asyncawait/async"),
+    await              = require("asyncawait/await"),
+    router             = express.Router();
 var APPROVED_GPIO = [2, 3];
 
 process.on('SIGINT', () => {
@@ -101,7 +102,7 @@ router.get('/schedule', function(req, res) {
 router.post('/schedule', 
     middleware.verifyAdminAccount, 
     middleware.checkScheduleInputs, 
-    middleware.isGpioConfigured(outletController), 
+    outletMiddleware.isGpioConfigured(outletController), 
     scheduleMiddleware.createSchedules(scheduleController, outletController)
 );
 router.get('/schedule/:schedule_id', function(req, res) {
@@ -119,7 +120,7 @@ router.get('/schedule/:schedule_id', function(req, res) {
 // edit an existing schedule
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
-    middleware.isGpioConfigured(outletController), 
+    outletMiddleware.isGpioConfigured(outletController), 
     scheduleMiddleware.updateSchedule(scheduleController, outletController)
 );
 // delete an existing schedule
