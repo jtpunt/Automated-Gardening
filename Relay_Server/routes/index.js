@@ -98,20 +98,7 @@ router.get('/schedule', function(req, res) {
 });
 // add a new chedule
 router.post('/schedule', middleware.checkScheduleInputs, middleware.verifyAdminAccount, middleware.isGpioConfigured(outletController), middleware.createSchedules(scheduleController, outletController), async function(req, res){
-    var newSchedule = req.body;
-    try{
-        console.log("newSchedule: ", newSchedule);
-        // Make sure that the gpio is configured by the relay device
-        // if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
-        //     throw new Error("Invalid GPIO input");
-        // }
-        // you can set a schedule with a start_time, end_time, start_date and end_date
-        
-    }catch(err){
-        console.log(`err: ${err}`);
-        //res.write(err.toString());
-        res.status(404).send(err.toString());
-    }
+    
 });
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
