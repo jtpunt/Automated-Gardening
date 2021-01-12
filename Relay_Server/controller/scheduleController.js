@@ -537,7 +537,7 @@ var scheduleObj = {
     // Updates a schedule by id, updates the schedule config in the scheduleArr and then places the associated outlet in the correct state
     // (on/off) since the new schedule details may require it to turn on or off based on whatever state the associated outlet was in beforehand
     editSchedule: function(scheduleHelpers, activateRelayFn, context){
-        let self = this,
+        let self = this;
         return function(req, res, next){
             let schedule_id       = req.params.schedule_id,
                 updatedSchedule   = req.body,
