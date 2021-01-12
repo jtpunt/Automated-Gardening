@@ -121,7 +121,8 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
     outletMiddleware.isGpioConfigured(outletController), 
-    scheduleMiddleware.updateSchedule(scheduleController, outletController)
+    scheduleController.updateSchedule(outletController.activateRelay, outletController)
+    // scheduleMiddleware.updateSchedule(scheduleController, outletController)
 );
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
@@ -152,7 +153,7 @@ router.get('/schedule/:schedule_id/date', function(req, res) {
 });
 
 
-router.post('/schedule/:schedule_id/cancel', middleware.verifyAdminAccount ,function(req, res) {
+router.post('/schedule/:schedule_id/cancel', middleware.verifyAdminAccount, function(req, res) {
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     try{
@@ -181,7 +182,7 @@ router.post('/schedule/:schedule_id/cancel/next', middleware.verifyAdminAccount 
         res.status(404).end();
     }
 });
-router.get('/schedule/:schedule_id/resume', function(req, res) {
+router.get('/schedule/:schedule_id/resume', middleware.verifyAdminAccount, function(req, res) {
     var schedule_id = req.params.schedule_id;
     console.log(typeof schedule_id);
     try{
@@ -222,7 +223,7 @@ router.get('/activate/:id', function(req, res){
         res.status(200).end();
     }
 });
-router.get('/activate/:id/:desired_state', function(req, res){
+router.get('/activate/:id/:desired_state', middleware.verifyAdminAccount, function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
     var desired_state = Boolean(req.params.desired_state);

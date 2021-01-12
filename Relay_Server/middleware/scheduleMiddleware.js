@@ -1,4 +1,20 @@
 let scheduleMiddleware = {
+    cancelSchedule(scheduleController){
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+            console.log(typeof schedule_id);
+            try{
+                scheduleController.cancelSchedule(schedule_id);
+                console.log("Successfully Canceled!");
+                res.status(200).end();
+            }catch(err){
+                console.log("Error caught!\n");
+                console.log(err);
+                res.write("404: ", JSON.stringify(err));
+                res.status(404).end();
+            }
+        }
+    },
     checkScheduleInputs(req, res, next){
         var newSchedule = req.body;
         try{
