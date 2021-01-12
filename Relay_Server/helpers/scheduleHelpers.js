@@ -35,6 +35,7 @@ let scheduleHelpers = {
                 minute = 0;
             if(hour == '00')
                 hour = 0;
+            console.log(`in buildSchedule with: ${second}`);
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND)
