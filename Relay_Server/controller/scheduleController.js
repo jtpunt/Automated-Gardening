@@ -665,13 +665,14 @@ var scheduleObj = {
     // schedule_id - the mongo id of the schedule we are trying to access and delete
     // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
     // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
-    deleteSchedule: () =>{
+    deleteSchedule: () => {
         let self = this;
         console.log("in delete schedule");
         return function(req, res, next){
 
-             var schedule_id = req.params.schedule_id;
-                index = self.findScheduleIndex(schedule_id.toString());
+            var schedule_id = req.params.schedule_id;
+            console.log(`In deleteSchedule Function with ${schedule_id}`);
+            var index = self.findScheduleIndex(schedule_id.toString());
                 
             console.log(`Match found at index: ${index}`);
             console.log(`In deleteSchedule Function with ${schedule_id}`);
