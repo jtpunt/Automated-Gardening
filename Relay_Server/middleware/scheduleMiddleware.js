@@ -501,17 +501,10 @@ let scheduleMiddleware = {
                         ... updatedSchedule,
                         schedule:   updatedSchedule['schedule']['start_time'] || 
                                     updatedSchedule['schedule']['end_time'],
+                        schedule['prevScheduleId']: updatedSchedule['schedule']['prevScheduleId'],
+                        schedule['nextScheduleId']: updatedSchedule['schedule']['nextScheduleId']
                     };
                     
-                if(prevScheduleId !== undefined){
-                    my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
-                    console.log("My schedule if: " + my_schedule);
-                }else if(nextScheduleId !== undefined){
-                    my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
-                    console.log("My schedule else if: " + my_schedule);
-                }else {
-                    console.log("My schedule else:" + my_schedule);
-                } 
 
                 scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
                 console.log("Successfully Updated!");
