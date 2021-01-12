@@ -119,12 +119,12 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
     middleware.isGpioConfigured(outletController), 
-    middleware.updateSchedule(scheduleController, outletController)
+    scheduleController.editSchedule(outletController.activateRelay, outletController)
 );
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,
-    scheduleController.deleteSchedule(scheduleController)
+    scheduleController.deleteSchedule()
 );
 
 
