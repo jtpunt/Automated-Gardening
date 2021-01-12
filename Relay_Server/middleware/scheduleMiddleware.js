@@ -500,11 +500,11 @@ let scheduleMiddleware = {
                     my_schedule = {
                         ... updatedSchedule,
                         schedule:   updatedSchedule['schedule']['start_time'] || 
-                                    updatedSchedule['schedule']['end_time'],
+                                    updatedSchedule['schedule']['end_time']
                     };
                     
-                my_schedule['schedule']['prevScheduleId']: updatedSchedule['schedule']['prevScheduleId'],
-                my_schedule['schedule']['nextScheduleId']: updatedSchedule['schedule']['nextScheduleId']
+                my_schedule['schedule']['prevScheduleId'] = updatedSchedule['schedule']['prevScheduleId'],
+                my_schedule['schedule']['nextScheduleId'] = updatedSchedule['schedule']['nextScheduleId']
 
                 scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
                 console.log("Successfully Updated!");
