@@ -361,14 +361,14 @@ let scheduleMiddleware = {
                 newSchedule['schedule']['end_time']   !== undefined
                 ){
                 console.log("New schedule with start_time, and end_time");
-                let device_start = { // we need to rewrite our device values for our start schedule
-                    ... newSchedule['device'], // take every key: value stored in the 'device' key
-                    desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
-                },
-                device_end = { // // we need to rewrite our device values for our end schedule
-                    ... newSchedule['device'],
-                    desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
-                }
+                // let device_start = { // we need to rewrite our device values for our start schedule
+                //     ... newSchedule['device'], // take every key: value stored in the 'device' key
+                //     desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
+                // },
+                // device_end = { // // we need to rewrite our device values for our end schedule
+                //     ... newSchedule['device'],
+                //     desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
+                // }
                 let on_start_time = {
                     ... newSchedule['schedule'],
                     ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
@@ -381,12 +381,18 @@ let scheduleMiddleware = {
                 let on_schedule = { // on schedule
                     ... newSchedule,
                     schedule: on_start_time,
-                    device: device_start
+                    device: {
+                        ... newSchedule['device'], // take every key: value stored in the 'device' key
+                        desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
+                    }
                 },
                 off_schedule   = { // off schedule
                     ... newSchedule, 
                     schedule: off_end_time,
-                    device: device_end
+                    device: {
+                        ... newSchedule['device'],
+                        desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
+                    }
                 };
 
                 // let new_on_schedule = scheduleController.buildSchedule(start_time),
