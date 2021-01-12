@@ -1,6 +1,6 @@
 var Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
-    //scheduleHelpers = require("../helpers/scheduleHelpers"),
+    //self = require("../helpers/self"),
     schedule        = require('node-schedule'),
     ip              = require("ip"),
     async           = require("asyncawait/async"),
@@ -30,7 +30,7 @@ var scheduleObj = {
     // params 4: desired_state is 0 (off) or 1(on)
     // pre:
     // post:
-        buildSchedule: function(schedule_config){
+    buildSchedule: function(schedule_config){
         var scheduleObj = {};
         if(schedule_config['schedule']){
             // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
@@ -207,8 +207,8 @@ var scheduleObj = {
 
             
         // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
-        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-        let job = scheduleHelpers.buildJob(
+        let myScheduleObj = self.buildSchedule(schedule_config);
+        let job = self.buildJob(
             myScheduleObj, 
             activateRelayFn, 
             context, 
@@ -223,8 +223,8 @@ var scheduleObj = {
     },
     createSchedule: async function(new_schedule_config, fn, context, ...args){
         let self                = this,
-            myScheduleObj       = scheduleHelpers.buildSchedule(new_schedule_config),
-            job                 = scheduleHelpers.buildJob(
+            myScheduleObj       = self.buildSchedule(new_schedule_config),
+            job                 = self.buildJob(
             myScheduleObj, 
             fn, 
             context, 
@@ -584,10 +584,10 @@ var scheduleObj = {
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
-                            let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
+                            let myScheduleObj = self.buildSchedule(schedule_config);
                             if(schedule_config['schedule']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
-                                let job = scheduleHelpers.buildJob(
+                                let job = self.buildJob(
                                     myScheduleObj, 
                                     self.deleteSchedule, 
                                     self,
@@ -597,7 +597,7 @@ var scheduleObj = {
                                 console.log(`obj: ${JSON.stringify(obj)}`);
                                 self.setSchedule(obj);
                             }else{
-                                let job = scheduleHelpers.buildJob(
+                                let job = self.buildJob(
                                     myScheduleObj, 
                                     activateRelayFn, 
                                     context, 
@@ -686,8 +686,8 @@ var scheduleObj = {
                         throw new Error("Invalid id provided for nextScheduleId");
                 }
                 self.cancelSchedule(schedule_id);
-                let myScheduleObj = scheduleHelpers.buildSchedule(updated_schedule_config);
-                let job = scheduleHelpers.buildJob(
+                let myScheduleObj = self.buildSchedule(updated_schedule_config);
+                let job = self.buildJob(
                     myScheduleObj, 
                     activateRelayFn, 
                     context, 
