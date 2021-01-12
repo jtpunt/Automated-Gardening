@@ -158,7 +158,7 @@ var middleware = {
             if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
                 res.status(404).send("Invalid GPIO input");
             }else{
-                next();
+                return next();
             }
         }
     },
