@@ -150,7 +150,7 @@ var middleware = {
                 }
             }
         }
-        next();
+        return next();
 	},
     isGpioConfigured: (outletController) => {
         return function(req, res, next){
