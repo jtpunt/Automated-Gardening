@@ -544,10 +544,11 @@ var scheduleObj = {
                 updatedSchedule   = req.body,
                 prevScheduleId    = updatedSchedule['schedule']['prevScheduleId'],
                 nextScheduleId    = updatedSchedule['schedule']['nextScheduleId'],
-                my_time           = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
-                updated_schedule_config = {... updatedSchedule };
+                updated_schedule_config = {
+                    ... updatedSchedule 
+                    schedule: updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time']
+                };
 
-            updated_schedule_config['schedule'] = my_time;
             if(prevScheduleId !== undefined){
                 updated_schedule_config['schedule']['prevScheduleId'] = prevScheduleId;
                 console.log("My schedule if: " + updated_schedule_config);
