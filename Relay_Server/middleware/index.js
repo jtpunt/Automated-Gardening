@@ -518,6 +518,39 @@ var middleware = {
                 res.status(404).send(err.toString());
             }
         }
+    },
+    updateSchedule: (scheduleController) => {
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+            var updatedSchedule = req.body;
+            try{
+                // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
+
+                let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
+                    nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
+                    my_time = updatedSchedule['schedule']['start_time'] || updatedSchedule['schedule']['end_time'],
+                    my_schedule = {... updatedSchedule };
+                
+          
+                my_schedule['schedule'] = my_time;
+                    
+                if(prevScheduleId !== undefined){
+                    my_schedule['schedule']['prevScheduleId'] = prevScheduleId;
+                    console.log("My schedule if: " + my_schedule);
+                }else if(nextScheduleId !== undefined){
+                    my_schedule['schedule']['nextScheduleId'] = nextScheduleId;
+                    console.log("My schedule else if: " + my_schedule);
+                }else {
+                    console.log("My schedule else:" + my_schedule);
+                } 
+                scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
+                console.log("Successfully Updated!");
+                res.status(200).end();
+            
+            }catch(err){
+                res.status(404).end();
+            }
+        }
     }
 }
 module.exports = middleware
