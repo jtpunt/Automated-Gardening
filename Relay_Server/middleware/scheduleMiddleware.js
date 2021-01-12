@@ -59,6 +59,7 @@ let scheduleMiddleware = {
                 if(newSchedule['schedule']['end_time'] === undefined)
                     throw new Error("End time schedule configuration details not found.")
                 else{
+                    sanitizedSchedule['schedule'] = { end_time: undefined}
                     // Second, minute, and hour details are required for end_time (off)
                     if(newSchedule['schedule']['end_time']['second'] === undefined)
                         throw new Error("End Time Second configuration details not found.")
