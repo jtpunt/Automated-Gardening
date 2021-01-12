@@ -39,7 +39,7 @@ let scheduleHelpers = {
                 else 
                     throw new Error(`second input must be >= ${MIN_SECOND} or <= ${MAX_SECOND}`);
             }else 
-                throw new Error("Invalid second input!");
+                throw new Error(`Invalid second input! - ${second}`);
             // Validate minute input
             if(minute !== undefined && !minute.isNaN && Number.isInteger(minute)){
                 if(minute >= MIN_MINUTE && minute <= MAX_MINUTE)
