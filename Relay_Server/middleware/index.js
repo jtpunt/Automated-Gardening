@@ -157,6 +157,17 @@ var middleware = {
         //res.write(err.toString());
         	res.status(404).send(exc.toString());
 		}
-	}
+	},
+    isGpioConfigured: (outletController) => {
+        return function(req, res, next){
+            var newSchedule = req.body;
+            if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
+                throw new Error("Invalid GPIO input");
+            }else{
+                console.log("gpio is configured in system");
+            }
+            next();
+        }
+    }
 }
 module.exports = middleware
