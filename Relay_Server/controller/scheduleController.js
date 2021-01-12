@@ -792,7 +792,7 @@ var scheduleObj = {
                         res.status(200).send("Successfully updated!");
                     }
                 });
-            }
+            
         }
 
 
