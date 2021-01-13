@@ -101,13 +101,15 @@ router.get('/schedule', function(req, res) {
 // add a new chedule
 router.post('/schedule', 
     middleware.verifyAdminAccount, 
-    scheduleMiddleware.checkScheduleInputs, async function(req, res){
+    scheduleMiddleware.checkScheduleInputs, 
+    outletMiddleware.isGpioConfigured(outletController),
+    async function(req, res){
         var newSchedule = req.body;
         try{
             // Make sure that the gpio is configured by the relay device
-            if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
-                throw new Error("Invalid GPIO input");
-            }
+            // if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
+            //     throw new Error("Invalid GPIO input");
+            // }
             if(
                 newSchedule['schedule']['start_time'] !== undefined && 
                 newSchedule['schedule']['end_time']   !== undefined &&  
