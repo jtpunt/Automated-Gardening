@@ -10,6 +10,13 @@ var Scheduler       = require("../models/scheduler"),
 
 var scheduleMethods = {
     scheduleObj: {},
+    getDateOfNextInvocation: function(schedule_id){
+        if(schedule_id in this.scheduleObj){
+            return this.scheduleObj[schedule_id]['job'].nextInvocation();
+        }else{
+            return `Schedule ${schedule_id} not found!`;
+        }
+    },
     // invalidates any job. All  planned invocations will be canceled
     // cancelSchedule: function(schedule_id){
     //     let self  = this,
