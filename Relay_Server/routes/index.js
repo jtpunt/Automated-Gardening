@@ -132,7 +132,7 @@ router.delete('/schedule/:schedule_id',
 
 // Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', 
-    middleware.verifyAdminAccount,
+    // middleware.verifyAdminAccount,
     scheduleMiddleware.getDateOfNextInvocation(scheduleController)
 );
 
