@@ -64,18 +64,15 @@
         	<label class="col-sm-6 col-form-label" for="DayOfWeekCheckBox">Set Day of Week?</label>
             <input class="col-sm-20" type="checkbox" name="DayOfWeekCheckBox" onclick="showExtraInputs('<%=ipStr%>DayOfWeek')">
         </div>
-
-            
-        </script>
         <div class="form-group row" id="<%=ipStr%>StartDate" style="display:none">
         	<label class="col-sm-6 col-form-label" for="date">Set Date: </label>
-        	<input class="col-sm-20" type="date" name="schedule[start_date]">
+        	<input class="col-sm-20 minDatePicker" type="date" name="schedule[start_date]">
         </div>
         <div class="form-group row" id="<%=ipStr%>EndDate" style="display:none">
             <label class="col-sm-6 col-form-label" for="date">Set End Date: </label>
-            <input class="col-sm-20" type="date" name="schedule[end_date]">
+            <input class="col-sm-20 minDatePicker" type="date" name="schedule[end_date]">
         </div>
-        <div class="form-group row" id="<%=ipStr%>DayOfWeek" style="display:none" value="2020-10-13">
+        <div class="form-group row" id="<%=ipStr%>DayOfWeek" style="display:none">
         	<label class="col-sm-6 col-form-label" for="weekDays-selector">Select day of week: </label>
         	<div class="weekDays-selector" id="weekDays-selector">
         		<label for="<%=ipStr%>weekday-sun" id='<%=ipStr%>sun' class="deselectedCheckbox">S</label>

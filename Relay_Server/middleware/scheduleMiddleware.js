@@ -285,7 +285,7 @@ let scheduleMiddleware = {
                     on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
 
                     let on_end_schedule_args = [
-                        on_end_schedule, 
+                        off_end_schedule, 
                         scheduleController.deleteSchedule, 
                         scheduleController, 
                         onScheduleId

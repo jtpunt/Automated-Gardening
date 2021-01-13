@@ -35,6 +35,21 @@ document.addEventListener("DOMContentLoaded", function(event){
         }
     }
 })
+document.addEventListener("DOMContentLoaded", function(event){
+    adjustMinDatePickers();
+});
+function adjustMinDatePickers(){
+    let datePickerClassName = "minDatePicker",
+        datePickers = document.getElementsByClassName(datePickerClassName);
+
+    let today = new Date(),
+        yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1)
+
+    for(let i = 0; i < datePickers.length; i++){
+        datePickers[i].min = yesterday.toISOString().split("T")[0];
+    }
+}
 function handleTimeElapsed(startTimeEle, endTimeEle, timeElapsedEle){
     let startTimeValue = startTimeEle.value,
         startTimeNum   = startTimeEle.valueAsNumber,
@@ -104,6 +119,10 @@ function selectCheckbox(id){
 // There are two boostrap collapse menus, when 1 is toggled, the other menu should collapse and vice versa, so that both menus are not displayed at the same time
 function collapseMenu(id){
 	$('#' + id).collapse('hide');
+}
+function updateMinDate(e){
+    console.log(e);
+    console.log("in updateMinDate");
 }
 function createDayOfWeekInput(){
     let div,
