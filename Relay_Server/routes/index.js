@@ -468,15 +468,14 @@ router.get('/schedule/:schedule_id', function(req, res) {
     }); 
 });
 // edit an existing schedule
-router.put('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req, res){
-    console.log("in put route with ", req.body);
-    var schedule_id = req.params.schedule_id;
-    var updatedSchedule = req.body;
-    try{
-        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-        if(outletController.findOutletByGpio(Number(updatedSchedule['device']['gpio'])) === -1){
-            throw new Error("Invalid GPIO input");
-        }else{
+router.put('/schedule/:schedule_id', 
+    middleware.verifyAdminAccount,  
+    outletMiddleware.isGpioConfigured(outletController),
+    function(req, res){
+        console.log("in put route with ", req.body);
+        var schedule_id = req.params.schedule_id;
+        var updatedSchedule = req.body;
+        try{
             let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
                 nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
                 my_schedule = {
@@ -491,11 +490,12 @@ router.put('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req
             scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
             console.log("Successfully Updated!");
             res.status(200).end();
+            
+        }catch(err){
+            res.status(404).end();
         }
-    }catch(err){
-        res.status(404).end();
     }
-});
+);
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req, res){
     var schedule_id = req.params.schedule_id;
