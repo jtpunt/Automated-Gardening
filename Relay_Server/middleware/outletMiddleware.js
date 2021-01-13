@@ -1,8 +1,9 @@
 var outletMiddleware = {
     isGpioConfigured: (outletController) => {
         return function(req, res, next){
-            var newSchedule = req.body;
-            if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
+            let newSchedule = req.body,
+            	requestedGpio = Number(newSchedule['device']['gpio'])
+            if(outletController.findOutletByGpio(requestedGpio) === -1){
                 res.status(404).send("Invalid GPIO input");
             }else{
 	            next();
