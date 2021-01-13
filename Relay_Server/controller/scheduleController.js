@@ -33,6 +33,7 @@ var scheduleMethods = {
     },
     getDateOfNextInvocation: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
+        console.log(`job: ${job}`);
         if(job === undefined)
             return job.nextInvocation();
         else
