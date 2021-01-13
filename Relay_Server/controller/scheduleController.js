@@ -614,7 +614,7 @@ var scheduleMethods = {
                 console.log("successfully updated schedule");
                 console.log(`Schedule before: ${JSON.stringify(self.scheduleObj[schedule_id]['schedule_config'])}`);
                 self.scheduleObj[schedule_id]['schedule_config'] = updated_schedule_config;
-                console.log(`Schedule After: ${JSON.stringify(self.scheduleObj][schedule_id]['schedule_config'])}`);
+                console.log(`Schedule After: ${JSON.stringify(self.scheduleObj[schedule_id]['schedule_config'])}`);
             }
         });
     },
