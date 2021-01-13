@@ -7,7 +7,7 @@ var middleware = {
 	        notAdminMsg = "you must be an admin to perform that action";
 
 	    if(admin_id === undefined)
-	    	res.status(404).send(notAdminMsg).end();
+	    	res.status(404).send(notAdminMsg);
 	    else{
 			User.findOne({"_id":admin_id.toString()}, function(err, user){
 			    if(err){
