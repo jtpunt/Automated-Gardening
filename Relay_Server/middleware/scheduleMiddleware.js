@@ -458,8 +458,8 @@ let scheduleMiddleware = {
                     let onScheduleId = await scheduleController.createSchedule(...on_schedule_args);
                     off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                    scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
-
+                    //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                    scheduleController.updateScheduleRelationship(offScheduleId, off_schedule);
                 }
             }
             // This functionality has no use for the smart gardening application, however,

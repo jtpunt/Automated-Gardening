@@ -662,6 +662,26 @@ var scheduleObj = {
             }
         });
     },
+    updateScheduleRelationship: function(schedule_id, updated_schedule_config){
+        let self              = this,
+            schedule_conflict = false,
+            today             = new Date(),
+            onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
+            offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
+            index             = self.findScheduleIndex(schedule_id);
+
+        Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
+            if(err){
+                console.log(err)
+            }else{
+                console.log("successfully updated schedule");
+                console.log(`Schedule before: ${JSON.stringify(self.scheduleArr[index]['schedule_config'])}`);
+                self.scheduleArr[index]['schedule_config'] = updated_schedule_config;
+                console.log(`Schedule After: ${JSON.stringify(self.scheduleArr[index]['schedule_config'])}`);
+                self.startActiveSchedules();
+            }
+        });
+    },
     // schedule_id - the mongo id of the schedule we are trying to access and delete
     // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
     // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
