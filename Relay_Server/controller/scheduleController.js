@@ -879,7 +879,7 @@ var scheduleObj = {
 
             //res.status(200).end();
         }
-    }
+    },
     findScheduleIndex: function(schedule_id){
         let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
         if(index === -1){
