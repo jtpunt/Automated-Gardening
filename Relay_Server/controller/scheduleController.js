@@ -18,44 +18,43 @@ var scheduleMethods = {
         }
     },
     // invalidates any job. All  planned invocations will be canceled
-    // cancelSchedule: function(schedule_id){
-    //     let self  = this,
-    //         job   = self.getScheduleJobById(schedule_id);
-                
-    //     console.log(`Next Schedule for ${job.nextInvocation()}`)
-    //     job.cancel();
-    //     console.log("Has been successfully canceled");
-    //     console.log(`Next Schedule for ${job.nextInvocation()}`)
-    // },
-    // // invalidates the next planned invocation
-    // cancelNextSchedule: function(schedule_id, activateRelayFn, context){
-    //     let self  = this,
-    //         job   = self.getScheduleJobById(schedule_id);
-                
-    //     console.log(`Next Schedule for ${job.nextInvocation()}`)
-    //     job.cancelNext();
-    //     console.log("Has been successfully canceled");
-    //     console.log(`Next Schedule for ${job.nextInvocation()}`)
-    // },
-    // startActiveSchedules: function(activateRelayFn, context){
-    //     let self  = this,
-    //         today = new Date();
+    cancelSchedule: function(schedule_id){
+        if(schedule_id in this.scheduleObj){
+            console.log(`Next Schedule before ${job.nextInvocation()} being canceled`);
+            this.scheduleObj[schedule_id]['job'].cancel();
+            console.log(`Next Schedule after being ${job.nextInvocation()} canceled`)
+        }
+    },
+    // invalidates the next planned invocation
+    cancelNextSchedule: function(schedule_id, activateRelayFn, context){
+        if(schedule_id in this.scheduleObj){
+            console.log(`Next Schedule before ${job.nextInvocation()} being canceled`);
+            this.scheduleObj[schedule_id]['job'].cancelNext();
+            console.log(`Next Schedule after being ${job.nextInvocation()} canceled`)
+        }
+    },
+    startActiveSchedules: function(activateRelayFn, context){
+        for(const [key, value] of Object.entries(this.scheduleObj)){
+            console.log(`key: ${key} value: ${JSON.stringify(value)}`);
+        }
+        // let self  = this,
+        //     today = new Date();
             
-    //     self.scheduleArr.forEach(function(schedule_obj){
-    //         //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
-    //         let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
-    //             nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
-    //             device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
+        // self.scheduleArr.forEach(function(schedule_obj){
+        //     //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
+        //     let desired_state  = Boolean(schedule_obj['schedule_config']['device']['desired_state']),
+        //         nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'],
+        //         device_gpio    = Number(schedule_obj['schedule_config']['device']['gpio']);
             
-    //         if(nextScheduleId === undefined)
-    //             console.log("nextScheduleId is undefined");
-    //         else{
-    //             let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
-    //             if(isScheduleActive === true)
-    //                 activateRelayFn.call(context,  device_gpio, desired_state);
-    //         }
-    //     });
-    // },
+        //     if(nextScheduleId === undefined)
+        //         console.log("nextScheduleId is undefined");
+        //     else{
+        //         let isScheduleActive = self.scheduleIsActive(schedule_obj['schedule_config'], today);
+        //         if(isScheduleActive === true)
+        //             activateRelayFn.call(context,  device_gpio, desired_state);
+        //     }
+        // });
+    },
     // resumeSchedule: function(schedule_id, activateRelayFn, context){
     //     let self            = this,
     //         reschedule      = true,
@@ -472,7 +471,7 @@ var scheduleMethods = {
          
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
-                        //self.startActiveSchedules(activateRelayFn, context);
+                        self.startActiveSchedules(activateRelayFn, context);
                     }).catch(function(err){
                         console.log(`Error caught: ${err}`);
                     })
