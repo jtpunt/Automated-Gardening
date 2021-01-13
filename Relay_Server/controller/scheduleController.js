@@ -26,7 +26,7 @@ var scheduleMethods = {
             return this.scheduleObj[schedule_id]['job'];
     },
     getScheduleConfigById: function(schedule_id){
-        if(!doesScheduleExist(schedule_id))
+        if(!this.doesScheduleExist(schedule_id))
             return undefined;
         else
             return this.scheduleObj[schedule_id]['schedule_config'];
