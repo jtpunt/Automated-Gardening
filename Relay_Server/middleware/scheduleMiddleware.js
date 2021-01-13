@@ -532,10 +532,7 @@ let scheduleMiddleware = {
                 
                 res.status(200).end();
             }catch(err){
-                console.log("Error caught!\n");
-                console.log(err);
-                res.write("404: ", JSON.stringify(err));
-                res.status(404).end();
+                res.status(404).send(err.toString());
             }
         }
     },
