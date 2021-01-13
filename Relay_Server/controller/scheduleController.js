@@ -679,7 +679,6 @@ var scheduleObj = {
                 console.log(`Schedule before: ${JSON.stringify(self.scheduleArr[index]['schedule_config'])}`);
                 self.scheduleArr[index]['schedule_config'] = updated_schedule_config;
                 console.log(`Schedule After: ${JSON.stringify(self.scheduleArr[index]['schedule_config'])}`);
-                self.startActiveSchedules();
             }
         });
     },

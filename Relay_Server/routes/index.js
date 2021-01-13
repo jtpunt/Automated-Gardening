@@ -239,6 +239,7 @@ router.post('/schedule',
                     //scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
                     scheduleController.updateScheduleRelationship(offScheduleId, off_schedule);
                     scheduleController.updateScheduleRelationship(onScheduleId, on_schedule);
+                    scheduleController.startActiveSchedules(outletController.activateRelay, outletController);
                     console.log(`endScheduleId: ${onEndScheduleId}`);
                     console.log(`offScheduleId: ${offEndScheduleId}`);
                 }
@@ -325,6 +326,7 @@ router.post('/schedule',
 
                     //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
                     scheduleController.updateScheduleRelationship(offScheduleId, off_schedule);
+                    scheduleController.startActiveSchedules(outletController.activateRelay, outletController);
                 }
             }
             // you can set a schedule with a start time and end time
@@ -406,6 +408,7 @@ router.post('/schedule',
 
                     //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
                     scheduleController.updateScheduleRelationship(offScheduleId, off_schedule);
+                    scheduleController.startActiveSchedules(outletController.activateRelay, outletController);
                 }
             }
             // This functionality has no use for the smart gardening application, however,
