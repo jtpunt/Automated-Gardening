@@ -71,7 +71,7 @@ var scheduleMethods = {
         );
 
         self.scheduleObj[schedule_id]['job'] = job;
-        console.log(`All Schedules for ${self.scheduleArr[index]['job']}`)
+        console.log(`All Schedules for ${self.scheduleObj[schedule_id]['job']}`)
         console.log("Have been resumed");
         self.startActiveSchedules(activateRelayFn, context);
     },
@@ -307,8 +307,7 @@ var scheduleMethods = {
                     minute           = schedule_obj['schedule']['minute'],
                     hour             = schedule_obj['schedule']['hour'];
                     
-                let offScheduleId    = schedule_obj['schedule']['nextScheduleId'].toString(),
-                    offScheduleIndex = self.findScheduleIndex(offScheduleId);
+                let offScheduleId    = schedule_obj['schedule']['nextScheduleId'].toString();
                     
                 let on_timestamp     = new Date(),
                     off_timestamp    = new Date();
@@ -316,7 +315,7 @@ var scheduleMethods = {
                 on_timestamp.setHours(hour, minute, second);
                 
                 if(offScheduleId in self.scheduleObj){
-                    let off_schedule_config = self.scheduleArr[offScheduleId]['schedule_config'],
+                    let off_schedule_config = self.scheduleObj[offScheduleId]['schedule_config'],
                         off_schedule_second = off_schedule_config['schedule']['second'],
                         off_schedule_minute = off_schedule_config['schedule']['minute'],
                         off_schedule_hour   = off_schedule_config['schedule']['hour'];
@@ -613,9 +612,9 @@ var scheduleMethods = {
             }else{
                 updated_schedule_config["_id"] = schedule_id;
                 console.log("successfully updated schedule");
-                console.log(`Schedule before: ${JSON.stringify(self.scheduleArr[schedule_id]['schedule_config'])}`);
-                self.scheduleArr[schedule_id]['schedule_config'] = updated_schedule_config;
-                console.log(`Schedule After: ${JSON.stringify(self.scheduleArr[schedule_id]['schedule_config'])}`);
+                console.log(`Schedule before: ${JSON.stringify(self.scheduleObj[schedule_id]['schedule_config'])}`);
+                self.scheduleObj[schedule_id]['schedule_config'] = updated_schedule_config;
+                console.log(`Schedule After: ${JSON.stringify(self.scheduleObj][schedule_id]['schedule_config'])}`);
             }
         });
     },
@@ -763,18 +762,18 @@ var scheduleMethods = {
                     }
                     console.log(`associated schedules found: ${schedules.toString()}`);
                     self.scheduleObj[schedule_id]['job'].cancel();
-                    console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                    console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
                     delete self.scheduleObj[schedule_id];
-                    console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                    console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
                 }
                 catch(err){
                     console.log(`Error: ${err.toString()}`);
 
                     self.scheduleObj[schedule_id]['job'].cancel();
-                    console.log(`Size of array Before removal: ${self.scheduleObj.length}`);
+                    console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
                     delete self.scheduleObj[schedule_id];
 
-                    console.log(`Size of array after removal: ${self.scheduleObj.length}`);
+                    console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
                 }
                 
                 // }else{
@@ -804,7 +803,7 @@ var scheduleMethods = {
                     self.cancelSchedule(schedule_id);
                     console.log("Back in deleteSchedules fn from cancelSchedule fn");
                     delete self.scheduleObj[schedule_id];
-                    console.log(`Size of array: ${self.scheduleObj.length}`);
+                    console.log(`Size of array: ${Object.keys(self.scheduleObj).length}`);
                 }
             });
         });
