@@ -863,7 +863,7 @@ var scheduleObj = {
                 res.status(404).send(err.toString());
             }
         }
-    }
+    },
     deleteSchedules: function(...schedule_ids){
         let self = this;
 
