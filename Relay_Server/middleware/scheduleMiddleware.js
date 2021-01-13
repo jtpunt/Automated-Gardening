@@ -17,9 +17,13 @@ let scheduleMiddleware = {
     },
     checkScheduleInputs(req, res, next){
         var newSchedule = req.body,
-            sanitizedSchedule = {};
+            sanitizedSchedule = {
+                schedule: undefined,
+                device: undefined
+            };
         try{
-        // newSchedule = {
+        // excected req.body 
+        // req.body = {
         //     schedule: {
         //         start_time: {
         //             second: 0,
@@ -54,7 +58,6 @@ let scheduleMiddleware = {
             if(newSchedule['schedule'] === undefined)
                 throw new Error("New schedule configuration details not found.")
             else{
-                sanitizedSchedule = { schedule: undefined}
                 // end_time (off) details are required
                 if(newSchedule['schedule']['end_time'] === undefined)
                     throw new Error("End time schedule configuration details not found.")
@@ -290,9 +293,10 @@ let scheduleMiddleware = {
                     let onEndScheduleId = await scheduleController.createSchedule(...on_end_schedule_args);
                     on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
 
-                    scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
-                    scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
-                
+                    //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                    //scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
+                    scheduleController.updateScheduleRelationship(offScheduleId, off_schedule);
+                    scheduleController.updateScheduleRelationship(onScheduleId, on_schedule);
                     console.log(`endScheduleId: ${onEndScheduleId}`);
                     console.log(`offScheduleId: ${offEndScheduleId}`);
                 }
@@ -377,8 +381,8 @@ let scheduleMiddleware = {
                     let onScheduleId = await scheduleController.createSchedule(...on_schedule_args);
                     off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                    scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
-
+                    //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                    scheduleController.updateScheduleRelationship(offScheduleId, off_schedule);
                 }
             }
             // you can set a schedule with a start time and end time
