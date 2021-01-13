@@ -509,9 +509,10 @@ let scheduleMiddleware = {
     }, 
     deleteSchedule: (scheduleController) => {
         return function(req, res, next){
+            scheduleController.deleteSchedule("123");
             var schedule_id = req.params.schedule_id;
             try{
-                scheduleController.deleteSchedule("123");
+                
                 
             }catch(err){
                 res.status(404).send(err.toString());
