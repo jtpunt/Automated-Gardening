@@ -39,14 +39,14 @@ var scheduleMethods = {
             console.log(`key: ${schedule_id} value: ${JSON.stringify(schedule_obj)}`);
             let schedule_config = schedule_obj['schedule_config']
                 desired_state   = schedule_config['device']['desired_state'],
-                deviceGpio      = schedule_config['device']['gpio'],
+                device_gpio     = schedule_config['device']['gpio'],
                 nextScheduleId  = schedule_config['schedule']['nextScheduleId'];
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
                 let isScheduleActive = this.scheduleIsActive(schedule_obj['schedule_config'], today);
                     if(isScheduleActive === true)
-                        activateRelayFn.call(context,  device_gpio, desired_state);
+                        activateRelayFn.call(context, device_gpio, desired_state);
             }
         }
     },
