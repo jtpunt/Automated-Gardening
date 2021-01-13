@@ -34,8 +34,18 @@ var scheduleMethods = {
         }
     },
     startActiveSchedules: function(activateRelayFn, context){
-        for(const [key, value] of Object.entries(this.scheduleObj)){
-            console.log(`key: ${key} value: ${JSON.stringify(value)}`);
+        for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
+            console.log(`key: ${schedule_id} value: ${JSON.stringify(schedule_obj)}`);
+            let desired_state  = schedule_obj['device']['desired_state'],
+                deviceGpio     = schedule_obj['device']['gpio'],
+                nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
+            if(nextScheduleId === undefined)
+                console.log("nextScheduleId is undefined");
+            else{
+            let isScheduleActive = this.scheduleIsActive(schedule_obj['schedule_config'], today);
+                if(isScheduleActive === true)
+                    activateRelayFn.call(context,  device_gpio, desired_state);
+            }
         }
         // let self  = this,
         //     today = new Date();
@@ -366,61 +376,56 @@ var scheduleMethods = {
     //         throw new Error(conflictMsg);
     //     }
     // },
-    // // Finds the next_schedule_config that's associated with the prev_schedule_config
-    // // and returns the boolean result of whether the 2nd argument, timestamp is greater than or equal to 
-    // // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
-    // // the next_schedule_config object
-    // // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    // scheduleIsActive: function(on_schedule_config, timestamp){
-    //     let self = this,
-    //         result = false,
-    //         sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+    // Finds the next_schedule_config that's associated with the prev_schedule_config
+    // and returns the boolean result of whether the 2nd argument, timestamp is greater than or equal to 
+    // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
+    // the next_schedule_config object
+    // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
+    scheduleIsActive: function(on_schedule_config, timestamp){
+        let self = this,
+            result = false,
+            sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
             
-    //     // check to see if 1 of the schedules is active right now.
-    //     if(on_schedule_config === undefined || on_schedule_config === null)
-    //         return result;
+        // check to see if 1 of the schedules is active right now.
+        if(on_schedule_config === undefined || on_schedule_config === null)
+            return result;
         
-    //     let on_schedule_second = sanitize_input(on_schedule_config['schedule']['second']),
-    //         on_schedule_minute = sanitize_input(on_schedule_config['schedule']['minute']),
-    //         on_schedule_hour   = sanitize_input(on_schedule_config['schedule']['hour']),
-    //         desired_state      = Boolean(on_schedule_config['device']['desired_state']),
-    //         onScheduleId       = on_schedule_config['schedule']['prevScheduleId'],
-    //         offScheduleId      = on_schedule_config['schedule']['nextScheduleId'];
+        let on_schedule_second = sanitize_input(on_schedule_config['schedule']['second']),
+            on_schedule_minute = sanitize_input(on_schedule_config['schedule']['minute']),
+            on_schedule_hour   = sanitize_input(on_schedule_config['schedule']['hour']),
+            desired_state      = Boolean(on_schedule_config['device']['desired_state']),
+            onScheduleId       = on_schedule_config['schedule']['prevScheduleId'],
+            offScheduleId      = on_schedule_config['schedule']['nextScheduleId'];
             
-    //     // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
-    //     if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
-    //         console.log("Processing 'on' schedule");
-    //         let offScheduleIndex = self.findScheduleIndex(on_schedule_config['schedule']['nextScheduleId'].toString());
-    
-    //         if(offScheduleIndex !== -1){
-    //             let today                  = new Date(),
-    //                 on_schedule_timestamp  = new Date(),
-    //                 off_schedule_timestamp = new Date(),
-    //                 off_schedule_config    = self.scheduleArr[offScheduleIndex]['schedule_config'],
-    //                 off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
-    //                 off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
-    //                 off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
-                        
-    //             on_schedule_timestamp.setHours(on_schedule_hour, on_schedule_minute, on_schedule_second);
-    //             off_schedule_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
+        // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
+        if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
+            console.log("Processing 'on' schedule");
+            if(offScheduleId in this.scheduleObj){
+                let today                  = new Date(),
+                    on_schedule_timestamp  = new Date(),
+                    off_schedule_timestamp = new Date(),
+                    off_schedule_config    = self.scheduleArr[offScheduleId]['schedule_config'],
+                    off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
+                    off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
+                    off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
+
+                on_schedule_timestamp.setHours(on_schedule_hour, on_schedule_minute, on_schedule_second);
+                off_schedule_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
                 
-    //             // console.log(`prev_schedule_timestamp: ${prev_schedule_timestamp}`);
-    //             // console.log(`today timestamp:  ${today}`);
-    //             // console.log(`next_schedule_timestamp: ${next_schedule_timestamp}`);
-    //             if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
-    //                 result = true;
-    //         }else{ // schedule not found
-    //             console.log("Off Schedule not found!!");
-    //         }
+                if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
+                    result = true;
+            }else{ // schedule not found
+                console.log("Off Schedule not found!!");
+            }
             
-    //     }else{
-    //         console.log("There is a problem with the inputs given.")
-    //         console.log(`desired_state: ${desired_state}`);
-    //         console.log(`prevScheduleId:  ${onScheduleId}`);
-    //         console.log(`nextScheduleId:  ${offScheduleId}`);
-    //     }
-    //     return result;
-    // },
+        }else{
+            console.log("There is a problem with the inputs given.")
+            console.log(`desired_state: ${desired_state}`);
+            console.log(`prevScheduleId:  ${onScheduleId}`);
+            console.log(`nextScheduleId:  ${offScheduleId}`);
+        }
+        return result;
+    },
     // gets all the schedules for this device from the database and stores them in the scheduleArr
     // if the schedule is active, then it is activated
     getSchedules: function(activateRelayFn, context){
