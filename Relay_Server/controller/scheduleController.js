@@ -704,7 +704,7 @@ var scheduleObj = {
                 throw err;
             }
             else{
-                try{
+                // try{
                     let schedules = [schedule_id];
                     if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
                         let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
@@ -834,14 +834,15 @@ var scheduleObj = {
                     console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                     self.scheduleArr.splice(index, 1);
                     console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                }catch(err){
-                    console.log(`Error: ${err.toString()}`);
+                // }
+                // catch(err){
+                //     console.log(`Error: ${err.toString()}`);
 
-                    self.scheduleArr[index]['job'].cancel();
-                    console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
-                    self.scheduleArr.splice(index, 1);
-                    console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                }
+                //     self.scheduleArr[index]['job'].cancel();
+                //     console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
+                //     self.scheduleArr.splice(index, 1);
+                //     console.log(`Size of array after removal: ${self.scheduleArr.length}`);
+                // }
                 
                 // }else{
 
@@ -863,8 +864,12 @@ var scheduleObj = {
         console.log("in delete schedule");
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
-            self.deleteSchedule("123");
-            res.status(200).end();
+            try{
+                self.deleteSchedule("123");
+                res.status(200).end();
+            }catch(err){
+                res.status(404).send(err.toString());
+            }
         }
     },
     deleteSchedules: function(...schedule_ids){
