@@ -625,8 +625,7 @@ var scheduleMethods = {
         console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this;
             // index = self.findScheduleIndex(schedule_id.toString());
-            
-        console.log(`Match found at index: ${index}`);
+        
 
         self.cancelSchedule(schedule_id);
         Scheduler.findByIdAndRemove(schedule_id, (err) => {
