@@ -874,7 +874,7 @@ var scheduleObj = {
         return function(req, res, next){
             console.log("in deleteScheduleReq");
             var schedule_id = req.params.schedule_id;
-                scheduleController.findScheduleIndexReq("123");
+                self.findScheduleIndexReq("123");
                 
 
             //res.status(200).end();
