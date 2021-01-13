@@ -440,6 +440,7 @@ router.post('/schedule',
             }else {
                 console.log("in else... no start_time or end_times in object");
             }
+            res.status(200).end();
         }
         catch(err){
             console.log(`err: ${err}`);
