@@ -35,9 +35,9 @@ var scheduleMethods = {
         let job = this.getScheduleJobById(schedule_id);
         console.log(`job: ${job}`);
         if(job === undefined)
-            return job.nextInvocation();
-        else
             return `Schedule ${schedule_id} not found!`;
+        else
+            return job.nextInvocation();        
     },
 
     // invalidates any job. All  planned invocations will be canceled
