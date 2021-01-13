@@ -861,6 +861,7 @@ var scheduleObj = {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
             try{
+                let index = self.findScheduleIndex(schedule_id.toString());
                 self.deleteSchedule("123");
                 res.status(200).end();
             }catch(err){
