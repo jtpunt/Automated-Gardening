@@ -852,6 +852,18 @@ var scheduleObj = {
             }
         });
     },
+    deleteScheduleReq: function(){
+        let self = this;
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+            try{
+                self.deleteSchedule("123");
+                res.status(200).end();
+            }catch(err){
+                res.status(404).send(err.toString());
+            }
+        }
+    }
     deleteSchedules: function(...schedule_ids){
         let self = this;
 
