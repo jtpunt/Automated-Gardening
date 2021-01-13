@@ -861,7 +861,7 @@ var scheduleObj = {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
 
-                let index = self.findScheduleIndex("123");
+                let index = self.findScheduleIndexReq("123");
                 console.log(`index: ${index}`);
                 // self.deleteSchedule("123");
                 res.status(200).end();
@@ -893,6 +893,14 @@ var scheduleObj = {
         if(index === -1)
             throw new Error(`Schedule id: ${schedule_id} not found!`);
         return index;
+    },
+    findScheduleIndexReq: function(schedule_id){
+        let self = this;
+        return function(req, res, next){
+            let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
+            if(index === -1)
+                next(`Schedule id: ${schedule_id} not found!`)
+        }
     }
 }
 module.exports = scheduleObj;
