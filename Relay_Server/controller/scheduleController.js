@@ -481,8 +481,7 @@ var scheduleMethods = {
             schedule_conflict = false,
             today             = new Date(),
             onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
-            offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
-            index             = self.findScheduleIndex(schedule_id);
+            offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined;
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${JSON.stringify(updated_schedule_config)}`);
         console.log(`Match found at index: ${index}`);
@@ -603,8 +602,7 @@ var scheduleMethods = {
             schedule_conflict = false,
             today             = new Date(),
             onScheduleId      = updated_schedule_config['schedule']['prevScheduleId'] || undefined,
-            offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined,
-            index             = self.findScheduleIndex(schedule_id);
+            offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined;
 
         Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
             if(err){
@@ -624,8 +622,6 @@ var scheduleMethods = {
     deleteSchedule: function(schedule_id){
         console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this;
-            // index = self.findScheduleIndex(schedule_id.toString());
-        
 
         self.cancelSchedule(schedule_id);
         Scheduler.findByIdAndRemove(schedule_id, (err) => {
