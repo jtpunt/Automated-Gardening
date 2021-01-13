@@ -872,7 +872,7 @@ var scheduleObj = {
     deleteScheduleReq: function(){
         let self = this;
         return function(req, res, next){
-           
+            console.log("in deleteScheduleReq");
             var schedule_id = req.params.schedule_id;
                 scheduleController.findScheduleIndexReq("123");
                 
@@ -891,7 +891,8 @@ var scheduleObj = {
     findScheduleIndexReq: () => {
         let self = this;
         return function(req, res, next){
-            let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
+            console.log("in findScheduleIndexReq");
+            let index = self.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
             if(index === -1){
                 console.log(`Schedule id: ${schedule_id} not found!`);
                 next(new Error(`Schedule id: ${schedule_id} not found!`));
