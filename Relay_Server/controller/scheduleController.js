@@ -694,7 +694,7 @@ var scheduleObj = {
             
         console.log(`Match found at index: ${index}`);
 
-        //self.cancelSchedule(schedule_id);
+        self.cancelSchedule(schedule_id);
         Scheduler.findByIdAndRemove(schedule_id, (err) => {
             if(err){
                 console.log(err);

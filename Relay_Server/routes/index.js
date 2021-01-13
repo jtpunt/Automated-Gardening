@@ -104,7 +104,10 @@ router.post('/schedule',
     scheduleMiddleware.checkScheduleInputs, async function(req, res){
         var newSchedule = req.body;
         try{
-             if(
+            if(outletController.findOutletByGpio(Number(updatedSchedule['device']['gpio'])) === -1){
+                throw new Error("Invalid GPIO input");
+            }
+            if(
                 newSchedule['schedule']['start_time'] !== undefined && 
                 newSchedule['schedule']['end_time']   !== undefined &&  
                 newSchedule['schedule']['start_date'] !== undefined &&
