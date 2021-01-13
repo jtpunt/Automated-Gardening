@@ -518,6 +518,27 @@ let scheduleMiddleware = {
             }
         }
     },
+    getDateOfNextInvocation: (scheduleController) => {
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+            console.log(typeof schedule_id);
+            try{
+                let nextInvocation = scheduleController.getDateOfNextInvocation(schedule_id);
+                if(nextInvocation === null){
+                    res.write("Next Invocation Date Not Found For This Schedule.");
+                }else{
+                    res.write(nextInvocation.toString());
+                }
+                
+                res.status(200).end();
+            }catch(err){
+                console.log("Error caught!\n");
+                console.log(err);
+                res.write("404: ", JSON.stringify(err));
+                res.status(404).end();
+            }
+        }
+    },
     updateSchedule: (scheduleController, outletController) => {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
