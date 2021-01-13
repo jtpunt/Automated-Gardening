@@ -864,6 +864,7 @@ var scheduleObj = {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
             self.deleteSchedule(schedule_id);
+            res.status(200).end();
         }
     },
     deleteSchedules: function(...schedule_ids){
