@@ -402,10 +402,9 @@ var scheduleMethods = {
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
             if(offScheduleId in this.scheduleObj){
-                let today                  = new Date(),
-                    on_schedule_timestamp  = new Date(),
+                let on_schedule_timestamp  = new Date(),
                     off_schedule_timestamp = new Date(),
-                    off_schedule_config    = self.scheduleArr[offScheduleId]['schedule_config'],
+                    off_schedule_config    = self.scheduleObj[offScheduleId]['schedule_config'],
                     off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
                     off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
                     off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
