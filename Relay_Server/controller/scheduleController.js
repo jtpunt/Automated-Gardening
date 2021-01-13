@@ -10,13 +10,35 @@ var Scheduler       = require("../models/scheduler"),
 
 var scheduleMethods = {
     scheduleObj: {},
-    getDateOfNextInvocation: function(schedule_id){
-        if(schedule_id in this.scheduleObj){
-            return this.scheduleObj[schedule_id]['job'].nextInvocation();
-        }else{
-            return `Schedule ${schedule_id} not found!`;
-        }
+    doesScheduleExist: function(schedule_id){
+        return schedule_id in self.scheduleObj;
     },
+    getScheduleObjById: function(schedule_id){
+        if(!doesScheduleExist(schedule_id))
+            return undefined;
+        else
+            return this.scheduleObj[schedule_id];
+    },
+    getScheduleJobById: function(schedule_id){
+        if(!doesScheduleExist(schedule_id))
+            return undefined;
+        else
+            return self.scheduleObj[schedule_id]['job'];
+    },
+    getScheduleConfigById: function(schedule_id){
+        if(!doesScheduleExist(schedule_id))
+            return undefined;
+        else
+            return self.scheduleObj[schedule_id]['schedule_config'];
+    },
+    getDateOfNextInvocation: function(schedule_id){
+        let job = this.getScheduleJobById(schedule_id);
+        if(job === undefined)
+            return job.nextInvocation();
+        else
+            return `Schedule ${schedule_id} not found!`;
+    },
+
     // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
         if(schedule_id in this.scheduleObj){
@@ -79,11 +101,11 @@ var scheduleMethods = {
         let self                = this,
             myScheduleObj       = scheduleHelpers.buildSchedule(new_schedule_config),
             job                 = scheduleHelpers.buildJob(
-            myScheduleObj, 
-            fn, 
-            context, 
-            ...args
-        );
+                myScheduleObj, 
+                fn, 
+                context, 
+                ...args
+            );
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
     
         if(newScheduleResponse === undefined)
@@ -99,13 +121,13 @@ var scheduleMethods = {
     // and returns the indices refering to those schedules in our scheduleArr
     findSameDaySchedulesAndRetIds: function(schedule_config){
         let self      = this,
-            second    = Number(schedule_config['schedule']['second'])|| undefined,
-            minute    = Number(schedule_config['schedule']['minute'])|| undefined,
-            hour      = Number(schedule_config['schedule']['hour'])  || undefined,
-            date      = Number(schedule_config['schedule']['date'])  || undefined,
-            month     = Number(schedule_config['schedule']['month']) || undefined,
-            year      = Number(schedule_config['schedule']['year'])  || undefined,
-            gpio      = Number(schedule_config['device']['gpio'])    || undefined,
+            second    = schedule_config['schedule']['second']|| undefined,
+            minute    = schedule_config['schedule']['minute']|| undefined,
+            hour      = schedule_config['schedule']['hour']  || undefined,
+            date      = schedule_config['schedule']['date']  || undefined,
+            month     = schedule_config['schedule']['month'] || undefined,
+            year      = schedule_config['schedule']['year']  || undefined,
+            gpio      = schedule_config['device']['gpio']    || undefined,
             dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
             timestamp = new Date(),
             indices   = [],
