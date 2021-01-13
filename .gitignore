@@ -2,7 +2,7 @@ Camera/config.js
 Relay_Server/config.js
 Smart_Gardening_Controller_MVC/config.js
 Temperature\ and\ Humidity\ API/config.js
-Water_Sensor_PI/config.js
+Water_Sensor_API/config.js
 
 Camera/node_modules/
 Relay_Server/node_modules/
