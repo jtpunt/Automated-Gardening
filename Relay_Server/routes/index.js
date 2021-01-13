@@ -125,7 +125,7 @@ router.put('/schedule/:schedule_id',
 );
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
-    middleware.verifyAdminAccount,
+    // middleware.verifyAdminAccount,
     scheduleMiddleware.deleteSchedule(scheduleController)
 );
 
