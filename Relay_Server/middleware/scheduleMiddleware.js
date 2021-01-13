@@ -509,17 +509,14 @@ let scheduleMiddleware = {
     }, 
     deleteSchedule: (scheduleController) => {
         return function(req, res, next){
-           
             var schedule_id = req.params.schedule_id;
             try{
-                 scheduleController.deleteSchedule("123");
-                
+                scheduleController.deleteSchedule(schedule_id);
+                res.status(200).end();
             }catch(err){
                 res.status(404).send(err.toString());
             }
-            //res.status(200).end();
         }
-
     },
     getDateOfNextInvocation: (scheduleController) => {
         return function(req, res, next){
