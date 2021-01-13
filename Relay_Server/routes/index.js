@@ -461,23 +461,72 @@ router.get('/schedule/:schedule_id', function(req, res) {
     }); 
 });
 // edit an existing schedule
-router.put('/schedule/:schedule_id', 
-    middleware.verifyAdminAccount,  
-    outletMiddleware.isGpioConfigured(outletController), 
-    scheduleMiddleware.updateSchedule(scheduleController, outletController)
-);
+router.put('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req, res){
+    console.log("in put route with ", req.body);
+    var schedule_id = req.params.schedule_id;
+    var updatedSchedule = req.body;
+    try{
+        // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
+        if(outletController.findOutletByGpio(Number(updatedSchedule['device']['gpio'])) === -1){
+            throw new Error("Invalid GPIO input");
+        }else{
+            let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
+                nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
+                my_schedule = {
+                    ... updatedSchedule,
+                    schedule:   updatedSchedule['schedule']['start_time'] || 
+                                updatedSchedule['schedule']['end_time']
+                };
+                
+            my_schedule['schedule']['prevScheduleId'] = updatedSchedule['schedule']['prevScheduleId'],
+            my_schedule['schedule']['nextScheduleId'] = updatedSchedule['schedule']['nextScheduleId']
+
+            scheduleController.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
+            console.log("Successfully Updated!");
+            res.status(200).end();
+        }
+    }catch(err){
+        res.status(404).end();
+    }
+});
 // delete an existing schedule
-router.delete('/schedule/:schedule_id', 
-    middleware.verifyAdminAccount,
-    scheduleMiddleware.deleteSchedule(scheduleController)
-);
+router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(req, res){
+    var schedule_id = req.params.schedule_id;
+    console.log(typeof schedule_id);
+    try{
+        //scheduleController.cancelSchedule(schedule_id);
+        scheduleController.deleteSchedule(schedule_id);
+        console.log("Successfully Deleted!");
+        res.status(200).end();
+    }catch(err){
+        console.log("Error caught!\n");
+        console.log(err);
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
+    }
+});
 
 
 // Returns the date of the next planned invocation of our schedule
-router.get('/schedule/:schedule_id/date', 
-    middleware.verifyAdminAccount,
-    scheduleMiddleware.getDateOfNextInvocation(scheduleController)
-);
+router.get('/schedule/:schedule_id/date', function(req, res) {
+    var schedule_id = req.params.schedule_id;
+    console.log(typeof schedule_id);
+    try{
+        let nextInvocation = scheduleController.getDateOfNextInvocation(schedule_id);
+        if(nextInvocation === null){
+            res.write("Next Invocation Date Not Found For This Schedule.");
+        }else{
+            res.write(nextInvocation.toString());
+        }
+        
+        res.status(200).end();
+    }catch(err){
+        console.log("Error caught!\n");
+        console.log(err);
+        res.write("404: ", JSON.stringify(err));
+        res.status(404).end();
+    }
+});
 
 
 router.post('/schedule/:schedule_id/cancel', middleware.verifyAdminAccount, function(req, res) {
