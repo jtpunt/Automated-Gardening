@@ -516,7 +516,7 @@ let scheduleMiddleware = {
             }catch(err){
                 res.status(404).send(err.toString());
             }
-            res.status(200).end();
+            //res.status(200).end();
         }
 
     },
