@@ -674,6 +674,7 @@ var scheduleObj = {
             if(err){
                 console.log(err)
             }else{
+                updated_schedule_config['schedule']["_id"] = schedule_id;
                 console.log("successfully updated schedule");
                 console.log(`Schedule before: ${JSON.stringify(self.scheduleArr[index]['schedule_config'])}`);
                 self.scheduleArr[index]['schedule_config'] = updated_schedule_config;
