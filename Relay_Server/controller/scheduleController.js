@@ -485,10 +485,10 @@ var scheduleMethods = {
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${JSON.stringify(updated_schedule_config)}`);
       
-        if(!onScheduleId in self.schedule_obj)
+        if(!onScheduleId in self.scheduleObj)
             throw new Error("Invalid id provided for prevScheduleId");
 
-        if(!offScheduleId in self.schedule_obj)
+        if(!offScheduleId in self.scheduleObj)
             throw new Error("Invalid id provided for nextScheduleId");
         console.log("about to cancel schedule");
         self.cancelSchedule(schedule_id);
