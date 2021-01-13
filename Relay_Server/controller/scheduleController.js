@@ -34,6 +34,7 @@ var scheduleMethods = {
         }
     },
     startActiveSchedules: function(activateRelayFn, context){
+        let today = new Date();
         for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
             console.log(`key: ${schedule_id} value: ${JSON.stringify(schedule_obj)}`);
             let schedule_config = schedule_obj['schedule_config']
