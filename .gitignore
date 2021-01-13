@@ -1,12 +1,13 @@
 Camera/config.js
 Relay_Server/config.js
-Temperature\ and\ Humidity\ Controller/config.js
+Smart_Gardening_Controller_MVC/config.js
 Temperature\ and\ Humidity\ API/config.js
+Water_Sensor_PI/config.js
 
 Camera/node_modules/
 Relay_Server/node_modules/
-Temperature\ and\ Humidity\ Controller/node_modules/
+Smart_Gardening_Controller_MVC/node_modules/
 Temperature\ and\ Humidity\ API/node_modules/
 Temperature\ and\ Humidity\ API/bcm2835-1.56/
 Soil\ Sensor\ API/node_modules/ 
-Temperature and Humidity Controller/package-lock.json
+Smart_Gardening_Controller_MVC/package-lock.json
