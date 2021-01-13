@@ -10,7 +10,7 @@ var Scheduler       = require("../models/scheduler"),
 
 var scheduleObj = {
     scheduleArr: [],
-    context = this,
+    context: this,
     // params 1: schedule_config
     // params 2:
     // params 3:
