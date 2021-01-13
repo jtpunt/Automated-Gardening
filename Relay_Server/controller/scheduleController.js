@@ -688,10 +688,6 @@ var scheduleObj = {
     // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
     // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
     deleteSchedule: function(schedule_id){
-        console.log(`Array contents Before Delete Function: `);
-        this.scheduleArr.forEach(function(schedule){
-            console.log(`${JSON.stringify(schedule)}`);
-        })
         console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this,
             index = self.findScheduleIndex(schedule_id.toString());
@@ -705,7 +701,7 @@ var scheduleObj = {
                 throw err;
             }
             else{
-                try{
+                // try{
                     let schedules = [schedule_id];
                     if(self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId']){
                         let prevScheduleId = self.scheduleArr[index]['schedule_config']['schedule']['prevScheduleId'];
@@ -835,11 +831,11 @@ var scheduleObj = {
                     console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
                     self.scheduleArr.splice(index, 1);
                     console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                }
-                catch(err){
-                    console.log(`Error: ${err.toString()}`);
-                    throw err;
-                }
+                // }
+                // catch(err){
+                //     console.log(`Error: ${err.toString()}`);
+                //     throw err;
+                // }
                 
                 // }else{
 
