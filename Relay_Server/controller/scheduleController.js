@@ -897,7 +897,7 @@ var scheduleObj = {
     findScheduleIndexReq: function(schedule_id){
         let self = this;
         return function(req, res, next){
-            let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
+            let index = self.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
             if(index === -1)
                 next(`Schedule id: ${schedule_id} not found!`)
         }
