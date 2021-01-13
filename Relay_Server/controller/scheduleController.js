@@ -11,7 +11,7 @@ var Scheduler       = require("../models/scheduler"),
 var scheduleMethods = {
     scheduleObj: {},
     doesScheduleExist: function(schedule_id){
-        return schedule_id in self.scheduleObj;
+        return schedule_id in this.scheduleObj;
     },
     getScheduleObjById: function(schedule_id){
         if(!this.doesScheduleExist(schedule_id))
