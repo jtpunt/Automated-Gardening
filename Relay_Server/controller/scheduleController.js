@@ -484,8 +484,7 @@ var scheduleMethods = {
             offScheduleId     = updated_schedule_config['schedule']['nextScheduleId'] || undefined;
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${JSON.stringify(updated_schedule_config)}`);
-        console.log(`Match found at index: ${index}`);
-        
+      
         if(!onScheduleId in self.schedule_obj)
             throw new Error("Invalid id provided for prevScheduleId");
 
