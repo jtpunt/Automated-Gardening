@@ -852,22 +852,6 @@ var scheduleObj = {
             }
         });
     },
-    // schedule_id - the mongo id of the schedule we are trying to access and delete
-    // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
-    // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
-    deleteScheduleReq: function() {
-        let self = this;
-        console.log("in delete schedule");
-        return function(req, res, next){
-            var schedule_id = req.params.schedule_id;
-
-                let index = self.findScheduleIndexReq("123");
-                console.log(`index: ${index}`);
-                // self.deleteSchedule("123");
-                res.status(200).end();
-
-        }
-    },
     deleteSchedules: function(...schedule_ids){
         let self = this;
 
@@ -893,14 +877,6 @@ var scheduleObj = {
         if(index === -1)
             throw new Error(`Schedule id: ${schedule_id} not found!`);
         return index;
-    },
-    findScheduleIndexReq: function(schedule_id){
-        let self = this;
-        return function(req, res, next){
-            let index = self.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
-            if(index === -1)
-                next(`Schedule id: ${schedule_id} not found!`)
-        }
     }
 }
 module.exports = scheduleObj;
