@@ -14,22 +14,22 @@ var scheduleMethods = {
         return schedule_id in self.scheduleObj;
     },
     getScheduleObjById: function(schedule_id){
-        if(!doesScheduleExist(schedule_id))
+        if(!this.doesScheduleExist(schedule_id))
             return undefined;
         else
             return this.scheduleObj[schedule_id];
     },
     getScheduleJobById: function(schedule_id){
-        if(!doesScheduleExist(schedule_id))
+        if(!this.doesScheduleExist(schedule_id))
             return undefined;
         else
-            return self.scheduleObj[schedule_id]['job'];
+            return this.scheduleObj[schedule_id]['job'];
     },
     getScheduleConfigById: function(schedule_id){
         if(!doesScheduleExist(schedule_id))
             return undefined;
         else
-            return self.scheduleObj[schedule_id]['schedule_config'];
+            return this.scheduleObj[schedule_id]['schedule_config'];
     },
     getDateOfNextInvocation: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
