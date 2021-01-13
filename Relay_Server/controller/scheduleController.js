@@ -869,6 +869,17 @@ var scheduleObj = {
             });
         });
     },
+    deleteScheduleReq: function(){
+        let self = this;
+        return function(req, res, next){
+           
+            var schedule_id = req.params.schedule_id;
+                scheduleController.findScheduleIndexReq("123");
+                
+
+            //res.status(200).end();
+        }
+    }
     findScheduleIndex: function(schedule_id){
         let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
         if(index === -1){
@@ -876,6 +887,17 @@ var scheduleObj = {
             throw new Error(`Schedule id: ${schedule_id} not found!`);
         }
         return index;
+    },
+    findScheduleIndexReq: () => {
+        let self = this,
+        return function(req, res, next){
+            let index = this.scheduleArr.findIndex((scheduleObj) => scheduleObj['schedule_config']['_id'] == schedule_id);
+            if(index === -1){
+                console.log(`Schedule id: ${schedule_id} not found!`);
+                next(new Error(`Schedule id: ${schedule_id} not found!`));
+            }
+            return index;
+        }
     }
 }
 module.exports = scheduleObj;
