@@ -9,7 +9,7 @@ var middleware = {
 	    if(admin_id === undefined)
 	    	res.status(404).send(notLoggedinMsg);
 
-		User.findOne({"_id":admin_id}, function(err, user){
+		User.findOne({"_id":admin_id.toString()}, function(err, user){
 		    if(err){
 		        console.log(err.toString);
 		        res.status(404).send(notLoggedinMsg);
