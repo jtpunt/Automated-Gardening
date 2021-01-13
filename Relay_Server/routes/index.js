@@ -104,7 +104,8 @@ router.post('/schedule',
     scheduleMiddleware.checkScheduleInputs, async function(req, res){
         var newSchedule = req.body;
         try{
-            if(outletController.findOutletByGpio(Number(updatedSchedule['device']['gpio'])) === -1){
+            // Make sure that the gpio is configured by the relay device
+            if(outletController.findOutletByGpio(Number(newSchedule['device']['gpio'])) === -1){
                 throw new Error("Invalid GPIO input");
             }
             if(
