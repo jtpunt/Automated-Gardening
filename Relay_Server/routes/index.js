@@ -99,9 +99,7 @@ router.get('/schedule', function(req, res) {
     });
 });
 // add a new chedule
-router.post('/schedule', 
-    middleware.verifyAdminAccount, 
-    scheduleMiddleware.checkScheduleInputs, 
+router.post('/schedule', middleware.verifyAdminAccount, scheduleMiddleware.checkScheduleInputs, 
     outletMiddleware.isGpioConfigured(outletController), 
     scheduleMiddleware.createSchedules(scheduleController, outletController)
 );
@@ -126,14 +124,13 @@ router.put('/schedule/:schedule_id',
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,
-    scheduleController.deleteScheduleReq()
-    //scheduleMiddleware.deleteSchedule(scheduleController)
+    scheduleMiddleware.deleteSchedule(scheduleController)
 );
 
 
 // Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', 
-    // middleware.verifyAdminAccount,
+    middleware.verifyAdminAccount,
     scheduleMiddleware.getDateOfNextInvocation(scheduleController)
 );
 
