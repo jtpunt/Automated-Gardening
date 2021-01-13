@@ -36,16 +36,16 @@ var scheduleMethods = {
     startActiveSchedules: function(activateRelayFn, context){
         for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
             console.log(`key: ${schedule_id} value: ${JSON.stringify(schedule_obj)}`);
-            let desired_state  = schedule_obj['device']['desired_state'],
-                deviceGpio     = schedule_obj['device']['gpio'],
-                nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
-            if(nextScheduleId === undefined)
-                console.log("nextScheduleId is undefined");
-            else{
-            let isScheduleActive = this.scheduleIsActive(schedule_obj['schedule_config'], today);
-                if(isScheduleActive === true)
-                    activateRelayFn.call(context,  device_gpio, desired_state);
-            }
+            // let desired_state  = schedule_obj['device']['desired_state'],
+            //     deviceGpio     = schedule_obj['device']['gpio'],
+            //     nextScheduleId = schedule_obj['schedule_config']['schedule']['nextScheduleId'];
+            // if(nextScheduleId === undefined)
+            //     console.log("nextScheduleId is undefined");
+            // else{
+            //     let isScheduleActive = this.scheduleIsActive(schedule_obj['schedule_config'], today);
+            //         if(isScheduleActive === true)
+            //             activateRelayFn.call(context,  device_gpio, desired_state);
+            // }
         }
         // let self  = this,
         //     today = new Date();
