@@ -20,9 +20,9 @@ var scheduleMethods = {
     // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
         if(schedule_id in this.scheduleObj){
-            console.log(`Next Schedule before ${job.nextInvocation()} being canceled`);
+            console.log(`Next Schedule before ${this.scheduleObj[schedule_id]['job'].nextInvocation()} being canceled`);
             this.scheduleObj[schedule_id]['job'].cancel();
-            console.log(`Next Schedule after being ${job.nextInvocation()} canceled`)
+            console.log(`Next Schedule after being ${this.scheduleObj[schedule_id]['job'].nextInvocation()} canceled`)
         }
     },
     // invalidates the next planned invocation
