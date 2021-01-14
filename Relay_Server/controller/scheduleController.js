@@ -30,43 +30,37 @@ var scheduleMethods = {
     },
     getDateOfNextInvocation: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
-        let res = this.setScheduleObjById(schedule_id, undefined);
-        console.log(`Result of setter fn: ${res}`);
         if(job === undefined)
             return `Schedule ${schedule_id} not found!`;
         else
             return job.nextInvocation();        
     },
     setScheduleObjById: function(schedule_id, schedule_obj){
-        if(!this.doesScheduleExist(schedule_id))
-            return `Schedule ${schedule_id} not found!`;
         this.scheduleObj[schedule_id] = schedule_obj;
     },
     setScheduleConfigById: function(schedule_id, schedule_config){
-        if(!this.doesScheduleExist(schedule_id))
-            return `Schedule ${schedule_id} not found!`;
-        this.scheduleObj[schedule_id]['schedule_config'] = schedule_config;
-        return;
+        if(this.doesScheduleExist(schedule_id))
+            this.scheduleObj[schedule_id]['schedule_config'] = schedule_config;
     },
     setScheduleJobById: function(schedule_id, job){
-        if(!this.doesScheduleExist(schedule_id))
-            return `Schedule ${schedule_id} not found!`;
-        else
+        if(this.doesScheduleExist(schedule_id))
             this.scheduleObj[schedule_id]['job'] = job; 
     },
     // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
-        if(schedule_id in this.scheduleObj){
-            console.log(`Next Schedule before ${this.scheduleObj[schedule_id]['job'].nextInvocation()} being canceled`);
-            this.scheduleObj[schedule_id]['job'].cancel();
-            console.log(`Next Schedule after being ${this.scheduleObj[schedule_id]['job'].nextInvocation()} canceled`)
+        let job = this.getScheduleJobById(schedule_id);
+        if(job){
+            console.log(`Next Schedule before ${job.nextInvocation()} being canceled`);
+            job.cancel();
+            console.log(`Next Schedule after being ${job.nextInvocation()} canceled`)
         }
     },
     // invalidates the next planned invocation
     cancelNextSchedule: function(schedule_id, activateRelayFn, context){
-        if(schedule_id in this.scheduleObj){
+        let job = this.getScheduleJobById(schedule_id);
+        if(job){
             console.log(`Next Schedule before ${job.nextInvocation()} being canceled`);
-            this.scheduleObj[schedule_id]['job'].cancelNext();
+            job.cancelNext();
             console.log(`Next Schedule after being ${job.nextInvocation()} canceled`)
         }
     },
@@ -91,26 +85,23 @@ var scheduleMethods = {
         let self            = this,
             reschedule      = true,
             today           = new Date(),
-            schedule_config = self.scheduleObj[schedule_id]['schedule_config'];
+            schedule_config = self.getScheduleConfigById(schedule_id);
             
-            // schedule_config = self.getScheduleConfigById(schedule_id),
-            // schedule_job    = self.getScheduleJobById(schedule_id);
-
-            
-        // if self.scheduleArr[index]['job'].nextInvocation() === undefined, dont rebuild job?
-        let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-        let job = scheduleHelpers.buildJob(
-            myScheduleObj, 
-            activateRelayFn, 
-            context, 
-            Number(schedule_config['device']['gpio']), 
-            Boolean(schedule_config['device']['desired_state'])
-        );
-
-        self.scheduleObj[schedule_id]['job'] = job;
-        console.log(`All Schedules for ${self.scheduleObj[schedule_id]['job']}`)
-        console.log("Have been resumed");
-        self.startActiveSchedules(activateRelayFn, context);
+        if(schedule_config === undefined){
+            console.log("Schedule config is undefined");
+        }else{
+            let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
+            let job = scheduleHelpers.buildJob(
+                myScheduleObj, 
+                activateRelayFn, 
+                context, 
+                Number(schedule_config['device']['gpio']), 
+                Boolean(schedule_config['device']['desired_state'])
+            );
+            self.setScheduleJobById(schedule_id, job);
+            self.startActiveSchedules(activateRelayFn, context);
+        }
+        
     },
     createSchedule: async function(new_schedule_config, fn, context, ...args){
         let self                = this,
@@ -126,10 +117,10 @@ var scheduleMethods = {
         if(newScheduleResponse === undefined)
             return newScheduleResponse;
         else{
-            console.log(`await result: ${newScheduleResponse}`);
-            var obj = { "schedule_config": newScheduleResponse, job };
-            self.scheduleObj[newScheduleResponse['_id']] = obj;
-            return newScheduleResponse["_id"];
+            let schedule_id  = newScheduleResponse["_id"],
+                schedule_obj = { "schedule_config": newScheduleResponse, job };
+            self.setScheduleObjById(schedule_id, schedule_obj);
+            return schedule_id;
         }
     },
     // Finds schedules (by the GPIO we are checking against) that would occur on the same day
@@ -351,8 +342,8 @@ var scheduleMethods = {
                     
                 on_timestamp.setHours(hour, minute, second);
                 
-                if(offScheduleId in self.scheduleObj){
-                    let off_schedule_config = self.scheduleObj[offScheduleId]['schedule_config'],
+                if(self.doesScheduleExist(offScheduleId)){
+                    let off_schedule_config = self.getScheduleConfigById(offScheduleId),
                         off_schedule_second = off_schedule_config['schedule']['second'],
                         off_schedule_minute = off_schedule_config['schedule']['minute'],
                         off_schedule_hour   = off_schedule_config['schedule']['hour'];
@@ -386,11 +377,11 @@ var scheduleMethods = {
         console.log("indexes: " + indices);
         
         indices.forEach(function(schedule_id){
-            if(index >= 0){
-                let schedule_obj          = self.scheduleObj[schedule_id],
-                    isScheduleConflicting = self.scheduleIsActive(schedule_obj['schedule_config'], timestamp);
+            if(index >= 0 && self.doesScheduleExist(schedule_id)){
+                let schedule_config       = self.getScheduleConfigById(schedule_id),
+                    isScheduleConflicting = self.scheduleIsActive(schedule_config, timestamp);
 
-                conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_obj['schedule_config']);
+                conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_config);
             }
         });
         if(conflictMsg !== ""){
