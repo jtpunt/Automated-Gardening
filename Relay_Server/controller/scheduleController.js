@@ -45,8 +45,8 @@ var scheduleMethods = {
     setScheduleConfigById: function(schedule_id, schedule_config){
         if(!this.doesScheduleExist(schedule_id))
             return `Schedule ${schedule_id} not found!`;
-        else
-            this.scheduleObj[schedule_id]['schedule_config'] = schedule_config;
+        this.scheduleObj[schedule_id]['schedule_config'] = schedule_config;
+        return;
     },
     setScheduleJobById: function(schedule_id, job){
         if(!this.doesScheduleExist(schedule_id))
