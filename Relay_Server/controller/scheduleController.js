@@ -41,11 +41,10 @@ var scheduleMethods = {
         }
     },
     setScheduleConfigById: function(schedule_id, schedule_config){
-        let old_schedule_config = this.getScheduleConfigById(schedule_id);
-        if(old_schedule_config === undefined)
+        if(!this.doesScheduleExist(schedule_id))
             return `Schedule ${schedule_id} not found!`;
         else
-            old_schedule_config['schedule_config'] = schedule_config;
+            this.scheduleObj[schedule_id]['schedule_config'] = schedule_config;
 
         console.log(`schedule: ${JSON.stringify(this.scheduleObj)}`);
     },
