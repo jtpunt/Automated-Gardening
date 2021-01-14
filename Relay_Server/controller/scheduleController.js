@@ -16,23 +16,22 @@ var scheduleMethods = {
     getScheduleObjById: function(schedule_id){
         if(!this.doesScheduleExist(schedule_id))
             return undefined;
-        else
-            return this.scheduleObj[schedule_id];
+        return this.scheduleObj[schedule_id];
     },
     getScheduleJobById: function(schedule_id){
         if(!this.doesScheduleExist(schedule_id))
             return undefined;
-        else
-            return this.scheduleObj[schedule_id]['job'];
+        return this.scheduleObj[schedule_id]['job'];
     },
     getScheduleConfigById: function(schedule_id){
         if(!this.doesScheduleExist(schedule_id))
             return undefined;
-        else
-            return this.scheduleObj[schedule_id]['schedule_config'];
+        return this.scheduleObj[schedule_id]['schedule_config'];
     },
     getDateOfNextInvocation: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
+        let res = this.setScheduleObjById(schedule_id, undefined);
+        console.log(`Result of setter fn: ${res}`);
         if(job === undefined)
             return `Schedule ${schedule_id} not found!`;
         else
@@ -41,8 +40,7 @@ var scheduleMethods = {
     setScheduleObjById: function(schedule_id, schedule_obj){
         if(!this.doesScheduleExist(schedule_id))
             return `Schedule ${schedule_id} not found!`;
-        else
-            this.scheduleObj[schedule_id] = schedule_obj;
+        this.scheduleObj[schedule_id] = schedule_obj;
     },
     setScheduleConfigById: function(schedule_id, schedule_config){
         if(!this.doesScheduleExist(schedule_id))
