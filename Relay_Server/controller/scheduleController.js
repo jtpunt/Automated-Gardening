@@ -33,9 +33,7 @@ var scheduleMethods = {
     },
     getDateOfNextInvocation: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
-        let old_schedule_config = this.getScheduleConfigById(schedule_id);
-        old_schedule_config = undefined;
-        console.log(`schedule: ${JSON.stringify(this.scheduleObj)}`);
+        this.setScheduleConfigById(schedule_id, undefined);
         if(job === undefined)
             return `Schedule ${schedule_id} not found!`;
         else{
@@ -47,7 +45,9 @@ var scheduleMethods = {
         if(old_schedule_config === undefined)
             return `Schedule ${schedule_id} not found!`;
         else
-            old_schedule_config = schedule_config;
+            old_schedule_config['schedule_config'] = schedule_config;
+
+        console.log(`schedule: ${JSON.stringify(this.scheduleObj)}`);
     },
     // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
