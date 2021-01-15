@@ -9,7 +9,7 @@ var Scheduler       = require("../models/scheduler"),
 
 var scheduleMethods = {
     getDateOfNextInvocationReq: (scheduleHelper) => {
-        let self = scheduleController;
+        let self = scheduleHelper;
         return function(req, res, next){
             let schedule_id = req.params.schedule_id;
             if(!self.doesScheduleExist(schedule_id))
