@@ -248,7 +248,7 @@ let scheduleHelpers = {
                 return a.filter(Set.prototype.has, new Set(b));
             };
             
-            
+        console.log(`schedule_config in findSameDay..${JSON.stringify(schedule_config)}`);
         // '00' from minute, second, or hour will create an invalid date object
         if(schedule_config['schedule']['second'] === '00')
             second = 0;
