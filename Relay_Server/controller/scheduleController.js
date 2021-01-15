@@ -11,7 +11,7 @@ var scheduleMethods = {
     getDateOfNextInvocationReq: (scheduleHelper) => {
         let self = scheduleHelper;
         return function(req, res, next){
-            let schedule_id = req.params.schedule_id;
+            let schedule_id = req.params.schedule_id.toString();
             if(!self.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
             else{
