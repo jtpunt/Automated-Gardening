@@ -339,7 +339,7 @@ var scheduleMethods = {
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
                     let overlappingMsg = scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
-                    let conflictingMSg = scheduleHelper.isScheduleConflicting(off_schedule);
+                    let conflictingMsg = scheduleHelper.isScheduleConflicting(off_schedule);
                     conflictingMsg += scheduleHelper.isScheduleConflicting(on_schedule);
                     
                     if(overlappingMsg !== "" || conflictingMsg !== ""){
