@@ -325,6 +325,7 @@ let scheduleHelpers = {
         }
         // otherwise, everyday 1 time - off schedules
         else{
+            console.log(`everyday 1 time schedules`);
             // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
             for(const [schedule_id, schedule_obj] of Object.entries(self.scheduleObj)){
                 let arr_date      = schedule_obj['schedule_config']['schedule']['date']  || undefined,
