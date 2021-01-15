@@ -518,25 +518,9 @@ router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(
 
 
 // Returns the date of the next planned invocation of our schedule
-router.get('/schedule/:schedule_id/date', function(req, res) {
-    var schedule_id = req.params.schedule_id;
-    console.log(typeof schedule_id);
-    try{
-        let nextInvocation = scheduleController.getDateOfNextInvocation(schedule_id);
-        if(nextInvocation === undefined){
-            res.write("Next Invocation Date Not Found For This Schedule.");
-        }else{
-            res.write(nextInvocation.toString());
-        }
-        
-        res.status(200).end();
-    }catch(err){
-        console.log("Error caught!\n");
-        console.log(err);
-        res.write("404: ", JSON.stringify(err));
-        res.status(404).end();
-    }
-});
+router.get('/schedule/:schedule_id/date', 
+    scheduleController.getDateOfNextInvocationReq()
+);
 
 
 router.post('/schedule/:schedule_id/cancel', middleware.verifyAdminAccount, function(req, res) {
