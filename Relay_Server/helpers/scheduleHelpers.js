@@ -333,7 +333,7 @@ let scheduleHelpers = {
                     arr_year      = schedule_obj['schedule_config']['schedule']['year']  || undefined,
                     arr_gpio      = schedule_obj['schedule_config']['device']['gpio']    || undefined,
                     arr_dayOfWeek = (schedule_obj['schedule_config']['schedule']['dayOfWeek']) ? Array.from(schedule_obj['schedule_config']['schedule']['dayOfWeek']) : undefined;
-                    
+                console.log(`Iterating through schedules`);
                 if(schedule_obj['schedule_config']['schedule']['nextScheduleId'] !== undefined && gpio === arr_gpio){
                 //if(schedule_obj["_id"] !== schedule_id){
                     // everyday 1 time - off schedules compared to recurrence based scheduling
