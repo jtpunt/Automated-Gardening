@@ -167,7 +167,7 @@ let scheduleMiddleware = {
             today     = new Date();
 
         try{
-            console.log(`Trying to validate schedule`)
+            console.log(`Trying to validate schedule - ${second}`);
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND)
