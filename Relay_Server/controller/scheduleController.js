@@ -34,8 +34,8 @@ var scheduleMethods = {
             return job;
         return job.nextInvocation();        
     },
-    getDateOfNextInvocationReq: () => {
-        let self = this;
+    getDateOfNextInvocationReq: (scheduleController) => {
+        let self = scheduleController;
         return function(req, res, next){
             let schedule_id = req.params.schedule_id;
             if(!self.doesScheduleExist(schedule_id))
