@@ -25,7 +25,7 @@ process.on('SIGINT', () => {
 try{
     outletController.adjustForIPChange();
     outletController.getOutletSetup();
-    scheduleController.getSchedules(outletController.activateRelay, outletController);
+    scheduleHelper.getSchedules(outletController.activateRelay, outletController);
 }catch(err){
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
