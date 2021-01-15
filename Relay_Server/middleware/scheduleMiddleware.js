@@ -155,7 +155,7 @@ let scheduleMiddleware = {
             validSchedule   = {},
             schedule_config = req.body,
             schedule        = schedule_config['schedule'];
-        console.log(`in validateScheduleInputs with ${schedule}`);
+        console.log(`in validateScheduleInputs with ${JSON.stringify(schedule)}`);
         const 
             second    = sanitize_input(schedule['second']),
             minute    = sanitize_input(schedule['minute']),
@@ -167,6 +167,7 @@ let scheduleMiddleware = {
             today     = new Date();
 
         try{
+            console.log(`Trying to validate schedule`)
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
                 if(second >= MIN_SECOND && second <= MAX_SECOND)
@@ -241,6 +242,7 @@ let scheduleMiddleware = {
             next();
         }
         catch(exc){
+            console.log(`err: ${exc.toString()}`);
             res.status(400).send(exc.toString);
         }
     }
