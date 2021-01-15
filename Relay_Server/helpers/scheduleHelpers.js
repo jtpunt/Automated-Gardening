@@ -384,7 +384,7 @@ let scheduleHelpers = {
         new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
-        
+        console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
             let arr_on_schedule_obj    = self.scheduleObj[schedule_id],
                 arr_on_schedule_config = arr_on_schedule_obj['schedule_config'],
@@ -477,7 +477,7 @@ let scheduleHelpers = {
         timestamp.setHours(hour, minute, second);  
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(schedule_config);
-        
+        console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
             if(self.doesScheduleExist(schedule_id)){
                 let schedule_config       = self.getScheduleConfigById(schedule_id),
