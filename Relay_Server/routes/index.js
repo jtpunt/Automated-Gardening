@@ -102,7 +102,8 @@ router.get('/schedule', function(req, res) {
 // add a new chedule
 router.post('/schedule', 
     middleware.verifyAdminAccount, 
-    scheduleMiddleware.checkScheduleInputs, 
+    scheduleMiddleware.checkScheduleInputs,
+    scheduleMiddleware.validateScheduleInputs,
     outletMiddleware.isGpioConfigured(outletController),
     scheduleController.createSchedulesReq(scheduleHelper, outletController)
 );
