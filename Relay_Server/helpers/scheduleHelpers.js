@@ -345,6 +345,8 @@ let scheduleHelpers = {
                     // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
                     else
                         indices.push(schedule_id);
+                }else{
+                    console.log(`nextScheduleId: ${schedule_obj['schedule_config']['schedule']['nextScheduleId']}`);
                 }
             }
         }
