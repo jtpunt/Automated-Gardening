@@ -11,7 +11,6 @@ var express            = require("express"),
     middleware         = require("../middleware/index"),
     scheduleMiddleware = require("../middleware/scheduleMiddleware"),
     outletMiddleware   = require("../middleware/outletMiddleware"),
-    scheduleHelper     = require("../helpers/scheduleHelpers"),
     ip                 = require("ip"),
     localIP            = ip.address(),
     async              = require("asyncawait/async"),
@@ -25,7 +24,7 @@ process.on('SIGINT', () => {
 try{
     outletController.adjustForIPChange();
     outletController.getOutletSetup();
-    scheduleHelper.getSchedules(outletController.activateRelay, outletController);
+    scheduleController.getSchedules(outletController.activateRelay, outletController);
 }catch(err){
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
@@ -520,7 +519,7 @@ router.delete('/schedule/:schedule_id', middleware.verifyAdminAccount, function(
 
 // Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', 
-    scheduleController.getDateOfNextInvocationReq(scheduleHelper)
+    scheduleController.getDateOfNextInvocationReq(scheduleController)
 );
 
 
