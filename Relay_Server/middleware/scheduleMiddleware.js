@@ -149,12 +149,12 @@ let scheduleMiddleware = {
         }
     },
     validateScheduleInputs(req, res, next){
-        // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
-            // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
-        let sanitize_input  = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined},
-            validSchedule   = {},
+        let validSchedule   = {},
             schedule_config = req.body,
             schedule        = schedule_config['schedule'];
+                    // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
+            // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
+            let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
         console.log(`in validateScheduleInputs with ${JSON.stringify(schedule)}`);
         const 
             second    = sanitize_input(schedule['second']),
