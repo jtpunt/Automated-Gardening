@@ -38,7 +38,7 @@ var scheduleMethods = {
         let self = this;
         return function(req, res, next){
             let schedule_id = req.params.schedule_id;
-            if(!self.doesScheduleExist())
+            if(!self.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
 
             let nextInvocation = self.getDateOfNextInvocation(schedule_id);
