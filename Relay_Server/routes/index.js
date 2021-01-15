@@ -104,7 +104,7 @@ router.post('/schedule',
     middleware.verifyAdminAccount, 
     scheduleMiddleware.checkScheduleInputs, 
     outletMiddleware.isGpioConfigured(outletController),
-    scheduleController.createSchedulesReq(scheduleHelper)
+    scheduleController.createSchedulesReq(scheduleHelper, outletController)
 );
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
