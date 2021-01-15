@@ -155,7 +155,7 @@ let scheduleMiddleware = {
             validSchedule   = {},
             schedule_config = req.body,
             schedule        = schedule_config['schedule'];
-
+        console.log(`in validateScheduleInputs`);
         const 
             second    = sanitize_input(schedule['second']),
             minute    = sanitize_input(schedule['minute']),
