@@ -40,12 +40,14 @@ var scheduleMethods = {
             let schedule_id = req.params.schedule_id;
             if(!self.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
-
-            let nextInvocation = self.getDateOfNextInvocation(schedule_id);
-            if(nextInvocation === undefined)
-                res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
-
-            res.status(200).send(nextInvocation.toString());
+            else{
+                let nextInvocation = self.getDateOfNextInvocation(schedule_id);
+                if(nextInvocation === undefined)
+                    res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
+                else
+                    res.status(200).send(nextInvocation.toString());
+            }
+            
         }
     },
     setScheduleObjById: function(schedule_id, schedule_obj){
