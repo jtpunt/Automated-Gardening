@@ -338,16 +338,17 @@ let scheduleHelpers = {
                 //if(schedule_obj["_id"] !== schedule_id){
                     // everyday 1 time - off schedules compared to recurrence based scheduling
                     if(arr_dayOfWeek !== undefined && arr_dayOfWeek.length)
-                        indices.push(index);
+                        indices.push(schedule_id);
                     // everyday 1 time - off schedules compared to date based scheduling
                     else if (arr_date !== undefined && arr_month !== undefined && arr_year !== undefined)
-                        indices.push(index);
+                        indices.push(schedule_id);
                     // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
                     else
-                        indices.push(index);
+                        indices.push(schedule_id);
                 }
             }
         }
+        console.log(`schedule ids: ${indices}`);
         return indices;
     },
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
