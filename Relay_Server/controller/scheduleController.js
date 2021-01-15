@@ -142,60 +142,64 @@ var scheduleMethods = {
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
-                    scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
-                    scheduleHelper.isScheduleConflicting(off_schedule);
-                    scheduleHelper.isScheduleConflicting(on_schedule);
+                    let overlappingMsg = scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
+                    let conflictingMsg = scheduleHelper.isScheduleConflicting(off_schedule);
+                    conflictingMsg += scheduleHelper.isScheduleConflicting(on_schedule);
+                    if(overlappingMsg !== "" || conflictingMsg !== ""){
+                        res.status(400).send(overlappingMsg + " " + conflictingMsg);
+                    }else{
+                        let off_schedule_args = [
+                            off_schedule, 
+                            outletController.activateRelay, 
+                            outletController,
+                            Number(off_schedule['device']['gpio']), 
+                            Boolean(off_schedule['device']['desired_state'])
+                        ]
+                   
+                        // create the off schedule and grab the id
+                        let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
+                        on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                        off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
 
-                    let off_schedule_args = [
-                        off_schedule, 
-                        outletController.activateRelay, 
-                        outletController,
-                        Number(off_schedule['device']['gpio']), 
-                        Boolean(off_schedule['device']['desired_state'])
-                    ]
-               
-                    // create the off schedule and grab the id
-                    let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
-                    on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
-                    off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
+                        let off_end_schedule_args = [
+                            off_end_schedule, 
+                            scheduleController.deleteSchedule, 
+                            scheduleController, 
+                            offScheduleId
+                        ]
 
-                    let off_end_schedule_args = [
-                        off_end_schedule, 
-                        scheduleController.deleteSchedule, 
-                        scheduleController, 
-                        offScheduleId
-                    ]
+                        let offEndScheduleId = await scheduleHelper.createSchedule(...off_end_schedule_args);
+                        off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
 
-                    let offEndScheduleId = await scheduleHelper.createSchedule(...off_end_schedule_args);
-                    off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
+                        let on_schedule_args = [
+                            on_schedule, 
+                            outletController.activateRelay, 
+                            outletController,
+                            Number(on_schedule['device']['gpio']), 
+                            Boolean(on_schedule['device']['desired_state'])
+                        ]
+                        // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
+                        let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
+                        off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                        on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
 
-                    let on_schedule_args = [
-                        on_schedule, 
-                        outletController.activateRelay, 
-                        outletController,
-                        Number(on_schedule['device']['gpio']), 
-                        Boolean(on_schedule['device']['desired_state'])
-                    ]
-                    // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                    let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
-                    off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
-                    on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
+                        let on_end_schedule_args = [
+                            off_end_schedule, 
+                            scheduleController.deleteSchedule, 
+                            scheduleController, 
+                            onScheduleId
+                        ]
+                        let onEndScheduleId = await scheduleHelper.createSchedule(...on_end_schedule_args);
+                        on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
 
-                    let on_end_schedule_args = [
-                        off_end_schedule, 
-                        scheduleController.deleteSchedule, 
-                        scheduleController, 
-                        onScheduleId
-                    ]
-                    let onEndScheduleId = await scheduleHelper.createSchedule(...on_end_schedule_args);
-                    on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
-
-                    //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
-                    //scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
-                    scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
-                    scheduleHelper.updateScheduleRelationship(onScheduleId, on_schedule);
-                    console.log(`endScheduleId: ${onEndScheduleId}`);
-                    console.log(`offScheduleId: ${offEndScheduleId}`);
+                        //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                        //scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
+                        scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                        scheduleHelper.updateScheduleRelationship(onScheduleId, on_schedule);
+                        console.log(`endScheduleId: ${onEndScheduleId}`);
+                        console.log(`offScheduleId: ${offEndScheduleId}`);
+                    }
+                    
                 }
 
             }
@@ -252,34 +256,37 @@ var scheduleMethods = {
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
-                    scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
-                    scheduleHelper.isScheduleConflicting(off_schedule);
-                    scheduleHelper.isScheduleConflicting(on_schedule);
+                    let overlappingMsg = scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
+                    let conflictingMsg = scheduleHelper.isScheduleConflicting(off_schedule);
+                    conflictingMsg += scheduleHelper.isScheduleConflicting(on_schedule);
+                    if(overlappingMsg !== "" || conflictingMsg !== ""){
+                        res.status(400).send(overlappingMsg + " " + conflictingMsg);
+                    }else{
+                        let off_schedule_args = [
+                            off_schedule, 
+                            outletController.activateRelay, 
+                            outletController,
+                            Number(off_schedule['device']['gpio']), 
+                            Boolean(off_schedule['device']['desired_state'])
+                        ]
+                        // create the off schedule and grab the id
+                        let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
+                        on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
 
-                    let off_schedule_args = [
-                        off_schedule, 
-                        outletController.activateRelay, 
-                        outletController,
-                        Number(off_schedule['device']['gpio']), 
-                        Boolean(off_schedule['device']['desired_state'])
-                    ]
-                    // create the off schedule and grab the id
-                    let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
-                    on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                        let on_schedule_args = [
+                            on_schedule, 
+                            outletController.activateRelay, 
+                            outletController,
+                            Number(on_schedule['device']['gpio']), 
+                            Boolean(on_schedule['device']['desired_state'])
+                        ]
+                        // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
+                        let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
+                        off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                    let on_schedule_args = [
-                        on_schedule, 
-                        outletController.activateRelay, 
-                        outletController,
-                        Number(on_schedule['device']['gpio']), 
-                        Boolean(on_schedule['device']['desired_state'])
-                    ]
-                    // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                    let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
-                    off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
-
-                    //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
-                    scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                        //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                        scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                    }
                 }
             }
             // you can set a schedule with a start time and end time
@@ -331,36 +338,39 @@ var scheduleMethods = {
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
-                    scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
-                    scheduleHelper.isScheduleConflicting(off_schedule);
-                    scheduleHelper.isScheduleConflicting(on_schedule);
+                    let overlappingMsg = scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
+                    let conflictingMSg = scheduleHelper.isScheduleConflicting(off_schedule);
+                    conflictingMsg += scheduleHelper.isScheduleConflicting(on_schedule);
                     
-                    console.log(`off_schedule: ${JSON.stringify(off_schedule)}`);
-                    // create the off schedule and grab the id
-                    let off_schedule_args = [
-                        off_schedule, 
-                        outletController.activateRelay, 
-                        outletController,
-                        Number(off_schedule['device']['gpio']), 
-                        Boolean(off_schedule['device']['desired_state'])
-                    ]
-                    let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
-                    on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
-                    
-                    console.log(`on_schedule: ${JSON.stringify(on_schedule)}`);
-                    let on_schedule_args = [
-                        on_schedule, 
-                        outletController.activateRelay, 
-                        outletController,
-                        Number(on_schedule['device']['gpio']), 
-                        Boolean(on_schedule['device']['desired_state'])
-                    ]
-                    // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
-                    let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
-                    off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                    if(overlappingMsg !== "" || conflictingMsg !== ""){
+                        res.status(400).send(overlappingMsg + " " + conflictingMsg);
+                    }else{
+                        // create the off schedule and grab the id
+                        let off_schedule_args = [
+                            off_schedule, 
+                            outletController.activateRelay, 
+                            outletController,
+                            Number(off_schedule['device']['gpio']), 
+                            Boolean(off_schedule['device']['desired_state'])
+                        ]
+                        let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
+                        on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                        
+                        console.log(`on_schedule: ${JSON.stringify(on_schedule)}`);
+                        let on_schedule_args = [
+                            on_schedule, 
+                            outletController.activateRelay, 
+                            outletController,
+                            Number(on_schedule['device']['gpio']), 
+                            Boolean(on_schedule['device']['desired_state'])
+                        ]
+                        // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
+                        let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
+                        off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                    //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
-                    scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                        //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
+                        scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                    }
                 }
             }
             // This functionality has no use for the smart gardening application, however,
@@ -385,19 +395,23 @@ var scheduleMethods = {
                     device: device_end
                 };
       
-                scheduleHelper.isScheduleConflicting(off_schedule);
-
-                let off_schedule_args = [
-                    off_schedule, 
-                    outletController.activateRelay, 
-                    outletController,
-                    Number(off_schedule['device']['gpio']), 
-                    Boolean(off_schedule['device']['desired_state'])
-                ]
-                let value = await scheduleHelper.createSchedule(...off_schedule_args);
-                console.log(`value returned: ${value}`);
-                //value.then((value) => console.log(value));
-                console.log("Schedule successfully created!\n");
+                let conflictingMsg = scheduleHelper.isScheduleConflicting(off_schedule);
+                if(conflictingMsg !== ""){
+                    res.status(400).send(conflictingMsg);
+                }else{
+                    let off_schedule_args = [
+                        off_schedule, 
+                        outletController.activateRelay, 
+                        outletController,
+                        Number(off_schedule['device']['gpio']), 
+                        Boolean(off_schedule['device']['desired_state'])
+                    ]
+                    let value = await scheduleHelper.createSchedule(...off_schedule_args);
+                    console.log(`value returned: ${value}`);
+                    //value.then((value) => console.log(value));
+                    console.log("Schedule successfully created!\n");
+                }
+                
             }else {
                 res.status(404).send("no start_time or end_times found");
             }
@@ -420,12 +434,28 @@ var scheduleMethods = {
                 
             my_schedule['schedule']['prevScheduleId'] = updatedSchedule['schedule']['prevScheduleId'],
             my_schedule['schedule']['nextScheduleId'] = updatedSchedule['schedule']['nextScheduleId']
-
-            scheduleHelper.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
-            console.log("Successfully Updated!");
-            res.status(200).send("Successfully updated!");
-            
-        
+            if(!scheduleHelper.doesScheduleExist(schedule_id))
+                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
+            else{
+                scheduleHelper.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
+                console.log("Successfully Updated!");
+                res.status(200).send("Successfully updated!");
+            }
+        }
+    },
+    resumeScheduleReq: (scheduleHelper) => {
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+            if(!scheduleHelper.doesScheduleExist(schedule_id))
+                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
+            else{
+                scheduleHelper.resumeSchedule(schedule_id, outletController.activateRelay, outletController);
+                let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
+                if(nextInvocationDate === undefined)
+                    res.status(400).send(`Schedule id ${schedule_id} did not successfully resume`);
+                else
+                    res.status(200).send(`Schedule id - ${schedule_id} has successfully resumed on ${nextInvocationDate}`);
+            }
         }
     }
 }

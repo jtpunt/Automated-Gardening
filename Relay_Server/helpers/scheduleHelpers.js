@@ -362,7 +362,7 @@ let scheduleHelpers = {
             new_off_timestamp = new Date();
             
         let conflictMsg       = "",
-            indices           = [];
+            schedule_ids      = [];
         
         console.log("in isScheduleOverlapping");
         // '00' from minute, second, or hour will create an invalid date object
@@ -417,8 +417,7 @@ let scheduleHelpers = {
                conflictMsg += `Schedule is overlapping`;
             
         });
-        if(conflictMsg !== "")
-            throw new Error(conflictMsg);
+        return conflictMsg;
     },
     isScheduleConflicting: function(schedule_config){
         let self        = this,
@@ -486,9 +485,7 @@ let scheduleHelpers = {
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_config);
             }
         });
-        if(conflictMsg !== ""){
-            throw new Error(conflictMsg);
-        }
+        return conflictMsg;
     },
     // Finds the next_schedule_config that's associated with the prev_schedule_config
     // and returns the boolean result of whether the 2nd argument, timestamp is greater than or equal to 

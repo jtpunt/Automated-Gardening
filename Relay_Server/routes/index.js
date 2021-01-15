@@ -137,50 +137,20 @@ router.get('/schedule/:schedule_id/date',
 );
 
 
-router.post('/schedule/:schedule_id/cancel', middleware.verifyAdminAccount, function(req, res) {
-    var schedule_id = req.params.schedule_id;
-    console.log(typeof schedule_id);
-    try{
-        scheduleController.cancelSchedule(schedule_id);
-        console.log("Successfully Canceled!");
-        res.status(200).end();
-    }catch(err){
-        console.log("Error caught!\n");
-        console.log(err);
-        res.write("404: ", JSON.stringify(err));
-        res.status(404).end();
-    }
-});
+router.post('/schedule/:schedule_id/cancel', 
+    middleware.verifyAdminAccount, 
+    scheduleController.cancelScheduleReq(scheduleHelper)
+);
 
-router.post('/schedule/:schedule_id/cancel/next', middleware.verifyAdminAccount ,function(req, res) {
-    var schedule_id = req.params.schedule_id;
-    console.log(typeof schedule_id);
-    try{
-        scheduleController.cancelNextSchedule(schedule_id);
-        console.log("Successfully Canceled!");
-        res.status(200).end();
-    }catch(err){
-        console.log("Error caught!\n");
-        console.log(err);
-        res.write("404: ", JSON.stringify(err));
-        res.status(404).end();
-    }
-});
-router.get('/schedule/:schedule_id/resume', middleware.verifyAdminAccount, function(req, res) {
-    var schedule_id = req.params.schedule_id;
-    console.log(typeof schedule_id);
-    try{
-        scheduleController.resumeSchedule(schedule_id, outletController.activateRelay, outletController);
-        console.log("Resume was successful");
-        res.status(200).end();
-    }catch(err){
-        console.log("Error caught!\n");
-        console.log(err);
-        res.write("404: ", JSON.stringify(err));
-        res.status(404).end();
-    }
-});
-router.get('/status/:id', function(req, res){
+router.post('/schedule/:schedule_id/cancel/next', 
+    middleware.verifyAdminAccount,
+    scheduleController.cancelNextScheduleReq(scheduleHelper)
+);
+router.get('/schedule/:schedule_id/resume', 
+    middleware.verifyAdminAccount, 
+    scheduleController.resumeScheduleReq(scheduleHelper)
+);
+router.get('/status/:id', outletMiddleware.isGpioConfigured(outletController), function(req, res){
     console.log("in /status/:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
     if(Number.isNaN(gpio_input)){
@@ -195,17 +165,12 @@ router.get('/status/:id', function(req, res){
     // validateInput(gpio_input, res, outletHelper.getStatus, outletHelper);
 });
 // really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
-router.get('/activate/:id', function(req, res){
+router.get('/activate/:id', outletMiddleware.isGpioConfigured(outletController), function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
-    if(Number.isNaN(gpio_input)){
-        res.write("400: ", "GPIO input given is not a number!");
-        res.status(400).end();
-    }else{
-        console.log("is a valid number!\n");
-        outletController.toggleRelay(gpio_input);
-        res.status(200).end();
-    }
+    console.log("is a valid number!\n");
+    outletController.toggleRelay(gpio_input);
+    res.status(200).end();
 });
 router.get('/activate/:id/:desired_state', middleware.verifyAdminAccount, function(req, res){
     console.log("in /:id route\n");
