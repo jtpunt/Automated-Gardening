@@ -417,6 +417,7 @@ let scheduleHelpers = {
                conflictMsg += `Schedule is overlapping`;
             
         });
+        console.log(`conflictMsg: ${conflictMsg}`);
         return conflictMsg;
     },
     isScheduleConflicting: function(schedule_config){
@@ -485,6 +486,7 @@ let scheduleHelpers = {
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_config);
             }
         });
+        console.log(`conflictMsg: ${conflictMsg}`);
         return conflictMsg;
     },
     // Finds the next_schedule_config that's associated with the prev_schedule_config
