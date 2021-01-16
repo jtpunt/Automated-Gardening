@@ -325,7 +325,7 @@ var scheduleMethods = {
                 };
 
                 console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
-                console.log(`off_end_time: ${JSON.stringify(off_time_times)}`);
+                console.log(`off_end_time: ${JSON.stringify(off_time_time)}`);
                 // let new_on_schedule = scheduleController.buildSchedule(start_time),
                 //     new_off_schedule = scheduleController.buildSchedule(end_time);
                     
