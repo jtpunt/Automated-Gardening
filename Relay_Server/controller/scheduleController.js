@@ -349,7 +349,7 @@ var scheduleMethods = {
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
-                if(on_time_timestamp === off_time_timestamp)
+                if(on_time_timestamp == off_time_timestamp)
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
