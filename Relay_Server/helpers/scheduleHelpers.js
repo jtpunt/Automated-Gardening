@@ -344,13 +344,13 @@ let scheduleHelpers = {
     },
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
-            new_on_second     = on_schedule_config['schedule']['second'] || undefined,
-            new_on_minute     = on_schedule_config['schedule']['minute'] || undefined,
-            new_on_hour       = on_schedule_config['schedule']['hour'  ] || undefined,
+            new_on_second     = on_schedule_config['schedule']['second'],
+            new_on_minute     = on_schedule_config['schedule']['minute'],
+            new_on_hour       = on_schedule_config['schedule']['hour'  ],
             
-            new_off_second    = off_schedule_config['schedule']['second'] || undefined,
-            new_off_minute    = off_schedule_config['schedule']['minute'] || undefined,
-            new_off_hour      = off_schedule_config['schedule']['hour']   || undefined, 
+            new_off_second    = off_schedule_config['schedule']['second'],
+            new_off_minute    = off_schedule_config['schedule']['minute'],
+            new_off_hour      = off_schedule_config['schedule']['hour'], 
             new_on_timestamp  = new Date(),
             new_off_timestamp = new Date();
             
@@ -362,17 +362,17 @@ let scheduleHelpers = {
         // 0 from minute, second, or hour will create an invalid date object
         // however, any number from 1 - 9 is fine and doesn't need a 0 prepended
         // to it inorder to create a valid object ¯\_(ツ)_/¯
-        if(on_schedule_config['schedule']['second'] === 0)  new_on_second = '00';
-        if(on_schedule_config['schedule']['minute'] === 0)  new_on_minute = '00';
-        if(on_schedule_config['schedule']['hour'] === 0)    new_on_hour   = '00';
+        // if(on_schedule_config['schedule']['second'] === 0)  new_on_second = '00';
+        // if(on_schedule_config['schedule']['minute'] === 0)  new_on_minute = '00';
+        // if(on_schedule_config['schedule']['hour'] === 0)    new_on_hour   = '00';
 
-        if(off_schedule_config['schedule']['second'] === 0) new_off_second = '00';
-        if(off_schedule_config['schedule']['minute'] === 0) new_off_minute = '00';
-        if(off_schedule_config['schedule']['hour'] === 0)   new_off_hour   = '00';
+        // if(off_schedule_config['schedule']['second'] === 0) new_off_second = '00';
+        // if(off_schedule_config['schedule']['minute'] === 0) new_off_minute = '00';
+        // if(off_schedule_config['schedule']['hour'] === 0)   new_off_hour   = '00';
 
         //  new_on_timestamp.setHours(10, 0, '00'); // this should not work, but it does  
         new_on_timestamp.setHours(0, 0, 0);
-        //new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
+        new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
         new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
