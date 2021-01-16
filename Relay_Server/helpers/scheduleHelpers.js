@@ -371,19 +371,19 @@ let scheduleHelpers = {
         console.log("in isScheduleOverlapping");
         console.log(`with: ${JSON.stringify(on_schedule_config)} and ${JSON.stringify(off_schedule_config)}`);
         // '00' from minute, second, or hour will create an invalid date object
-        if(on_schedule_config['schedule']['second'] === 0)
-            new_on_second = '00';
-        if(on_schedule_config['schedule']['minute'] === 0)
-            new_on_minute = '00';
-        if(on_schedule_config['schedule']['hour'] === 0)
-            new_on_hour = '00';
-        // '00' from minute, second, or hour will create an invalid date object
-        if(off_schedule_config['schedule']['second'] === 0)
-            new_off_second = '00';
-        if(off_schedule_config['schedule']['minute'] === 0)
-            new_off_minute = '00';
-        if(off_schedule_config['schedule']['hour'] == 0)
-            new_off_hour = '00';
+        // if(on_schedule_config['schedule']['second'] === 0)
+        //     new_on_second = '00';
+        // if(on_schedule_config['schedule']['minute'] === 0)
+        //     new_on_minute = '00';
+        // if(on_schedule_config['schedule']['hour'] === 0)
+        //     new_on_hour = '00';
+        // // '00' from minute, second, or hour will create an invalid date object
+        // if(off_schedule_config['schedule']['second'] === 0)
+        //     new_off_second = '00';
+        // if(off_schedule_config['schedule']['minute'] === 0)
+        //     new_off_minute = '00';
+        // if(off_schedule_config['schedule']['hour'] == 0)
+        //     new_off_hour = '00';
             
         new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
         new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
@@ -471,13 +471,13 @@ let scheduleHelpers = {
                 return "";
             
         }
-        // '00' from minute, second, or hour will create an invalid date object
-        if(schedule_config['schedule']['second'] === 0)
-            second = '00';
-        if(schedule_config['schedule']['minute'] === 0)
-            minute = '00';
-        if(schedule_config['schedule']['hour'] === 0)
-            hour = '00';
+        // // '00' from minute, second, or hour will create an invalid date object
+        // if(schedule_config['schedule']['second'] === 0)
+        //     second = '00';
+        // if(schedule_config['schedule']['minute'] === 0)
+        //     minute = '00';
+        // if(schedule_config['schedule']['hour'] === 0)
+        //     hour = '00';
             
         timestamp.setHours(hour, minute, second);  
         
