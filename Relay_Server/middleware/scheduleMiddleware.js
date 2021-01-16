@@ -264,6 +264,7 @@ let scheduleMiddleware = {
                 schedule_config['schedule']['start_time'] = buildSchedule(start_time);
             if(end_time)
                 schedule_config['schedule']['end_time'] = buildSchedule(end_time);
+            console.log(`schedule_config before adding to req.body: ${JSON.stringify(schedule_config)}`);
             req.body = schedule_config;
             console.log(`req.body: ${JSON.stringify(req.body)}`);
             next();
@@ -273,7 +274,7 @@ let scheduleMiddleware = {
         }    
     },
     validateDeviceInputs(req, res, next){
-        
+
     }
 }
 module.exports = scheduleMiddleware;
