@@ -362,8 +362,8 @@ let scheduleHelpers = {
             new_off_second    = off_schedule_config['schedule']['second'] || undefined,
             new_off_minute    = off_schedule_config['schedule']['minute'] || undefined,
             new_off_hour      = off_schedule_config['schedule']['hour']   || undefined, 
-            new_on_timestamp  = new Date(new Date().setUTCHours(0,0,0,0)),
-            new_off_timestamp = new Date(new Date().setUTCHours(0,0,0,0));
+            new_on_timestamp  = new Date(),
+            new_off_timestamp = new Date();
             
         let conflictMsg       = "",
             schedule_ids      = [];
@@ -385,7 +385,7 @@ let scheduleHelpers = {
         // if(off_schedule_config['schedule']['hour'] == 0)
         //     new_off_hour = '00';
             
-        new_on_timestamp.setHours(10, 0, 0);  
+        new_on_timestamp.setHours(10, 0, "00");  
         new_off_timestamp.setHours(2, 0, 0);
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
