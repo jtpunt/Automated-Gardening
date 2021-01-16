@@ -291,11 +291,12 @@ var scheduleMethods = {
                 }
                 let on_start_time = {
                     ... newSchedule['schedule']['start_time'], // grabs second, minute, hour
-                    ... newSchedule['schedule']
+                    newSchedule['schedule']['dayOfWeek'] ? dayOfWeek: ... newSchedule['schedule']['dayOfWeek']
+                    
                 },
                 off_end_time   = {
                     ... newSchedule['schedule']['end_time'],
-                    ... newSchedule['schedule']
+                    ... newSchedule['schedule']['dayOfWeek'] 
                 };
                 console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
                 console.log(`on_end_time: ${JSON.stringify(off_end_time)}`);
