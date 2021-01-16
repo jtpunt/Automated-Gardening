@@ -290,11 +290,11 @@ var scheduleMethods = {
                     desired_state: false // overwrite what we receieved for desired state in the 'device' key to be 'off'
                 }
                 let on_start_time = {
-                    ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
+                   // ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
                     ... newSchedule['schedule']['start_time'] // grabs second, minute, hour
                 },
                 off_end_time   = {
-                    ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
+                    //... newSchedule['schedule'], // grabs dayOfWeek or date, month year
                     ... newSchedule['schedule']['end_time'] 
                 };
 
