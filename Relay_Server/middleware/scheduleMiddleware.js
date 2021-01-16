@@ -166,7 +166,9 @@ let scheduleMiddleware = {
         let schedule_config = req.body,
             schedule        = schedule_config['schedule'],
             start_time      = schedule['start_time'],
-            end_time        = schedule['end_time']
+            end_time        = schedule['end_time'];
+
+        console.log(`req.body: ${JSON.stringify(req.body)}`);
         // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
         // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
         let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
