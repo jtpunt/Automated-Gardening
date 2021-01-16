@@ -122,22 +122,12 @@ var scheduleMethods = {
                 }
                 let start_date = newSchedule['schedule']['start_date'],
                     end_date   = newSchedule['schedule']['end_date'];
-                // let new_on_schedule = scheduleController.buildSchedule(start_time),
-                //     new_off_schedule = scheduleController.buildSchedule(end_time);
-                    
+
                 let on_time_timestamp = new Date(),
                     off_time_timestamp = new Date(),
                     start_date_timestamp = new Date(start_date['year'], start_date['month'], start_date['date']),
                     end_date_timestamp = new Date(end_date['year'], end_date['month'], end_date['date']);
 
-                console.log(`end_schedule: ${JSON.stringify(on_end_schedule)}`);
-                // if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
-                // if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
-                // if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
-
-                // if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
-                // if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
-                // if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
@@ -198,12 +188,8 @@ var scheduleMethods = {
                         let onEndScheduleId = await scheduleHelper.createSchedule(...on_end_schedule_args);
                         on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
 
-                        //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
-                        //scheduleController.editSchedule(onScheduleId, on_schedule, outletController.activateRelay, outletController);
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                         scheduleHelper.updateScheduleRelationship(onScheduleId, on_schedule);
-                        console.log(`endScheduleId: ${onEndScheduleId}`);
-                        console.log(`offScheduleId: ${offEndScheduleId}`);
                     }
                     
                 }
@@ -247,19 +233,9 @@ var scheduleMethods = {
                     device: device_end
                 };
 
-                // let new_on_schedule = scheduleController.buildSchedule(start_time),
-                //     new_off_schedule = scheduleController.buildSchedule(end_time);
-                    
                 let on_time_timestamp = new Date(),
                     off_time_timestamp = new Date();
                 
-                // if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
-                // if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
-                // if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
-
-                // if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
-                // if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
-                // if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
@@ -295,7 +271,6 @@ var scheduleMethods = {
                         let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
                         off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                        //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                     }
                 }
@@ -305,10 +280,7 @@ var scheduleMethods = {
                 newSchedule['schedule']['start_time'] !== undefined && 
                 newSchedule['schedule']['end_time']   !== undefined
                 ){
-                console.log("New schedule with start_time, and end_time");
-                console.log(`schedule: ${JSON.stringify(newSchedule['schedule'])}`);
-                console.log(`start_time: ${JSON.stringify(newSchedule['schedule']['start_time'])}`);
-                console.log(`end_time: ${JSON.stringify(newSchedule['schedule']['end_time'])}`);
+
                 let device_start = { // we need to rewrite our device values for our start schedule
                     ... newSchedule['device'], // take every key: value stored in the 'device' key
                     desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
@@ -334,22 +306,9 @@ var scheduleMethods = {
                     schedule: off_end_time,
                     device: device_end
                 };
-
-                console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
-                console.log(`off_end_time: ${JSON.stringify(off_end_time)}`);
-                // let new_on_schedule = scheduleController.buildSchedule(start_time),
-                //     new_off_schedule = scheduleController.buildSchedule(end_time);
                     
                 let on_time_timestamp = new Date(),
                     off_time_timestamp = new Date();
-                
-                if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
-                if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
-                if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
-
-                if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
-                if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
-                if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
 
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
@@ -388,7 +347,6 @@ var scheduleMethods = {
                         let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
                         off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                        //scheduleController.editSchedule(offScheduleId, off_schedule, outletController.activateRelay, outletController);  
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                     }
                 }
@@ -399,7 +357,6 @@ var scheduleMethods = {
             // you can set a schedule with just an end_time 
             else if(newSchedule['schedule']['end_time'] !== undefined){ // you can set a schedule with only an end time
             // example usage: we want to make sure the lights are off by 2am
-                console.log("in else with start_time");
 
                 let device_end = { // // we need to rewrite our device values for our end schedule
                     ... newSchedule['device'],
@@ -427,9 +384,6 @@ var scheduleMethods = {
                         Boolean(off_schedule['device']['desired_state'])
                     ]
                     let value = await scheduleHelper.createSchedule(...off_schedule_args);
-                    console.log(`value returned: ${value}`);
-                    //value.then((value) => console.log(value));
-                    console.log("Schedule successfully created!\n");
                 }
                 
             }else {
