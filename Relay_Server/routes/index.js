@@ -103,7 +103,7 @@ router.get('/schedule', function(req, res) {
 router.post('/schedule', 
     middleware.verifyAdminAccount, 
     scheduleMiddleware.checkScheduleInputs,
-    //scheduleMiddleware.validateScheduleInputs,
+    scheduleMiddleware.validateScheduleInputs,
     outletMiddleware.isGpioConfigured(outletController),
     scheduleController.createSchedulesReq(scheduleHelper, outletController)
 );
