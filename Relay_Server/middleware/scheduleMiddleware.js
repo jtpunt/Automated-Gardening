@@ -264,6 +264,7 @@ let scheduleMiddleware = {
             if(end_time)
                 schedule_config['schedule']['end_time'] = buildSchedule(end_time);
             req.body = schedule_config;
+            console.log(`req.body: ${JSON.stringify(req.body)}`);
             next();
 
         }catch(exc){
