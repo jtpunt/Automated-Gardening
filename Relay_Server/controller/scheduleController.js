@@ -141,6 +141,7 @@ var scheduleMethods = {
                 else if(on_time_timestamp === off_time_timestamp)
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
+
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
                     let overlappingMsg = scheduleHelper.isScheduleOverlapping(on_schedule, off_schedule);
                     let conflictingMsg = scheduleHelper.isScheduleConflicting(off_schedule);
@@ -295,6 +296,8 @@ var scheduleMethods = {
                 newSchedule['schedule']['end_time']   !== undefined
                 ){
                 console.log("New schedule with start_time, and end_time");
+                console.log(`start_time: ${JSON.stringify(start_time)}`);
+                console.log(`end_time: ${JSON.stringify(end_time)}`);
                 let device_start = { // we need to rewrite our device values for our start schedule
                     ... newSchedule['device'], // take every key: value stored in the 'device' key
                     desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
