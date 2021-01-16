@@ -472,12 +472,12 @@ let scheduleHelpers = {
             
         }
         // '00' from minute, second, or hour will create an invalid date object
-        if(schedule_config['schedule']['second'] === '00')
-            second = 0;
-        if(schedule_config['schedule']['minute'] === '00')
-            minute = 0;
-        if(schedule_config['schedule']['hour'] === '00')
-            hour = 0;
+        if(schedule_config['schedule']['second'] === 0)
+            second = '00';
+        if(schedule_config['schedule']['minute'] === 0)
+            minute = '00';
+        if(schedule_config['schedule']['hour'] === 0)
+            hour = '00';
             
         timestamp.setHours(hour, minute, second);  
         
