@@ -369,6 +369,7 @@ let scheduleHelpers = {
             schedule_ids      = [];
         
         console.log("in isScheduleOverlapping");
+        console.log(`with: ${JSON.stringify(on_schedule_config)} and ${JSON.stringify(off_schedule_config)}`);
         // '00' from minute, second, or hour will create an invalid date object
         if(on_schedule_config['schedule']['second'] === '00')
             new_on_second = 0;
