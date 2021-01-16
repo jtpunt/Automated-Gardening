@@ -320,14 +320,14 @@ var scheduleMethods = {
                     schedule: on_start_time,
                     device: device_start
                 },
-                console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
-                console.log(`off_end_time: ${JSON.stringify(off_time_times)}`);
                 off_schedule   = { // off schedule
                     ... newSchedule, 
                     schedule: off_end_time,
                     device: device_end
                 };
 
+                console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
+                console.log(`off_end_time: ${JSON.stringify(off_time_times)}`);
                 // let new_on_schedule = scheduleController.buildSchedule(start_time),
                 //     new_off_schedule = scheduleController.buildSchedule(end_time);
                     
