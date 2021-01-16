@@ -296,6 +296,7 @@ var scheduleMethods = {
                 newSchedule['schedule']['end_time']   !== undefined
                 ){
                 console.log("New schedule with start_time, and end_time");
+                console.log(`schedule: ${JSON.stringify(newSchedule['schedule'])}`);
                 console.log(`start_time: ${JSON.stringify(newSchedule['schedule']['start_time'])}`);
                 console.log(`end_time: ${JSON.stringify(newSchedule['schedule']['end_time'])}`);
                 let device_start = { // we need to rewrite our device values for our start schedule
@@ -325,7 +326,7 @@ var scheduleMethods = {
                 };
 
                 console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
-                console.log(`off_end_time: ${JSON.stringify(off_time_time)}`);
+                console.log(`off_end_time: ${JSON.stringify(off_end_time)}`);
                 // let new_on_schedule = scheduleController.buildSchedule(start_time),
                 //     new_off_schedule = scheduleController.buildSchedule(end_time);
                     
