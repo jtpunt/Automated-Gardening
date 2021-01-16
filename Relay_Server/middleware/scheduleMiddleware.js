@@ -19,6 +19,7 @@ let scheduleMiddleware = {
                 schedule: undefined,
                 device: undefined
             };
+        console.log(`req.body = ${JSON.stringify(newSchedule)}`);
         try{
         // excected req.body 
         // req.body = {
