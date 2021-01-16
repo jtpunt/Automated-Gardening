@@ -234,9 +234,6 @@ let scheduleHelpers = {
     // and returns the indices refering to those schedules in our scheduleArr
     findSameDaySchedulesAndRetIds: function(schedule_config){
         let self      = this,
-            second    = schedule_config['schedule']['second']|| undefined,
-            minute    = schedule_config['schedule']['minute']|| undefined,
-            hour      = schedule_config['schedule']['hour']  || undefined,
             date      = schedule_config['schedule']['date']  || undefined,
             month     = schedule_config['schedule']['month'] || undefined,
             year      = schedule_config['schedule']['year']  || undefined,
@@ -249,14 +246,6 @@ let scheduleHelpers = {
             };
             
         console.log(`schedule_config in findSameDay..${JSON.stringify(schedule_config)}`);
-        // '00' from minute, second, or hour will create an invalid date object
-        if(schedule_config['schedule']['second'] === '00')
-            second = 0;
-        if(schedule_config['schedule']['minute'] === '00')
-            minute = 0;
-        if(schedule_config['schedule']['hour'] == '00')
-            hour = 0;
-        timestamp.setHours(hour, minute, second);  
 
         // recurrence based scheduling
         if(dayOfWeek !== undefined && dayOfWeek.length){ 
@@ -382,7 +371,7 @@ let scheduleHelpers = {
             new_off_second = '00';
         if(off_schedule_config['schedule']['minute'] === 0)
             new_off_minute = '00';
-        if(off_schedule_config['schedule']['hour'] == 0)
+        if(off_schedule_config['schedule']['hour'] === 0)
             new_off_hour = '00';
         //  new_on_timestamp.setHours(10, 0, '00'); // this should not work, but it does  
         new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
