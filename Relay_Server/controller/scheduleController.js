@@ -297,7 +297,7 @@ var scheduleMethods = {
                     ... newSchedule['schedule'], // grabs dayOfWeek or date, month year
                     ... newSchedule['schedule']['end_time'] 
                 };
-
+                console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
                 let on_schedule = { // on schedule
                     ... newSchedule,
                     schedule: on_start_time,
