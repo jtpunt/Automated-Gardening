@@ -62,6 +62,7 @@ let scheduleMiddleware = {
                         throw new Error("End time schedule configuration details not found.")
                     else{
                         sanitizedSchedule['schedule'] = { end_time: undefined}
+                        console.log(`checking end_time`);
                         // Second, minute, and hour details are required for end_time (off)
                         if(newSchedule['schedule']['end_time']['second'] === undefined)
                             throw new Error("End Time Second configuration details not found.")
@@ -77,6 +78,7 @@ let scheduleMiddleware = {
                     }
                     // start_time (on) details are not required
                     if(newSchedule['schedule']['start_time'] !== undefined){
+                        console.log(`checking start_time`);
                         if(newSchedule['schedule']['start_time']['second'] === undefined)
                             throw new Error("End Time Second configuration details not found.")
                         if(newSchedule['schedule']['start_time']['minute'] === undefined)
@@ -91,6 +93,7 @@ let scheduleMiddleware = {
                     }
                     // Check For Date Based Scheduling Details
                     if(newSchedule['schedule']['start_date'] !== undefined){
+                        console.log(`checking start_date`);
                         // Make sure the rest of the Date Based Scheduling Details were not left out
                         if(newSchedule['schedule']['start_date']['date'] === undefined)
                             throw new Error("Date input required for date-based scheduling");
@@ -106,6 +109,7 @@ let scheduleMiddleware = {
                     }
                     // Check For Date Based Scheduling Details
                     if(newSchedule['schedule']['end_date'] !== undefined){
+                        console.log(`checking end_date`);
                         // Make sure the rest of the Date Based Scheduling Details were not left out
                         if(newSchedule['schedule']['start_date']['date'] === undefined)
                             throw new Error("Month input required for date-based scheduling");
@@ -121,6 +125,7 @@ let scheduleMiddleware = {
                     }
                     // Check For Recurrence Based Scheduling details
                     if(newSchedule['schedule']['dayOfWeek'] !== undefined){
+                        console.log(`checking dayOfWeek`);
                         // Date-Based Scheduling Details can not be included with Recurrence Based Scheduling Details
                         if(newSchedule['schedule']['start_date']['date'] !== undefined)
                             throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
@@ -135,6 +140,7 @@ let scheduleMiddleware = {
                 if(newSchedule['device'] === undefined){
                     throw new Error("New Device configurations not found");
                 }else{
+                    console.log(`checking device`);
                     // id - mongodb id representing our relay device - required
                     if(newSchedule['device']['id'] === undefined)
                         throw new Error("Device id not found!");
