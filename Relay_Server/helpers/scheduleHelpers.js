@@ -371,7 +371,7 @@ let scheduleHelpers = {
         if(off_schedule_config['schedule']['hour'] === 0)   new_off_hour   = '00';
 
         //  new_on_timestamp.setHours(10, 0, '00'); // this should not work, but it does  
-        new_on_timestamp.setHours(10, 0, 0);
+        new_on_timestamp.setHours(0, 0, 0);
         //new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
         new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
         
