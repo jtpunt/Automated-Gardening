@@ -280,7 +280,7 @@ var scheduleMethods = {
                 newSchedule['schedule']['start_time'] !== undefined && 
                 newSchedule['schedule']['end_time']   !== undefined
                 ){
-
+                console.log(`new schedule with start_time and end_time`);
                 let device_start = { // we need to rewrite our device values for our start schedule
                     ... newSchedule['device'], // take every key: value stored in the 'device' key
                     desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
