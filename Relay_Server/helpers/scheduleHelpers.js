@@ -402,9 +402,9 @@ let scheduleHelpers = {
     },
     isScheduleConflicting: function(schedule_config){
         let self        = this,
-            second      = schedule_config['schedule']['second']|| undefined,
-            minute      = schedule_config['schedule']['minute']|| undefined,
-            hour        = schedule_config['schedule']['hour']  || undefined,
+            second      = schedule_config['schedule']['second'],
+            minute      = schedule_config['schedule']['minute'],
+            hour        = schedule_config['schedule']['hour'],
             timestamp   = new Date();
             
         let conflictMsg = "",
@@ -446,13 +446,6 @@ let scheduleHelpers = {
                 return "";
             
         }
-        // 0 from minute, second, or hour will create an invalid date object
-        // however, any number from 1 - 9 is fine and doesn't need a 0 prepended
-        // to it inorder to create a valid object ¯\_(ツ)_/¯
-        if(schedule_config['schedule']['second'] === 0) second = '00';
-        if(schedule_config['schedule']['minute'] === 0) minute = '00';
-        if(schedule_config['schedule']['hour'] === 0)   hour   = '00';
-            
         timestamp.setHours(hour, minute, second);  
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(schedule_config);
