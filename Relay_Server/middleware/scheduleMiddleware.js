@@ -175,7 +175,7 @@ let scheduleMiddleware = {
         console.log(`in validateScheduleInputs with ${JSON.stringify(schedule)}`);
 
 
-        let buildSchedule = function(schedule){
+        let validSchedule = function(schedule){
             if(schedule === undefined) return schedule;
             let validSchedule = {}
             const 

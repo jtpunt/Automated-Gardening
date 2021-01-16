@@ -472,6 +472,7 @@ let scheduleHelpers = {
             
         }
         // '00' from minute, second, or hour will create an invalid date object
+        // somehow, 0 will create an invalid object now, but '00' creates a valid object
         if(schedule_config['schedule']['second'] === 0)
             second = '00';
         if(schedule_config['schedule']['minute'] === 0)
