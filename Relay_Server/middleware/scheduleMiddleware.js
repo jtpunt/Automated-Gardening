@@ -91,7 +91,7 @@ let scheduleMiddleware = {
                             hour: newSchedule['schedule']['start_time']['hour']
                         }
                     }
-                    // Check For Date Based Scheduling Details
+                    // Check For Start Date Date Based Scheduling Details
                     if(newSchedule['schedule']['start_date'] !== undefined){
                         console.log(`checking start_date`);
                         // Make sure the rest of the Date Based Scheduling Details were not left out
@@ -107,11 +107,11 @@ let scheduleMiddleware = {
                             year: newSchedule['schedule']['start_date']['year']
                         }
                     }
-                    // Check For Date Based Scheduling Details
+                    // Check For End Date Based Scheduling Details
                     if(newSchedule['schedule']['end_date'] !== undefined){
                         console.log(`checking end_date`);
                         // Make sure the rest of the Date Based Scheduling Details were not left out
-                        if(newSchedule['schedule']['start_date']['date'] === undefined)
+                        if(newSchedule['schedule']['end_date']['date'] === undefined)
                             throw new Error("Month input required for date-based scheduling");
                         if(newSchedule['schedule']['end_date']['month'] === undefined)
                             throw new Error("Month input required for date-based scheduling");
@@ -126,13 +126,13 @@ let scheduleMiddleware = {
                     // Check For Recurrence Based Scheduling details
                     if(newSchedule['schedule']['dayOfWeek'] !== undefined){
                         console.log(`checking dayOfWeek`);
-                        // Date-Based Scheduling Details can not be included with Recurrence Based Scheduling Details
-                        if(newSchedule['schedule']['start_date']['date'] !== undefined)
-                            throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                        if(newSchedule['schedule']['start_date']['month'] !== undefined)
-                            throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
-                        if(newSchedule['schedule']['start_date']['year'] !== undefined)
-                            throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                        // // Date-Based Scheduling Details can not be included with Recurrence Based Scheduling Details
+                        // if(newSchedule['schedule']['start_date']['date'] !== undefined)
+                        //     throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                        // if(newSchedule['schedule']['start_date']['month'] !== undefined)
+                        //     throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
+                        // if(newSchedule['schedule']['start_date']['year'] !== undefined)
+                        //     throw new Error("Recurrence Based Scheduling is not valid with date-based scheduling details");
                         sanitizedSchedule['schedule']['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
                     }
                 }
