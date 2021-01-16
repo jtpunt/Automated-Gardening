@@ -158,8 +158,8 @@ var scheduleMethods = {
                    
                         // create the off schedule and grab the id
                         let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
-                        on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
-                        off_end_schedule['schedule']['startScheduleId'] = offScheduleId;
+                        on_schedule['relational']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                        off_end_schedule['relational']['startScheduleId'] = offScheduleId;
 
                         let off_end_schedule_args = [
                             off_end_schedule, 
@@ -169,7 +169,7 @@ var scheduleMethods = {
                         ]
 
                         let offEndScheduleId = await scheduleHelper.createSchedule(...off_end_schedule_args);
-                        off_schedule['schedule']['endScheduleId'] = offEndScheduleId;
+                        off_schedule['relational']['endScheduleId'] = offEndScheduleId;
 
                         let on_schedule_args = [
                             on_schedule, 
@@ -180,8 +180,8 @@ var scheduleMethods = {
                         ]
                         // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                         let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
-                        off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
-                        on_end_schedule['schedule']['startScheduleId'] = onScheduleId;
+                        off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                        on_end_schedule['relational']['startScheduleId'] = onScheduleId;
 
                         let on_end_schedule_args = [
                             off_end_schedule, 
@@ -190,7 +190,7 @@ var scheduleMethods = {
                             onScheduleId
                         ]
                         let onEndScheduleId = await scheduleHelper.createSchedule(...on_end_schedule_args);
-                        on_schedule['schedule']['endScheduleId'] = onEndScheduleId;
+                        on_schedule['relational']['endScheduleId'] = onEndScheduleId;
 
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                         scheduleHelper.updateScheduleRelationship(onScheduleId, on_schedule);
@@ -263,7 +263,7 @@ var scheduleMethods = {
                         ]
                         // create the off schedule and grab the id
                         let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
-                        on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                        on_schedule['relational']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
 
                         let on_schedule_args = [
                             on_schedule, 
@@ -274,7 +274,7 @@ var scheduleMethods = {
                         ]
                         // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                         let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
-                        off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                        off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                     }
@@ -344,7 +344,7 @@ var scheduleMethods = {
                             Boolean(off_schedule['device']['desired_state'])
                         ]
                         let offScheduleId = await scheduleHelper.createSchedule(...off_schedule_args);
-                        on_schedule['schedule']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
+                        on_schedule['relational']['nextScheduleId'] = offScheduleId; // associate the on schedule with the off schedule - 'nextScheduleId'
                         
                         console.log(`on_schedule: ${JSON.stringify(on_schedule)}`);
                         let on_schedule_args = [
@@ -356,7 +356,7 @@ var scheduleMethods = {
                         ]
                         // create the on schedule that's now associated with the off schedule and grab the id - 'prevScheduleId'
                         let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
-                        off_schedule['schedule']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
+                        off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                     }
