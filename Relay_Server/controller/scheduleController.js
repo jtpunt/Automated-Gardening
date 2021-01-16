@@ -131,13 +131,13 @@ var scheduleMethods = {
                     end_date_timestamp = new Date(end_date['year'], end_date['month'], end_date['date']);
 
                 console.log(`end_schedule: ${JSON.stringify(on_end_schedule)}`);
-                if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
-                if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
-                if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
+                // if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
+                // if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
+                // if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
 
-                if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
-                if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
-                if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
+                // if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
+                // if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
+                // if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
@@ -253,13 +253,13 @@ var scheduleMethods = {
                 let on_time_timestamp = new Date(),
                     off_time_timestamp = new Date();
                 
-                if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
-                if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
-                if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
+                // if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
+                // if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
+                // if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
 
-                if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
-                if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
-                if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
+                // if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
+                // if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
+                // if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
