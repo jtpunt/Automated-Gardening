@@ -257,6 +257,7 @@ let scheduleMiddleware = {
                 }else 
                     throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
+            return validSchedule;
         }
         try{
             if(start_time)
