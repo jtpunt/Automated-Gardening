@@ -296,8 +296,8 @@ var scheduleMethods = {
                 newSchedule['schedule']['end_time']   !== undefined
                 ){
                 console.log("New schedule with start_time, and end_time");
-                console.log(`start_time: ${JSON.stringify(start_time)}`);
-                console.log(`end_time: ${JSON.stringify(end_time)}`);
+                console.log(`start_time: ${JSON.stringify(newSchedule['schedule']['start_time'])}`);
+                console.log(`end_time: ${JSON.stringify(newSchedule['schedule']['end_time'])}`);
                 let device_start = { // we need to rewrite our device values for our start schedule
                     ... newSchedule['device'], // take every key: value stored in the 'device' key
                     desired_state: true // overwrite what we receieved for desired state in the 'device' key to be 'on'
@@ -320,6 +320,8 @@ var scheduleMethods = {
                     schedule: on_start_time,
                     device: device_start
                 },
+                console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
+                console.log(`off_end_time: ${JSON.stringify(off_time_times)}`);
                 off_schedule   = { // off schedule
                     ... newSchedule, 
                     schedule: off_end_time,
