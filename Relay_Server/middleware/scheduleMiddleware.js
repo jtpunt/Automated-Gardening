@@ -271,6 +271,9 @@ let scheduleMiddleware = {
         }catch(exc){
             res.status(400).send(exc.toString());
         }    
+    },
+    validateDeviceInputs(req, res, next){
+        
     }
 }
 module.exports = scheduleMiddleware;
