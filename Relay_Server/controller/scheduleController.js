@@ -248,12 +248,17 @@ var scheduleMethods = {
                 let on_time_timestamp = new Date(),
                     off_time_timestamp = new Date();
                 
+                if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
+                if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
+                if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
+
+                if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
+                if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
+                if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
-                if(on_time_timestamp > off_time_timestamp)
-                    res.status(404).send("start_time must be less than end_time")
-                else if(on_time_timestamp === off_time_timestamp)
+                if(on_time_timestamp === off_time_timestamp)
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
@@ -344,9 +349,7 @@ var scheduleMethods = {
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
-                if(on_time_timestamp > off_time_timestamp)
-                    res.status(404).send("start_time must be less than end_time")
-                else if(on_time_timestamp === off_time_timestamp)
+                if(on_time_timestamp === off_time_timestamp)
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
