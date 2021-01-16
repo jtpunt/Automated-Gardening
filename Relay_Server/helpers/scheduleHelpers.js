@@ -362,8 +362,8 @@ let scheduleHelpers = {
             new_off_second    = off_schedule_config['schedule']['second'] || undefined,
             new_off_minute    = off_schedule_config['schedule']['minute'] || undefined,
             new_off_hour      = off_schedule_config['schedule']['hour']   || undefined, 
-            new_on_timestamp  = new Date(),
-            new_off_timestamp = new Date();
+            new_on_timestamp  = new Date(new Date().setUTCHours(0,0,0,0)),
+            new_off_timestamp = new Date(new Date().setUTCHours(0,0,0,0));
             
         let conflictMsg       = "",
             schedule_ids      = [];
@@ -371,22 +371,22 @@ let scheduleHelpers = {
         console.log("in isScheduleOverlapping");
         console.log(`with: ${JSON.stringify(on_schedule_config)} and ${JSON.stringify(off_schedule_config)}`);
         // '00' from minute, second, or hour will create an invalid date object
-        // if(on_schedule_config['schedule']['second'] === 0)
-        //     new_on_second = '00';
-        // if(on_schedule_config['schedule']['minute'] === 0)
-        //     new_on_minute = '00';
-        // if(on_schedule_config['schedule']['hour'] === 0)
-        //     new_on_hour = '00';
-        // // '00' from minute, second, or hour will create an invalid date object
-        // if(off_schedule_config['schedule']['second'] === 0)
-        //     new_off_second = '00';
-        // if(off_schedule_config['schedule']['minute'] === 0)
-        //     new_off_minute = '00';
-        // if(off_schedule_config['schedule']['hour'] == 0)
-        //     new_off_hour = '00';
-            
-        new_on_timestamp.setHours(10, 0, "00");  
-        new_off_timestamp.setHours(2, 0, 0);
+        if(on_schedule_config['schedule']['second'] === 0)
+            new_on_second = '00';
+        if(on_schedule_config['schedule']['minute'] === 0)
+            new_on_minute = '00';
+        if(on_schedule_config['schedule']['hour'] === 0)
+            new_on_hour = '00';
+        // '00' from minute, second, or hour will create an invalid date object
+        if(off_schedule_config['schedule']['second'] === 0)
+            new_off_second = '00';
+        if(off_schedule_config['schedule']['minute'] === 0)
+            new_off_minute = '00';
+        if(off_schedule_config['schedule']['hour'] == 0)
+            new_off_hour = '00';
+        //  new_on_timestamp.setHours(10, 0, '00'); // this should not work, but it does  
+        new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
+        new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         console.log(`same day schedule ids: ${schedule_ids}`);
