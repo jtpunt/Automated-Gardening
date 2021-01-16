@@ -149,24 +149,28 @@ let scheduleMiddleware = {
         }
     },
     validateScheduleInputs(req, res, next){
-        let validSchedule   = {},
-            schedule_config = req.body,
-            schedule        = schedule_config['schedule'];
-                    // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
-            // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
-            let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+        let schedule_config = req.body,
+            schedule        = schedule_config['schedule'],
+            start_time      = schedule['start_time'],
+            end_time        = schedule['end_time']
+        // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
+        // and the right operand will be returned. This is not the behavior we want as second, minute, hour and month values can be 0
+        let sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
         console.log(`in validateScheduleInputs with ${JSON.stringify(schedule)}`);
-        const 
-            second    = sanitize_input(schedule['second']),
-            minute    = sanitize_input(schedule['minute']),
-            hour      = sanitize_input(schedule['hour']),
-            date      = Number(schedule['date'])  || undefined,
-            month     = sanitize_input(schedule['month']),
-            year      = Number(schedule['year']) || undefined,
-            dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined,
-            today     = new Date();
 
-        try{
+
+        let buildSchedule = function(schedule){
+            if(schedule === undefined) return schedule;
+            let validSchedule = {}
+            const 
+                second    = sanitize_input(schedule['second']),
+                minute    = sanitize_input(schedule['minute']),
+                hour      = sanitize_input(schedule['hour']),
+                date      = Number(schedule['date'])  || undefined,
+                month     = sanitize_input(schedule['month']),
+                year      = Number(schedule['year']) || undefined,
+                dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined,
+                today     = new Date();
             console.log(`Trying to validate schedule - ${second}`);
             // Validate second input
             if(second !== undefined && !second.isNaN && Number.isInteger(second)){
@@ -237,14 +241,18 @@ let scheduleMiddleware = {
                 }else 
                     throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
-            schedule_config['schedule'] = validSchedule;
+        }
+        try{
+            if(start_time)
+                schedule_config['schedule']['start_time'] = buildSchedule(start_time);
+            if(end_time)
+                schedule_config['schedule']['end_time'] = buildSchedule(end_time);
             req.body = schedule_config;
             next();
-        }
-        catch(exc){
-            console.log(`err: ${exc.toString()}`);
-            res.status(400).send(exc.toString);
-        }
+
+        }catch(exc){
+            res.status(400).send(exc.toString());
+        }    
     }
 }
 module.exports = scheduleMiddleware;
