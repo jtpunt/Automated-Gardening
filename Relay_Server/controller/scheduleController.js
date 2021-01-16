@@ -298,6 +298,7 @@ var scheduleMethods = {
                     ... newSchedule['schedule']['end_time'] 
                 };
                 console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
+                console.log(`on_end_time: ${JSON.stringify(off_end_time)}`);
                 let on_schedule = { // on schedule
                     ... newSchedule,
                     schedule: on_start_time,
