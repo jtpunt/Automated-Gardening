@@ -234,12 +234,12 @@ let scheduleHelpers = {
     // and returns the indices refering to those schedules in our scheduleArr
     findSameDaySchedulesAndRetIds: function(schedule_config){
         let self      = this,
-            second    = Number(schedule_config['schedule']['second'])|| undefined,
-            minute    = Number(schedule_config['schedule']['minute'])|| undefined,
-            hour      = Number(schedule_config['schedule']['hour'])  || undefined,
-            date      = Number(schedule_config['schedule']['date'])  || undefined,
-            month     = Number(schedule_config['schedule']['month']) || undefined,
-            year      = Number(schedule_config['schedule']['year'])  || undefined,
+            second    = schedule_config['schedule']['second']|| undefined,
+            minute    = schedule_config['schedule']['minute']|| undefined,
+            hour      = schedule_config['schedule']['hour']  || undefined,
+            date      = schedule_config['schedule']['date']  || undefined,
+            month     = schedule_config['schedule']['month'] || undefined,
+            year      = schedule_config['schedule']['year']  || undefined,
             gpio      = Number(schedule_config['device']['gpio'])    || undefined,
             dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : undefined,
             timestamp = new Date(),
