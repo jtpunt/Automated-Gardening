@@ -131,14 +131,19 @@ var scheduleMethods = {
                     end_date_timestamp = new Date(end_date['year'], end_date['month'], end_date['date']);
 
                 console.log(`end_schedule: ${JSON.stringify(on_end_schedule)}`);
-                
+                if(on_start_time['second'] === 0)  on_start_time['second'] = '00';
+                if(on_start_time['minute'] === 0)  on_start_time['minute'] = '00';
+                if(on_start_time['hour'] === 0)    on_start_time['hour']   = '00';
+
+                if(off_end_time['second'] === 0)  off_end_time['second'] = '00';
+                if(off_end_time['minute'] === 0)  off_end_time['minute'] = '00';
+                if(off_end_time['hour'] === 0)    off_end_time['hour']   = '00';
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
-                // if(on_time_timestamp > off_time_timestamp)
                 if(start_date_timestamp > end_date_timestamp)
                     res.status(404).send("start_date must be less than end_date")
-                else if(on_time_timestamp === off_time_timestamp)
+                else if(on_time_timestamp.toString() === off_time_timestamp.toString())
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
 
@@ -258,7 +263,7 @@ var scheduleMethods = {
                 on_time_timestamp.setHours(on_start_time['hour'], on_start_time['minute'], on_start_time['second']); 
                 off_time_timestamp.setHours(off_end_time['hour'], off_end_time['minute'], off_end_time['second']); 
                 
-                if(on_time_timestamp === off_time_timestamp)
+                if(on_time_timestamp.toString() === off_time_timestamp.toString())
                     res.status(404).send("start_time must not be equal to the end_time")
                 else{
                     // have to also make sure that our saved schedules don't conflict with the new schedule that we are trying to add
