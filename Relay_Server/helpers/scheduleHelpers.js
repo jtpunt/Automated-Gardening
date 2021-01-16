@@ -355,7 +355,7 @@ let scheduleHelpers = {
     },
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
-            new_on_second     = Numner(on_schedule_config['schedule']['second']) || undefined,
+            new_on_second     = Number(on_schedule_config['schedule']['second']) || undefined,
             new_on_minute     = Number(on_schedule_config['schedule']['minute']) || undefined,
             new_on_hour       = Number(on_schedule_config['schedule']['hour'  ]) || undefined,
             
