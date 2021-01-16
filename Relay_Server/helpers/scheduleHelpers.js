@@ -355,13 +355,13 @@ let scheduleHelpers = {
     },
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
-            new_on_second     = on_schedule_config['schedule']['second'] || undefined,
-            new_on_minute     = on_schedule_config['schedule']['minute'] || undefined,
-            new_on_hour       = on_schedule_config['schedule']['hour'  ] || undefined,
+            new_on_second     = Number(on_schedule_config['schedule']['second']) || undefined,
+            new_on_minute     = Number(on_schedule_config['schedule']['minute']) || undefined,
+            new_on_hour       = Number(on_schedule_config['schedule']['hour'  ]) || undefined,
             
-            new_off_second    = off_schedule_config['schedule']['second'] || undefined,
-            new_off_minute    = off_schedule_config['schedule']['minute'] || undefined,
-            new_off_hour      = off_schedule_config['schedule']['hour']   || undefined, 
+            new_off_second    = Number(off_schedule_config['schedule']['second']) || undefined,
+            new_off_minute    = Number(off_schedule_config['schedule']['minute']) || undefined,
+            new_off_hour      = Number(off_schedule_config['schedule']['hour'])   || undefined, 
             new_on_timestamp  = new Date(new Date().setUTCHours(0,0,0,0)),
             new_off_timestamp = new Date(new Date().setUTCHours(0,0,0,0));
             
