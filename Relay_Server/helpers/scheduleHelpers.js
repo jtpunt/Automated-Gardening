@@ -6,6 +6,17 @@ let Scheduler       = require("../models/scheduler"),
     await           = require("asyncawait/await"),
     localIP         = ip.address();
 
+class Schedule{
+    constructor(second, minute, hour, date, month, year, dayOfWeek){
+        this.second = second,
+        this.minute = minute,
+        this.hour = hour,
+        this.date = date,
+        this.month = month,
+        this.year = year,
+        this.dayOfWeek = dayOfWeek
+    }
+}
 let scheduleHelpers = {
     scheduleObj: {},
     buildJob: function(myScheduleObj, fn, context, ...args){
@@ -427,6 +438,8 @@ let scheduleHelpers = {
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
+                            let scheduleTest = new Schedule(schedule_config['schedule']);
+                            console.log(`scheduleTest: ${JSON.stringify(scheduleTest)}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
