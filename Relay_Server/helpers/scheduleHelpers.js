@@ -225,6 +225,7 @@ let scheduleHelpers = {
         else{
             let schedule_id  = newScheduleResponse["_id"],
                 schedule_obj = { "schedule_config": newScheduleResponse, job };
+            console.log(`schedule_obj created: ${JSON.stringify(schedule_obj)}`);
             self.setScheduleObjById(schedule_id, schedule_obj);
             return schedule_id;
         }
