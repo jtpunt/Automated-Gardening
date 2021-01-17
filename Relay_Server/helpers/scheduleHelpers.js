@@ -17,24 +17,18 @@ class Schedule{
         this.year = schedule['year'];
         this.dayOfWeek = schedule['dayOfWeek'];
     }
-    keys(){
-        return Object.getOwnPropertyNames(this);
+    entries(){
+        return Object.entries(this);
     }
     keyValues(){
-        let myKeys = this.keys();
-        myKeys.forEach(function(key){
-            console.log(`key from keyValues: ${key}`);
-            if(this.key === undefined){
-                console.log(`key ${key} is undefined`)
-            }
-        })
+        let myEntries = this.entries();
+        myEntries.forEach(([prop, val] => console.log([prop, val]));
     }
 }
 class Job extends Schedule{
     constructor(schedule, job){
         super(schedule);
         this.job = null;
-        console.log(super.keys())
         super.keyValues();
     }
 }
