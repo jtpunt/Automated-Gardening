@@ -26,7 +26,7 @@ class Schedule{
 }
 class Job extends Schedule{
     constructor(schedule){
-        super();
+        super(schedule);
         console.log(super.keys())
     }
 }
