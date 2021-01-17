@@ -19,9 +19,8 @@ class Schedule{
     }
     // getter
     get keyValues(){
-        return {
-            this.getOwnPropertyNames();
-        }
+        return this.getOwnPropertyNames();
+        
     }
 }
 let scheduleHelpers = {
