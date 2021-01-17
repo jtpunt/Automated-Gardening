@@ -151,7 +151,7 @@ router.get('/schedule/:schedule_id/resume',
     middleware.verifyAdminAccount, 
     scheduleController.resumeScheduleReq(scheduleHelper)
 );
-router.get('/status/:id', outletMiddleware.isGpioConfigured(outletController), function(req, res){
+router.get('/status/:id', function(req, res){
     console.log("in /status/:id route\n");
     var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
     if(Number.isNaN(gpio_input)){
