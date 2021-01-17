@@ -222,6 +222,7 @@ let scheduleMiddleware = {
                 
             // Validate Inputs for Day of Week Based Scheduling
             if(dayOfWeek !== undefined && dayOfWeek.length){
+                console.log(`validating dayOfWeek: ${dayOfWeek}`);
                 let dayOfWeekArr = dayOfWeek.map(function(day){
                     // dayOfWeek = 0 - 6
                     if(!Number.isNaN(day) && Number(day) >= MIN_DOW && Number(day) <= MAX_DOW)
