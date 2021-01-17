@@ -26,8 +26,6 @@ class Schedule{
             console.log(`key from keyValues: ${key}`);
             if(!key in this){
                 console.log(`key ${key} is undefined`)
-            }else{
-                console.log(`value: ${this.key}`)
             }
         })
     }
