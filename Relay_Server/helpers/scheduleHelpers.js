@@ -22,7 +22,7 @@ class Schedule{
     }
     keyValues(){
         let myEntries = this.entries();
-        myEntries.forEach(([prop, val] => console.log([prop, val]));
+        myEntries.forEach(([prop, val]) => console.log(prop, val));
     }
 }
 class Job extends Schedule{
