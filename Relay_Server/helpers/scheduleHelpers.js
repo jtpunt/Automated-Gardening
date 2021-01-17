@@ -21,10 +21,8 @@ class Schedule{
         return Object.getOwnPropertyNames(this);
     }
     keyValues(){
-        let keys = this.keys();
-        for(let key in keys){
-            console.log(key);
-        }
+        let myKeys = this.keys();
+        console.log(`keys from keyValues: ${myKeys}`)
     }
 }
 class Job extends Schedule{
