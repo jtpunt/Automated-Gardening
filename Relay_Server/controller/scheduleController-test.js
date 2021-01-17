@@ -2,8 +2,6 @@ var Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
     scheduleHelpers = require("../helpers/scheduleHelpers"),
     ip              = require("ip"),
-    async           = require("asyncawait/async"),
-    await           = require("asyncawait/await"),
     localIP         = ip.address();
 
 

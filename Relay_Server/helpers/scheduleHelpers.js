@@ -34,7 +34,7 @@ class Schedule{
 class Job extends Schedule{
     constructor(schedule, job){
         super(schedule);
-        this.#job = null;
+        this.job = null;
         super.keyValues();
     }
 }

@@ -14,8 +14,6 @@ var express            = require("express"),
     scheduleHelper     = require("../helpers/scheduleHelpers"),
     ip                 = require("ip"),
     localIP            = ip.address(),
-    async              = require("asyncawait/async"),
-    await              = require("asyncawait/await"),
     router             = express.Router();
 var APPROVED_GPIO = [2, 3];
 
