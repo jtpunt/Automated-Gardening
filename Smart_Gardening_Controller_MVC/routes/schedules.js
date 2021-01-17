@@ -140,22 +140,26 @@ function buildSchedule(mySchedule){
         obj['schedule']['dayOfWeek'] = dayOfWeek;
     }
     console.log(`checking prevScheduleId`);
-    if(mySchedule['relational']['prevScheduleId'] !== null && mySchedule['relational']['prevScheduleId'] !== undefined){
-        console.log(`valid prevScheduleId`);
-        // 'none' was selected, which has a value of 0
-        if(Number(mySchedule['relational']['prevScheduleId']) !== 0){
-            console.log(`none was selected`);
-            obj['relational']['prevScheduleId'] = mySchedule['relational']['prevScheduleId'];
-        } 
-    }
-    console.log(`checking nextScheduleId`);
-    if(mySchedule['relational']['nextScheduleId'] !== null && mySchedule['relational']['nextScheduleId'] !== undefined){
-        if(Number(mySchedule['relational']['nextScheduleId']) !== 0)// 'none' was selected, which has a value of 0
-            obj['relational']['nextScheduleId'] = mySchedule['relational']['nextScheduleId'];
-    }
-    if(mySchedule['relational']['endScheduleId'] !== null && mySchedule['relational']['endScheduleId'] !== undefined)
-        if(Number(mySchedule['relational']['endScheduleId']) !== 0)
-            obj['relational']['endScheduleId'] = mySchedule['relational']['endScheduleId'];
+    if(mySchedule['relational']){
+        if(mySchedule['relational']['prevScheduleId']){
+            console.log(`valid prevScheduleId`);
+            // 'none' was selected, which has a value of 0
+            if(Number(mySchedule['relational']['prevScheduleId']) !== 0){
+                console.log(`none was selected`);
+                obj['relational']['prevScheduleId'] = mySchedule['relational']['prevScheduleId'];
+            } 
+        }
+        console.log(`checking nextScheduleId`);
+        if(mySchedule['relational']['nextScheduleId'] !== null && mySchedule['relational']['nextScheduleId'] !== undefined){
+            if(Number(mySchedule['relational']['nextScheduleId']) !== 0)// 'none' was selected, which has a value of 0
+                obj['relational']['nextScheduleId'] = mySchedule['relational']['nextScheduleId'];
+        }
+        if(mySchedule['relational']['endScheduleId'] !== null && mySchedule['relational']['endScheduleId'] !== undefined)
+            if(Number(mySchedule['relational']['endScheduleId']) !== 0)
+                obj['relational']['endScheduleId'] = mySchedule['relational']['endScheduleId'];
+
+        }
+
     return obj;
 }
 
