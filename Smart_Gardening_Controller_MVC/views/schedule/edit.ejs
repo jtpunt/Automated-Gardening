@@ -146,8 +146,8 @@ input:checked + .slider:before {
         </div>
          
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label" for="schedule[relational][prevScheduleId]">Set Associated Previous Schedule</label>
-        	<select class="col-sm-20" name="schedule[relational][prevScheduleId]">
+            <label class="col-sm-6 col-form-label" for="relational[prevScheduleId]">Set Associated Previous Schedule</label>
+        	<select class="col-sm-20" name="relational[prevScheduleId]">
         		<option value="-1" disabled>Select Your Previous Schedule</option>
         		<option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
@@ -194,8 +194,8 @@ input:checked + .slider:before {
         	</select>
         </div>
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label" for="schedule[relational][nextScheduleId]">Set Associated Next Schedule</label>
-        	<select class="col-sm-20" name="schedule[relational][nextScheduleId]">
+            <label class="col-sm-6 col-form-label" for="relational[nextScheduleId]">Set Associated Next Schedule</label>
+        	<select class="col-sm-20" name="relational[nextScheduleId]">
         		<option value="-1" disabled>Select Your Previous Schedule</option>
         		<option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
@@ -240,8 +240,8 @@ input:checked + .slider:before {
         	</select>
         </div>
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label" for="schedule[relational][startScheduleId]">Set Associated Start Schedule</label>
-            <select class="col-sm-20" name="schedule[relational][startScheduleId]">
+            <label class="col-sm-6 col-form-label" for="relational[startScheduleId]">Set Associated Start Schedule</label>
+            <select class="col-sm-20" name="relational[startScheduleId]">
                 <option value="-1" disabled>Select Your Start Schedule</option>
                 <option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
@@ -274,8 +274,8 @@ input:checked + .slider:before {
             </select>
         </div>
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label" for="schedule[relational][endScheduleId]">Set Associated End Schedule</label>
-            <select class="col-sm-20" name="schedule[relational][endScheduleId]">
+            <label class="col-sm-6 col-form-label" for="relational[endScheduleId]">Set Associated End Schedule</label>
+            <select class="col-sm-20" name="relational[endScheduleId]">
                 <option value="-1" disabled>Select Your End Schedule</option>
                 <option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
