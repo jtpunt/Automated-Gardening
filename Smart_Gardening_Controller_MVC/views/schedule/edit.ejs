@@ -82,14 +82,27 @@ input:checked + .slider:before {
   border-radius: 50%;
 } 
 </style>
-<% let ipStr = device['local_ip'].replace(/\./g,'')
-   let foundSun = schedule['schedule']['dayOfWeek'].indexOf("0")
-   let foundMon = schedule['schedule']['dayOfWeek'].indexOf("1")
-   let foundTues = schedule['schedule']['dayOfWeek'].indexOf("2")
-   let foundWed = schedule['schedule']['dayOfWeek'].indexOf("3")
-   let foundThur = schedule['schedule']['dayOfWeek'].indexOf("4")
-   let foundFri = schedule['schedule']['dayOfWeek'].indexOf("5")
-   let foundSat = schedule['schedule']['dayOfWeek'].indexOf("6") %>
+<% 
+    let ipStr = device['local_ip'].replace(/\./g,''),
+        foundSun,
+        foundMon,
+        foundTues,
+        foundWed,
+        foundThur,
+        foundFri,
+        foundSat;
+    if(schedule['schedule']['dayOfWeek']){
+       foundSun = schedule['schedule']['dayOfWeek'].indexOf("0")
+       foundMon = schedule['schedule']['dayOfWeek'].indexOf("1")
+       foundTues = schedule['schedule']['dayOfWeek'].indexOf("2")
+       foundWed = schedule['schedule']['dayOfWeek'].indexOf("3")
+       foundThur = schedule['schedule']['dayOfWeek'].indexOf("4")
+       foundFri = schedule['schedule']['dayOfWeek'].indexOf("5")
+       foundSat = schedule['schedule']['dayOfWeek'].indexOf("6") 
+    }
+
+
+%>
 
 
 <div class="container">
