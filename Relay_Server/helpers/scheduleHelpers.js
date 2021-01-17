@@ -22,6 +22,7 @@ class Schedule{
     }
     keyValues(){
         let myEntries = this.entries();
+        console.log(`myEntries: ${myEntries}`);
         let myScheduleObj = {}
         myEntries.forEach(([prop, val]) =>{
             if(val !== undefined)
