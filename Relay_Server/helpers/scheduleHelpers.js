@@ -213,7 +213,7 @@ let scheduleHelpers = {
     createSchedule: async function(new_schedule_config, fn, context, ...args){
         let self                = this,
             job                 = self.buildJob(
-                myScheduleObj, 
+                new_schedule_config['schedule'], 
                 fn, 
                 context, 
                 ...args
