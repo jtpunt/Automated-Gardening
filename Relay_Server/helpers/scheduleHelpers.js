@@ -32,24 +32,11 @@ class Schedule{
     }
 }
 class Job extends Schedule{
+    #job;
     constructor(schedule, job){
         super(schedule);
         this.job = null;
         super.keyValues();
-        this.keyValues();
-    }
-    entries(){
-        return Object.entries(this);
-    }
-    keyValues(){
-        let myEntries = this.entries();
-        console.log(`Job myEntries: ${myEntries}`);
-        let myScheduleObj = {}
-        myEntries.forEach(([prop, val]) =>{
-            if(val !== undefined)
-                myScheduleObj[prop] = val
-        }) 
-        console.log(`myScheduleObj: ${JSON.stringify(myScheduleObj)}`);
     }
 }
 let scheduleHelpers = {
