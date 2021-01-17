@@ -7,14 +7,14 @@ let Scheduler       = require("../models/scheduler"),
     localIP         = ip.address();
 
 class Schedule{
-    constructor(second, minute, hour, date, month, year, dayOfWeek){
-        this.second = second;
-        this.minute = minute;
-        this.hour = hour;
-        this.date = date;
-        this.month = month;
-        this.year = year;
-        this.dayOfWeek = dayOfWeek;
+    constructor(schedule){
+        this.second = schedule['second'];
+        this.minute = schedule['minute'];
+        this.hour = schedule['hour'];
+        this.date = schedule['date'];
+        this.month = schedule['month'];
+        this.year = schedule['year'];
+        this.dayOfWeek = schedule['dayOfWeek'];
     }
 }
 let scheduleHelpers = {
@@ -439,7 +439,7 @@ let scheduleHelpers = {
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
-                            let scheduleTest = Object.entries(schedule_config['schedule']);
+                            let scheduleTest = new Schedule(schedule_config['schedule']);
                             console.log(`scheduleTest: ${JSON.stringify(scheduleTest)}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
