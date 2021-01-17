@@ -8,13 +8,13 @@ let Scheduler       = require("../models/scheduler"),
 
 class Schedule{
     constructor(second, minute, hour, date, month, year, dayOfWeek){
-        this.second = second,
-        this.minute = minute,
-        this.hour = hour,
-        this.date = date,
-        this.month = month,
-        this.year = year,
-        this.dayOfWeek = dayOfWeek
+        this.second = second;
+        this.minute = minute;
+        this.hour = hour;
+        this.date = date;
+        this.month = month;
+        this.year = year;
+        this.dayOfWeek = dayOfWeek;
     }
 }
 let scheduleHelpers = {
