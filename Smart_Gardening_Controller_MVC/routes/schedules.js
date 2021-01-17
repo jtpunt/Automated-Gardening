@@ -138,17 +138,17 @@ function buildSchedule(mySchedule){
         });
         obj['schedule']['dayOfWeek'] = dayOfWeek;
     }
-    if(mySchedule['schedule']['prevScheduleId'] !== null && mySchedule['schedule']['prevScheduleId'] !== undefined){
-        if(Number(mySchedule['schedule']['prevScheduleId']) !== 0) // 'none' was selected, which has a value of 0
-            obj['schedule']['prevScheduleId'] = mySchedule['schedule']['prevScheduleId'];
+    if(mySchedule['relational']['prevScheduleId'] !== null && mySchedule['relational']['prevScheduleId'] !== undefined){
+        if(Number(mySchedule['relational']['prevScheduleId']) !== 0) // 'none' was selected, which has a value of 0
+            obj['relational']['prevScheduleId'] = mySchedule['relational']['prevScheduleId'];
     }
-    if(mySchedule['schedule']['nextScheduleId'] !== null && mySchedule['schedule']['nextScheduleId'] !== undefined){
-        if(Number(mySchedule['schedule']['nextScheduleId']) !== 0)// 'none' was selected, which has a value of 0
-            obj['schedule']['nextScheduleId'] = mySchedule['schedule']['nextScheduleId'];
+    if(mySchedule['relational']['nextScheduleId'] !== null && mySchedule['relational']['nextScheduleId'] !== undefined){
+        if(Number(mySchedule['relational']['nextScheduleId']) !== 0)// 'none' was selected, which has a value of 0
+            obj['relational']['nextScheduleId'] = mySchedule['relational']['nextScheduleId'];
     }
-    if(mySchedule['schedule']['endScheduleId'] !== null && mySchedule['schedule']['endScheduleId'] !== undefined)
-        if(Number(mySchedule['schedule']['endScheduleId']) !== 0)
-            obj['schedule']['endScheduleId'] = mySchedule['schedule']['endScheduleId'];
+    if(mySchedule['relational']['endScheduleId'] !== null && mySchedule['relational']['endScheduleId'] !== undefined)
+        if(Number(mySchedule['relational']['endScheduleId']) !== 0)
+            obj['relational']['endScheduleId'] = mySchedule['relational']['endScheduleId'];
     return obj;
 }
 
