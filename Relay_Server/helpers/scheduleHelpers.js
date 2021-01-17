@@ -28,8 +28,9 @@ class Schedule{
     }
 }
 class Job extends Schedule{
-    constructor(schedule){
+    constructor(schedule, job){
         super(schedule);
+        this.job = null;
         console.log(super.keys())
         super.keyValues();
     }
