@@ -19,6 +19,7 @@ class Schedule{
     }
     // getter
     get keyValues(){
+        let keys = Object.getOwnPropertyNames(this);
         return Object.getOwnPropertyNames(this);
         
     }
