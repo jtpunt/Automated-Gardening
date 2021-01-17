@@ -439,7 +439,7 @@ let scheduleHelpers = {
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
-                            let scheduleTest = new Schedule(schedule_config['schedule']);
+                            let scheduleTest = new ScheduleJSON.stringify((schedule_config['schedule']));
                             console.log(`scheduleTest: ${JSON.stringify(scheduleTest)}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
@@ -454,7 +454,7 @@ let scheduleHelpers = {
                                 self.scheduleObj[schedule_config['_id']] = obj; 
                             }else{
                                 let job = scheduleHelpers.buildJob(
-                                    JSON.parse(scheduleTest), 
+                                    scheduleTest, 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
