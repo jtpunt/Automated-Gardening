@@ -17,6 +17,12 @@ class Schedule{
         this.year = schedule['year'];
         this.dayOfWeek = schedule['dayOfWeek'];
     }
+    // getter
+    get keyValues(){
+        return {
+            this.getOwnPropertyNames();
+        }
+    }
 }
 let scheduleHelpers = {
     scheduleObj: {},
@@ -441,7 +447,7 @@ let scheduleHelpers = {
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
                             let scheduleTest = new Schedule(schedule_config['schedule']);
-                            console.log(`scheduleTest: ${JSON.stringify(scheduleTest)}`);
+                            console.log(`scheduleTest: ${scheduleTest.keyValues}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = scheduleHelpers.buildJob(
