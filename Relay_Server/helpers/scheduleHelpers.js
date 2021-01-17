@@ -19,7 +19,7 @@ class Schedule{
     }
     // getter
     get keyValues(){
-        return this.getOwnPropertyNames();
+        return Object.getOwnPropertyNames(this);
         
     }
 }
