@@ -24,7 +24,7 @@ class Schedule{
         let myKeys = this.keys();
         myKeys.forEach(function(key){
             console.log(`key from keyValues: ${key}`);
-            if(!key in this){
+            if(this.key === undefined){
                 console.log(`key ${key} is undefined`)
             }
         })
