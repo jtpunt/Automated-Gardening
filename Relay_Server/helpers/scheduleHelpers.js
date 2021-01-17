@@ -610,11 +610,13 @@ let scheduleHelpers = {
                 console.log("Schedule canceled and removed!");
 
                 let updated_schedule_device = updated_schedule_config['device'],
-                    updated_schedule_schedule = updated_schedule_config['schedule'];
+                    updated_schedule_schedule = updated_schedule_config['schedule'],
+                    updated_relational = updated_schedule_config['relational'];
                 
                 let schedule_config = {
                     "device": updated_schedule_device,
                     "schedule": updated_schedule_schedule,
+                    "relational": updated_relational,
                     "_id": schedule['_id']
                 };
                 // self.scheduleArr[index].updateSchedule(updated_schedule_device, updated_schedule_schedule, job);

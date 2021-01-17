@@ -418,16 +418,16 @@ var scheduleMethods = {
             var updatedSchedule = req.body;
                 // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
 
-            let prevScheduleId = updatedSchedule['schedule']['prevScheduleId'],
-                nextScheduleId = updatedSchedule['schedule']['nextScheduleId'],
+            let prevScheduleId = updatedSchedule['relational']['prevScheduleId'],
+                nextScheduleId = updatedSchedule['relational']['nextScheduleId'],
                 my_schedule = {
                     ... updatedSchedule,
                     schedule:   updatedSchedule['schedule']['start_time'] || 
                                 updatedSchedule['schedule']['end_time']
                 };
                 
-            my_schedule['schedule']['prevScheduleId'] = updatedSchedule['schedule']['prevScheduleId'],
-            my_schedule['schedule']['nextScheduleId'] = updatedSchedule['schedule']['nextScheduleId']
+            my_schedule['relational']['prevScheduleId'] = updatedSchedule['relational']['prevScheduleId'],
+            my_schedule['relational']['nextScheduleId'] = updatedSchedule['relational']['nextScheduleId']
             if(!scheduleHelper.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
             else{

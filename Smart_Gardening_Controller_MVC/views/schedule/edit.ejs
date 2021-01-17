@@ -146,8 +146,8 @@ input:checked + .slider:before {
         </div>
          
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label">Set Associated Previous Schedule</label>
-        	<select class="col-sm-20" name="schedule[prevScheduleId]">
+            <label class="col-sm-6 col-form-label" for="schedule[relational][prevScheduleId]">Set Associated Previous Schedule</label>
+        	<select class="col-sm-20" name="schedule[relational][prevScheduleId]">
         		<option value="-1" disabled>Select Your Previous Schedule</option>
         		<option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
@@ -164,7 +164,7 @@ input:checked + .slider:before {
                             second = "0" + deviceSchedule['schedule']['second'];
                         }
                         
-                        if(schedule['schedule']['prevScheduleId'] &&  deviceSchedule['_id'].toString() === schedule['schedule']['prevScheduleId'].toString()){
+                        if(schedule['relational']['prevScheduleId'] &&  deviceSchedule['_id'].toString() === schedule['relational']['prevScheduleId'].toString()){
                             console.log("prevScheduleId matched");
                             selected = true;
                         }
@@ -194,8 +194,8 @@ input:checked + .slider:before {
         	</select>
         </div>
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label">Set Associated Next Schedule</label>
-        	<select class="col-sm-20" name="schedule[nextScheduleId]">
+            <label class="col-sm-6 col-form-label" for="schedule[relational][nextScheduleId]">Set Associated Next Schedule</label>
+        	<select class="col-sm-20" name="schedule[relational][nextScheduleId]">
         		<option value="-1" disabled>Select Your Previous Schedule</option>
         		<option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
@@ -211,7 +211,7 @@ input:checked + .slider:before {
                         if(deviceSchedule['schedule']['second'] < 10){
                             second = "0" + deviceSchedule['schedule']['second'];
                         }
-                        if(schedule['schedule']['nextScheduleId'] && deviceSchedule['_id'].toString() === schedule['schedule']['nextScheduleId'].toString()){
+                        if(schedule['relational']['nextScheduleId'] && deviceSchedule['_id'].toString() === schedule['relational']['nextScheduleId'].toString()){
                             console.log("nextScheduleId matched");
                             selected = true;
                         }
@@ -240,13 +240,13 @@ input:checked + .slider:before {
         	</select>
         </div>
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label">Set Associated Start Schedule</label>
-            <select class="col-sm-20" name="schedule[startScheduleId]">
+            <label class="col-sm-6 col-form-label" for="schedule[relational][startScheduleId]">Set Associated Start Schedule</label>
+            <select class="col-sm-20" name="schedule[relational][startScheduleId]">
                 <option value="-1" disabled>Select Your Start Schedule</option>
                 <option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
                     // we need to prevent associating a schedule with itself
-                    if(deviceSchedule['schedule']['endScheduleId']){
+                    if(deviceSchedule['relational']['endScheduleId']){
                         if(deviceSchedule['_id'].toString() !== schedule['_id'].toString()){
                             let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
                             let minute = deviceSchedule['schedule']['minute'];
@@ -258,7 +258,7 @@ input:checked + .slider:before {
                             if(deviceSchedule['schedule']['second'] < 10){
                                 second = "0" + deviceSchedule['schedule']['second'];
                             }
-                            if(schedule['schedule']['startScheduleId'] && deviceSchedule['_id'].toString() === schedule['schedule']['startScheduleId'].toString()){
+                            if(schedule['relational']['startScheduleId'] && deviceSchedule['_id'].toString() === schedule['relational']['startScheduleId'].toString()){
                                 console.log("startScheduleId matched");
                                 selected = true;
                             }
@@ -274,13 +274,13 @@ input:checked + .slider:before {
             </select>
         </div>
         <div class="form-group row">
-            <label class="col-sm-6 col-form-label">Set Associated End Schedule</label>
-            <select class="col-sm-20" name="schedule[endScheduleId]">
+            <label class="col-sm-6 col-form-label" for="schedule[relational][endScheduleId]">Set Associated End Schedule</label>
+            <select class="col-sm-20" name="schedule[relational][endScheduleId]">
                 <option value="-1" disabled>Select Your End Schedule</option>
                 <option value="0">None</option>
                 <% deviceSchedules.forEach(function(deviceSchedule){ 
                     // we need to prevent associating a schedule with itself
-                    if(deviceSchedule['schedule']['startScheduleId']){
+                    if(deviceSchedule['relational']['startScheduleId']){
                         if(deviceSchedule['_id'].toString() !== schedule['_id'].toString()){
                             let desired_state = deviceSchedule['device']['desired_state'] === true ? "On" : "Off";
                             let minute = deviceSchedule['schedule']['minute'];
@@ -292,7 +292,7 @@ input:checked + .slider:before {
                             if(deviceSchedule['schedule']['second'] < 10){
                                 second = "0" + deviceSchedule['schedule']['second'];
                             }
-                            if(schedule['schedule']['endScheduleId'] && deviceSchedule['_id'].toString() === schedule['schedule']['endScheduleId'].toString()){
+                            if(schedule['relational']['endScheduleId'] && deviceSchedule['_id'].toString() === schedule['relational']['endScheduleId'].toString()){
                                 console.log("endScheduleId matched");
                                 selected = true;
                             }
