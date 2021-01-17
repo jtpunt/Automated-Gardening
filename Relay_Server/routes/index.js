@@ -166,7 +166,7 @@ router.get('/status/:id', outletMiddleware.isGpioConfigured(outletController), f
     // validateInput(gpio_input, res, outletHelper.getStatus, outletHelper);
 });
 // really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
-router.get('/activate/:gpio', outletMiddleware.isGpioConfigured(outletController), function(req, res){
+router.get('/activate/:gpio', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
     console.log("is a valid number!\n");
