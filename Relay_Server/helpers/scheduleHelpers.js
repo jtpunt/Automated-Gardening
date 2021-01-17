@@ -22,7 +22,12 @@ class Schedule{
     }
     keyValues(){
         let myEntries = this.entries();
-        myEntries.forEach(([prop, val]) => console.log(prop, val));
+        let myScheduleObj = {}
+        myEntries.forEach(([prop, val]) =>{
+            if(val !== undefined)
+                myScheduleObj[prop] = val
+        }) 
+        console.log(`myScheduleObj: ${JSON.stringify(myScheduleObj)}`);
     }
 }
 class Job extends Schedule{
