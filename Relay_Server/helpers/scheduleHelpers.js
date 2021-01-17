@@ -22,7 +22,7 @@ class Schedule{
     }
     keyValues(){
         let keys = this.keys();
-        for(key in keys){
+        for(let key in keys){
             console.log(key);
         }
     }
