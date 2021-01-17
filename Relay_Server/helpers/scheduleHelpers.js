@@ -539,7 +539,7 @@ let scheduleHelpers = {
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = scheduleHelpers.buildJob(
-                                    correctedSchedule, 
+                                    schedule_config['schedule'], 
                                     self.deleteSchedule, 
                                     self,
                                     schedule_config['relational']['startScheduleId'].toString()
@@ -549,7 +549,7 @@ let scheduleHelpers = {
                                 self.scheduleObj[schedule_config['_id']] = obj; 
                             }else{
                                 let job = scheduleHelpers.buildJob(
-                                    correctedSchedule, 
+                                    schedule_config['schedule'], 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
