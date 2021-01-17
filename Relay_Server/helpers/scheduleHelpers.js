@@ -6,6 +6,7 @@ let Scheduler       = require("../models/scheduler"),
     await           = require("asyncawait/await"),
     localIP         = ip.address();
 
+// testing this
 class Schedule{
     constructor(schedule){
         this.second = schedule['second'];
@@ -439,12 +440,12 @@ let scheduleHelpers = {
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
-                            let scheduleTest = new Schedule(JSON.stringify(schedule_config['schedule']));
+                            let scheduleTest = new Schedule(schedule_config['schedule']);
                             console.log(`scheduleTest: ${JSON.stringify(scheduleTest)}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = scheduleHelpers.buildJob(
-                                    scheduleTest, 
+                                    myScheduleObj, 
                                     self.deleteSchedule, 
                                     self,
                                     schedule_config['relational']['startScheduleId'].toString()
@@ -454,7 +455,7 @@ let scheduleHelpers = {
                                 self.scheduleObj[schedule_config['_id']] = obj; 
                             }else{
                                 let job = scheduleHelpers.buildJob(
-                                    scheduleTest, 
+                                    myScheduleObj, 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
