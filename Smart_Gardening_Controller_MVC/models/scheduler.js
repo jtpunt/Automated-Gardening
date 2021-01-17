@@ -6,7 +6,7 @@ var scheduleSchema = new mongoose.Schema({
             ref: "Device"
         },
         gpio: Number,
-        desired_state: Boolean // TO DO - take this code out, moved to new 'relaySettings.js' schema
+        desired_state: Boolean
     }, 
     schedule: {
         second: Number,
@@ -15,17 +15,17 @@ var scheduleSchema = new mongoose.Schema({
         date: Number,
         month: Number,
         year: Number,
-        dayOfWeek: [],
-        // TO DO - change to 'onScheduleId'
-        prevScheduleId: {
+        dayOfWeek: []
+    },
+    relational: {
+        prevScheduleId: { // associated with desired_state === true. Turn the relay on
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
         },
-        // TO DO - change to 'offScheduleId'
-        nextScheduleId: {
+        nextScheduleId: { // associated with desired_state === false. Turn the relay off
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
-        }, 
+        },
         startScheduleId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
@@ -34,13 +34,6 @@ var scheduleSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Scheduler"
         }
-        // runAtInterval: {
-        //     Interval: Number,
-        //     time_format: {
-        //         format: String, // seconds is not a valid format
-        //         enum: ['minutes', 'hours']
-        //     }
-        // }
     }
     
 });
