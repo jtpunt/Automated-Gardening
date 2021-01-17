@@ -22,7 +22,9 @@ class Schedule{
     }
     keyValues(){
         let myKeys = this.keys();
-        console.log(`keys from keyValues: ${myKeys}`)
+        myKeys.forEach(function(key){
+            console.log(`key from keyValues: ${key}`);
+        })
     }
 }
 class Job extends Schedule{
