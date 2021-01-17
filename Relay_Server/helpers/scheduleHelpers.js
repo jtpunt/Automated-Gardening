@@ -114,7 +114,7 @@ let scheduleHelpers = {
                 ...args
             );
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
-    
+        console.log(`new_schedule_config received: ${JSON.stringify(new_schedule_config)}`);
         if(newScheduleResponse === undefined)
             return newScheduleResponse;
         else{
