@@ -18,15 +18,20 @@ class Schedule{
         this.dayOfWeek = schedule['dayOfWeek'];
     }
     keys(){
-        let keys = Object.getOwnPropertyNames(this);
-        return keys;
-        
+        return Object.getOwnPropertyNames(this);
+    }
+    keyValues(){
+        let keys = this.keys();
+        for(key in keys){
+            console.log(key);
+        }
     }
 }
 class Job extends Schedule{
     constructor(schedule){
         super(schedule);
         console.log(super.keys())
+        super.keyValues();
     }
 }
 let scheduleHelpers = {
