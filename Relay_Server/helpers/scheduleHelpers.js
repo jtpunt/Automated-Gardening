@@ -704,7 +704,7 @@ let scheduleHelpers = {
             today             = new Date(),
             onScheduleId      = updated_schedule_config['relational']['prevScheduleId'] || undefined,
             offScheduleId     = updated_schedule_config['relational']['nextScheduleId'] || undefined;
-
+        console.log(`updated_schedule_config: ${JSON.stringify(updated_schedule_config)}`);
         Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
             if(err){
                 console.log(err)
