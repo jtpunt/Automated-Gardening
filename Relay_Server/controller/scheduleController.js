@@ -107,22 +107,26 @@ var scheduleMethods = {
                 let on_schedule = { // on schedule
                     ... newSchedule,
                     schedule: on_start_time,
-                    device: device_start 
+                    device: device_start,
+                    relational: {}
                 },
                 off_schedule   = { // off schedule
                     ... newSchedule, 
                     schedule: off_end_time,
-                    device: device_end
+                    device: device_end,
+                    relational: {}
                 },
                 on_end_schedule = {
                     ... newSchedule,
                     schedule: on_end_schedule_time,
-                    device: device_start
+                    device: device_start,
+                    relational: {}
                 },
                 off_end_schedule = {
                     ... newSchedule,
                     schedule: off_end_schedule_time,
-                    device: device_end
+                    device: device_end,
+                    relational: {}
                 }
                 let start_date = newSchedule['schedule']['start_date'],
                     end_date   = newSchedule['schedule']['end_date'];
@@ -230,12 +234,14 @@ var scheduleMethods = {
                 let on_schedule = { // on schedule
                     ... newSchedule,
                     schedule: on_start_time,
-                    device: device_start
+                    device: device_start,
+                    relational: {}
                 },
                 off_schedule   = { // off schedule
                     ... newSchedule, 
                     schedule: off_end_time,
-                    device: device_end
+                    device: device_end,
+                    relational: {}
                 };
 
                 let on_time_timestamp = new Date(),
@@ -310,12 +316,14 @@ var scheduleMethods = {
                 let on_schedule = { // on schedule
                     ... newSchedule,
                     schedule: on_start_time,
-                    device: device_start
+                    device: device_start,
+                    relational: {}
                 },
                 off_schedule   = { // off schedule
                     ... newSchedule, 
                     schedule: off_end_time,
-                    device: device_end
+                    device: device_end,
+                    relational: {}
                 };
                     
                 let on_time_timestamp = new Date(),
@@ -380,7 +388,8 @@ var scheduleMethods = {
                     off_schedule   = { // off schedule
                     ... newSchedule, 
                     schedule: off_end_time,
-                    device: device_end
+                    device: device_end,
+                    relational: {}
                 };
       
                 let conflictingMsg = scheduleHelper.isScheduleConflicting(off_schedule);
