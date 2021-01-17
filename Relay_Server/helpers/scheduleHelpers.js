@@ -18,7 +18,7 @@ class Schedule{
         this.dayOfWeek = schedule['dayOfWeek'];
     }
     // getter
-    get key(){
+    get keys(){
         let keys = Object.getOwnPropertyNames(this);
         return keys;
         
