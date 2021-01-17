@@ -533,7 +533,7 @@ let scheduleHelpers = {
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = scheduleHelpers.buildSchedule(schedule_config);
-                            let correctedSchedule = JSON.parse(schedule_config['schedule']);
+                            let correctedSchedule = JSON.parse(JSON.stringify(schedule_config['schedule']));
                             console.log(`correctedSchedule: ${correctedSchedule}`);
                             console.log(`myScheduleObj: ${JSON.stringify(myScheduleObj)}`);
                             if(schedule_config['relational']['startScheduleId']){
