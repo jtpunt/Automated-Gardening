@@ -314,13 +314,11 @@ var scheduleMethods = {
                 console.log(`on_start_time: ${JSON.stringify(on_start_time)}`);
                 console.log(`on_end_time: ${JSON.stringify(off_end_time)}`);
                 let on_schedule = { // on schedule
-                    ... newSchedule,
                     schedule: on_start_time,
                     device: device_start,
                     relational: {}
                 },
                 off_schedule   = { // off schedule
-                    ... newSchedule, 
                     schedule: off_end_time,
                     device: device_end,
                     relational: {}
