@@ -454,7 +454,7 @@ let scheduleHelpers = {
                                 self.scheduleObj[schedule_config['_id']] = obj; 
                             }else{
                                 let job = scheduleHelpers.buildJob(
-                                    scheduleTest, 
+                                    JSON.parse(scheduleTest), 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
