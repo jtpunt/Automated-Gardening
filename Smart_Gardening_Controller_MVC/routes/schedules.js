@@ -295,7 +295,7 @@ router.post("/", middleware.isLoggedIn, async (req, res) => {
             throw new Error("admin credentials not valid!")
         }
         scheduleObj['admin_id'] = adminCredentials['_id'];
-        
+        console.log(`scheduleObj build: ${JSON.stringify(scheduleObj)}`);
         const scheduleStr = JSON.stringify(scheduleObj);
         const options = buildOptions(req.body.device.local_ip, 5000, '/schedule', 'POST', scheduleStr);
         
