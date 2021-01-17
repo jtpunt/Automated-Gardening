@@ -417,7 +417,7 @@ var scheduleMethods = {
             var schedule_id = req.params.schedule_id;
             var updatedSchedule = req.body;
                 // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-
+            console.log(`updatedSchedule: ${JSON.stringify(updatedSchedule)}`);
             let prevScheduleId = updatedSchedule['relational']['prevScheduleId'],
                 nextScheduleId = updatedSchedule['relational']['nextScheduleId'],
                 my_schedule = {
