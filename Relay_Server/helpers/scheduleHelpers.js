@@ -100,8 +100,8 @@ let scheduleHelpers = {
         let job = this.getScheduleJobById(schedule_id);
         if(job === undefined)
             return job;
-        // return job.nextInvocation();
-        return job.nextInvocationDate;        
+        return job.nextInvocation();
+        //return job.nextInvocationDate;        
     },
     setScheduleObjById: function(schedule_id, schedule_obj){
         this.scheduleObj[schedule_id] = schedule_obj;
@@ -499,15 +499,23 @@ let scheduleHelpers = {
                                 gpio            = schedule_config['device']['gpio'],
                                 desired_state   = schedule_config['device']['desired_state'];
 
+                            // let jobArgs = startScheduleId ? 
+                            //     [schedule_config['schedule'],self.deleteSchedule,self,startScheduleId.toString()] :
+                            //     [schedule_config['schedule'],activateRelayFn,context,gpio,desired_state];
+                            // let job = new Job(...jobArgs);
+                            // var obj = {"schedule_config": schedule_config, "job": job};
+                            // console.log(`obj: ${JSON.stringify(obj)}`);
+                            // self.scheduleObj[schedule_config['_id']] = obj;
                             let jobArgs = startScheduleId ? 
-                                [schedule_config['schedule'],self.deleteSchedule,self,startScheduleId.toString()] :
-                                [schedule_config['schedule'],activateRelayFn,context,gpio,desired_state];
+                                [myScheduleObj,self.deleteSchedule,self,startScheduleId.toString()] :
+                                [myScheduleObj,activateRelayFn,context,gpio,desired_state];
 
-                            let job = new Job(...jobArgs);
+                            let job = scheduleHelpers.buildJob(...jobArgs);
 
-                            var obj = {"schedule_config": schedule_config, "job": job};
+                            var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
                             self.scheduleObj[schedule_config['_id']] = obj;
+
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
                         self.startActiveSchedules(activateRelayFn, context);
