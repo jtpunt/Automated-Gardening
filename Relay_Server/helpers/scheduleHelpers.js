@@ -42,7 +42,7 @@ class Job{
         this.job.cancelNext();
     }
     get scheduleObj(){
-        return this.scheduler.keyValues();
+        return this.schedule.keyValues();
     }
     get nextInvocationDate(){
         return this.job.nextInvocation();
