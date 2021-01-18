@@ -33,7 +33,9 @@ class Job{
     constructor(schedule, job){
         this.job = null;
         this.schedule = new Schedule(schedule);
-        console.log(`from Job Constructor: ${JSON.stringify(this.schedule.keyValues())}`);
+    }
+    get scheduleObj(){
+        return this.schedule.keyValues();
     }
 }
 let scheduleHelpers = {
@@ -459,6 +461,8 @@ let scheduleHelpers = {
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
                             let scheduleTest = new Job(schedule_config['schedule']);
+                            let scheduleObjTest = scheduleTest.scheduleObj();
+                            console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = scheduleHelpers.buildJob(
