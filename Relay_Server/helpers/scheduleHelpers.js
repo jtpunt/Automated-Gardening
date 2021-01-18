@@ -42,7 +42,7 @@ class Job{
     constructor(schedule, fn, context, ...args){
         this.schedule = new Schedule(schedule);
         this.job = this.createJob(fn, context, ...args);
-        console.log(this.nextInvocationDate);
+        console.log(`next invocation: ${this.nextInvocationDate}`);
     }
     createJob(fn, context, ...args){
         return node_schedule.scheduleJob(
@@ -100,7 +100,8 @@ let scheduleHelpers = {
         let job = this.getScheduleJobById(schedule_id);
         if(job === undefined)
             return job;
-        return job.nextInvocation();        
+        // return job.nextInvocation();
+        return job.nextInvocationDate();        
     },
     setScheduleObjById: function(schedule_id, schedule_obj){
         this.scheduleObj[schedule_id] = schedule_obj;
@@ -498,21 +499,15 @@ let scheduleHelpers = {
                                 gpio            = schedule_config['device']['gpio'],
                                 desired_state   = schedule_config['device']['desired_state'];
 
-                            let myJob = new Job(schedule_config['schedule'], activateRelayFn,context,gpio,desired_state);
+                            let jobArgs = startScheduleId ? 
+                                [schedule_config['schedule'],self.deleteSchedule,self,startScheduleId.toString()] :
+                                [schedule_config['schedule'],activateRelayFn,context,gpio,desired_state];
 
-                            // let jobArgs = startScheduleId ? 
-                            //     [myScheduleObj,self.deleteSchedule,self,startScheduleId.toString()] :
-                            //     [myScheduleObj,activateRelayFn,context,gpio,desired_state];
+                            let job = new Job(...jobArgs);
 
-                            // let job = (startScheduleId) ? 
-                            //     // End Schedule Found - Deletes the start schedule
-                            //     scheduleHelpers.buildJob(...jobArgs) : 
-                            //     // Start Schedule Found - Activates the relay on or off
-                            //     scheduleHelpers.buildJob(...jobArgs);
-
-                            // var obj = {"schedule_config": schedule_config, job};
-                            // console.log(`obj: ${JSON.stringify(obj)}`);
-                            // self.scheduleObj[schedule_config['_id']] = obj;
+                            var obj = {"schedule_config": schedule_config, "job": job};
+                            console.log(`obj: ${JSON.stringify(obj)}`);
+                            self.scheduleObj[schedule_config['_id']] = obj;
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
                         self.startActiveSchedules(activateRelayFn, context);
