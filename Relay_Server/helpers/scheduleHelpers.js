@@ -31,8 +31,8 @@ class Schedule{
 }
 class Job{
     constructor(schedule, fn, context, ...args){
-        this.schedule = new Schedule(schedule);
-        this.job = this.schedule.scheduleJob(this.schedule.keyValues(), function(){ fn.call(context, ...args); });
+        this.scheduler = new Schedule(schedule);
+        this.job = schedule.scheduleJob(this.scheduler.keyValues(), function(){ fn.call(context, ...args); });
         console.log(`from constructor: ${this.job.nextInvocationDate}`);
     }
     cancelJob(){
@@ -42,7 +42,7 @@ class Job{
         this.job.cancelNext();
     }
     get scheduleObj(){
-        return this.schedule.keyValues();
+        return this.scheduler.keyValues();
     }
     get nextInvocationDate(){
         return this.job.nextInvocation();
