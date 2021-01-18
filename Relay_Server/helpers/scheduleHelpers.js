@@ -26,14 +26,14 @@ class Schedule{
             if(val !== undefined)
                 myScheduleObj[prop] = val
         }) 
-        console.log(`myScheduleObj: ${JSON.stringify(myScheduleObj)}`);
+        return myScheduleObj;
     }
 }
 class Job{
     constructor(schedule, job){
         this.job = null;
         this.schedule = new Schedule(schedule);
-        this.schedule.keyValues();
+        console.log(`from Job Constructor: ${JSON.stringify(this.schedule.keyValues())}`);
     }
 }
 let scheduleHelpers = {
