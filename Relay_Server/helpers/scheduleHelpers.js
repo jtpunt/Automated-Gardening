@@ -30,12 +30,28 @@ class Schedule{
     }
 }
 class Job{
-    constructor(schedule, job){
-        this.job = null;
+    constructor(schedule, fn, context, ...args){
         this.schedule = new Schedule(schedule);
+        this.job = schedule.scheduleJob(schedule.keyValues(), function(){ fn.call(context, ...args); });
+        console.log(`from constructor: ${this.job.nextInvocationDate}`);
+    }
+    cancelJob(){
+        this.job.cancel();
+    }
+    cancelNextJob(){
+        this.job.cancelNext();
     }
     get scheduleObj(){
         return this.schedule.keyValues();
+    }
+    get nextInvocationDate(){
+        return this.job.nextInvocation();
+    }
+    set newJob(job){
+        this.job = job;
+    }
+    set newSchedule(schedule){
+
     }
 }
 let scheduleHelpers = {
@@ -460,8 +476,14 @@ let scheduleHelpers = {
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
-                            let scheduleTest = new Job(schedule_config['schedule']);
-                            let scheduleObjTest = scheduleTest.scheduleObj;
+                            let scheduleJob = new Job(
+                                schedule_config['schedule'], 
+                                activateRelayFn, 
+                                context, 
+                                Number(schedule_config['device']['gpio']),
+                                Boolean(schedule_config['device']['desired_state'])
+                            );
+                            let scheduleObjTest = scheduleJob.scheduleObj;
                             console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
