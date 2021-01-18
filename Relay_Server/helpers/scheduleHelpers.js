@@ -32,7 +32,7 @@ class Schedule{
 class Job{
     constructor(schedule, job){
         this.job = null;
-        this.schedule = Schedule(schedule);
+        this.schedule = new Schedule(schedule);
         this.schedule.keyValues();
     }
 }
