@@ -42,6 +42,7 @@ class Job{
     constructor(schedule, fn, context, ...args){
         this.schedule = new Schedule(schedule);
         this.job = this.createJob(fn, context, ...args);
+        console.log(this.nextInvocationDate);
     }
     createJob(fn, context, ...args){
         return node_schedule.scheduleJob(
@@ -498,7 +499,7 @@ let scheduleHelpers = {
                                 desired_state   = schedule_config['device']['desired_state'];
 
                             let myJob = new Job(schedule_config['schedule'], activateRelayFn,context,gpio,desired_state);
-                            
+
                             // let jobArgs = startScheduleId ? 
                             //     [myScheduleObj,self.deleteSchedule,self,startScheduleId.toString()] :
                             //     [myScheduleObj,activateRelayFn,context,gpio,desired_state];
