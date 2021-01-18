@@ -101,7 +101,7 @@ let scheduleHelpers = {
         if(job === undefined)
             return job;
         // return job.nextInvocation();
-        return job.nextInvocationDate();        
+        return job.nextInvocationDate;        
     },
     setScheduleObjById: function(schedule_id, schedule_obj){
         this.scheduleObj[schedule_id] = schedule_obj;
