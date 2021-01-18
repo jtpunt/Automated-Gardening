@@ -1,6 +1,6 @@
 let Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
-    schedule        = require('node-schedule'),
+    node_schedule        = require('node-schedule'),
     ip              = require("ip"),
     localIP         = ip.address();
 
@@ -30,9 +30,9 @@ class Schedule{
     }
 }
 class Job{
-    constructor(scheduler, fn, context, ...args){
-        this.scheduler = new Schedule(scheduler);
-        this.job = schedule.scheduleJob(this.scheduler.keyValues(), function(){ fn.call(context, ...args); });
+    constructor(schedule, fn, context, ...args){
+        this.schedule = new Schedule(scheduler);
+        this.job = node_schedule.scheduleJob(this.schedule.keyValues(), function(){ fn.call(context, ...args); });
         console.log(`from constructor: ${this.job.nextInvocationDate}`);
     }
     cancelJob(){
@@ -57,7 +57,7 @@ class Job{
 let scheduleHelpers = {
     scheduleObj: {},
     buildJob: function(myScheduleObj, fn, context, ...args){
-        let job = schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
+        let job = node_schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
         console.log(`next invocation: ${job.nextInvocation()}`);
         return job;
     },
