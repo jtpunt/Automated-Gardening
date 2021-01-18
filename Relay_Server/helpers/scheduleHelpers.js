@@ -7,12 +7,12 @@ let Scheduler       = require("../models/scheduler"),
 // testing this
 class Schedule{
     constructor(schedule){
-        this.second = schedule['second'];
-        this.minute = schedule['minute'];
-        this.hour = schedule['hour'];
-        this.date = schedule['date'];
-        this.month = schedule['month'];
-        this.year = schedule['year'];
+        this.second    = schedule['second'];
+        this.minute    = schedule['minute'];
+        this.hour      = schedule['hour'];
+        this.date      = schedule['date'];
+        this.month     = schedule['month'];
+        this.year      = schedule['year'];
         this.dayOfWeek = schedule['dayOfWeek'];
     }
     entries(){
@@ -27,6 +27,15 @@ class Schedule{
                 myScheduleObj[prop] = val
         }) 
         return myScheduleObj;
+    }
+    set newSchedule(newSchedule){
+        this.second    = newSchedule['second'];
+        this.minute    = newSschedule['minute'];
+        this.hour      = newSchedule['hour'];
+        this.date      = newSchedule['date'];
+        this.month     = newSchedule['month'];
+        this.year      = newSchedule['year'];
+        this.dayOfWeek = newSchedule['dayOfWeek'];
     }
 }
 class Job{
@@ -51,9 +60,11 @@ class Job{
     get nextInvocationDate(){
         return this.job.nextInvocation();
     }
-    set newJob(job){
+    set job(schedule, fn, context, ...args){
         this.cancelJob();
-        this.job = job;
+        this.schedule.newSchedule(schedule);
+        delete this.job;
+        this.job = createJob(fn, context, ...args);
     }
     set newSchedule(schedule){
 
