@@ -30,8 +30,8 @@ class Schedule{
     }
 }
 class Job{
-    constructor(schedule, fn, context, ...args){
-        this.scheduler = new Schedule(schedule);
+    constructor(scheduler, fn, context, ...args){
+        this.scheduler = new Schedule(scheduler);
         this.job = schedule.scheduleJob(this.scheduler.keyValues(), function(){ fn.call(context, ...args); });
         console.log(`from constructor: ${this.job.nextInvocationDate}`);
     }
