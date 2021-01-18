@@ -500,29 +500,47 @@ let scheduleHelpers = {
                             //     Boolean(schedule_config['device']['desired_state'])
                             // );
                             //console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
-                            if(schedule_config['relational']['startScheduleId']){
-                                console.log("PROCESSING END SCHEDULE");
-                                let job = scheduleHelpers.buildJob(
+                            let startScheduleId = schedule_config['relational']['startScheduleId'];
+                            let job = (startScheduleId) ? 
+                                scheduleHelpers.buildJob(
                                     myScheduleObj, 
                                     self.deleteSchedule, 
                                     self,
-                                    schedule_config['relational']['startScheduleId'].toString()
-                                );
-                                var obj = {"schedule_config": schedule_config, job};
-                                console.log(`obj: ${JSON.stringify(obj)}`);
-                                self.scheduleObj[schedule_config['_id']] = obj; 
-                            }else{
-                                let job = scheduleHelpers.buildJob(
+                                    startScheduleId.toString()
+                                ) : 
+                                scheduleHelpers.buildJob(
                                     myScheduleObj, 
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
                                     Boolean(schedule_config['device']['desired_state'])
                                 );
-                                var obj = {"schedule_config": schedule_config, job};
-                                console.log(`obj: ${JSON.stringify(obj)}`);
-                                self.scheduleObj[schedule_config['_id']] = obj;
-                            }
+                            var obj = {"schedule_config": schedule_config, job};
+                            console.log(`obj: ${JSON.stringify(obj)}`);
+                            self.scheduleObj[schedule_config['_id']] = obj;
+                            // if(schedule_config['relational']['startScheduleId']){
+                            //     console.log("PROCESSING END SCHEDULE");
+                            //     let job = scheduleHelpers.buildJob(
+                            //         myScheduleObj, 
+                            //         self.deleteSchedule, 
+                            //         self,
+                            //         schedule_config['relational']['startScheduleId'].toString()
+                            //     );
+                            //     var obj = {"schedule_config": schedule_config, job};
+                            //     console.log(`obj: ${JSON.stringify(obj)}`);
+                            //     self.scheduleObj[schedule_config['_id']] = obj; 
+                            // }else{
+                            //     let job = scheduleHelpers.buildJob(
+                            //         myScheduleObj, 
+                            //         activateRelayFn, 
+                            //         context, 
+                            //         Number(schedule_config['device']['gpio']), 
+                            //         Boolean(schedule_config['device']['desired_state'])
+                            //     );
+                            //     var obj = {"schedule_config": schedule_config, job};
+                            //     console.log(`obj: ${JSON.stringify(obj)}`);
+                            //     self.scheduleObj[schedule_config['_id']] = obj;
+                            // }
          
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
