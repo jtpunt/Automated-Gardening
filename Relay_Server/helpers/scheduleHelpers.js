@@ -502,12 +502,13 @@ let scheduleHelpers = {
                             //console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
 
                             let startScheduleId = schedule_config['relational']['startScheduleId'],
-                                gpio = Number(schedule_config['device']['gpio']),
-                                desired_state = Boolean(schedule_config['device']['desired_state']);
+                                gpio            = schedule_config['device']['gpio'],
+                                desired_state   = schedule_config['device']['desired_state'];
 
                             let jobArgs = startScheduleId ? 
                                 [myScheduleObj,self.deleteSchedule,self,startScheduleId.toString()] :
                                 [myScheduleObj,activateRelayFn,context,gpio,desired_state];
+                                
                             let job = (startScheduleId) ? 
                                 // End Schedule Found - Deletes the start schedule
                                 scheduleHelpers.buildJob(...jobArgs) : 
