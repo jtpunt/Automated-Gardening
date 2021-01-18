@@ -501,19 +501,28 @@ let scheduleHelpers = {
                             // );
                             //console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
                             let startScheduleId = schedule_config['relational']['startScheduleId'];
-                            let job = (startScheduleId) ? 
-                                scheduleHelpers.buildJob(
-                                    myScheduleObj, 
+                            let jobArgs = startScheduleId ? 
+                                [
                                     self.deleteSchedule, 
                                     self,
                                     startScheduleId.toString()
-                                ) : 
-                                scheduleHelpers.buildJob(
-                                    myScheduleObj, 
+                                ] :
+                                [
                                     activateRelayFn, 
                                     context, 
                                     Number(schedule_config['device']['gpio']), 
                                     Boolean(schedule_config['device']['desired_state'])
+                                ];
+                            let job = (startScheduleId) ? 
+                                // End Schedule Found - Deletes the start schedule
+                                scheduleHelpers.buildJob(
+                                    myScheduleObj, 
+                                    ...jobArgs
+                                ) : 
+                                // Start Schedule Found - Activates the relay on or off
+                                scheduleHelpers.buildJob(
+                                    myScheduleObj, 
+                                    ...jobArgs
                                 );
                             var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
