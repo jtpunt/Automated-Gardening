@@ -499,7 +499,7 @@ let scheduleHelpers = {
                             //     Number(schedule_config['device']['gpio']),
                             //     Boolean(schedule_config['device']['desired_state'])
                             // );
-                            console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
+                            //console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
                                 let job = scheduleHelpers.buildJob(
