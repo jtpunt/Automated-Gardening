@@ -19,9 +19,9 @@ class Schedule{
         return Object.entries(this);
     }
     keyValues(){
-        let myEntries = this.entries();
-        console.log(`Schedule myEntries: ${myEntries}`);
-        let myScheduleObj = {}
+        let myScheduleObj = {},
+            myEntries     = this.entries();
+
         myEntries.forEach(([prop, val]) =>{
             if(val !== undefined)
                 myScheduleObj[prop] = val
@@ -32,9 +32,12 @@ class Schedule{
 class Job{
     constructor(schedule, fn, context, ...args){
         this.schedule = new Schedule(schedule);
-        this.job = node_schedule.scheduleJob(this.scheduleObj, function(){ fn.call(context, ...args); });
-        console.log(`from constructor: ${this.nextInvocationDate}`);
-        console.log(`from constructor: ${this.job.nextInvocation()}`)
+        this.job = this.createJob(fn, context, ...args);
+    }
+    createJob(fn, context, ...args){
+        return node_schedule.scheduleJob(
+            this.scheduleObj, function(){ fn.call(context, ...args); }
+        )
     }
     cancelJob(){
         this.job.cancel();
@@ -49,6 +52,7 @@ class Job{
         return this.job.nextInvocation();
     }
     set newJob(job){
+        this.cancelJob();
         this.job = job;
     }
     set newSchedule(schedule){
