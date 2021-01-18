@@ -29,11 +29,11 @@ class Schedule{
         console.log(`myScheduleObj: ${JSON.stringify(myScheduleObj)}`);
     }
 }
-class Job extends Schedule{
+class Job{
     constructor(schedule, job){
-        super(schedule);
         this.job = null;
-        super.keyValues();
+        this.schedule = Schedule(schedule);
+        this.schedule.keyValues();
     }
 }
 let scheduleHelpers = {
