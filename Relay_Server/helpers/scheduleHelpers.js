@@ -32,7 +32,7 @@ class Schedule{
 class Job{
     constructor(schedule, fn, context, ...args){
         this.schedule = new Schedule(schedule);
-        this.job = schedule.scheduleJob(schedule.keyValues(), function(){ fn.call(context, ...args); });
+        this.job = schedule.scheduleJob(this.schedule.keyValues(), function(){ fn.call(context, ...args); });
         console.log(`from constructor: ${this.job.nextInvocationDate}`);
     }
     cancelJob(){
