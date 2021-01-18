@@ -30,7 +30,7 @@ class Schedule{
     }
     set newSchedule(newSchedule){
         this.second    = newSchedule['second'];
-        this.minute    = newSschedule['minute'];
+        this.minute    = newSchedule['minute'];
         this.hour      = newSchedule['hour'];
         this.date      = newSchedule['date'];
         this.month     = newSchedule['month'];
