@@ -60,12 +60,12 @@ class Job{
     get nextInvocationDate(){
         return this.job.nextInvocation();
     }
-    set job(schedule, fn, context, ...args){
-        this.cancelJob();
-        this.schedule.newSchedule(schedule);
-        delete this.job;
-        this.job = createJob(fn, context, ...args);
-    }
+    // set job(schedule, fn, context, ...args){
+    //     this.cancelJob();
+    //     this.schedule.newSchedule(schedule);
+    //     delete this.job;
+    //     this.job = createJob(fn, context, ...args);
+    // }
     set newSchedule(schedule){
 
     }
