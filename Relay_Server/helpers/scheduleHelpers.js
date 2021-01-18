@@ -461,7 +461,7 @@ let scheduleHelpers = {
                             console.log(`schedule_config: ${schedule_config}`);
                             let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
                             let scheduleTest = new Job(schedule_config['schedule']);
-                            let scheduleObjTest = scheduleTest.scheduleObj();
+                            let scheduleObjTest = scheduleTest.scheduleObj;
                             console.log(`scheduleObjTest: ${JSON.stringify(scheduleObjTest)}`);
                             if(schedule_config['relational']['startScheduleId']){
                                 console.log("PROCESSING END SCHEDULE");
