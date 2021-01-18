@@ -1,8 +1,3 @@
-var async           = require("asyncawait/async"),
-    await           = require("asyncawait/await");
-
-
-
 var scheduleMethods = {
     cancelScheduleReq(scheduleHelper){
         return function(req, res, next){
