@@ -83,20 +83,9 @@ router.delete('/device/:device_id', function(req, res) {
     });
 });
 // returns all schedules
-router.get('/schedule', function(req, res) {
-    Scheduler.find({}, (err, schedules) => {
-        if(err){
-            console.log(err);
-            res.status(400).end();
-        }
-        else{
-            console.log(schedules);
-            res.write(JSON.stringify(schedules));
-            res.status(200).end();
-        }
-        
-    });
-});
+router.get('/schedule', 
+    scheduleController.getSchedulesReq(scheduleHelper)
+);
 // add a new chedule
 router.post('/schedule', 
     middleware.verifyAdminAccount, 
@@ -105,8 +94,18 @@ router.post('/schedule',
     outletMiddleware.isGpioConfigured(outletController),
     scheduleController.createSchedulesReq(scheduleHelper, outletController)
 );
-router.get('/schedule/:schedule_id', 
-    scheduleController.getSchedulesReq(scheduleHelper));
+router.get('/schedule/:schedule_id', function(req, res) {
+    Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
+        if(err) {
+            res.redirect("back");
+        }
+        else{
+            console.log(foundSchedule);
+            res.write(JSON.stringify(foundSchedule));
+            res.status(200).end();
+        }
+    }); 
+});
 // edit an existing schedule
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
