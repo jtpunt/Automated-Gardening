@@ -42,7 +42,7 @@ let options = {
     useCreateIndex: true,
     reconnectTries : 300,
     reconnectInterval: 60000,
-    autoReconnect : true
+    // autoReconnect : true
     
 }
 app.use(function errorHandler (err, req, res, next) {
