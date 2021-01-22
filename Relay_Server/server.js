@@ -49,6 +49,7 @@ app.use(function errorHandler (err, req, res, next) {
         res.status(400).send(err.toString());
     }
 )
+mongoose.set("useFindAndModify", false);
 mongoose.connect(connStr, options, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
