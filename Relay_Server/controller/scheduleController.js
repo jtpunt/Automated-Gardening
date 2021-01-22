@@ -1,5 +1,5 @@
 var scheduleMethods = {
-    getScheduleReq(scheduleHelper){
+    getSchedulesReq(scheduleHelper){
         return function(req, res, next){
             res.status(200).send(scheduleHelper.scheduleObj);
         }
