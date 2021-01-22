@@ -36,19 +36,16 @@ var indexRoutes = require('./routes/index.js');
 // test comment for git
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
-let options = {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    reconnectTries : 300,
-    reconnectInterval: 60000,
-    // autoReconnect : true
-    
-}
 app.use(function errorHandler (err, req, res, next) {
         res.status(400).send(err.toString());
     }
 )
+
+let options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true
+}
 mongoose.set("useFindAndModify", false);
 mongoose.connect(connStr, options, function(err){
     if(err){
