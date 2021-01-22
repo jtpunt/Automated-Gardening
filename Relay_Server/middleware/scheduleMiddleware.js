@@ -12,6 +12,7 @@ const MIN_SECOND = 0,
       MAX_DATE   = 31,
       MAX_MONTH  = 11,
       MAX_DOW    = 6;
+      // test comment
 let scheduleMiddleware = {
     checkScheduleInputs(req, res, next){
         var newSchedule = req.body,
