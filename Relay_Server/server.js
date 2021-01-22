@@ -40,20 +40,22 @@ app.use(function errorHandler (err, req, res, next) {
         res.status(400).send(err.toString());
     }
 )
-
 let options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
+    // reconnectTries : 300,
+    // reconnectInterval: 60000,
+    // autoReconnect : true
 }
 mongoose.set("useFindAndModify", false);
 mongoose.connect(connStr, options, function(err){
     if(err){
         console.log("Error connecting to mongodb", err);
         // default schedule here
-        setTimeout(function() {
-            console.log('Connection failed. Retrying in 30 seconds.');
-        }, 30000);
+        // setTimeout(function() {
+        //     console.log('Connection failed. Retrying in 30 seconds.');
+        // }, 30000);
     }else{
         console.log("Successfully Connected!");
         // idea: pause execution for 5-30 seconds before retrying
