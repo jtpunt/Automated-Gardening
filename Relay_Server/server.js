@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 let options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true
+    useCreateIndex: true,
     reconnectTries : 300,
     reconnectInterval: 60000,
     autoReconnect : true
