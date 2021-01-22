@@ -3,7 +3,7 @@ var scheduleMethods = {
         return function(req, res, next){
             res.status(200).send(scheduleHelper.scheduleObj);
         }
-    }
+    },
     cancelScheduleReq(scheduleHelper){
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
