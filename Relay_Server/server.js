@@ -37,13 +37,12 @@ var indexRoutes = require('./routes/index.js');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
 let options = {
-    server : {
         useNewUrlParser: true,
         useUnifiedTopology: true,
-        reconnectTries : 300,
-        reconnectInterval: 60000,
-        autoReconnect : true
-    }
+        // reconnectTries : 300,
+        // reconnectInterval: 60000,
+        // autoReconnect : true
+    
 }
 app.use(function errorHandler (err, req, res, next) {
         res.status(400).send(err.toString());
