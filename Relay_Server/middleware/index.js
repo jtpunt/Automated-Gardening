@@ -6,8 +6,10 @@ var middleware = {
 	        admin_id    = scheduleObj['admin_id'] || undefined,
 	        notAdminMsg = "you must be an admin to perform that action";
 
-	    if(admin_id === undefined)
+	    if(admin_id === undefined){
+	    	console.log(notAdminMsg);
 	    	res.status(404).send(notAdminMsg);
+	    }
 	    else{
 			User.findOne({"_id":admin_id.toString()}, function(err, user){
 			    if(err){
