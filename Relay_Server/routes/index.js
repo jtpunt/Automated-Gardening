@@ -105,18 +105,8 @@ router.post('/schedule',
     outletMiddleware.isGpioConfigured(outletController),
     scheduleController.createSchedulesReq(scheduleHelper, outletController)
 );
-router.get('/schedule/:schedule_id', function(req, res) {
-    Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
-        if(err) {
-            res.redirect("back");
-        }
-        else{
-            console.log(foundSchedule);
-            res.write(JSON.stringify(foundSchedule));
-            res.status(200).end();
-        }
-    }); 
-});
+router.get('/schedule/:schedule_id', 
+    scheduleController.getSchedulesReq(scheduleHelper));
 // edit an existing schedule
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
