@@ -23,7 +23,6 @@ var localIP = ip.address(),
     port    = config.server.port,
     connStr = config.getConnStr();
     
-var indexRoutes = require('./routes/index.js');
 /**********************************************************************
 * Setup our handlebars engine for handling file extensions that end in
 * 'handlebars'
@@ -62,6 +61,7 @@ mongoose.connect(connStr, options, function(err){
         /**********************************************************************
         * Setup Routes For Our Server
         **********************************************************************/
+        var indexRoutes = require('./routes/index.js');
         //app.use("/schedule", schedRoutes);
         app.use("/", indexRoutes);
         /**********************************************************************
