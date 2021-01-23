@@ -1,5 +1,9 @@
 Camera/config.js
 Relay_Server/config.js
+Relay_Server/device_id.json
+Relay_Server/newcrontab
+Relay_Server/oldcrontab
+Relay_Server/package-lock.json
 Smart_Gardening_Controller_MVC/config.js
 Temperature\ and\ Humidity\ API/config.js
 Water_Sensor_API/config.js
