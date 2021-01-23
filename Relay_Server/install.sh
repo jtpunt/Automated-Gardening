@@ -3,7 +3,8 @@ sudo apt-get autoclean
 sudo apt-get update
 sudo apt-get upgrade
 sudo apt-get dist-upgrade
-sudo apt-get install nodejs npm
+wget -O - https://raw.githubusercontent.com/audstanley/NodeJs-Raspberry-Pi/master/Install-Node.sh | sudo bash;
+sudo node-install -v 15;
 npm install
 crontab -l > oldcrontab
 cp oldcrontab newcrontab
