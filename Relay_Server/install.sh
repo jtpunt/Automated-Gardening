@@ -10,4 +10,4 @@ crontab -l > oldcrontab
 cp oldcrontab newcrontab
 echo "@reboot /home/pi/Smart-Gardening/Relay_Server/start.sh > /tmp/listener1.log 2>&1" >> newcrontab
 crontab < newcrontab
-sudo timedatectl set-timezone America/Chicaco
+sudo timedatectl set-timezone America/Chicago
