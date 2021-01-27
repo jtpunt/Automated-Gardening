@@ -74,6 +74,7 @@ function buildTestDevice(){
         gpio: 3
     }
 }
+
 let testSchedule = buildTestSchedule();
 let testDevice = buildTestDevice();
 console.log(`testDevice: ${JSON.stringify(testDevice)}`);
