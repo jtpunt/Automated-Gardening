@@ -12,6 +12,11 @@ class Device{
             gpio:          this.gpio
         }
     }
+    set device(updatedDevice){
+        this._id           = updatedDevice['id'];
+        this.desired_state = updatedDevice['desired_state'];
+        this.gpio          = updatedDevice['gpio'];
+    }
 }
 // testing this
 class Schedule extends Device{
@@ -54,6 +59,24 @@ class Job extends Schedule{
         this.jobFunction = jobFunction;
         this.job = node_schedule.scheduleJob(this.schedule, this.jobFunction)
     }
+    // use case: schedule is updated, but the job function's parameters are the same
+    // The schedule is overwritten and then the job is rescheduled, which automically
+    // cancels the old schedule
+    updateSchedAndJob(updatedSchedule){
+        this.schedule = updatedSchedule;
+        return job.rescheduleJob;
+    }
+    // use case: the schedule and the job's function's paremeters are different
+    // such as turning the relay on/off, or which gpio (smart outlet) to use, which
+    // requires this.device to be updated as well, since the functions inside schedule
+    // helper depend on it to work
+    updateSchedJobAndDevice(updatedDevice, updatedSchedule, updatedJobFunction){
+        this.cancelJob();
+        this.device   = updatedDevice;
+        this.schedule = updatedSchedule;
+        this.jobFn    = updatedJobFunction;
+        this.job      = node_schedule.scheduleJob(this.schedule, this.jobFunction);
+    }
     /* Invalidates all planned invocation for the job. */
     cancelJob(reschedule){ this.job.cancel(); }
     /* Invalidates the next planned invocation for the job. */
@@ -82,53 +105,70 @@ class JobBuilder{
     }
     build(){ return new Job(this.schedule, this.device, this.jobFunction); }
 }
-
-function buildTestSchedule() {
-    return {
-        second: 45,
-        minute: 7,
-        hour: 0
-    }
-}
-function buildTestSchedule1() {
-    return {
-        second: 1,
-        minute: 1,
-        hour: 1
-    }
-}
-function buildTestDevice(){
-    return{
-        id: 1,
-        desired_state: true,
-        gpio: 3
-    }
-}
 var test = {
-    print: function(...args){
+    buildTestSchedule1: function(){
+        return {
+            second: 45,
+            minute: 7,
+            hour: 0
+        }
+    },
+    buildTestSchedule2: function(){
+        return {
+            second: 1,
+            minute: 40,
+            hour: 17
+        }
+    },
+    buildTestDevice1: function(){
+        return{
+            id: 1,
+            desired_state: true,
+            gpio: 2
+        }
+    },
+    buildTestDevice2: function(){
+        return{
+            id: 2,
+            desired_state: false,
+            gpio: 3
+        }
+    },
+    print1: function(...args){
         console.log(...args);
+    },
+    print2: function(...args){
+        console.log(...args);
+    },
+    buildJobFn: function(fn, context, ...args){
+        return function(){ fn.call(context, ...args); } 
     }
 }
-let testSchedule = buildTestSchedule();
-let testSchedule1 = buildTestSchedule1();
+let testSchedule1 = test.buildTestSchedule1(),
+    testSchedule2 = test.buildTestSchedule2();
 
-let testDevice = buildTestDevice();
-let jobFnArgs = [test.print, test, "hello"]
+let testDevice1 = test.buildTestDevice1(),
+    testDevice2 = test.buildTestDevice2();
+
+let jobFnArgs1 = [test.print1, test, "hello"],
+    jobFnArgs2 = [test.print2, test, "yowhatup"];
 
 
 let job = new JobBuilder()
-    .withSchedule(testSchedule)
-    .withDevice(testDevice)
-    .withJobFunction(...jobFnArgs)
+    .withSchedule(testSchedule1)
+    .withDevice(testDevice1)
+    .withJobFunction(...jobFnArgs1)
     .build()
 
 console.log(`next nextInvocation: ${job.nextInvocationDate}`)
 console.log(`job: ${JSON.stringify(job.schedule)}`);
 
-job.schedule = testSchedule1;
+job.schedule = testSchedule2;
+let updatedJobFn = test.buildJobFn(...jobFnArgs2);
+job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
 console.log(`job: ${JSON.stringify(job.schedule)}`);
 
-let result = job.rescheduleJob;
+// let result = job.rescheduleJob;
 // job.cancelJob; 
 //job.cancelNextJob(); 
 console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
