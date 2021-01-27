@@ -1,3 +1,4 @@
+let node_schedule        = require('node-schedule');
 class Device{
     constructor(device){
         this._id           = device['id'];
@@ -34,26 +35,52 @@ class Schedule extends Device{
         this.dayOfWeek = newSchedule['dayOfWeek'];
     }
     get schedule(){
-        return {
+        let obj = {
             second:    this.second,
             minute:    this.minute,
             hour:      this.hour,
-            date:      this.date,
-            month:     this.month,
-            year:      this.year,
-            dayOfWeek: this.dayOfWeek
         }
+        let optionalProps = ['date', 'month', 'year', 'dayOfWeek']
+        optionalProps.forEach(optionProp => {
+            if(optionProp in this && this[optionProp] !== undefined)
+                obj[optionProp] = this.optionProp;
+        });
+        return obj;
     }
 }
 class Job extends Schedule{
-    constructor(schedule, device){
+    constructor(schedule, device, fn, context, ...args){
         super(schedule, device);
-        this.job = null;
+        this.job = null
+        this.job = this.createJob(fn, context, ...args);
+        console.log(this.job);
+        console.log(this.schedule);
+    }
+    createJob(fn, context, ...args){
+        console.log("Creating job");
+        return node_schedule.scheduleJob(
+            this.schedule, function(){ fn.call(context, ...args); }
+        )
+    }
+    cancelJob(){ 
+        this.job.cancel(); 
+    }
+    cancelNextJob(){
+        this.job.cancelNext();
+    }
+    get nextInvocationDate(){
+        return this.job.nextInvocation();
     }
 }
 class JobBuilder{
     withDevice(device){
 
+    }
+    withSchedule(schedule){
+
+    }
+    withJob(fn, context, ...args){
+        
     }
     build(){
         return new Job();
@@ -74,12 +101,16 @@ function buildTestDevice(){
         gpio: 3
     }
 }
-
+var test = {
+    print: function(...args){
+        console.log(...args);
+    }
+}
 let testSchedule = buildTestSchedule();
 let testDevice = buildTestDevice();
 console.log(`testDevice: ${JSON.stringify(testDevice)}`);
-let job = new Job(testSchedule, testDevice);
-
+let job = new Job(testSchedule, testDevice, test.print, test, "hello");
+console.log(`next nextInvocation: ${job.nextInvocationDate}`)
 // // let job = new JobBuilder(testSchedule)
 // //     .build();
 console.log(`job: ${JSON.stringify(job.schedule)}`);

@@ -4,6 +4,9 @@ let Scheduler       = require("../models/scheduler"),
     ip              = require("ip"),
     localIP         = ip.address();
 
+class Device{
+    
+}
 // testing this
 class Schedule{
     constructor(schedule){
