@@ -72,11 +72,11 @@ let scheduleHelpers = {
             console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
             let desired_state   = job.desired_state,
                 device_gpio     = job.gpio,
-                nextScheduleId  = job.relational['nextScheduleId'];
+                nextScheduleId  = job.nextScheduleId;
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
-                console.log(`nextScheduleId is not null: ${nextScheduleId}`);
+                console.log(`nextScheduleId is not null:`)
                 // let isScheduleActive = this.scheduleIsActive(schedule_id, today);
                 //     if(isScheduleActive === true)
                 //         activateRelayFn.call(context, device_gpio, desired_state);
@@ -374,23 +374,21 @@ let scheduleHelpers = {
     // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
     // the next_schedule_config object
     // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    scheduleIsActive: function(on_schedule_id, timestamp){
+    scheduleIsActive: function(on_schedule_config, timestamp){
         let self = this,
             result = false,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
             
         // check to see if 1 of the schedules is active right now.
-        // if(on_schedule_config === undefined || on_schedule_config === null)
-        //     return result;
+        if(on_schedule_config === undefined || on_schedule_config === null)
+            return result;
         
-        let on_schedule_config = self.scheduleObj[on_schedule_id],
-            on_schedule        = on_schedule_config.schedule,
-            on_schedule_second = sanitize_input(on_schedule['second']),
-            on_schedule_minute = sanitize_input(on_schedule['minute']),
-            on_schedule_hour   = sanitize_input(on_schedule['hour']),
-            desired_state      = Boolean(on_schedule_config.device['desired_state']),
-            onScheduleId       = on_schedule_config.relational['prevScheduleId'],
-            offScheduleId      = on_schedule_config.relational['nextScheduleId'];
+        let on_schedule_second = sanitize_input(on_schedule_config['schedule']['second']),
+            on_schedule_minute = sanitize_input(on_schedule_config['schedule']['minute']),
+            on_schedule_hour   = sanitize_input(on_schedule_config['schedule']['hour']),
+            desired_state      = Boolean(on_schedule_config['device']['desired_state']),
+            onScheduleId       = on_schedule_config['relational']['prevScheduleId'],
+            offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
             
         // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
@@ -398,10 +396,10 @@ let scheduleHelpers = {
             if(offScheduleId in this.scheduleObj){
                 let on_schedule_timestamp  = new Date(),
                     off_schedule_timestamp = new Date(),
-                    off_schedule_config    = self.scheduleObj[offScheduleId],
-                    off_schedule_second    = sanitize_input(off_schedule_config.schedule['second']),
-                    off_schedule_minute    = sanitize_input(off_schedule_config.schedule['minute']),
-                    off_schedule_hour      = sanitize_input(off_schedule_config.schedule['hour']);
+                    off_schedule_config    = self.scheduleObj[offScheduleId]['schedule_config'],
+                    off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
+                    off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
+                    off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
 
                 on_schedule_timestamp.setHours(on_schedule_hour, on_schedule_minute, on_schedule_second);
                 off_schedule_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
@@ -474,9 +472,9 @@ let scheduleHelpers = {
                             var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
                             self.scheduleObj[schedule_config['_id']] = job;
-                            // console.log(`stored schedule: ${JSON.stringify(job.schedule)}`);
-                            // console.log(`stored relational: ${JSON.stringify(job.relational)}`);
-                            // console.log(`stored device: ${JSON.stringify(job.device)}`);
+                            console.log(`stored schedule: ${JSON.stringify(job.schedule)}`);
+                            console.log(`stored relational: ${JSON.stringify(job.relational)}`);
+                            console.log(`stored device: ${JSON.stringify(job.device)}`);
                             console.log(`nextInvocationDate: ${job.nextInvocationDate}`);
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);

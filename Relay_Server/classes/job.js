@@ -12,8 +12,6 @@ class Device{
             gpio:          this.gpio
         }
     }
-    get desired_state() { return this.desired_state }
-    get gpio(){ return this.gpio }
     set device(updatedDevice){
         this._id           = updatedDevice['id'];
         this.desired_state = updatedDevice['desired_state'];
@@ -185,38 +183,39 @@ var test = {
         return function(){ fn.call(context, ...args); } 
     }
 }
-// let testSchedule1 = test.buildTestSchedule1(),
-//     testSchedule2 = test.buildTestSchedule2();
+let testSchedule1 = test.buildTestSchedule1(),
+    testSchedule2 = test.buildTestSchedule2();
 
-// let testRelational1 = test.buildRelational1(),
-//     testRelational2 = test.buildRelational2();
+let testRelational1 = test.buildRelational1(),
+    testRelational2 = test.buildRelational2();
 
-// let testDevice1 = test.buildTestDevice1(),
-//     testDevice2 = test.buildTestDevice2();
+let testDevice1 = test.buildTestDevice1(),
+    testDevice2 = test.buildTestDevice2();
 
-// let jobFnArgs1 = [test.print1, test, "hello"],
-//     jobFnArgs2 = [test.print2, test, "yowhatup"];
+let jobFnArgs1 = [test.print1, test, "hello"],
+    jobFnArgs2 = [test.print2, test, "yowhatup"];
 
 
-// let job = new JobBuilder()
-//     .withSchedule(testSchedule1)
-//     .withRelational(testRelational1)
-//     .withDevice(testDevice1)
-//     .withJobFunction(...jobFnArgs1)
-//     .build()
+let job = new JobBuilder()
+    .withSchedule(testSchedule1)
+    .withRelational(testRelational1)
+    .withDevice(testDevice1)
+    .withJobFunction(...jobFnArgs1)
+    .build()
 
-// console.log(`next nextInvocation: ${job.nextInvocationDate}`)
-// console.log(`schedule1: ${JSON.stringify(job.schedule)}`);
+console.log(`next nextInvocation: ${job.nextInvocationDate}`)
+console.log(`schedule1: ${JSON.stringify(job.schedule)}`);
 
-// job.schedule = testSchedule2;
-// let updatedJobFn = test.buildJobFn(...jobFnArgs2);
-// job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
-// console.log(`schedule2: ${JSON.stringify(job.schedule)}`);
+job.schedule = testSchedule2;
+let updatedJobFn = test.buildJobFn(...jobFnArgs2);
+job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
+console.log(`schedule2: ${JSON.stringify(job.schedule)}`);
 
-// // let result = job.rescheduleJob;
-// // job.cancelJob; 
-// //job.cancelNextJob(); 
-// console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
-// console.log(`relational: ${JSON.stringify(job.relational)}`)
-// console.log(`device: ${JSON.stringify(job.device)}`)
+// let result = job.rescheduleJob;
+// job.cancelJob; 
+//job.cancelNextJob(); 
+console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
+console.log(`relational: ${JSON.stringify(job.relational)}`)
+console.log(`device: ${JSON.stringify(job.device)}`)
+console.log(`desired_state: ${job.desired_state}`);
 module.exports = JobBuilder;
