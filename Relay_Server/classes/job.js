@@ -174,4 +174,4 @@ console.log(`job: ${JSON.stringify(job.schedule)}`);
 console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
 
 console.log(`device: ${JSON.stringify(job.device)}`)
-// module.exports = Job;
+module.exports = {Device, Schedule, Job, JobBuilder};
