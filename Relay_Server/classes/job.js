@@ -18,10 +18,33 @@ class Device{
         this.gpio          = updatedDevice['gpio'];
     }
 }
-// testing this
-class Schedule extends Device{
-    constructor(schedule, device){
+class Relational extends Device{
+    constructor(relational, device){
         super(device);
+        this.prevScheduleId  = relational['prevScheduleId'];
+        this.nextScheduleId  = relational['nextScheduleId'];
+        this.startScheduleId = relational['startScheduleId'];
+        this.endScheduleId   = relational['endScheduleId'];
+    }
+    get relational(){
+        return {
+            prevScheduleId:  this.prevScheduleId,
+            nextScheduleId:  this.nextScheduleId,
+            startScheduleId: this.startScheduleId,
+            endScheduleId:   this.endScheduleId
+        }
+    }
+    set relational(relational){
+        this.prevScheduleId  = relational['prevScheduleId'];
+        this.nextScheduleId  = relational['nextScheduleId'];
+        this.startScheduleId = relational['startScheduleId'];
+        this.endScheduleId   = relational['endScheduleId'];
+    }
+}
+// testing this
+class Schedule extends Relational{
+    constructor(schedule, relational, device){
+        super(relational, device);
         this.second    = schedule['second'];    // required
         this.minute    = schedule['minute'];    // required
         this.hour      = schedule['hour'];      // required
@@ -54,8 +77,8 @@ class Schedule extends Device{
     }
 }
 class Job extends Schedule{
-    constructor(schedule, device, jobFunction){
-        super(schedule, device);
+    constructor(schedule, relational, device, jobFunction){
+        super(schedule, relational, device);
         this.jobFunction = jobFunction;
         this.job = node_schedule.scheduleJob(this.schedule, this.jobFunction)
     }
@@ -95,6 +118,10 @@ class JobBuilder{
         this.schedule = schedule; 
         return this;
     }
+    withRelational(relational){
+        this.relational = relational;
+        return this;
+    }
     withDevice(device){ 
         this.device = device; 
         return this;
@@ -103,7 +130,7 @@ class JobBuilder{
         this.jobFunction = function(){ fn.call(context, ...args); } 
         return this;
     }
-    build(){ return new Job(this.schedule, this.device, this.jobFunction); }
+    build(){ return new Job(this.schedule, this.relational, this.device, this.jobFunction); }
 }
 // var test = {
 //     buildTestSchedule1: function(){
@@ -118,6 +145,18 @@ class JobBuilder{
 //             second: 1,
 //             minute: 40,
 //             hour: 17
+//         }
+//     },
+//     buildRelational1: function(){
+//         return {
+//             prevScheduleId:  1,
+//             nextScheduleId:  2,
+//         }
+//     },
+//     buildRelational2: function(){
+//         return {
+//             startScheduleId: 1,
+//             endScheduleId:   2
 //         }
 //     },
 //     buildTestDevice1: function(){
@@ -147,6 +186,9 @@ class JobBuilder{
 // let testSchedule1 = test.buildTestSchedule1(),
 //     testSchedule2 = test.buildTestSchedule2();
 
+// let testRelational1 = test.buildRelational1(),
+//     testRelational2 = test.buildRelational2();
+
 // let testDevice1 = test.buildTestDevice1(),
 //     testDevice2 = test.buildTestDevice2();
 
@@ -156,6 +198,7 @@ class JobBuilder{
 
 // let job = new JobBuilder()
 //     .withSchedule(testSchedule1)
+//     .withRelational(testRelational1)
 //     .withDevice(testDevice1)
 //     .withJobFunction(...jobFnArgs1)
 //     .build()
@@ -172,6 +215,6 @@ class JobBuilder{
 // // job.cancelJob; 
 // //job.cancelNextJob(); 
 // console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
-
+// console.log(`relational: ${JSON.stringify(job.relational)}`)
 // console.log(`device: ${JSON.stringify(job.device)}`)
 module.exports = JobBuilder;

@@ -5,65 +5,6 @@ let Scheduler       = require("../models/scheduler"),
     JobBuilder      = require("../classes/job");
     localIP         = ip.address();
 
-
-var test = {
-    buildTestSchedule1: function(){
-        return {
-            second: 45,
-            minute: 7,
-            hour: 0
-        }
-    },
-    buildTestSchedule2: function(){
-        return {
-            second: 1,
-            minute: 40,
-            hour: 17
-        }
-    },
-    buildTestDevice1: function(){
-        return{
-            id: 1,
-            desired_state: true,
-            gpio: 2
-        }
-    },
-    buildTestDevice2: function(){
-        return{
-            id: 2,
-            desired_state: false,
-            gpio: 3
-        }
-    },
-    print1: function(...args){
-        console.log(...args);
-    },
-    print2: function(...args){
-        console.log(...args);
-    },
-    buildJobFn: function(fn, context, ...args){
-        return function(){ fn.call(context, ...args); } 
-    }
-}
-let testSchedule1 = test.buildTestSchedule1(),
-    testSchedule2 = test.buildTestSchedule2();
-
-let testDevice1 = test.buildTestDevice1(),
-    testDevice2 = test.buildTestDevice2();
-
-let jobFnArgs1 = [test.print1, test, "hello"],
-    jobFnArgs2 = [test.print2, test, "yowhatup"];
-
-
-let job = new JobBuilder()
-    .withSchedule(testSchedule1)
-    .withDevice(testDevice1)
-    .withJobFunction(...jobFnArgs1)
-    .build()
-
-console.log(`TEST next nextInvocation: ${job.nextInvocationDate}`)
-console.log(`TEST job: ${JSON.stringify(job.schedule)}`);
-console.log(`TEST device: ${JSON.stringify(job.device)}`)
 let scheduleHelpers = {
     scheduleObj: {},
     buildJob: function(myScheduleObj, fn, context, ...args){
@@ -499,11 +440,20 @@ let scheduleHelpers = {
                             // var obj = {"schedule_config": schedule_config, "job": job};
                             // console.log(`obj: ${JSON.stringify(obj)}`);
                             // self.scheduleObj[schedule_config['_id']] = obj;
+
                             let jobArgs = startScheduleId ? 
                                 [myScheduleObj,self.deleteSchedule,self,startScheduleId.toString()] :
                                 [myScheduleObj,activateRelayFn,context,gpio,desired_state];
 
-                            let job = scheduleHelpers.buildJob(...jobArgs);
+
+
+                            let job = new JobBuilder()
+                                .withSchedule(schedule_config['schedule'])
+                                .withRelational(schedule_config['relational'])
+                                .withDevice(schedule_config['device'])
+                                .withJobFunction(...jobArgs)
+                                .build()
+                            // let job = scheduleHelpers.buildJob(...jobArgs);
 
                             var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
