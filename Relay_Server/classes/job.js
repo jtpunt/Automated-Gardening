@@ -105,73 +105,73 @@ class JobBuilder{
     }
     build(){ return new Job(this.schedule, this.device, this.jobFunction); }
 }
-var test = {
-    buildTestSchedule1: function(){
-        return {
-            second: 45,
-            minute: 7,
-            hour: 0
-        }
-    },
-    buildTestSchedule2: function(){
-        return {
-            second: 1,
-            minute: 40,
-            hour: 17
-        }
-    },
-    buildTestDevice1: function(){
-        return{
-            id: 1,
-            desired_state: true,
-            gpio: 2
-        }
-    },
-    buildTestDevice2: function(){
-        return{
-            id: 2,
-            desired_state: false,
-            gpio: 3
-        }
-    },
-    print1: function(...args){
-        console.log(...args);
-    },
-    print2: function(...args){
-        console.log(...args);
-    },
-    buildJobFn: function(fn, context, ...args){
-        return function(){ fn.call(context, ...args); } 
-    }
-}
-let testSchedule1 = test.buildTestSchedule1(),
-    testSchedule2 = test.buildTestSchedule2();
+// var test = {
+//     buildTestSchedule1: function(){
+//         return {
+//             second: 45,
+//             minute: 7,
+//             hour: 0
+//         }
+//     },
+//     buildTestSchedule2: function(){
+//         return {
+//             second: 1,
+//             minute: 40,
+//             hour: 17
+//         }
+//     },
+//     buildTestDevice1: function(){
+//         return{
+//             id: 1,
+//             desired_state: true,
+//             gpio: 2
+//         }
+//     },
+//     buildTestDevice2: function(){
+//         return{
+//             id: 2,
+//             desired_state: false,
+//             gpio: 3
+//         }
+//     },
+//     print1: function(...args){
+//         console.log(...args);
+//     },
+//     print2: function(...args){
+//         console.log(...args);
+//     },
+//     buildJobFn: function(fn, context, ...args){
+//         return function(){ fn.call(context, ...args); } 
+//     }
+// }
+// let testSchedule1 = test.buildTestSchedule1(),
+//     testSchedule2 = test.buildTestSchedule2();
 
-let testDevice1 = test.buildTestDevice1(),
-    testDevice2 = test.buildTestDevice2();
+// let testDevice1 = test.buildTestDevice1(),
+//     testDevice2 = test.buildTestDevice2();
 
-let jobFnArgs1 = [test.print1, test, "hello"],
-    jobFnArgs2 = [test.print2, test, "yowhatup"];
+// let jobFnArgs1 = [test.print1, test, "hello"],
+//     jobFnArgs2 = [test.print2, test, "yowhatup"];
 
 
-let job = new JobBuilder()
-    .withSchedule(testSchedule1)
-    .withDevice(testDevice1)
-    .withJobFunction(...jobFnArgs1)
-    .build()
+// let job = new JobBuilder()
+//     .withSchedule(testSchedule1)
+//     .withDevice(testDevice1)
+//     .withJobFunction(...jobFnArgs1)
+//     .build()
 
-console.log(`next nextInvocation: ${job.nextInvocationDate}`)
-console.log(`job: ${JSON.stringify(job.schedule)}`);
+// console.log(`next nextInvocation: ${job.nextInvocationDate}`)
+// console.log(`job: ${JSON.stringify(job.schedule)}`);
 
-job.schedule = testSchedule2;
-let updatedJobFn = test.buildJobFn(...jobFnArgs2);
-job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
-console.log(`job: ${JSON.stringify(job.schedule)}`);
+// job.schedule = testSchedule2;
+// let updatedJobFn = test.buildJobFn(...jobFnArgs2);
+// job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
+// console.log(`job: ${JSON.stringify(job.schedule)}`);
 
-// let result = job.rescheduleJob;
-// job.cancelJob; 
-//job.cancelNextJob(); 
-console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
+// // let result = job.rescheduleJob;
+// // job.cancelJob; 
+// //job.cancelNextJob(); 
+// console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
 
-console.log(`device: ${JSON.stringify(job.device)}`)
+// console.log(`device: ${JSON.stringify(job.device)}`)
 module.exports = {Device, Schedule, Job, JobBuilder};
