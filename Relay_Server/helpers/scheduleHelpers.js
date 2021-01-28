@@ -1,9 +1,9 @@
 let Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
-    node_schedule        = require('node-schedule'),
+    node_schedule   = require('node-schedule'),
     ip              = require("ip"),
     localIP         = ip.address();
-
+import {Device, Schedule, Job, JobBuilder} from "/classes/job";
 class Device{
     
 }
