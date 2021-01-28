@@ -3,7 +3,6 @@ let Scheduler       = require("../models/scheduler"),
     node_schedule   = require('node-schedule'),
     ip              = require("ip"),
     {
-        Device, 
         Schedule, 
         Job, 
         JobBuilder
