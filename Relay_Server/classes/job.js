@@ -12,6 +12,8 @@ class Device{
             gpio:          this.gpio
         }
     }
+    get desired_state() { return desired_state: this.desired_state }
+    get gpio(){ return gpio: this.gpio }
     set device(updatedDevice){
         this._id           = updatedDevice['id'];
         this.desired_state = updatedDevice['desired_state'];

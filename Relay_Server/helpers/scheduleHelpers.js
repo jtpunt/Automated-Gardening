@@ -70,9 +70,8 @@ let scheduleHelpers = {
         let today = new Date();
         for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
             console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
-            let jobDevice       = job.device,
-                desired_state   = jobDevice['desired_state'],
-                device_gpio     = jobDevice['gpio'],
+            let desired_state   = job.desired_state,
+                device_gpio     = job.gpio,
                 nextScheduleId  = job.relational['nextScheduleId'];
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
