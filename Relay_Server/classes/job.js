@@ -44,6 +44,7 @@ class Relational extends Device{
 // testing this
 class Schedule extends Relational{
     constructor(schedule, relational, device){
+        console.log(`in schedule constructor with: ${JSON.stringify(schedule)}`);
         super(relational, device);
         this.second    = schedule['second'];    // required
         this.minute    = schedule['minute'];    // required
