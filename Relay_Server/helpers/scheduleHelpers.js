@@ -2,7 +2,11 @@ let Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
     node_schedule   = require('node-schedule'),
     ip              = require("ip"),
-    JobBuilder      = require("../classes/job");
+    {
+        Schedule, 
+        Job, 
+        JobBuilder
+    }               = require("../classes/job");
     localIP         = ip.address();
 
 
@@ -63,6 +67,7 @@ let job = new JobBuilder()
 
 console.log(`TEST next nextInvocation: ${job.nextInvocationDate}`)
 console.log(`TEST job: ${JSON.stringify(job.schedule)}`);
+console.log(`TEST device: ${JSON.stringify(job.device)}`)
 let scheduleHelpers = {
     scheduleObj: {},
     buildJob: function(myScheduleObj, fn, context, ...args){
