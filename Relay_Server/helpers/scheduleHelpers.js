@@ -448,7 +448,7 @@ let scheduleHelpers = {
 
 
                             let job = new JobBuilder()
-                                .withSchedule(schedule_config['schedule'])
+                                .withSchedule(myScheduleObj)
                                 .withRelational(schedule_config['relational'])
                                 .withDevice(schedule_config['device'])
                                 .withJobFunction(...jobArgs)
