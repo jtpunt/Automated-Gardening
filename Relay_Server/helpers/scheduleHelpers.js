@@ -77,9 +77,9 @@ let scheduleHelpers = {
                 console.log("nextScheduleId is undefined");
             else{
                 console.log(`nextScheduleId is not null: ${nextScheduleId}`);
-                let isScheduleActive = this.scheduleIsActive(schedule_id, today);
-                    if(isScheduleActive === true)
-                        activateRelayFn.call(context, device_gpio, desired_state);
+                // let isScheduleActive = this.scheduleIsActive(schedule_id, today);
+                //     if(isScheduleActive === true)
+                //         activateRelayFn.call(context, device_gpio, desired_state);
             }
         }
         // for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
