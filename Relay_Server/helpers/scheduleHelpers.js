@@ -453,7 +453,7 @@ let scheduleHelpers = {
                             //     .withDevice(schedule_config['device'])
                             //     .withJobFunction(...jobArgs)
                             //     .build()
-                            // let job = scheduleHelpers.buildJob(...jobArgs);
+                            let job = scheduleHelpers.buildJob(...jobArgs);
 
                             var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
