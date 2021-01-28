@@ -383,7 +383,8 @@ let scheduleHelpers = {
         if(on_schedule_config === undefined || on_schedule_config === null)
             return result;
         
-        let on_schedule_config = self.scheduleObj[on_schedule_id],
+        let on_schedule_config = self.scheduleObj[on_schedule_id];
+        let
             on_schedule_second = sanitize_input(on_schedule_config['second']),
             on_schedule_minute = sanitize_input(on_schedule_config['minute']),
             on_schedule_hour   = sanitize_input(on_schedule_config['hour']),
