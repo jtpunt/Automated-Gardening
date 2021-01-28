@@ -44,7 +44,6 @@ class Relational extends Device{
 // testing this
 class Schedule extends Relational{
     constructor(schedule, relational, device){
-        console.log(`in schedule constructor with: ${JSON.stringify(schedule)}`);
         super(relational, device);
         this.second    = schedule['second'];    // required
         this.minute    = schedule['minute'];    // required
@@ -58,12 +57,13 @@ class Schedule extends Relational{
         let obj = {
             second:    this.second,
             minute:    this.minute,
-            hour:      this.hour,
+            hour:      this.hour
         }
         let optionalProps = ['date', 'month', 'year', 'dayOfWeek']
         optionalProps.forEach(optionProp => {
-            if(optionProp in this && this[optionProp] !== undefined)
-                obj[optionProp] = this.optionProp;
+            if(optionProp in this && this[optionProp] !== undefined){
+                obj[optionProp] = this[optionProp];
+            }
         });
         return obj;
     }
@@ -79,7 +79,6 @@ class Schedule extends Relational{
 }
 class Job extends Schedule{
     constructor(schedule, relational, device, jobFunction){
-        console.log(`in job constructor with: ${JSON.stringify(schedule)}`)
         super(schedule, relational, device);
         this.jobFunction = jobFunction;
         this.job = node_schedule.scheduleJob(this.schedule, this.jobFunction)
@@ -134,55 +133,56 @@ class JobBuilder{
     }
     build(){ return new Job(this.schedule, this.relational, this.device, this.jobFunction); }
 }
-// var test = {
-//     buildTestSchedule1: function(){
-//         return {
-//             "second": 0,
-//             "minute": 30,
-//             "hour": 13
-//         }
-//     },
-//     buildTestSchedule2: function(){
-//         return {
-//             second: 1,
-//             minute: 40,
-//             hour: 17
-//         }
-//     },
-//     buildRelational1: function(){
-//         return {
-//         }
-//     },
-//     buildRelational2: function(){
-//         return {
-//             startScheduleId: 1,
-//             endScheduleId:   2
-//         }
-//     },
-//     buildTestDevice1: function(){
-//         return{
-//             id: 1,
-//             desired_state: true,
-//             gpio: 2
-//         }
-//     },
-//     buildTestDevice2: function(){
-//         return{
-//             id: 2,
-//             desired_state: false,
-//             gpio: 3
-//         }
-//     },
-//     print1: function(...args){
-//         console.log(...args);
-//     },
-//     print2: function(...args){
-//         console.log(...args);
-//     },
-//     buildJobFn: function(fn, context, ...args){
-//         return function(){ fn.call(context, ...args); } 
-//     }
-// }
+var test = {
+    buildTestSchedule1: function(){
+        return {
+            second: 0,
+            minute: 30,
+            hour: 13,
+            dayOfWeek: [1, 3, 5]
+        }
+    },
+    buildTestSchedule2: function(){
+        return {
+            second: 1,
+            minute: 40,
+            hour: 17
+        }
+    },
+    buildRelational1: function(){
+        return {
+        }
+    },
+    buildRelational2: function(){
+        return {
+            startScheduleId: 1,
+            endScheduleId:   2
+        }
+    },
+    buildTestDevice1: function(){
+        return{
+            id: 1,
+            desired_state: true,
+            gpio: 2
+        }
+    },
+    buildTestDevice2: function(){
+        return{
+            id: 2,
+            desired_state: false,
+            gpio: 3
+        }
+    },
+    print1: function(...args){
+        console.log(...args);
+    },
+    print2: function(...args){
+        console.log(...args);
+    },
+    buildJobFn: function(fn, context, ...args){
+        return function(){ fn.call(context, ...args); } 
+    }
+}
 // let testSchedule1 = test.buildTestSchedule1(),
 //     testSchedule2 = test.buildTestSchedule2();
 
@@ -204,12 +204,12 @@ class JobBuilder{
 //     .build()
 
 // console.log(`next nextInvocation: ${job.nextInvocationDate}`)
-// console.log(`job: ${JSON.stringify(job.schedule)}`);
+// console.log(`schedule1: ${JSON.stringify(job.schedule)}`);
 
 // job.schedule = testSchedule2;
 // let updatedJobFn = test.buildJobFn(...jobFnArgs2);
 // job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
-// console.log(`job: ${JSON.stringify(job.schedule)}`);
+// console.log(`schedule2: ${JSON.stringify(job.schedule)}`);
 
 // // let result = job.rescheduleJob;
 // // job.cancelJob; 
