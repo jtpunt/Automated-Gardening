@@ -77,9 +77,9 @@ let scheduleHelpers = {
                 console.log("nextScheduleId is undefined");
             else{
                 console.log(`nextScheduleId is not null:`)
-                // let isScheduleActive = this.scheduleIsActive(schedule_id, today);
-                //     if(isScheduleActive === true)
-                //         activateRelayFn.call(context, device_gpio, desired_state);
+                let isScheduleActive = this.scheduleIsActive(schedule_id, today);
+                    if(isScheduleActive === true)
+                        activateRelayFn.call(context, device_gpio, desired_state);
             }
         }
         // for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
@@ -374,7 +374,7 @@ let scheduleHelpers = {
     // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
     // the next_schedule_config object
     // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    scheduleIsActive: function(on_schedule_config, timestamp){
+    scheduleIsActive: function(on_schedule_id, timestamp){
         let self = this,
             result = false,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -383,12 +383,13 @@ let scheduleHelpers = {
         if(on_schedule_config === undefined || on_schedule_config === null)
             return result;
         
-        let on_schedule_second = sanitize_input(on_schedule_config['schedule']['second']),
-            on_schedule_minute = sanitize_input(on_schedule_config['schedule']['minute']),
-            on_schedule_hour   = sanitize_input(on_schedule_config['schedule']['hour']),
-            desired_state      = Boolean(on_schedule_config['device']['desired_state']),
-            onScheduleId       = on_schedule_config['relational']['prevScheduleId'],
-            offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
+        let on_schedule_config = self.scheduleObj[on_schedule_id],
+            on_schedule_second = sanitize_input(on_schedule_config['second']),
+            on_schedule_minute = sanitize_input(on_schedule_config['minute']),
+            on_schedule_hour   = sanitize_input(on_schedule_config['hour']),
+            desired_state      = Boolean(on_schedule_config['desired_state']),
+            onScheduleId       = on_schedule_config['prevScheduleId'],
+            offScheduleId      = on_schedule_config['nextScheduleId'];
             
         // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
@@ -396,10 +397,10 @@ let scheduleHelpers = {
             if(offScheduleId in this.scheduleObj){
                 let on_schedule_timestamp  = new Date(),
                     off_schedule_timestamp = new Date(),
-                    off_schedule_config    = self.scheduleObj[offScheduleId]['schedule_config'],
-                    off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
-                    off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
-                    off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
+                    off_schedule_config    = self.scheduleObj[offScheduleId],
+                    off_schedule_second    = sanitize_input(off_schedule_config['second']),
+                    off_schedule_minute    = sanitize_input(off_schedule_config['minute']),
+                    off_schedule_hour      = sanitize_input(off_schedule_config['hour']);
 
                 on_schedule_timestamp.setHours(on_schedule_hour, on_schedule_minute, on_schedule_second);
                 off_schedule_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
