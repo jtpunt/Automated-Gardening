@@ -3,8 +3,6 @@ let Scheduler       = require("../models/scheduler"),
     node_schedule   = require('node-schedule'),
     ip              = require("ip"),
     {
-        Schedule, 
-        Job, 
         JobBuilder
     }               = require("../classes/job");
     localIP         = ip.address();
