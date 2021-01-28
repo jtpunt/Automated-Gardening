@@ -111,6 +111,13 @@ class Job extends Schedule{
     /* All planned invocations are canceled and registers the job completely new again using
      * the schedule data stored in the Schedule class. Returns true/false on success/failure. */
     get rescheduleJob(){ return this.job.reschedule(this.schedule); }
+    get schedule_config(){
+        return {
+            device: this.device,
+            schedule: this.schedule,
+            relational: this.relational
+        }
+    }
     set jobFn(newJobFunction){ this.jobFunction = newJobFunction; }
 }
 /* Ref - Pg. 243 - Node.js Design Patterns - 3rd Edition - Mario Casciaro, Luciano Mammino */
