@@ -458,6 +458,7 @@ let scheduleHelpers = {
                             var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
                             self.scheduleObj[schedule_config['_id']] = obj;
+                            console.log(`stored schedule: ${JSON.stringify(job.schedule)}`);
                             console.log(`nextInvocationDate: ${job.nextInvocationDate}`);
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
