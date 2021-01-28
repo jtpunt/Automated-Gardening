@@ -380,11 +380,10 @@ let scheduleHelpers = {
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
             
         // check to see if 1 of the schedules is active right now.
-        if(on_schedule_config === undefined || on_schedule_config === null)
-            return result;
+        // if(on_schedule_config === undefined || on_schedule_config === null)
+        //     return result;
         
         let on_schedule_config = self.scheduleObj[on_schedule_id];
-        let
             on_schedule_second = sanitize_input(on_schedule_config['second']),
             on_schedule_minute = sanitize_input(on_schedule_config['minute']),
             on_schedule_hour   = sanitize_input(on_schedule_config['hour']),
