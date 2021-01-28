@@ -458,10 +458,10 @@ let scheduleHelpers = {
                             var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
                             self.scheduleObj[schedule_config['_id']] = obj;
-
+                            console.log(`nextInvocationDate: ${job.nextInvocationDate}`);
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
-                        self.startActiveSchedules(activateRelayFn, context);
+                        //self.startActiveSchedules(activateRelayFn, context);
                     }).catch(function(err){
                         console.log(`Error caught: ${err}`);
                     })
