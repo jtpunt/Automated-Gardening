@@ -68,20 +68,34 @@ let scheduleHelpers = {
     },
     startActiveSchedules: function(activateRelayFn, context){
         let today = new Date();
-        for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
-            console.log(`key: ${schedule_id} value: ${JSON.stringify(schedule_obj)}`);
-            let schedule_config = schedule_obj['schedule_config']
-                desired_state   = schedule_config['device']['desired_state'],
-                device_gpio     = schedule_config['device']['gpio'],
-                nextScheduleId  = schedule_config['relational']['nextScheduleId'];
+        for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
+            console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
+            let jobDevice       = job.device,
+                desired_state   = jobDevice['desired_state'],
+                device_gpio     = jobDevice['gpio'],
+                nextScheduleId  = job.relational['nextScheduleId'];
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
-                let isScheduleActive = this.scheduleIsActive(schedule_config, today);
-                    if(isScheduleActive === true)
-                        activateRelayFn.call(context, device_gpio, desired_state);
+                // let isScheduleActive = this.scheduleIsActive(schedule_id, today);
+                //     if(isScheduleActive === true)
+                //         activateRelayFn.call(context, device_gpio, desired_state);
             }
         }
+        // for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
+        //     console.log(`key: ${schedule_id} value: ${JSON.stringify(schedule_obj)}`);
+        //     let schedule_config = schedule_obj['schedule_config']
+        //         desired_state   = schedule_config['device']['desired_state'],
+        //         device_gpio     = schedule_config['device']['gpio'],
+        //         nextScheduleId  = schedule_config['relational']['nextScheduleId'];
+        //     if(nextScheduleId === undefined)
+        //         console.log("nextScheduleId is undefined");
+        //     else{
+        //         let isScheduleActive = this.scheduleIsActive(schedule_config, today);
+        //             if(isScheduleActive === true)
+        //                 activateRelayFn.call(context, device_gpio, desired_state);
+        //     }
+        // }
     },
     resumeSchedule: function(schedule_id, activateRelayFn, context){
         let self            = this,
@@ -457,7 +471,7 @@ let scheduleHelpers = {
 
                             var obj = {"schedule_config": schedule_config, job};
                             console.log(`obj: ${JSON.stringify(obj)}`);
-                            self.scheduleObj[schedule_config['_id']] = obj;
+                            self.scheduleObj[schedule_config['_id']] = job;
                             console.log(`stored schedule: ${JSON.stringify(job.schedule)}`);
                             console.log(`stored relational: ${JSON.stringify(job.relational)}`);
                             console.log(`stored device: ${JSON.stringify(job.device)}`);
