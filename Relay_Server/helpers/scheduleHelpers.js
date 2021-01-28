@@ -2,78 +2,9 @@ let Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
     node_schedule   = require('node-schedule'),
     ip              = require("ip"),
+    jobClasses      = require("../classes/job");
     localIP         = ip.address();
-import {Device, Schedule, Job, JobBuilder} from "/classes/job";
-class Device{
-    
-}
-// testing this
-class Schedule{
-    constructor(schedule){
-        this.second    = schedule['second'];
-        this.minute    = schedule['minute'];
-        this.hour      = schedule['hour'];
-        this.date      = schedule['date'];
-        this.month     = schedule['month'];
-        this.year      = schedule['year'];
-        this.dayOfWeek = schedule['dayOfWeek'];
-    }
-    entries(){
-        return Object.entries(this);
-    }
-    keyValues(){
-        let myScheduleObj = {},
-            myEntries     = this.entries();
 
-        myEntries.forEach(([prop, val]) =>{
-            if(val !== undefined)
-                myScheduleObj[prop] = val
-        }) 
-        return myScheduleObj;
-    }
-    set newSchedule(newSchedule){
-        this.second    = newSchedule['second'];
-        this.minute    = newSchedule['minute'];
-        this.hour      = newSchedule['hour'];
-        this.date      = newSchedule['date'];
-        this.month     = newSchedule['month'];
-        this.year      = newSchedule['year'];
-        this.dayOfWeek = newSchedule['dayOfWeek'];
-    }
-}
-class Job{
-    constructor(schedule, fn, context, ...args){
-        this.schedule = new Schedule(schedule);
-        this.job = this.createJob(fn, context, ...args);
-        console.log(`next invocation: ${this.nextInvocationDate}`);
-    }
-    createJob(fn, context, ...args){
-        return node_schedule.scheduleJob(
-            this.scheduleObj, function(){ fn.call(context, ...args); }
-        )
-    }
-    cancelJob(){
-        this.job.cancel();
-    }
-    cancelNextJob(){
-        this.job.cancelNext();
-    }
-    get scheduleObj(){
-        return this.schedule.keyValues();
-    }
-    get nextInvocationDate(){
-        return this.job.nextInvocation();
-    }
-    // set job(schedule, fn, context, ...args){
-    //     this.cancelJob();
-    //     this.schedule.newSchedule(schedule);
-    //     delete this.job;
-    //     this.job = createJob(fn, context, ...args);
-    // }
-    set newSchedule(schedule){
-
-    }
-}
 let scheduleHelpers = {
     scheduleObj: {},
     buildJob: function(myScheduleObj, fn, context, ...args){
