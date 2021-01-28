@@ -136,9 +136,9 @@ class JobBuilder{
 // var test = {
 //     buildTestSchedule1: function(){
 //         return {
-//             second: 45,
-//             minute: 7,
-//             hour: 0
+//             "second": 0,
+//             "minute": 30,
+//             "hour": 13
 //         }
 //     },
 //     buildTestSchedule2: function(){
@@ -150,8 +150,6 @@ class JobBuilder{
 //     },
 //     buildRelational1: function(){
 //         return {
-//             prevScheduleId:  1,
-//             nextScheduleId:  2,
 //         }
 //     },
 //     buildRelational2: function(){

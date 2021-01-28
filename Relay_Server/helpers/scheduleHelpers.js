@@ -442,13 +442,13 @@ let scheduleHelpers = {
                             // self.scheduleObj[schedule_config['_id']] = obj;
 
                             let jobArgs = startScheduleId ? 
-                                [myScheduleObj,self.deleteSchedule,self,startScheduleId.toString()] :
-                                [myScheduleObj,activateRelayFn,context,gpio,desired_state];
+                                [self.deleteSchedule,self,startScheduleId.toString()] :
+                                [activateRelayFn,context,gpio,desired_state];
 
 
 
                             let job = new JobBuilder()
-                                .withSchedule(myScheduleObj)
+                                .withSchedule(schedule_config['schedule'])
                                 .withRelational(schedule_config['relational'])
                                 .withDevice(schedule_config['device'])
                                 .withJobFunction(...jobArgs)
