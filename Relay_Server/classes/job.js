@@ -78,6 +78,7 @@ class Schedule extends Relational{
 }
 class Job extends Schedule{
     constructor(schedule, relational, device, jobFunction){
+        console.log(`in job constructor with: ${JSON.stringify(schedule)}`)
         super(schedule, relational, device);
         this.jobFunction = jobFunction;
         this.job = node_schedule.scheduleJob(this.schedule, this.jobFunction)
