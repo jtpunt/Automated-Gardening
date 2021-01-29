@@ -68,9 +68,9 @@ let scheduleHelpers = {
     },
     startActiveSchedules: function(activateRelayFn, context){
         let today = new Date();
-        for(const [schedule_id, schedule_obj] of Object.entries(this.scheduleObj)){
-            console.log(`key: ${schedule_id} value: ${JSON.stringify(schedule_obj)}`);
-            let schedule_config = schedule_obj['schedule_config']
+        for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
+            console.log(`key: ${schedule_id} value: ${JSON.stringify(jobj)}`);
+            let schedule_config = job.schedule_config,
                 desired_state   = schedule_config['device']['desired_state'],
                 device_gpio     = schedule_config['device']['gpio'],
                 nextScheduleId  = schedule_config['relational']['nextScheduleId'];
@@ -382,7 +382,7 @@ let scheduleHelpers = {
             if(offScheduleId in this.scheduleObj){
                 let on_schedule_timestamp  = new Date(),
                     off_schedule_timestamp = new Date(),
-                    off_schedule_config    = self.scheduleObj[offScheduleId]['schedule_config'],
+                    off_schedule_config    = self.scheduleObj[offScheduleId].schedule_config,
                     off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
                     off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
                     off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
@@ -447,17 +447,17 @@ let scheduleHelpers = {
 
 
 
-                            // let job = new JobBuilder()
-                            //     .withSchedule(schedule_config['schedule'])
-                            //     .withRelational(schedule_config['relational'])
-                            //     .withDevice(schedule_config['device'])
-                            //     .withJobFunction(...jobArgs)
-                            //     .build()
-                            let job = scheduleHelpers.buildJob(...jobArgs);
+                            let job = new JobBuilder()
+                                .withSchedule(schedule_config['schedule'])
+                                .withRelational(schedule_config['relational'])
+                                .withDevice(schedule_config['device'])
+                                .withJobFunction(...jobArgs)
+                                .build()
+                            // let job = scheduleHelpers.buildJob(...jobArgs);
 
-                            var obj = {"schedule_config": schedule_config, job};
-                            console.log(`obj: ${JSON.stringify(obj)}`);
-                            self.scheduleObj[schedule_config['_id']] = obj;
+                            // var obj = {"schedule_config": schedule_config, job};
+                            // console.log(`obj: ${JSON.stringify(obj)}`);
+                            self.scheduleObj[schedule_config['_id']] = job;
                             // console.log(`stored schedule: ${JSON.stringify(job.schedule)}`);
                             // console.log(`stored relational: ${JSON.stringify(job.relational)}`);
                             // console.log(`stored device: ${JSON.stringify(job.device)}`);

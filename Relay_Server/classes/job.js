@@ -60,9 +60,9 @@ class Schedule extends Relational{
             hour:      this.hour
         }
         let optionalProps = ['date', 'month', 'year', 'dayOfWeek']
-        optionalProps.forEach(optionProp => {
-            if(optionProp in this && this[optionProp] !== undefined){
-                obj[optionProp] = this[optionProp];
+        optionalProps.forEach(optionalProp => {
+            if(optionalProp in this && this[optionalProp] !== undefined){
+                obj[optionalProp] = this[optionalProp];
             }
         });
         return obj;
