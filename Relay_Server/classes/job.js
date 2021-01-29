@@ -94,12 +94,13 @@ class Job extends Schedule{
     // such as turning the relay on/off, or which gpio (smart outlet) to use, which
     // requires this.device to be updated as well, since the functions inside schedule
     // helper depend on it to work
-    updateSchedJobAndDevice(updatedDevice, updatedSchedule, updatedJobFunction){
+    updateSchedJobAndDevice(updatedDevice, updatedSchedule, updatedRelational, updatedJobFunction){
         this.cancelJob();
-        this.device   = updatedDevice;
-        this.schedule = updatedSchedule;
-        this.jobFn    = updatedJobFunction;
-        this.job      = node_schedule.scheduleJob(this.schedule, this.jobFunction);
+        this.device     = updatedDevice;
+        this.schedule   = updatedSchedule;
+        this.relational = updatedRelational;
+        this.jobFn      = updatedJobFunction;
+        this.job        = node_schedule.scheduleJob(this.schedule, this.jobFunction);
     }
     /* Invalidates all planned invocation for the job. */
     cancelJob(reschedule){ this.job.cancel(); }
