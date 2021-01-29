@@ -490,7 +490,7 @@ let scheduleHelpers = {
 
         let args = [Number(updated_schedule_config['device']['gpio']), Boolean(updated_schedule_config['device']['desired_state'])];
         let updatedJobfn = function(){ activateRelayFn.call(context, ...args); } 
-        job.updateSchedJobAndDevice(updated_device, updated_schedule, updated_relational, updatedJobFn);
+        self.schedule_obj[schedule_id].updateSchedJobAndDevice(updated_device, updated_schedule, updated_relational, updatedJobFn);
 
         Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
             if(err){
