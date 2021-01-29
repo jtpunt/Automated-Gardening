@@ -69,7 +69,7 @@ let scheduleHelpers = {
     startActiveSchedules: function(activateRelayFn, context){
         let today = new Date();
         for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
-            console.log(`key: ${schedule_id} value: ${JSON.stringify(jobj)}`);
+            console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
             let schedule_config = job.schedule_config,
                 desired_state   = schedule_config['device']['desired_state'],
                 device_gpio     = schedule_config['device']['gpio'],
