@@ -103,7 +103,7 @@ let scheduleHelpers = {
             return newScheduleResponse;
         else{
             let schedule_id  = newScheduleResponse["_id"];
-            self.scheduleObj[schedule_config['_id']] = job;
+            self.scheduleObj[schedule_id] = job;
             return schedule_id;
         }
     },
