@@ -36,18 +36,18 @@ let scheduleHelpers = {
     cancelSchedule: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
         if(job){
-            console.log(`Next Schedule before ${job.nextInvocation()} being canceled`);
-            job.cancel();
-            console.log(`Next Schedule after being ${job.nextInvocation()} canceled`)
+            console.log(`Next Schedule before ${job.nextInvocationDate()} being canceled`);
+            job.cancelJob();
+            console.log(`Next Schedule after being ${job.nextInvocationDate()} canceled`)
         }
     },
     // invalidates the next planned invocation
     cancelNextSchedule: function(schedule_id, activateRelayFn, context){
         let job = this.getScheduleJobById(schedule_id);
         if(job){
-            console.log(`Next Schedule before ${job.nextInvocation()} being canceled`);
-            job.cancelNext();
-            console.log(`Next Schedule after being ${job.nextInvocation()} canceled`)
+            console.log(`Next Schedule before ${job.nextInvocationDate()} being canceled`);
+            job.cancelNextJob();
+            console.log(`Next Schedule after being ${job.nextInvocationDate()} canceled`)
         }
     },
     startActiveSchedules: function(activateRelayFn, context){
