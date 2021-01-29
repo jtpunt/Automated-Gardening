@@ -96,7 +96,7 @@ let scheduleHelpers = {
                 .withDevice(new_schedule_config['device'])
                 .withJobFunction(...jobArgs)
                 .build()
-            self.scheduleObj[schedule_config['_id']] = job;
+
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
     
         if(newScheduleResponse === undefined)
