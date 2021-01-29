@@ -7,11 +7,6 @@ let Scheduler       = require("../models/scheduler"),
 
 let scheduleHelpers = {
     scheduleObj: {},
-    buildJob: function(myScheduleObj, fn, context, ...args){
-        let job = node_schedule.scheduleJob(myScheduleObj, function(){ fn.call(context, ...args); });
-        console.log(`next invocation: ${job.nextInvocation()}`);
-        return job;
-    },
     doesScheduleExist: function(schedule_id){
         return schedule_id in this.scheduleObj;
     },
