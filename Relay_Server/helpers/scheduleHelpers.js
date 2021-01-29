@@ -489,7 +489,7 @@ let scheduleHelpers = {
         console.log("about to cancel schedule");
 
         let args = [Number(updated_schedule_config['device']['gpio']), Boolean(updated_schedule_config['device']['desired_state'])];
-        let updatedJobfn = function(){ activateRelayFn.call(context, ...args); } 
+        let updatedJobFn = function(){ activateRelayFn.call(context, ...args); } 
         let job = self.getScheduleJobById(schedule_id);
         job.updateSchedJobAndDevice(updated_device, updated_schedule, updated_relational, updatedJobFn);
 
