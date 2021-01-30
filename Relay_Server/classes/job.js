@@ -77,7 +77,7 @@ class Schedule extends Relational{
         this.dayOfWeek = newSchedule['dayOfWeek'];
     }
     get timestamp(){
-        let date = new Date(),
+        let date = new Date();
         date.setHours(this.hour, this.second, this.minute);
         return date;
     }
