@@ -198,6 +198,7 @@ var scheduleMethods = {
 
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                         scheduleHelper.updateScheduleRelationship(onScheduleId, on_schedule);
+                        scheduleHelper.startActiveSchedules(outletController.activateRelay, outletController);
                     }
                     
                 }
@@ -283,6 +284,7 @@ var scheduleMethods = {
                         off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                        scheduleHelper.startActiveSchedules(outletController.activateRelay, outletController);
                     }
                 }
             }
@@ -361,7 +363,8 @@ var scheduleMethods = {
                         let onScheduleId = await scheduleHelper.createSchedule(...on_schedule_args);
                         off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
-                        //scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                        scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
+                        scheduleHelper.startActiveSchedules(outletController.activateRelay, outletController);
                     }
                 }
             }
