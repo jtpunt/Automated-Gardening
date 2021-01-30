@@ -76,6 +76,11 @@ class Schedule extends Relational{
         this.year      = newSchedule['year'];
         this.dayOfWeek = newSchedule['dayOfWeek'];
     }
+    get timestamp(){
+        let date = new Date(),
+        date.setHours(this.hour, this.second, this.minute);
+        return date;
+    }
 }
 class Job extends Schedule{
     constructor(schedule, relational, device, jobFunction){
@@ -222,6 +227,7 @@ console.log(`schedule2: ${JSON.stringify(job.schedule)}`);
 // let result = job.rescheduleJob;
 // job.cancelJob; 
 //job.cancelNextJob(); 
+console.log(job.timestamp);
 console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
 console.log(`relational: ${JSON.stringify(job.relational)}`)
 console.log(`device: ${JSON.stringify(job.device)}`)
