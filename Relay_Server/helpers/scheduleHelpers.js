@@ -27,10 +27,10 @@ let scheduleHelpers = {
         return job.nextInvocationDate;
         //return job.nextInvocationDate;        
     },
-    buildTimeStamp :function(schedule_config){
-        let second      = schedule_config['schedule']['second'],
-            minute      = schedule_config['schedule']['minute'],
-            hour        = schedule_config['schedule']['hour'],
+    buildTimeStamp :function(schedule){
+        let second      = schedule['second'],
+            minute      = schedule['minute'],
+            hour        = schedule['hour'],
             timestamp   = new Date();
         timestamp.setHours(hour, minute, second);  
         return timestamp;
@@ -234,24 +234,18 @@ let scheduleHelpers = {
     },
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
+            conflictMsg       = "",
             new_on_timestamp  = self.buildTimeStamp(on_schedule_config),
-            new_off_timestamp = self.buildTimeStamp(off_schedule_config);
-            
-        let conflictMsg       = "",
-            schedule_ids      = [];
+            new_off_timestamp = self.buildTimeStamp(off_schedule_config),
+            schedule_ids      = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         
-        console.log("in isScheduleOverlapping");
-        console.log(`with: ${JSON.stringify(on_schedule_config)} and ${JSON.stringify(off_schedule_config)}`);
-        
-        schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
-        console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
             let sched_on_job          = self.scheduleObj[schedule_id],
                 sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'],
                 sched_on_timestamp    = sched_on_job.timestamp;
 
              if(self.doesScheduleExist(sched_off_mongo_id)){
-                let sched_off_timestamp   = self.scheduleObj[sched_off_mongo_id].timestamp;
+                let sched_off_timestamp = self.scheduleObj[sched_off_mongo_id].timestamp;
                 if(new_on_timestamp <= sched_on_timestamp && new_off_timestamp >= sched_off_timestamp)
                     conflictMsg += `Schedule is overlapping. `;
             }
@@ -277,17 +271,14 @@ let scheduleHelpers = {
                     on_timestamp     = sched_on_job.timestamp;
                 
                 if(self.doesScheduleExist(offScheduleId)){
-                    let off_timestamp       = self.scheduleObj[offScheduleId].timestamp;
-                    let timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true };
-                    
-                    let fixed_on_timestamp  = on_timestamp.toLocaleString('en-US', timestamp_options),
+                    let off_timestamp       = self.scheduleObj[offScheduleId].timestamp,
+                        timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true },
+                        fixed_on_timestamp  = on_timestamp.toLocaleString('en-US', timestamp_options),
                         fixed_timestamp     = timestamp.toLocaleString('en-US', timestamp_options),
                         fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
                         
                     return `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}`;
                 }
-                else
-                    console.log(`Schedule does not exist`);
             }else // No Schedule Conflict Found
                 return "";
             
