@@ -42,9 +42,9 @@ function buildSchedule(mySchedule){
         console.log("VALID On/Off\n");
         if(mySchedule['device']['desired_state'] === "on" || mySchedule['device']['desired_state'] === "off"){
             if(mySchedule['device']['desired_state'] === "on")
-                 obj['device']['desired_state'] = 1;
+                 obj['device']['desired_state'] = true;
             else
-                 obj['device']['desired_state'] = 0;
+                 obj['device']['desired_state'] = false;
         }
         
     }else // no desired state posted, make it 0 'off' by default
