@@ -34,7 +34,7 @@ let scheduleHelpers = {
             timestamp   = new Date();
         timestamp.setHours(hour, minute, second);  
         return timestamp;
-    }
+    },
     // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
