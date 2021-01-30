@@ -494,21 +494,15 @@ let scheduleHelpers = {
         });
     },
     updateScheduleRelationship: function(schedule_id, updated_schedule_config){
-        let self              = this,
-            schedule_conflict = false,
-            today             = new Date(),
-            onScheduleId      = updated_schedule_config['relational']['prevScheduleId'] || undefined,
-            offScheduleId     = updated_schedule_config['relational']['nextScheduleId'] || undefined;
+        let self = this;
 
         Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
             if(err){
                 console.log(err)
             }else{
-                //updated_schedule_config["_id"] = schedule_id;
                 console.log("successfully updated schedule");
                 console.log(`Schedule before: ${JSON.stringify(self.scheduleObj[schedule_id].schedule_config)}`);
                 self.scheduleObj[schedule_id].relational = updated_schedule_config['relational'];
-                //self.scheduleObj[schedule_id]['schedule_config'] = updated_schedule_config;
                 console.log(`Schedule After: ${JSON.stringify(self.scheduleObj[schedule_id].schedule_config)}`);
             }
         });
