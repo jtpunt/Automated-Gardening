@@ -234,24 +234,14 @@ let scheduleHelpers = {
     },
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
-            new_on_second     = on_schedule_config['schedule']['second'],
-            new_on_minute     = on_schedule_config['schedule']['minute'],
-            new_on_hour       = on_schedule_config['schedule']['hour'  ],
-            
-            new_off_second    = off_schedule_config['schedule']['second'],
-            new_off_minute    = off_schedule_config['schedule']['minute'],
-            new_off_hour      = off_schedule_config['schedule']['hour'], 
-            new_on_timestamp  = new Date(),
-            new_off_timestamp = new Date();
+            new_on_timestamp  = self.buildTimeStamp(on_schedule_config),
+            new_off_timestamp = self.buildTimeStamp(off_schedule_config);
             
         let conflictMsg       = "",
             schedule_ids      = [];
         
         console.log("in isScheduleOverlapping");
         console.log(`with: ${JSON.stringify(on_schedule_config)} and ${JSON.stringify(off_schedule_config)}`);
-
-        new_on_timestamp.setHours(new_on_hour, new_on_minute, new_on_second);  
-        new_off_timestamp.setHours(new_off_hour, new_off_minute, new_off_second);
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         console.log(`same day schedule ids: ${schedule_ids}`);
