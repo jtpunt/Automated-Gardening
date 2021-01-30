@@ -235,8 +235,8 @@ let scheduleHelpers = {
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
             conflictMsg       = "",
-            new_on_timestamp  = self.buildTimeStamp(on_schedule_config),
-            new_off_timestamp = self.buildTimeStamp(off_schedule_config),
+            new_on_timestamp  = self.buildTimeStamp(on_schedule_config['schedule']),
+            new_off_timestamp = self.buildTimeStamp(off_schedule_config['schedule']),
             schedule_ids      = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         
         schedule_ids.forEach(function(schedule_id){
@@ -258,7 +258,7 @@ let scheduleHelpers = {
         let self        = this,
             conflictMsg = "",
             indices     = [];
-            timestamp   = self.buildTimeStamp(schedule_config);
+            timestamp   = self.buildTimeStamp(schedule_config['schedule']);
     
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_id){
