@@ -248,39 +248,16 @@ let scheduleHelpers = {
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
-            // let sched_on_schedule_obj    = self.scheduleObj[schedule_id],
-            //     sched_on_schedule_config = sched_on_schedule_obj.schedule_config,
-            //     sched_on_second          = sched_on_schedule_config['schedule']['second'],
-            //     sched_on_minute          = sched_on_schedule_config['schedule']['minute'],
-            //     sched_on_hour            = sched_on_schedule_config['schedule']['hour'],
-            //     sched_off_mongo_id       = sched_on_schedule_config['relational']['nextScheduleId'].toString(),
-            //     sched_on_timestamp       = new Date();
-            
 
-            // let sched_off_schedule_obj    = self.scheduleObj[sched_off_mongo_id],
-            //     sched_off_schedule_config = sched_off_schedule_obj.schedule_config,
-            //     sched_off_second          = sched_off_schedule_config['schedule']['second'],
-            //     sched_off_minute          = sched_off_schedule_config['schedule']['minute'],
-            //     sched_off_hour            = sched_off_schedule_config['schedule']['hour'],
-            //     sched_off_timestamp       = new Date();
-                
-            // sched_on_timestamp.setHours(sched_on_hour, sched_on_minute, sched_on_second);
-            // sched_off_timestamp.setHours(sched_off_hour, sched_off_minute, sched_off_second);
             let sched_on_job          = self.scheduleObj[schedule_id],
-                sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'].toString(),
-                sched_on_timestamp    = sched_on_job.timestamp,
-                sched_off_timestamp   = self.scheduleObj[sched_off_mongo_id].timestamp;
+                sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'],
+                sched_on_timestamp    = sched_on_job.timestamp;
 
-            console.log(`on_timestamp ${sched_on_timestamp}, timestamp: ${sched_on_timestamp}, off_timestamp" ${sched_off_timestamp}, timestamp1: ${sched_off_timestamp}`);
-            
-            let timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true },
-                fixed_on_timestamp  = new_on_timestamp.toLocaleString('en-US', timestamp_options),
-                fixed_timestamp1    = sched_on_timestamp.toLocaleString('en-US', timestamp_options),
-                fixed_timestamp2    = sched_off_timestamp.toLocaleString('en-US', timestamp_options),
-                fixed_off_timestamp = new_off_timestamp.toLocaleString('en-US', timestamp_options);
-            
-            if(new_on_timestamp <= sched_on_timestamp && new_off_timestamp >= sched_off_timestamp)
-               conflictMsg += `Schedule is overlapping. `;
+             if(self.doesScheduleExist(sched_off_mongo_id)){
+                let sched_off_timestamp   = self.scheduleObj[sched_off_mongo_id].timestamp;
+                if(new_on_timestamp <= sched_on_timestamp && new_off_timestamp >= sched_off_timestamp)
+                    conflictMsg += `Schedule is overlapping. `;
+            }
             
         });
         console.log(`conflictMsg: ${conflictMsg}`);
@@ -301,24 +278,12 @@ let scheduleHelpers = {
             // is there a schedule conflict?
             if(isScheduleConflicting){
                 console.log("In handleScheduleConflictsMsg");
-                // let second           = schedule_obj['schedule']['second'],
-                //     minute           = schedule_obj['schedule']['minute'],
-                //     hour             = schedule_obj['schedule']['hour'],
-                //     offScheduleId    = schedule_obj['relational']['nextScheduleId'].toString();
                     
                 let sched_on_job     = self.scheduleObj[schedule_id],
                     offScheduleId    = sched_on_job.schedule_config['relational']['nextScheduleId'],
                     on_timestamp     = sched_on_job.timestamp;
-                    
-                // on_timestamp.setHours(hour, minute, second);
                 
                 if(self.doesScheduleExist(offScheduleId)){
-                    // let off_schedule_config = self.getScheduleConfigById(offScheduleId),
-                    //     off_schedule_second = off_schedule_config['schedule']['second'],
-                    //     off_schedule_minute = off_schedule_config['schedule']['minute'],
-                    //     off_schedule_hour   = off_schedule_config['schedule']['hour'];
-                        
-                    // off_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
                     let off_timestamp       = self.scheduleObj[offScheduleId].timestamp;
                     let timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true };
                     
