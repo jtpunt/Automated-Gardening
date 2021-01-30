@@ -57,7 +57,7 @@ let scheduleHelpers = {
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
-                let isScheduleActive = this.scheduleIsActive(schedule_config, today);
+                let isScheduleActive = this.scheduleIsActive(schedule_id, today);
                     if(isScheduleActive === true)
                         activateRelayFn.call(context, device_gpio, desired_state);
             }
@@ -286,8 +286,7 @@ let scheduleHelpers = {
         console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
             if(self.doesScheduleExist(schedule_id)){
-                let schedule_config       = self.getScheduleConfigById(schedule_id),
-                    isScheduleConflicting = self.scheduleIsActive(schedule_config, timestamp);
+                let isScheduleConflicting = self.scheduleIsActive(schedule_id, timestamp);
 
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_id);
             }
@@ -300,19 +299,12 @@ let scheduleHelpers = {
     // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
     // the next_schedule_config object
     // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    scheduleIsActive: function(on_schedule_config, timestamp){
-        let self = this,
-            result = false,
-            sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
-            
-        // check to see if 1 of the schedules is active right now.
-        if(on_schedule_config === undefined || on_schedule_config === null)
-            return result;
+    scheduleIsActive: function(onScheduleId, timestamp){
+        let self   = this,
+            result = false;
         
-        let on_schedule_second = sanitize_input(on_schedule_config['schedule']['second']),
-            on_schedule_minute = sanitize_input(on_schedule_config['schedule']['minute']),
-            on_schedule_hour   = sanitize_input(on_schedule_config['schedule']['hour']),
-            desired_state      = Boolean(on_schedule_config['device']['desired_state']),
+        let on_schedule_config = self.scheduleObj[onScheduleId].schedule_config,
+            desired_state      = on_schedule_config['device']['desired_state'],
             onScheduleId       = on_schedule_config['relational']['prevScheduleId'],
             offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
             
@@ -320,10 +312,8 @@ let scheduleHelpers = {
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
             if(offScheduleId in this.scheduleObj){
-                let on_schedule_timestamp  = new Date(),
+                let on_schedule_timestamp  = self.scheduleObj[onScheduleId].timestamp,
                     off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
-
-                on_schedule_timestamp.setHours(on_schedule_hour, on_schedule_minute, on_schedule_second);
                 
                 if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
                     result = true;
@@ -483,11 +473,11 @@ let scheduleHelpers = {
                 for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
                     //console.log(`my schedule config: ${JSON.stringify(schedule_obj)}`);
                     let schedule_config = job.schedule_config,
-                        desired_state  = schedule_config['device']['desired_state'],
-                        prevSheduleId  = schedule_config['relational']['prevScheduleId'],
-                        nextScheduleId = schedule_config['relational']['nextScheduleId'],
-                        sched_id       = schedule_id.toString(),
-                        device_gpio    = schedule_config['device']['gpio'];
+                        device_gpio     = schedule_config['device']['gpio']
+                        desired_state   = schedule_config['device']['desired_state'],
+                        prevSheduleId   = schedule_config['relational']['prevScheduleId'],
+                        nextScheduleId  = schedule_config['relational']['nextScheduleId'],
+                        sched_id        = schedule_id.toString();
                     
   
                     if(nextScheduleId === undefined)
@@ -496,7 +486,7 @@ let scheduleHelpers = {
                         nextScheduleId = nextScheduleId.toString();
                         // schedule_id is the schedule we are trying to see is active or not
                         if(sched_id === schedule_id || nextScheduleId === schedule_id){
-                            let isScheduleActive = self.scheduleIsActive(schedule_config, today);
+                            let isScheduleActive = self.scheduleIsActive(schedule_id, today);
                             if(isScheduleActive === true && desired_state === true){
                                 console.log("Schedule is active");
                                 console.log("Desired state is on");
