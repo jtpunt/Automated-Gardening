@@ -248,7 +248,6 @@ let scheduleHelpers = {
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
-
             let sched_on_job          = self.scheduleObj[schedule_id],
                 sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'],
                 sched_on_timestamp    = sched_on_job.timestamp;

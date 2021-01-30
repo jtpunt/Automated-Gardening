@@ -76,9 +76,12 @@ class Schedule extends Relational{
         this.year      = newSchedule['year'];
         this.dayOfWeek = newSchedule['dayOfWeek'];
     }
+    // Returns a timestamp based on the current day with just the hour, minute, and second properties 
+    // as the findSameDaySchedulesAndRetIds function gives us schedules that would occur on the same day, 
+    // so we can ignore date, month, year, and dayOfWeek properties.
     get timestamp(){
         let date = new Date();
-        date.setHours(this.hour, this.second, this.minute);
+        date.setHours(this.hour, this.minute, this.second);
         return date;
     }
 }
