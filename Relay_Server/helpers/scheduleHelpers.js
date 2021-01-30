@@ -307,7 +307,7 @@ let scheduleHelpers = {
                 //     offScheduleId    = schedule_obj['relational']['nextScheduleId'].toString();
                     
                 let sched_on_job     = self.scheduleObj[schedule_id],
-                    offScheduleId    = schedule_on_job.schedule_config['relational']['nextScheduleId'].toString(),
+                    offScheduleId    = sched_on_job.schedule_config['relational']['nextScheduleId'],
                     on_timestamp     = sched_on_job.timestamp;
                     
                 // on_timestamp.setHours(hour, minute, second);
