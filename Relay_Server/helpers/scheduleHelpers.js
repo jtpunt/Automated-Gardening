@@ -268,6 +268,7 @@ let scheduleHelpers = {
             second      = schedule_config['schedule']['second'],
             minute      = schedule_config['schedule']['minute'],
             hour        = schedule_config['schedule']['hour'],
+            schedule    = new Schedule(schedule_config['schedule']),
             timestamp   = new Date();
             
         let conflictMsg = "",
