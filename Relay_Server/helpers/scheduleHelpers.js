@@ -321,14 +321,9 @@ let scheduleHelpers = {
             console.log("Processing 'on' schedule");
             if(offScheduleId in this.scheduleObj){
                 let on_schedule_timestamp  = new Date(),
-                    off_schedule_timestamp = new Date(),
-                    off_schedule_config    = self.scheduleObj[offScheduleId].schedule_config,
-                    off_schedule_second    = sanitize_input(off_schedule_config['schedule']['second']),
-                    off_schedule_minute    = sanitize_input(off_schedule_config['schedule']['minute']),
-                    off_schedule_hour      = sanitize_input(off_schedule_config['schedule']['hour']);
+                    off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
 
                 on_schedule_timestamp.setHours(on_schedule_hour, on_schedule_minute, on_schedule_second);
-                off_schedule_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
                 
                 if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
                     result = true;
