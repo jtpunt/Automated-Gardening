@@ -36,7 +36,7 @@ function buildSchedule(mySchedule){
         obj['device']['id'] = mySchedule['device']['id'];
 
     if(mySchedule['device']['gpio'] !== null && mySchedule['device']['gpio'] !== undefined)
-        obj['device']['gpio'] = mySchedule['device']['gpio'];
+        obj['device']['gpio'] = Number(mySchedule['device']['gpio']);
     
     if(mySchedule['device']['desired_state'] !== null && mySchedule['device']['desired_state'] !== undefined){
         console.log("VALID On/Off\n");
