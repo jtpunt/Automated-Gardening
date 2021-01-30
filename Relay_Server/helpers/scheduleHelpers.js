@@ -2,9 +2,7 @@ let Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
     node_schedule   = require('node-schedule'),
     ip              = require("ip"),
-    JobHelpers      = require("../classes/job"),
-    JobBuilder      = JobHelpers.JobBuilder,
-    Schedule        = JobHelpers.Schedule,
+    JobBuilder      = require("../classes/job");
     localIP         = ip.address();
 
 let scheduleHelpers = {
@@ -270,7 +268,6 @@ let scheduleHelpers = {
             second      = schedule_config['schedule']['second'],
             minute      = schedule_config['schedule']['minute'],
             hour        = schedule_config['schedule']['hour'],
-            schedule    = new Schedule(schedule_config['schedule']),
             timestamp   = new Date();
             
         let conflictMsg = "",
