@@ -297,19 +297,20 @@ let scheduleHelpers = {
             indices     = [];
 
         console.log("in isScheduleConflicting");
-        let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_obj){
+        let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_id){
             // is there a schedule conflict?
             if(isScheduleConflicting){
                 console.log("In handleScheduleConflictsMsg");
-                let second           = schedule_obj['schedule']['second'],
-                    minute           = schedule_obj['schedule']['minute'],
-                    hour             = schedule_obj['schedule']['hour'],
-                    offScheduleId    = schedule_obj['relational']['nextScheduleId'].toString();
+                // let second           = schedule_obj['schedule']['second'],
+                //     minute           = schedule_obj['schedule']['minute'],
+                //     hour             = schedule_obj['schedule']['hour'],
+                //     offScheduleId    = schedule_obj['relational']['nextScheduleId'].toString();
                     
-                let on_timestamp     = new Date(),
-                    off_timestamp    = new Date();
+                let sched_on_job     = self.scheduleObj[schedule_id],
+                    offScheduleId    = schedule_on_job.schedule_config['relational']['nextScheduleId'].toString(),
+                    on_timestamp     = sched_on_job.timestamp;
                     
-                on_timestamp.setHours(hour, minute, second);
+                // on_timestamp.setHours(hour, minute, second);
                 
                 if(self.doesScheduleExist(offScheduleId)){
                     // let off_schedule_config = self.getScheduleConfigById(offScheduleId),
@@ -342,7 +343,7 @@ let scheduleHelpers = {
                 let schedule_config       = self.getScheduleConfigById(schedule_id),
                     isScheduleConflicting = self.scheduleIsActive(schedule_config, timestamp);
 
-                conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_config);
+                conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_id);
             }
         });
         console.log(`conflictMsg: ${conflictMsg}`);
