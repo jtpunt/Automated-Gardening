@@ -280,7 +280,7 @@ let scheduleHelpers = {
                 fixed_off_timestamp = new_off_timestamp.toLocaleString('en-US', timestamp_options);
             
             if(new_on_timestamp <= sched_on_timestamp && new_off_timestamp >= sched_off_timestamp)
-               conflictMsg += `Schedule is overlapping`;
+               conflictMsg += `Schedule is overlapping. `;
             
         });
         console.log(`conflictMsg: ${conflictMsg}`);
@@ -312,12 +312,13 @@ let scheduleHelpers = {
                 on_timestamp.setHours(hour, minute, second);
                 
                 if(self.doesScheduleExist(offScheduleId)){
-                    let off_schedule_config = self.getScheduleConfigById(offScheduleId),
-                        off_schedule_second = off_schedule_config['schedule']['second'],
-                        off_schedule_minute = off_schedule_config['schedule']['minute'],
-                        off_schedule_hour   = off_schedule_config['schedule']['hour'];
+                    // let off_schedule_config = self.getScheduleConfigById(offScheduleId),
+                    //     off_schedule_second = off_schedule_config['schedule']['second'],
+                    //     off_schedule_minute = off_schedule_config['schedule']['minute'],
+                    //     off_schedule_hour   = off_schedule_config['schedule']['hour'];
                         
-                    off_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
+                    // off_timestamp.setHours(off_schedule_hour, off_schedule_minute, off_schedule_second);
+                    let off_timestamp       = self.scheduleObj[offScheduleId].timestamp;
                     let timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true };
                     
                     let fixed_on_timestamp  = on_timestamp.toLocaleString('en-US', timestamp_options),
