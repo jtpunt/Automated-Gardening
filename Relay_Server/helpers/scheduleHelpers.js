@@ -27,6 +27,14 @@ let scheduleHelpers = {
         return job.nextInvocationDate;
         //return job.nextInvocationDate;        
     },
+    buildTimeStamp :function(schedule_config){
+        let second      = schedule_config['schedule']['second'],
+            minute      = schedule_config['schedule']['minute'],
+            hour        = schedule_config['schedule']['hour'],
+            timestamp   = new Date();
+        timestamp.setHours(hour, minute, second);  
+        return timestamp;
+    }
     // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
@@ -266,16 +274,8 @@ let scheduleHelpers = {
         let self        = this,
             conflictMsg = "",
             indices     = [];
-            timestamp   = buildTimeStamp(schedule_config);
+            timestamp   = self.buildTimeStamp(schedule_config);
     
-        let buildTimeStamp = function(schedule_config){
-            second      = schedule_config['schedule']['second'],
-            minute      = schedule_config['schedule']['minute'],
-            hour        = schedule_config['schedule']['hour'],
-            timestamp   = new Date();
-            timestamp.setHours(hour, minute, second);  
-            return timestamp;
-        }
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_id){
             // is there a schedule conflict?
