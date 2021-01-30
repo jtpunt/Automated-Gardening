@@ -158,8 +158,8 @@ let scheduleMiddleware = {
                     }
                     sanitizedSchedule['device'] = {
                         id: newSchedule['device']['id'],
-                        gpio: newSchedule['device']['gpio'],
-                        desired_state: newSchedule['device']['desired_state']
+                        gpio: Number(newSchedule['device']['gpio']),
+                        desired_state: Boolean(newSchedule['device']['desired_state'])
                     }
                 }
             }
