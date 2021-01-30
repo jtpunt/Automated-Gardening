@@ -248,28 +248,28 @@ let scheduleHelpers = {
         schedule_ids = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
-            // let sched_on_schedule_obj    = self.scheduleObj[schedule_id],
-            //     sched_on_schedule_config = sched_on_schedule_obj.schedule_config,
-            //     sched_on_second          = sched_on_schedule_config['schedule']['second'],
-            //     sched_on_minute          = sched_on_schedule_config['schedule']['minute'],
-            //     sched_on_hour            = sched_on_schedule_config['schedule']['hour'],
-            //     sched_off_mongo_id       = sched_on_schedule_config['relational']['nextScheduleId'].toString(),
-            //     sched_on_timestamp       = new Date();
+            let sched_on_schedule_obj    = self.scheduleObj[schedule_id],
+                sched_on_schedule_config = sched_on_schedule_obj.schedule_config,
+                sched_on_second          = sched_on_schedule_config['schedule']['second'],
+                sched_on_minute          = sched_on_schedule_config['schedule']['minute'],
+                sched_on_hour            = sched_on_schedule_config['schedule']['hour'],
+                sched_off_mongo_id       = sched_on_schedule_config['relational']['nextScheduleId'].toString(),
+                sched_on_timestamp       = new Date();
             
 
-            // let sched_off_schedule_obj    = self.scheduleObj[sched_off_mongo_id],
-            //     sched_off_schedule_config = arr_off_schedule_obj.schedule_config,
-            //     sched_off_second          = arr_off_schedule_config['schedule']['second'],
-            //     sched_off_minute          = arr_off_schedule_config['schedule']['minute'],
-            //     sched_off_hour            = arr_off_schedule_config['schedule']['hour'],
-            //     sched_off_timestamp       = new Date();
+            let sched_off_schedule_obj    = self.scheduleObj[sched_off_mongo_id],
+                sched_off_schedule_config = arr_off_schedule_obj.schedule_config,
+                sched_off_second          = arr_off_schedule_config['schedule']['second'],
+                sched_off_minute          = arr_off_schedule_config['schedule']['minute'],
+                sched_off_hour            = arr_off_schedule_config['schedule']['hour'],
+                sched_off_timestamp       = new Date();
                 
-            // sched_on_timestamp.setHours(sched_on_hour, sched_on_minute, sched_on_second);
-            // sched_off_timestamp.setHours(sched_off_hour, sched_off_minute, sched_off_second);
-            let sched_on_job          = self.scheduleObj[schedule_id],
-                sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'].toString(),
-                sched_on_timestamp    = sched_on_job.timestamp,
-                sched_off_timestamp   = self.scheduleObj[sched_off_mongo_id].timestamp;
+            sched_on_timestamp.setHours(sched_on_hour, sched_on_minute, sched_on_second);
+            sched_off_timestamp.setHours(sched_off_hour, sched_off_minute, sched_off_second);
+            // let sched_on_job          = self.scheduleObj[schedule_id],
+            //     sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'].toString(),
+            //     sched_on_timestamp    = sched_on_job.timestamp,
+            //     sched_off_timestamp   = self.scheduleObj[sched_off_mongo_id].timestamp;
 
             console.log(`on_timestamp ${sched_on_timestamp}, timestamp: ${sched_on_timestamp}, off_timestamp" ${sched_off_timestamp}, timestamp1: ${sched_off_timestamp}`);
             
