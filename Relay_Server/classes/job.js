@@ -232,4 +232,5 @@ console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
 console.log(`relational: ${JSON.stringify(job.relational)}`)
 console.log(`device: ${JSON.stringify(job.device)}`)
 console.log(`desired_state: ${job.desired_state}`);
-module.exports = JobBuilder;
+
+module.exports = {Schedule, JobBuilder};
