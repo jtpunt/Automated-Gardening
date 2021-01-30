@@ -27,14 +27,6 @@ let scheduleHelpers = {
         return job.nextInvocationDate;
         //return job.nextInvocationDate;        
     },
-    buildTimeStamp :function(schedule){
-        let second      = schedule['second'],
-            minute      = schedule['minute'],
-            hour        = schedule['hour'],
-            timestamp   = new Date();
-        timestamp.setHours(hour, minute, second);  
-        return timestamp;
-    },
     // invalidates any job. All  planned invocations will be canceled
     cancelSchedule: function(schedule_id){
         let job = this.getScheduleJobById(schedule_id);
@@ -235,8 +227,11 @@ let scheduleHelpers = {
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
             conflictMsg       = "",
-            new_on_timestamp  = self.buildTimeStamp(on_schedule_config['schedule']),
-            new_off_timestamp = self.buildTimeStamp(off_schedule_config['schedule']),
+            buildTimeStamp    = (schedule) => {
+                return new Date(new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']);  
+            },
+            new_on_timestamp  = buildTimeStamp(on_schedule_config['schedule']),
+            new_off_timestamp = buildTimeStamp(off_schedule_config['schedule']),
             schedule_ids      = self.findSameDaySchedulesAndRetIds(on_schedule_config);
         
         schedule_ids.forEach(function(schedule_id){
@@ -257,8 +252,11 @@ let scheduleHelpers = {
     isScheduleConflicting: function(schedule_config){
         let self        = this,
             conflictMsg = "",
-            indices     = [];
-            timestamp   = self.buildTimeStamp(schedule_config['schedule']);
+            indices     = [],
+            buildTimeStamp    = (schedule) => {
+                return new Date(new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']);  
+            },
+            timestamp   = buildTimeStamp(schedule_config['schedule']);
     
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_id){
