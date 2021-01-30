@@ -8,6 +8,7 @@ class Device{
         this.#gpio          = device['gpio'];
         this.#desired_state = device['desired_state'];
     }
+    /*************************** Device GETTERS ***************************/
     get device(){
         return {
             _id:           this.#_id,
@@ -15,16 +16,17 @@ class Device{
             desired_state: this.#desired_state
         }
     }
-    get _id(){ return this.#_id; }
-    get gpio(){ return this.#gpio };
+    get _id()           { return this.#_id;          }
+    get gpio()          { return this.#gpio          };
     get desired_state() { return this.#desired_state };
+    /*************************** Device SETTERS ***************************/
     set device(updatedDevice){
         this.#_id           = updatedDevice['id'];
         this.#gpio          = updatedDevice['gpio'];
         this.#desired_state = updatedDevice['desired_state'];
     }
-    set _id(_id){ this.#_id = _id; }
-    set gpio(gpio){ this.#gpio = gpio; }
+    set _id(_id)                     { this.#_id           = _id;           }
+    set gpio(gpio)                   { this.#gpio          = gpio;          }
     set desired_state(desired_state) { this.#desired_state = desired_state; }
 }
 class Relational extends Device{
@@ -39,6 +41,7 @@ class Relational extends Device{
         this.#startScheduleId = relational['startScheduleId'];
         this.#endScheduleId   = relational['endScheduleId'];
     }
+    /*************************** Relational GETTERS ***************************/
     get relational(){
         return {
             prevScheduleId:  this.#prevScheduleId,
@@ -47,12 +50,22 @@ class Relational extends Device{
             endScheduleId:   this.#endScheduleId
         }
     }
+    get prevScheduleId() { return this.#prevScheduleId;  }
+    get nextScheduleId() { return this.#nextScheduleId;  }
+    get startScheduleId(){ return this.#startScheduleId; }
+    get endScheduleId()  { return this.#endScheduleId;   }
+    /*************************** Relational SETTERS ***************************/
     set relational(relational){
         this.#prevScheduleId  = relational['prevScheduleId'];
         this.#nextScheduleId  = relational['nextScheduleId'];
         this.#startScheduleId = relational['startScheduleId'];
         this.#endScheduleId   = relational['endScheduleId'];
     }
+    set prevScheduleId(prevScheduleId)  { this.#prevScheduleId  = prevScheduleId;  }
+    set nextScheduleId(nextScheduleId)  { this.#nextScheduleId  = nextScheduleId;  }
+    set startScheduleId(startScheduleId){ this.#startScheduleId = startScheduleId; }
+    set endScheduleId(endScheduleId)    { this.#endScheduleId   = endScheduleId;   }
+
 }
 // testing this
 class Schedule extends Relational{
@@ -73,32 +86,48 @@ class Schedule extends Relational{
         this.#year      = schedule['year'];      // optional
         this.#dayOfWeek = schedule['dayOfWeek']; // optional
     }
+    /*************************** Schedule GETTERS ***************************/
     get schedule(){
         let obj = {
-            second:    this.#second,
-            minute:    this.#minute,
-            hour:      this.#hour
+            second: this.second,
+            minute: this.minute,
+            hour:   this.hour
         }
-        if(this.#date)      obj.date      = this.#date;
-        if(this.#month)     obj.month     = this.#month;
-        if(this.#year)      obj.year      = this.#year;
-        if(this.#dayOfWeek) obj.dayOfWeek = this.#dayOfWeek;
+        if(this.date)      obj.date      = this.date;
+        if(this.month)     obj.month     = this.month;
+        if(this.year)      obj.year      = this.year;
+        if(this.dayOfWeek) obj.dayOfWeek = this.dayOfWeek;
 
         return obj;
     }
-    set schedule(newSchedule){
-        this.#second    = newSchedule['second'];
-        this.#minute    = newSchedule['minute'];
-        this.#hour      = newSchedule['hour'];
-        this.#date      = newSchedule['date'];
-        this.#month     = newSchedule['month'];
-        this.#year      = newSchedule['year'];
-        this.#dayOfWeek = newSchedule['dayOfWeek'];
-    }
-    // Returns a timestamp based on the current day with just the hour, minute, and second properties 
+    get second()   { return this.#second;    }
+    get minute()   { return this.#minute;    }
+    get hour()     { return this.#hour;      }
+    get date()     { return this.#date;      }
+    get month()    { return this.#month;     }
+    get year()     { return this.#year;      }
+    get dayOfWeek(){ return this.#dayOfWeek; }
+        // Returns a timestamp based on the current day with just the hour, minute, and second properties 
     // as the findSameDaySchedulesAndRetIds function gives us schedules that would occur on the same day, 
     // so we can ignore date, month, year, and dayOfWeek properties.
-    get timestamp(){ return new Date((new Date).setHours(this.#hour, this.#minute, this.#second));}
+    get timestamp(){ return new Date((new Date).setHours(this.hour, this.minute, this.second));}
+    /*************************** Schedule SETTERS ***************************/
+    set schedule(newSchedule){
+        this.second    = newSchedule['second'];
+        this.minute    = newSchedule['minute'];
+        this.hour      = newSchedule['hour'];
+        this.date      = newSchedule['date'];
+        this.month     = newSchedule['month'];
+        this.year      = newSchedule['year'];
+        this.dayOfWeek = newSchedule['dayOfWeek'];
+    }
+    set second(second)      { this.#second = second;       }
+    set minute(minute)      { this.#minute = minute;       }
+    set hour(hour)          { this.#hour = hour;           }
+    set date(date)          { this.#date = date;           }
+    set month(month)        { this.#month = month;         }
+    set year(year)          { this.#year = year;           }
+    set dayOfWeek(dayOfWeek){ this.#dayOfWeek = dayOfWeek; }
 }
 class Job extends Schedule{
     constructor(schedule, relational, device, jobFunction){
@@ -106,6 +135,7 @@ class Job extends Schedule{
         this.jobFunction = jobFunction;
         this.job = node_schedule.scheduleJob(this.schedule, this.jobFunction)
     }
+    /*************************** Job METHODS ***************************/
     // use case: schedule is updated, but the job function's parameters are the same
     // The schedule is overwritten and then the job is rescheduled, which automically
     // cancels the old schedule
@@ -129,6 +159,7 @@ class Job extends Schedule{
     cancelJob(reschedule){ this.job.cancel(); }
     /* Invalidates the next planned invocation for the job. */
     cancelNextJob(reschedule){ this.job.cancelNext(); }
+    /*************************** Job GETTERS ***************************/
     /* Returns a date object for the next planned invocation for this job. 
      * If no invocation is planned, then null is returned. */
     get nextInvocationDate(){ return this.job.nextInvocation(); }
@@ -137,11 +168,12 @@ class Job extends Schedule{
     get rescheduleJob(){ return this.job.reschedule(this.schedule); }
     get schedule_config(){
         return {
-            device: this.device,
-            schedule: this.schedule,
+            device:     this.device,
+            schedule:   this.schedule,
             relational: this.relational
         }
     }
+    /*************************** Job SETTERS ***************************/
     set jobFn(newJobFunction){ this.jobFunction = newJobFunction; }
 }
 /* Ref - Pg. 243 - Node.js Design Patterns - 3rd Edition - Mario Casciaro, Luciano Mammino */
@@ -182,6 +214,8 @@ var test = {
     },
     buildRelational1: function(){
         return {
+            startScheduleId: 1,
+            endScheduleId:   2
         }
     },
     buildRelational2: function(){
@@ -236,7 +270,7 @@ let job = new JobBuilder()
 
 console.log(`next nextInvocation: ${job.nextInvocationDate}`)
 console.log(`schedule1: ${JSON.stringify(job.schedule)}`);
-
+console.log(`relational: ${JSON.stringify(job.relational)}`)
 job.schedule = testSchedule2;
 let updatedJobFn = test.buildJobFn(...jobFnArgs2);
 job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
@@ -247,7 +281,6 @@ console.log(`job: ${JSON.stringify(job)}`)
 //job.cancelNextJob(); 
 console.log(job.timestamp);
 console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
-console.log(`relational: ${JSON.stringify(job.relational)}`)
 console.log(`device: ${JSON.stringify(job.device)}`)
 console.log(`desired_state: ${job.desired_state}`);
 module.exports = JobBuilder;
