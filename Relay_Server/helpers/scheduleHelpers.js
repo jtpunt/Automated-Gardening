@@ -299,11 +299,11 @@ let scheduleHelpers = {
     // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
     // the next_schedule_config object
     // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    scheduleIsActive: function(onScheduleId, timestamp){
+    scheduleIsActive: function(schedule_id, timestamp){
         let self   = this,
             result = false;
         
-        let on_schedule_config = self.scheduleObj[onScheduleId].schedule_config,
+        let on_schedule_config = self.scheduleObj[schedule_id].schedule_config,
             desired_state      = on_schedule_config['device']['desired_state'],
             onScheduleId       = on_schedule_config['relational']['prevScheduleId'],
             offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
@@ -312,7 +312,7 @@ let scheduleHelpers = {
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
             if(offScheduleId in this.scheduleObj){
-                let on_schedule_timestamp  = self.scheduleObj[onScheduleId].timestamp,
+                let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
                     off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
                 
                 if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
