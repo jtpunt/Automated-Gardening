@@ -258,10 +258,10 @@ let scheduleHelpers = {
             
 
             let sched_off_schedule_obj    = self.scheduleObj[sched_off_mongo_id],
-                sched_off_schedule_config = arr_off_schedule_obj.schedule_config,
-                sched_off_second          = arr_off_schedule_config['schedule']['second'],
-                sched_off_minute          = arr_off_schedule_config['schedule']['minute'],
-                sched_off_hour            = arr_off_schedule_config['schedule']['hour'],
+                sched_off_schedule_config = sched_off_schedule_obj.schedule_config,
+                sched_off_second          = sched_off_schedule_config['schedule']['second'],
+                sched_off_minute          = sched_off_schedule_config['schedule']['minute'],
+                sched_off_hour            = sched_off_schedule_config['schedule']['hour'],
                 sched_off_timestamp       = new Date();
                 
             sched_on_timestamp.setHours(sched_on_hour, sched_on_minute, sched_on_second);
