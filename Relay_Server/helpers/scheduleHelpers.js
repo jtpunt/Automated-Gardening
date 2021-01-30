@@ -268,9 +268,9 @@ let scheduleHelpers = {
             // sched_off_timestamp.setHours(sched_off_hour, sched_off_minute, sched_off_second);
             let sched_on_job          = self.scheduleObj[schedule_id],
                 sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'].toString(),
-                sched_on_timestamp    = schedule_on_job.timestamp,
+                sched_on_timestamp    = sched_on_job.timestamp,
                 sched_off_timestamp   = self.scheduleObj[sched_off_mongo_id].timestamp;
-                
+
             console.log(`on_timestamp ${sched_on_timestamp}, timestamp: ${sched_on_timestamp}, off_timestamp" ${sched_off_timestamp}, timestamp1: ${sched_off_timestamp}`);
             
             let timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true },
