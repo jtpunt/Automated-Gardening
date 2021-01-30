@@ -309,7 +309,8 @@ let scheduleHelpers = {
             if(offScheduleId in this.scheduleObj){
                 let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
                     off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
-                
+                console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
+                console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
                 if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
                     result = true;
             }else{ // schedule not found
