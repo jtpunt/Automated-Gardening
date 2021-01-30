@@ -228,9 +228,7 @@ let scheduleHelpers = {
     isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
         let self              = this,
             conflictMsg       = "",
-            buildTimeStamp    = (schedule) => {
-                return new Date((new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']));  
-            },
+            buildTimeStamp    = (schedule) => { return new Date((new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']));},
             new_on_timestamp  = buildTimeStamp(on_schedule_config['schedule']),
             new_off_timestamp = buildTimeStamp(off_schedule_config['schedule']),
             schedule_ids      = self.findSameDaySchedulesAndRetIds(on_schedule_config);
