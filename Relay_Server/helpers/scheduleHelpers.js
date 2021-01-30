@@ -50,9 +50,10 @@ let scheduleHelpers = {
         for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
             console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
             let schedule_config = job.schedule_config,
-                desired_state   = schedule_config['device']['desired_state'],
                 device_gpio     = schedule_config['device']['gpio'],
+                desired_state   = schedule_config['device']['desired_state'],
                 nextScheduleId  = schedule_config['relational']['nextScheduleId'];
+
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
@@ -62,7 +63,7 @@ let scheduleHelpers = {
             }
         }
     },
-    resumeSchedule: function(schedule_id, activateRelayFn, context){
+    resumeSchedule: function(schedule_id, fn, context){
         let self            = this,
             reschedule      = true,
             today           = new Date(),
@@ -71,21 +72,27 @@ let scheduleHelpers = {
         if(schedule_config === undefined){
             console.log("Schedule config is undefined");
         }else{
-            let job = new JobBuilder()
-                .withSchedule(schedule_config['schedule'])
-                .withRelational(schedule_config['relational'])
-                .withDevice(schedule_config['device'])
-                .withJobFunction(...jobArgs)
-                .build()
+            let device_gpio   = schedule_config['device']['gpio'],
+                desired_state = schedule_config['device']['desired_state'],
+                jobArgs       = [fn, context, device_gpio, desired_state],
+                job           = new JobBuilder()
+                    .withSchedule(schedule_config['schedule'])
+                    .withRelational(schedule_config['relational'])
+                    .withDevice(schedule_config['device'])
+                    .withJobFunction(...jobArgs)
+                    .build()
+
             self.scheduleObj[schedule_config['_id']] = job;
             self.startActiveSchedules(activateRelayFn, context);
         }
         
     },
     createSchedule: async function(new_schedule_config, fn, context, ...args){
-        let self    = this,
-            jobArgs = [fn, context, ...args],
-            job     = new JobBuilder()
+        let self            = this,
+            device_gpio     = new_schedule_config['device']['gpio'],
+            desired_state   = new_schedule_config['device']['desired_state'],
+            jobArgs         = [fn, context, ...args, device_gpio, desired_state],
+            job             = new JobBuilder()
                 .withSchedule(new_schedule_config['schedule'])
                 .withRelational(new_schedule_config['relational'])
                 .withDevice(new_schedule_config['device'])
@@ -386,7 +393,7 @@ let scheduleHelpers = {
         return result;
     },
     // gets all the schedules for this device from the database and stores them in the scheduleArr
-    // if the schedule is active, then it is activated
+    // if the schedule is active, then the associated outlet is activated
     getSchedules: function(activateRelayFn, context){
         let self = this,
             sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
@@ -408,25 +415,14 @@ let scheduleHelpers = {
                         console.log(`schedule_configs: ${schedule_configs}`);
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
-                            let myScheduleObj = JSON.parse(JSON.stringify(schedule_config['schedule']));
 
                             let startScheduleId = schedule_config['relational']['startScheduleId'],
-                                gpio            = schedule_config['device']['gpio'],
+                                device_gpio     = schedule_config['device']['gpio'],
                                 desired_state   = schedule_config['device']['desired_state'];
 
-                            // let jobArgs = startScheduleId ? 
-                            //     [schedule_config['schedule'],self.deleteSchedule,self,startScheduleId.toString()] :
-                            //     [schedule_config['schedule'],activateRelayFn,context,gpio,desired_state];
-                            // let job = new Job(...jobArgs);
-                            // var obj = {"schedule_config": schedule_config, "job": job};
-                            // console.log(`obj: ${JSON.stringify(obj)}`);
-                            // self.scheduleObj[schedule_config['_id']] = obj;
-
                             let jobArgs = startScheduleId ? 
-                                [myScheduleObj,self.deleteSchedule,self,startScheduleId.toString()] :
-                                [myScheduleObj,activateRelayFn,context,gpio,desired_state];
-
-
+                                [self.deleteSchedule, self, startScheduleId.toString()] :
+                                [activateRelayFn, context, device_gpio, desired_state];
 
                             let job = new JobBuilder()
                                 .withSchedule(schedule_config['schedule'])
@@ -434,15 +430,8 @@ let scheduleHelpers = {
                                 .withDevice(schedule_config['device'])
                                 .withJobFunction(...jobArgs)
                                 .build()
-                            // let job = scheduleHelpers.buildJob(...jobArgs);
 
-                            // var obj = {"schedule_config": schedule_config, job};
-                            // console.log(`obj: ${JSON.stringify(obj)}`);
                             self.scheduleObj[schedule_config['_id']] = job;
-                            // console.log(`stored schedule: ${JSON.stringify(job.schedule)}`);
-                            // console.log(`stored relational: ${JSON.stringify(job.relational)}`);
-                            // console.log(`stored device: ${JSON.stringify(job.device)}`);
-                            // console.log(`nextInvocationDate: ${job.nextInvocationDate}`);
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
                         self.startActiveSchedules(activateRelayFn, context);
@@ -467,11 +456,15 @@ let scheduleHelpers = {
             schedule_conflict = false,
             today             = new Date(),
             onScheduleId      = updated_schedule_config['relational']['prevScheduleId'] || undefined,
-            offScheduleId     = updated_schedule_config['relational']['nextScheduleId'] || undefined;
+            offScheduleId     = updated_schedule_config['relational']['nextScheduleId'] || undefined,
+            job               = self.getScheduleJobById(schedule_id);
 
         let updated_device     = updated_schedule_config['device'],
             updated_schedule   = updated_schedule_config['schedule'],
             updated_relational = updated_schedule_config['relational'];
+
+        let updated_device_gpio   = updated_schedule_config['device']['gpio'],
+            updated_desired_state = updated_schedule_config['device']['desired_state'];
 
         console.log(`schedule_id: ${schedule_id}`);
         console.log(`updateSchedule: ${JSON.stringify(updated_schedule_config)}`);
@@ -481,11 +474,13 @@ let scheduleHelpers = {
 
         if(!offScheduleId in self.scheduleObj)
             throw new Error("Invalid id provided for nextScheduleId");
+        
         console.log("about to cancel schedule");
 
-        let args = [Number(updated_schedule_config['device']['gpio']), Boolean(updated_schedule_config['device']['desired_state'])];
-        let updatedJobFn = function(){ activateRelayFn.call(context, ...args); } 
-        let job = self.getScheduleJobById(schedule_id);
+        let args         = [updated_device_gpio, updated_desired_state],
+            updatedJobFn = function(){ activateRelayFn.call(context, ...args); };
+            
+
         job.updateSchedJobAndDevice(updated_device, updated_schedule, updated_relational, updatedJobFn);
 
         Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
