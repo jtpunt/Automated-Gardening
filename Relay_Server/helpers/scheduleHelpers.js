@@ -46,7 +46,8 @@ let scheduleHelpers = {
         }
     },
     startActiveSchedules: function(activateRelayFn, context){
-        let today = new Date();
+        let self  = this,
+            today = new Date();
         for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
             console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
             let schedule_config = job.schedule_config,
@@ -57,7 +58,7 @@ let scheduleHelpers = {
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
-                let isScheduleActive = this.IsScheduleActive(schedule_id, today);
+                let isScheduleActive = self.IsScheduleActive(schedule_id, today);
                     if(isScheduleActive === true)
                         activateRelayFn.call(context, device_gpio, desired_state);
             }
