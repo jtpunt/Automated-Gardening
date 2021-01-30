@@ -264,14 +264,18 @@ let scheduleHelpers = {
     },
     isScheduleConflicting: function(schedule_config){
         let self        = this,
+            conflictMsg = "",
+            indices     = [];
+            timestamp   = buildTimeStamp(schedule_config);
+    
+        let buildTimeStamp = function(schedule_config){
             second      = schedule_config['schedule']['second'],
             minute      = schedule_config['schedule']['minute'],
             hour        = schedule_config['schedule']['hour'],
             timestamp   = new Date();
-            
-        let conflictMsg = "",
-            indices     = [];
-
+            timestamp.setHours(hour, minute, second);  
+            return timestamp;
+        }
         console.log("in isScheduleConflicting");
         let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_id){
             // is there a schedule conflict?
@@ -298,7 +302,6 @@ let scheduleHelpers = {
                 return "";
             
         }
-        timestamp.setHours(hour, minute, second);  
         
         schedule_ids = self.findSameDaySchedulesAndRetIds(schedule_config);
         console.log(`same day schedule ids: ${schedule_ids}`);
