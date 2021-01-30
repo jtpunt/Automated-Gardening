@@ -58,7 +58,7 @@ let scheduleHelpers = {
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
-                let isScheduleActive = self.IsScheduleActive(schedule_id, today);
+                let isScheduleActive = self.isScheduleActive(schedule_id, today);
                     if(isScheduleActive === true)
                         activateRelayFn.call(context, device_gpio, desired_state);
             }
@@ -284,7 +284,7 @@ let scheduleHelpers = {
         console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
             if(self.doesScheduleExist(schedule_id)){
-                let isScheduleConflicting = self.IsScheduleActive(schedule_id, timestamp);
+                let isScheduleConflicting = self.isScheduleActive(schedule_id, timestamp);
 
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_id);
             }
