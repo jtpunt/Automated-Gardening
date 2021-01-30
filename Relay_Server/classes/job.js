@@ -1,101 +1,85 @@
 let node_schedule = require('node-schedule');
 class Device{
-    #_id
-    #desired_state
-    #gpio
-
     constructor(device){
-        this.#_id           = device['id'];
-        this.#desired_state = device['desired_state'];
-        this.#gpio          = device['gpio'];
+        this._id           = device['id'];
+        this.desired_state = device['desired_state'];
+        this.gpio          = device['gpio'];
     }
     get device(){
         return {
-            _id:           this.#_id,
-            desired_state: this.#desired_state,
-            gpio:          this.#gpio
+            _id:           this._id,
+            desired_state: this.desired_state,
+            gpio:          this.gpio
         }
     }
-    get desired_state(){ return this.#desired_state; }
     set device(updatedDevice){
-        this.#_id           = updatedDevice['id'];
-        this.#desired_state = updatedDevice['desired_state'];
-        this.#gpio          = updatedDevice['gpio'];
+        this._id           = updatedDevice['id'];
+        this.desired_state = updatedDevice['desired_state'];
+        this.gpio          = updatedDevice['gpio'];
     }
 }
 class Relational extends Device{
-    #prevScheduleId
-    #nextScheduleId
-    #startScheduleId
-    #endScheduleId
-
     constructor(relational, device){
         super(device);
-        this.#prevScheduleId  = relational['prevScheduleId'];
-        this.#nextScheduleId  = relational['nextScheduleId'];
-        this.#startScheduleId = relational['startScheduleId'];
-        this.#endScheduleId   = relational['endScheduleId'];
+        this.prevScheduleId  = relational['prevScheduleId'];
+        this.nextScheduleId  = relational['nextScheduleId'];
+        this.startScheduleId = relational['startScheduleId'];
+        this.endScheduleId   = relational['endScheduleId'];
     }
     get relational(){
         return {
-            prevScheduleId:  this.#prevScheduleId,
-            nextScheduleId:  this.#nextScheduleId,
-            startScheduleId: this.#startScheduleId,
-            endScheduleId:   this.#endScheduleId
+            prevScheduleId:  this.prevScheduleId,
+            nextScheduleId:  this.nextScheduleId,
+            startScheduleId: this.startScheduleId,
+            endScheduleId:   this.endScheduleId
         }
     }
     set relational(relational){
-        this.#prevScheduleId  = relational['prevScheduleId'];
-        this.#nextScheduleId  = relational['nextScheduleId'];
-        this.#startScheduleId = relational['startScheduleId'];
-        this.#endScheduleId   = relational['endScheduleId'];
+        this.prevScheduleId  = relational['prevScheduleId'];
+        this.nextScheduleId  = relational['nextScheduleId'];
+        this.startScheduleId = relational['startScheduleId'];
+        this.endScheduleId   = relational['endScheduleId'];
     }
 }
 // testing this
 class Schedule extends Relational{
-    #second
-    #minute
-    #hour
-    #date
-    #month
-    #year
-    #dayOfWeek
     constructor(schedule, relational, device){
         super(relational, device);
-        this.#second    = schedule['second'];    // required
-        this.#minute    = schedule['minute'];    // required
-        this.#hour      = schedule['hour'];      // required
-        this.#date      = schedule['date'];      // optional
-        this.#month     = schedule['month'];     // optional
-        this.#year      = schedule['year'];      // optional
-        this.#dayOfWeek = schedule['dayOfWeek']; // optional
+        this.second    = schedule['second'];    // required
+        this.minute    = schedule['minute'];    // required
+        this.hour      = schedule['hour'];      // required
+        this.date      = schedule['date'];      // optional
+        this.month     = schedule['month'];     // optional
+        this.year      = schedule['year'];      // optional
+        this.dayOfWeek = schedule['dayOfWeek']; // optional
     }
     get schedule(){
         let obj = {
-            second:    this.#second,
-            minute:    this.#minute,
-            hour:      this.#hour,
+            second:    this.second,
+            minute:    this.minute,
+            hour:      this.hour
         }
-        if(this.#date)       obj.date      = this.#date;
-        if(this.#month)      obj.month     = this.#month;
-        if(this.#year)       obj.year      = this.#year;
-        if(this.#dayOfWeek)  obj.dayOfWeek = this.#dayOfWeek
-
+        let optionalProps = ['date', 'month', 'year', 'dayOfWeek']
+        optionalProps.forEach(optionalProp => {
+            if(optionalProp in this && this[optionalProp] !== undefined){
+                obj[optionalProp] = this[optionalProp];
+            }
+        });
         return obj;
     }
     set schedule(newSchedule){
-        this.#second    = newSchedule['second'];
-        this.#minute    = newSchedule['minute'];
-        this.#hour      = newSchedule['hour'];
-        this.#date      = newSchedule['date'];
-        this.#month     = newSchedule['month'];
-        this.#year      = newSchedule['year'];
-        this.#dayOfWeek = newSchedule['dayOfWeek'];
+        this.second    = newSchedule['second'];
+        this.minute    = newSchedule['minute'];
+        this.hour      = newSchedule['hour'];
+        this.date      = newSchedule['date'];
+        this.month     = newSchedule['month'];
+        this.year      = newSchedule['year'];
+        this.dayOfWeek = newSchedule['dayOfWeek'];
     }
     // Returns a timestamp based on the current day with just the hour, minute, and second properties 
     // as the findSameDaySchedulesAndRetIds function gives us schedules that would occur on the same day, 
     // so we can ignore date, month, year, and dayOfWeek properties.
-    get timestamp(){ return new Date((new Date).setHours(this.#hour, this.#minute, this.#second));}
+    get timestamp(){ return new Date((new Date).setHours(this.hour, this.minute, this.second));}
 }
 class Job extends Schedule{
     constructor(schedule, relational, device, jobFunction){
