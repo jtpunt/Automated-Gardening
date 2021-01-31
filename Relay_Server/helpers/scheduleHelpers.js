@@ -48,6 +48,7 @@ let scheduleHelpers = {
     startActiveSchedules: function(activateRelayFn, context){
         let self  = this,
             today = new Date();
+
         for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
             console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
             if(!job.nextScheduleId)
@@ -301,15 +302,31 @@ let scheduleHelpers = {
             if(desired_state == true && offScheduleId){ // 'on' schedule
                 console.log("Processing 'on' schedule");
                 if(offScheduleId in this.scheduleObj){
-                    let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
-                        off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
-                    console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
-                    console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
-                    if(off_schedule_timestamp < on_schedule_timestamp)
-                        off_schedule_timestamp.setDate(off_schedule_timestamp.getDate() + 1);
+                    let activesToday = false;
+                    let datebased_timestamp = new Date();
+                    // check date, month, year, dayOfWeek
+                    // if(job.date && job.month && job.year){
+                    //     datebased_timestamp = new Date(job.year, job.month, job.date, job.hour, job.minute, job.second);
+                    // }
+                    if(job.dayOfWeek && job.dayOfWeek.length){
+                        let numDay = datebased_timestamp.getDay();
+                        if(job.dayOfWeek.includes(numDay)){
+                            activesToday = true;
+                        }
+                    }
+                    if(activesToday){
+                        let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
+                            off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
+                        console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
+                        console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
+                        if(off_schedule_timestamp < on_schedule_timestamp)
+                            off_schedule_timestamp.setDate(off_schedule_timestamp.getDate() + 1);
 
-                    if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
-                        result = true;
+                        if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
+                            result = true;
+                    }else{
+                        console.log(`dayOfWeek does not activate today`);
+                    }
                 }else{ // schedule not found
                     console.log("Off Schedule not found!!");
                 }
