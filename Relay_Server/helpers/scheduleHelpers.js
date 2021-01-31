@@ -93,7 +93,7 @@ let scheduleHelpers = {
                 .withDevice(new_schedule_config['device'])
                 .withJobFunction(...jobArgs)
                 .build()
-
+        console.log(`Create schedule original: ${JSON.stringify(new_schedule_config)}`);
         let newScheduleResponse = await Scheduler.create(new_schedule_config);
     
         if(newScheduleResponse === undefined)
@@ -101,6 +101,7 @@ let scheduleHelpers = {
         else{
             let schedule_id  = newScheduleResponse["_id"];
             self.scheduleObj[schedule_id] = job;
+            console.log(`Created Schedule: ${JSON.stringify(self.scheduleObj.schedule_config)}`);
             return schedule_id;
         }
     },
