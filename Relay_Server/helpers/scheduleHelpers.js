@@ -50,9 +50,10 @@ let scheduleHelpers = {
             today = new Date();
         for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
             console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
-            let device_gpio     = job.gpio,
-                desired_state   = job.desired_state,
-                nextScheduleId  = job.nextScheduleId;
+            let schedule_config = job.schedule_config,
+                device_gpio     = schedule_config['device']['gpio'],
+                desired_state   = schedule_config['device']['desired_state'],
+                nextScheduleId  = schedule_config['relational']['nextScheduleId'];
 
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
@@ -297,10 +298,10 @@ let scheduleHelpers = {
         let self   = this,
             result = false;
         
-        let job = self.getScheduleJobById(schedule_id),
-            desired_state      = job.desired_state,
-            onScheduleId       = job.prevScheduleId,
-            offScheduleId      = job.nextScheduleId;
+        let on_schedule_config = self.scheduleObj[schedule_id].schedule_config,
+            desired_state      = on_schedule_config['device']['desired_state'],
+            onScheduleId       = on_schedule_config['relational']['prevScheduleId'],
+            offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
             
         // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
