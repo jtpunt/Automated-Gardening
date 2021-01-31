@@ -305,7 +305,7 @@ let scheduleHelpers = {
             offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
         console.log(`in scheduleIsActive`);
         // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
-        if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
+        if(desired_state !== undefined && desired_state == true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
             if(offScheduleId in this.scheduleObj){
                 let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
