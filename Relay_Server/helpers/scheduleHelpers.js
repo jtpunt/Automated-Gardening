@@ -62,7 +62,7 @@ let scheduleHelpers = {
     },
     resumeSchedule: function(schedule_id, fn, context){
         let self  = this,
-            today = new Date(),
+            today = new Date(w),
             job   = self.getScheduleJobById(schedule_id);
             
         if(!job){
@@ -125,16 +125,15 @@ let scheduleHelpers = {
             console.log("Recurrence Based Scheduling");
             // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
             for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
-                let schedule_config = job.schedule_config,
-                    sched_second    = schedule_config['schedule']['second'],
-                    sched_minute    = schedule_config['schedule']['minute'],
-                    sched_hour      = schedule_config['schedule']['hour'],
-                    sched_date      = schedule_config['schedule']['date'],
-                    sched_month     = schedule_config['schedule']['month'],
-                    sched_year      = schedule_config['schedule']['year'],
-                    sched_gpio      = schedule_config['device']['gpio'],
-                    sched_dayOfWeek = schedule_config['schedule']['dayOfWeek'] ? Array.from(schedule_config['schedule']['dayOfWeek']) : null;
-                if(schedule_config['relational']['nextScheduleId'] && gpio === sched_gpio){
+                let sched_second    = job.second,
+                    sched_minute    = job.minute,
+                    sched_hour      = job.hour,
+                    sched_date      = job.date,
+                    sched_month     = job.month,
+                    sched_year      = job.year,
+                    sched_gpio      = job.gpio,
+                    sched_dayOfWeek = job.dayOfWeek ? Array.from(job.dayOfWeek) : null;
+                if(job.nextScheduleId && gpio === sched_gpio){
                     // recurrence based schedule compared to recurrence based scheduling
                     if(sched_dayOfWeek && sched_dayOfWeek.length){
                         // the times these schedules are set for are all the same for recurrence based scheduling
@@ -160,14 +159,13 @@ let scheduleHelpers = {
         else if(date && month && year){ 
             // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
             for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
-                let schedule_config = job.schedule_config,
-                    sched_date      = schedule_config['schedule']['date'],
-                    sched_month     = schedule_config['schedule']['month'],
-                    sched_year      = schedule_config['schedule']['year'],
-                    sched_gpio      = schedule_config['device']['gpio'],
-                    sched_dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : null;
+                let sched_date      = job.date,
+                    sched_month     = job.month,
+                    sched_year      = job.year,
+                    sched_gpio      = job.gpio,
+                    sched_dayOfWeek = (job.dayOfWeek) ? Array.from(job.dayOfWeek) : null;
                 
-                if(schedule_config['relational']['nextScheduleId'] && gpio === sched_gpio){
+                if(job.nextScheduleId && gpio === sched_gpio){
                     // date based scheduling compared to recurrence based scheduling
                     if(sched_dayOfWeek && sched_dayOfWeek.length){
                         let datebased_timestamp = new Date(year, month, date, hour, minute, second);
@@ -192,14 +190,13 @@ let scheduleHelpers = {
             console.log(`everyday 1 time schedules`);
             // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
             for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
-                let schedule_config = job.schedule_config,
-                    sched_date      = schedule_config['schedule']['date'],
-                    sched_month     = schedule_config['schedule']['month'],
-                    sched_year      = schedule_config['schedule']['year'],
-                    sched_gpio      = schedule_config['device']['gpio'],
-                    sched_dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : null;
+                let sched_date      = job.date,
+                    sched_month     = job.month,
+                    sched_year      = job.year,
+                    sched_gpio      = job.gpio,
+                    sched_dayOfWeek = (job.dayOfWeek) ? Array.from(job.dayOfWeek) : null;
                 console.log(`Iterating through schedules`);
-                if(schedule_config['relational']['nextScheduleId'] && gpio === sched_gpio){
+                if(job.nextScheduleId && gpio === sched_gpio){
                 //if(schedule_obj["_id"] !== schedule_id){
                     // everyday 1 time - off schedules compared to recurrence based scheduling
                     if(sched_dayOfWeek && sched_dayOfWeek.length)
@@ -211,7 +208,7 @@ let scheduleHelpers = {
                     else
                         indices.push(schedule_id);
                 }else{
-                    console.log(`nextScheduleId: ${schedule_config['relational']['nextScheduleId']}`);
+                    console.log(`nextScheduleId: ${job.nextScheduleId}`);
                 }
             }
         }
@@ -228,7 +225,7 @@ let scheduleHelpers = {
         
         schedule_ids.forEach(function(schedule_id){
             let sched_on_job          = self.scheduleObj[schedule_id],
-                sched_off_mongo_id    = sched_on_job.schedule_config['relational']['nextScheduleId'],
+                sched_off_mongo_id    = sched_on_job.nextScheduleId,
                 sched_on_timestamp    = sched_on_job.timestamp;
 
              if(self.doesScheduleExist(sched_off_mongo_id)){
@@ -297,7 +294,7 @@ let scheduleHelpers = {
             console.log(`job is null`);
         }else{
             let desired_state = job.desired_state,
-                onScheduleId = job.prevScheduleId,
+                onScheduleId  = job.prevScheduleId,
                 offScheduleId = job.nextScheduleId;
              console.log(`in scheduleIsActive`);
             // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
