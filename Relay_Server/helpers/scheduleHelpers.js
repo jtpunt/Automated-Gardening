@@ -479,7 +479,7 @@ let scheduleHelpers = {
                         sched_id        = schedule_id.toString();
                     
   
-                    if(nextScheduleId)
+                    if(nextScheduleId !== null)
                         console.log("nextScheduleId is undefined");
                     else{
                         console.log(`nextScheduleId: ${nextScheduleId}`);
