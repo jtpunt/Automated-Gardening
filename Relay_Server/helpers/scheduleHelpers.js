@@ -299,15 +299,15 @@ let scheduleHelpers = {
         let self   = this,
             result = false;
         
-        let job = self.getScheduleJobById(schedule_id);
+        let job = getScheduleJobById(schedule_id);
 
         if(!job){
             console.log(`job is null`);
         }else{
             let desired_state = job.desired_state,
-                onScheduleId  = job.onScheduleId,
-                offScheduleId = job.offScheduleId;
-            console.log(`in scheduleIsActive`);
+                onScheduleId = job.prevScheduleId,
+                offScheduleId = job.nextScheduleId;
+             console.log(`in scheduleIsActive`);
             // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
             if(desired_state == true && offScheduleId){ // 'on' schedule
                 console.log("Processing 'on' schedule");
@@ -330,6 +330,7 @@ let scheduleHelpers = {
                 console.log(`onScheduleId - ${onScheduleId}`);
                 console.log(`offScheduleId - ${offScheduleId}`);
             }
+
         }
         return result;
     },
