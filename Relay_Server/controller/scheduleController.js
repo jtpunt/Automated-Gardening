@@ -167,8 +167,8 @@ var scheduleMethods = {
 
                         let off_end_schedule_args = [
                             off_end_schedule, 
-                            scheduleController.deleteSchedule, 
-                            scheduleController, 
+                            scheduleHelper.deleteSchedule, 
+                            scheduleHelper, 
                             offScheduleId
                         ]
 
@@ -189,8 +189,8 @@ var scheduleMethods = {
 
                         let on_end_schedule_args = [
                             off_end_schedule, 
-                            scheduleController.deleteSchedule, 
-                            scheduleController, 
+                            scheduleHelper.deleteSchedule, 
+                            scheduleHelper, 
                             onScheduleId
                         ]
                         let onEndScheduleId = await scheduleHelper.createSchedule(...on_end_schedule_args);
