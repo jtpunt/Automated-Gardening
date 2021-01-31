@@ -482,6 +482,7 @@ let scheduleHelpers = {
                     if(nextScheduleId)
                         console.log("nextScheduleId is undefined");
                     else{
+                        console.log(`nextScheduleId: ${nextScheduleId}`);
                         nextScheduleId = nextScheduleId.toString();
                         // schedule_id is the schedule we are trying to see is active or not
                         if(sched_id === schedule_id || nextScheduleId === schedule_id){
