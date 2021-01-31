@@ -319,7 +319,7 @@ let scheduleHelpers = {
             }
             
         }else{
-            console.log(`invalid schedule`);
+            console.log(`off schedule`);
         }
         return result;
     },
