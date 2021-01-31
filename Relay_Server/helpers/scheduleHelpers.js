@@ -58,6 +58,7 @@ let scheduleHelpers = {
             if(nextScheduleId === undefined)
                 console.log("nextScheduleId is undefined");
             else{
+                console.log(`nextScheduleId is not undefined - ${nextScheduleId}`);
                 let isScheduleActive = self.isScheduleActive(schedule_id, today);
                     if(isScheduleActive === true)
                         activateRelayFn.call(context, device_gpio, desired_state);
