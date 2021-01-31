@@ -299,7 +299,7 @@ let scheduleHelpers = {
         let self   = this,
             result = false;
         
-        let job = getScheduleJobById(schedule_id);
+        let job = self.getScheduleJobById(schedule_id);
 
         if(!job){
             console.log(`job is null`);
