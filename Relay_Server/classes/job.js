@@ -78,6 +78,7 @@ class Schedule extends Relational{
     #dayOfWeek
     constructor(schedule, relational, device){
         super(relational, device);
+        console.log(`schedule constructor with: ${JSON.stringify(schedule)}`);
         this.#second    = schedule['second'];    // required
         this.#minute    = schedule['minute'];    // required
         this.#hour      = schedule['hour'];      // required
