@@ -12,17 +12,17 @@ let scheduleHelpers = {
     },
     getScheduleJobById: function(schedule_id){
         if(!this.doesScheduleExist(schedule_id))
-            return undefined;
+            return null;
         return this.scheduleObj[schedule_id];
     },
     getScheduleConfigById: function(schedule_id){
         if(!this.doesScheduleExist(schedule_id))
-            return undefined;
+            return null;
         return this.scheduleObj[schedule_id].schedule_config;
     },
     getDateOfNextInvocation: function(schedule_id){
-        let job = this.getScheduleJobById(schedule_id);
-        if(job === undefined)
+        let job = th6is.getScheduleJobById(schedule_id);
+        if(!job) 
             return job;
         return job.nextInvocationDate;
         //return job.nextInvocationDate;        
@@ -71,8 +71,8 @@ let scheduleHelpers = {
             today           = new Date(),
             schedule_config = self.getScheduleConfigById(schedule_id);
             
-        if(schedule_config === undefined){
-            console.log("Schedule config is undefined");
+        if(!schedule_config){
+            console.log("Schedule config is NULL");
         }else{
             let device_gpio   = schedule_config['device']['gpio'],
                 desired_state = schedule_config['device']['desired_state'],
@@ -299,32 +299,37 @@ let scheduleHelpers = {
         let self   = this,
             result = false;
         
-        let on_schedule_config = self.scheduleObj[schedule_id].schedule_config,
-            desired_state      = on_schedule_config['device']['desired_state'],
-            onScheduleId       = on_schedule_config['relational']['prevScheduleId'],
-            offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
-        console.log(`in scheduleIsActive`);
-        // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
-        if(desired_state == true && offScheduleId){ // 'on' schedule
-            console.log("Processing 'on' schedule");
-            if(offScheduleId in this.scheduleObj){
-                let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
-                    off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
-                console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
-                console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
-                if(off_schedule_timestamp < on_schedule_timestamp)
-                    off_schedule_timestamp.setDate(off_schedule_timestamp.getDate() + 1);
+        let job = getScheduleJobById(schedule_id);
 
-                if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
-                    result = true;
-            }else{ // schedule not found
-                console.log("Off Schedule not found!!");
-            }
-            
+        if(!job){
+            console.log(`job is null`);
         }else{
-            console.log(`off schedule - desired_state: ${desired_state} - typeof - ${typeof desired_state}`);
-            console.log(`onScheduleId - ${onScheduleId}`);
-            console.log(`offScheduleId - ${offScheduleId}`);
+            let desired_state = job.desired_state,
+                onScheduleId  = job.onScheduleId,
+                offScheduleId = job.offScheduleId;
+            console.log(`in scheduleIsActive`);
+            // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
+            if(desired_state == true && offScheduleId){ // 'on' schedule
+                console.log("Processing 'on' schedule");
+                if(offScheduleId in this.scheduleObj){
+                    let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
+                        off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
+                    console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
+                    console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
+                    if(off_schedule_timestamp < on_schedule_timestamp)
+                        off_schedule_timestamp.setDate(off_schedule_timestamp.getDate() + 1);
+
+                    if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
+                        result = true;
+                }else{ // schedule not found
+                    console.log("Off Schedule not found!!");
+                }
+                
+            }else{
+                console.log(`off schedule - desired_state: ${desired_state} - typeof - ${typeof desired_state}`);
+                console.log(`onScheduleId - ${onScheduleId}`);
+                console.log(`offScheduleId - ${offScheduleId}`);
+            }
         }
         return result;
     },
