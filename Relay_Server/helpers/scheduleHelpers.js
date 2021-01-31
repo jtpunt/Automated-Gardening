@@ -287,7 +287,7 @@ let scheduleHelpers = {
 
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_id);
             }
-        });
+        });4
         return conflictMsg;
     },
     // Finds the next_schedule_config that's associated with the prev_schedule_config
@@ -319,7 +319,9 @@ let scheduleHelpers = {
             }
             
         }else{
-            console.log(`off schedule`);
+            console.log(`off schedule - desired_state: ${desired_state}`);
+            console.log(`onScheduleId - ${onScheduleId}`);
+            console.log(`offScheduleId - ${offScheduleId}`);
         }
         return result;
     },
