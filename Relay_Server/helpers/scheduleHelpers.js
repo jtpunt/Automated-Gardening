@@ -521,7 +521,13 @@ let scheduleHelpers = {
     deleteSchedule: function(schedule_id){
         console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this,
-            job  = self.getScheduleJobById(schedule_id);
+            job  = self.getScheduleJobById(schedule_id),
+            prevScheduleId = job.prevScheduleId,
+            nextScheduleId = job.nextScheduleId,
+            startScheduleId = job.startScheduleId,
+            endScheduleId   = job.endScheduleId;
+
+
 
         self.cancelSchedule(schedule_id);
 
@@ -533,126 +539,91 @@ let scheduleHelpers = {
             else{
                 try{
                     let schedules = [schedule_id];
-                    if(job.prevScheduleId){
-                        let prevScheduleId = job.prevScheduleId;
-                        console.log(`prevScheduleId: ${prevScheduleId}`);
-                        schedules.push(prevScheduleId);
+                    if(prevScheduleId){
 
-                        let onScheduleIndex = prevScheduleId;
-                        console.log(`Associated On Schedule Index Found: ${onScheduleIndex}`);
-
-  
-                        if(self.scheduleObj[onScheduleIndex]['schedule_config']['relational']['endScheduleId']){
-                            let endScheduleId = self.scheduleObj[onScheduleIndex]['schedule_config']['relational']['endScheduleId'];
-                            schedules.push(endScheduleId.toString());
+                        let prevJob = self.getScheduleJobById(prevScheduleId);
+                        if(prevJob){
+                            schedules.push(job.prevScheduleId.toString());
+                            if(self.doesScheduleExist(prevJob.endScheduleId)){
+                                schedules.push(prevJob.endScheduleId.toString());
+                            }
                         }
-                        if(self.scheduleObj[schedule_id].schedule_config['relational']['endScheduleId']){
+                        if(self.doesScheduleExist(job.endScheduleId)){
                             // end schedule wont have a set prev or next schedule
-                            let endScheduleId = self.scheduleObj[schedule_id].schedule_config['relational']['endScheduleId'];
-                            console.log(`endScheduleId: ${endScheduleId}`);
-                            schedules.push(endScheduleId.toString());
-                            // let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
-                            // console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
+                            console.log(`endScheduleId: ${job.endScheduleId}`);
+                            schedules.push(job.endScheduleId.toString());
 
                         }   
-                    }else if(self.scheduleObj[schedule_id].schedule_config['relational']['nextScheduleId']){
-                        let nextScheduleId = self.scheduleObj[schedule_id].schedule_config['relational']['nextScheduleId'];
-                        console.log(`nextScheduleId: ${nextScheduleId}`);
-                        console.log(`Associated Off Schedule Found`);
-                        schedules.push(nextScheduleId);
-
-                        let offScheduleIndex = nextScheduleId;
-                        console.log(`Associated Off Schedule Index Found: ${offScheduleIndex}`);
-                        
-                        if(self.scheduleObj[offScheduleIndex].schedule_config['relational']['endScheduleId']){
-                            let endScheduleId = self.scheduleObj[offScheduleIndex].schedule_config['relational']['endScheduleId'];
-                            schedules.push(endScheduleId.toString());
+                    }else if(nextScheduleId){
+                        let nextJob = self.getScheduleJobById(nextScheduleId);
+                        if(nextJob){
+                            schedules.push(nextScheduleId);
+                            if(self.doesScheduleExist(nextJob.endScheduleId)){
+                                schedules.push(nextJob.endScheduleId.toString());
+                            }
                         }
-                        if(self.scheduleObj[schedule_id].schedule_config['relational']['endScheduleId']){
+                        if(self.doesScheduleExist(job.endScheduleId)){
                             // end schedule wont have a set prev or next schedule
-                            let endScheduleId = self.scheduleObj[schedule_id].schedule_config['relational']['endScheduleId'];
-                            console.log(`endScheduleId: ${endScheduleId}`);
-                            schedules.push(endScheduleId);
-
-                            // let endScheduleIndex = self.findScheduleIndex(endScheduleId.toString());
-                            // console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
-                        }
-                    }else if(self.scheduleObj[schedule_id].schedule_config['relational']['startScheduleId']){
+                            console.log(`endScheduleId: ${job.endScheduleId}`);
+                            schedules.push(job.endScheduleId.toString());
+                        }   
+                    }else if(startScheduleId){
                         console.log(`Associated Start Schedule Found`);
-                        // start schedule wont have a set prev or next schedule since it would mess up a lot of functions in this file
-                        let startScheduleId = self.scheduleObj[schedule_id].schedule_config['relational']['startScheduleId'];
-                        console.log(`startScheduleId: ${startScheduleId}`);
-                        schedules.push(startScheduleId.toString());
-
-                        let startScheduleIndex = startScheduleId;
-                        console.log(`Associated Start Schedule Index Found: ${startScheduleIndex}`);
-                        // get the schedule associated with the startScheduleId
-                        // see if the schedule is associated with an on or off schedule
-                        // retrieve that on or off schedule if it exists and delete it       
-                        if(self.scheduleObj[startScheduleIndex].schedule_config['relational']['nextScheduleId']){
-                            // end schedule wont have a set prev or next schedule
-                            let nextScheduleId = self.scheduleObj[startScheduleIndex].schedule_config['relational']['nextScheduleId'];
-                            console.log(`nextScheduleId: ${nextScheduleId}`);
-                            schedules.push(nextScheduleId);
-
-                            let nextScheduleIndex = nextScheduleId;
-                            console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                            if(self.scheduleObj[nextScheduleIndex].schedule_config['relational']['endScheduleId']){
-                                let endScheduleId = self.scheduleObj[nextScheduleIndex].schedule_config['relational']['endScheduleId'];
-                                schedules.push(endScheduleId.toString());
+                        let startJob = self.getScheduleJobById(startScheduleId);
+                        if(startJob){
+                             // start schedule wont have a set prev or next schedule since it would mess up a lot of functions in this file
+                            console.log(`startScheduleId: ${startScheduleId}`);
+                            schedules.push(startScheduleId.toString());
+                            // get the schedule associated with the startScheduleId
+                            // see if the schedule is associated with an on or off schedule
+                            // retrieve that on or off schedule if it exists and delete it       
+                            if(startJob.nextScheduleId){
+                                let nextJob = self.getScheduleJobById(startJob.nextScheduleId);
+                                if(nextJob){
+                                    // end schedule wont have a set prev or next schedule
+                                    console.log(`nextScheduleId: ${startJob.nextScheduleId}`);
+                                    schedules.push(startJob.nextScheduleId.toString());
+                                    if(self.doesScheduleExist(nextJob.endScheduleId)){
+                                        schedules.push(nextJob.endScheduleId.toString());
+                                    }
+                                }
                             }
-                        }
-                        if(self.scheduleObj[startScheduleIndex].schedule_config['relational']['prevScheduleId']){
-                            // end schedule wont have a set prev or next schedule
-                            let prevScheduleId = self.scheduleObj[startScheduleIndex].schedule_config['relational']['prevScheduleId'];
-                            console.log(`endScheduleId: ${prevScheduleId}`);
-                            schedules.push(prevScheduleId);
-
-                            let prevScheduleIndex = prevScheduleId;
-                            console.log(`Associated End Schedule Index Found: ${prevScheduleIndex}`);
-                            if(self.scheduleObj[prevScheduleIndex].schedule_config['relational']['endScheduleId']){
-                                let endScheduleId = self.scheduleObj[prevScheduleIndex].schedule_config['relational']['endScheduleId'];
-                                schedules.push(endScheduleId.toString());
-                            }
-                        }
-                    }else if(self.scheduleObj[schedule_id].schedule_config['relational']['endScheduleId']){
-                        console.log(`Associated End Schedule Found`);
-                        // end schedule wont have a set prev or next schedule
-                        let endScheduleId = self.scheduleObj[schedule_id].schedule_config['relational']['endScheduleId'];
-                        console.log(`endScheduleId: ${endScheduleId}`);
-                        schedules.push(endScheduleId.toString());
-
-                        let endScheduleIndex = endScheduleId;
-                        console.log(`Associated End Schedule Index Found: ${endScheduleIndex}`);
-                    
-                        if(self.scheduleObj[endScheduleIndex].schedule_config['relational']['nextScheduleId']){
-                            // end schedule wont have a set prev or next schedule
-                            let nextScheduleId = self.scheduleObj[endScheduleIndex].schedule_config['relational']['nextScheduleId'];
-                            console.log(`endScheduleId: ${nextScheduleId}`);
-                            schedules.push(nextScheduleId);
-
-                            let nextScheduleIndex = nextScheduleId;
-                            console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                            if(self.scheduleObj[nextScheduleIndex].schedule_config['relational']['endScheduleId']){
-                                let endScheduleId = self.scheduleObj[startScheduleIndex].schedule_config['relational']['endScheduleId'];
-                                schedules.push(endScheduleId.toString());
-                            }
-                        }
-                        if(self.scheduleObj[endScheduleIndex].schedule_config['relational']['prevScheduleId']){
-                            // end schedule wont have a set prev or next schedule
-                            let prevScheduleId = self.scheduleObj[endScheduleIndex].schedule_config['relational']['prevScheduleId'];
-                            console.log(`endScheduleId: ${prevScheduleId}`);
-                            schedules.push(prevScheduleId);
-
-                            let prevScheduleIndex = prevScheduleId;
-                            console.log(`Associated End Schedule Index Found: ${nextScheduleIndex}`);
-                            if(self.scheduleObj[prevScheduleIndex].schedule_config['relational']['endScheduleId']){
-                                let endScheduleId = self.scheduleObj[prevScheduleIndex].schedule_config['relational']['endScheduleId'];
-                                schedules.push(endScheduleId.toString());
+                            if(startJob.prevScheduleId){
+                                let prevJob = self.getScheduleJobById(startJob.prevScheduleId);
+                                if(prevJob){
+                                    // end schedule wont have a set prev or next schedule
+                                    console.log(`endScheduleId: ${startJob.prevScheduleId}`);
+                                    schedules.push(startJob.prevScheduleId.toString());
+                                    if(self.doesScheduleExist(prevJob.endScheduleId)){
+                                        schedules.push(prevJob.endScheduleId.toString());
+                                    }
+                                }
                             }
                         }
 
+                    }else if(endScheduleId){
+                        let endJob = self.getScheduleJobById(endScheduleId);
+                        if(endJob){
+                            console.log(`Associated End Schedule Found`);
+                            schedules.push(endScheduleId.toString());
 
+                            let nextJob = self.getScheduleJobById(endJob.nextScheduleId),
+                                prevJob = self.getScheduleJobById(endJob.prevScheduleId);
+                            if(nextJob){
+                                console.log(`endScheduleId: ${endJob.nextScheduleId}`);
+                                schedules.push(endJob.nextScheduleId);
+                                if(self.doesScheduleExist(nextJob.endScheduleId())){
+                                    schedules.push(nextJob.endScheduleId.toString());
+                                }
+                            }
+                            if(prevJob){
+                                console.log(`endScheduleId: ${endJob.prevScheduleId}`);
+                                schedules.push(endJob.prevScheduleId.toString());
+                                if(self.doesScheduleExist(prevJob.endScheduleId)){
+                                    schedules.push(prevJob.endScheduleId.toString());
+                                }
+                            }
+                        }
                     }else{
                         console.log(`Unknown schedule found`);
 
