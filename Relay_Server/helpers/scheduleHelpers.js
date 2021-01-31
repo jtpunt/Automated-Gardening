@@ -313,7 +313,7 @@ let scheduleHelpers = {
                 console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
                 console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
                 if(off_schedule_timestamp < on_schedule_timestamp){
-                    off_schedule_timestamp.setDate(date.getDate() + 1);
+                    off_schedule_timestamp.setDate(off_schedule_timestamp.getDate() + 1);
                 }
                 if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
                     result = true;
