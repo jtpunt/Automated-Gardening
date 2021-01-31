@@ -59,9 +59,9 @@ let scheduleHelpers = {
                 console.log("nextScheduleId is undefined");
             else{
                 console.log(`nextScheduleId is not undefined - ${nextScheduleId}`);
-                let isScheduleActive = self.isScheduleActive(schedule_id, today);
-                    if(isScheduleActive === true)
-                        activateRelayFn.call(context, device_gpio, desired_state);
+                let isScheduleActive = self.scheduleIsActive(schedule_id, today);
+                if(isScheduleActive === true)
+                    activateRelayFn.call(context, device_gpio, desired_state);
             }
         }
     },
@@ -283,7 +283,7 @@ let scheduleHelpers = {
         console.log(`same day schedule ids: ${schedule_ids}`);
         schedule_ids.forEach(function(schedule_id){
             if(self.doesScheduleExist(schedule_id)){
-                let isScheduleConflicting = self.isScheduleActive(schedule_id, timestamp);
+                let isScheduleConflicting = self.scheduleIsActive(schedule_id, timestamp);
 
                 conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_id);
             }
@@ -295,7 +295,7 @@ let scheduleHelpers = {
     // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
     // the next_schedule_config object
     // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    isScheduleActive: function(schedule_id, timestamp){
+    scheduleIsActive: function(schedule_id, timestamp){
         let self   = this,
             result = false;
         
@@ -478,7 +478,7 @@ let scheduleHelpers = {
                         nextScheduleId = nextScheduleId.toString();
                         // schedule_id is the schedule we are trying to see is active or not
                         if(sched_id === schedule_id || nextScheduleId === schedule_id){
-                            let isScheduleActive = self.isScheduleActive(schedule_id, today);
+                            let isScheduleActive = self.scheduleIsActive(schedule_id, today);
                             if(isScheduleActive === true && desired_state === true){
                                 console.log("Schedule is active");
                                 console.log("Desired state is on");
