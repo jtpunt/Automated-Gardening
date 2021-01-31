@@ -95,10 +95,10 @@ class Schedule extends Relational{
             minute: this.minute,
             hour:   this.hour
         }
-        if(this.date)      obj.date      = this.date;
-        if(this.month)     obj.month     = this.month;
-        if(this.year)      obj.year      = this.year;
-        if(this.dayOfWeek) obj.dayOfWeek = this.dayOfWeek;
+        if(this.date !== null)  obj.date      = this.date; // date could be zero
+        if(this.month !== null) obj.month     = this.month; // month could be zero
+        if(this.year)           obj.year      = this.year;
+        if(this.dayOfWeek)      obj.dayOfWeek = this.dayOfWeek;
 
         return obj;
     }
