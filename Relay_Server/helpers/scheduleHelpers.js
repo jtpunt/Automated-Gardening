@@ -303,7 +303,7 @@ let scheduleHelpers = {
             desired_state      = on_schedule_config['device']['desired_state'],
             onScheduleId       = on_schedule_config['relational']['prevScheduleId'],
             offScheduleId      = on_schedule_config['relational']['nextScheduleId'];
-            
+        console.log(`in scheduleIsActive`);
         // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
         if(desired_state !== undefined && desired_state === true && onScheduleId === undefined && offScheduleId !== undefined){ // 'on' schedule
             console.log("Processing 'on' schedule");
@@ -318,6 +318,8 @@ let scheduleHelpers = {
                 console.log("Off Schedule not found!!");
             }
             
+        }else{
+            console.log(`invalid schedule`);
         }
         return result;
     },
