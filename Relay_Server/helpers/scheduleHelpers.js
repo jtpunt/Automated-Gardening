@@ -319,7 +319,7 @@ let scheduleHelpers = {
             }
             
         }else{
-            console.log(`off schedule - desired_state: ${desired_state}`);
+            console.log(`off schedule - desired_state: ${desired_state} - typeof - ${typeof desired_state}`);
             console.log(`onScheduleId - ${onScheduleId}`);
             console.log(`offScheduleId - ${offScheduleId}`);
         }
