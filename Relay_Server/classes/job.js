@@ -86,6 +86,7 @@ class Schedule extends Relational{
         this.#month     = schedule['month'];     // optional
         this.#year      = schedule['year'];      // optional
         this.#dayOfWeek = schedule['dayOfWeek']; // optional
+        console.log(`month? - ${this.month}`);
     }
     /*************************** Schedule GETTERS ***************************/
     get schedule(){
