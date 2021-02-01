@@ -92,7 +92,7 @@ var scheduleMethods = {
                 },
                 on_end_schedule_time = {
                     ... newSchedule['schedule']['end_date'],
-                    ... newSchedule['schedule']['start_time'] 
+                    ... newSchedule['schedule']['end_time']  
                 },
                 off_end_schedule_time = {
                     ... newSchedule['schedule']['end_date'],
@@ -101,8 +101,8 @@ var scheduleMethods = {
                 if(newSchedule['schedule']['dayOfWeek']){
                     on_start_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
                     off_end_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
-                    on_end_schedule_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
-                    off_end_schedule_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
+                    // on_end_schedule_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
+                    // off_end_schedule_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
                 }
                 let on_schedule = { // on schedule
                     ... newSchedule,
