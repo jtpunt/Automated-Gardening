@@ -252,10 +252,7 @@ let scheduleMiddleware = {
                 if(year >= MIN_YEAR){
                     validDate['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
-                    let scheduleTestDate = new Date(Date.UTC(year, month, date, hour, minute, second));  
-                    console.log(`hour: ${hour}`);
-                    console.log(`minute: ${minute}`);
-                    console.log(`second: ${second}`);
+                    let scheduleTestDate = new Date(Date.UTC(year, month, date));  
                     console.log("Date Obj: ", scheduleTestDate.toISOString());
                     console.log(`time hour: ${scheduleTestDate.getHours()}`);
                     // if(scheduleTestObj < today) 
