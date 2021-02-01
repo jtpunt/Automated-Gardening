@@ -232,8 +232,11 @@ let scheduleMiddleware = {
             }
             return validSchedule;
         }
-        let buildValidDate = function(dateObj){
+        let buildValidDate = function(dateObj, schedule){
             let validDate = {},
+                second    = sanitize_input(schedule['second']),
+                minute    = sanitize_input(schedule['minute']),
+                hour      = sanitize_input(schedule['hour']),
                 date      = sanitize_input(dateObj['date'])  || undefined,
                 month     = sanitize_input(dateObj['month']),
                 year      = Number(dateObj['year']) || undefined,
@@ -253,7 +256,7 @@ let scheduleMiddleware = {
                 if(year >= MIN_YEAR){
                     validDate['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
-                    let scheduleTestDate = new Date(year, month, date);  
+                    let scheduleTestDate = new Date(year, month, date, hour, minute, second);  
                     console.log(`scheduleTestObj: ${scheduleTestDate.toISOString()}`);
                     console.log(`today: ${today}`);
                     // if(scheduleTestObj < today) 
@@ -279,9 +282,9 @@ let scheduleMiddleware = {
             if(end_time)
                 schedule_config['schedule']['end_time'] = buildValidSchedule(end_time);
             if(start_date)
-                schedule_config['schedule']['start_date'] = buildValidDate(start_date);
+                schedule_config['schedule']['start_date'] = buildValidDate(start_date, start_time);
             if(end_date)
-                schedule_config['schedule']['end_date'] = buildValidDate(end_date);
+                schedule_config['schedule']['end_date'] = buildValidDate(end_date, end_time);
             console.log(`schedule_config before adding to req.body: ${JSON.stringify(schedule_config)}`);
             req.body = schedule_config;
             console.log(`req.body: ${JSON.stringify(req.body)}`);
