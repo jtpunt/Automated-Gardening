@@ -379,13 +379,13 @@ let scheduleHelpers = {
                             if(date >= 0 && month >= 0 && year){
                                 let today     = new Date(),
                                     timestamp = new Date(year, month, date, hour, minute, second);
-                                if(timestamp < today){
-                                    console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
-                                    delete schedule_config['schedule']['date'];
-                                    delete schedule_config['schedule']['month'];
-                                    delete schedule_config['schedule']['year'];
-                                    console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
-                                }
+                                // if(timestamp < today){
+                                //     console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
+                                //     delete schedule_config['schedule']['date'];
+                                //     delete schedule_config['schedule']['month'];
+                                //     delete schedule_config['schedule']['year'];
+                                //     console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
+                                // }
                             }
 
                             let jobArgs = startScheduleId ? 
