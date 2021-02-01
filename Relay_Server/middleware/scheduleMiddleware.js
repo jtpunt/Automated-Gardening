@@ -257,7 +257,7 @@ let scheduleMiddleware = {
                     validDate['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
                     let scheduleTestDate = new Date(year, month, date, hour, minute, second);  
-                    console.log(`scheduleTestObj: ${scheduleTestDate.toISOString()}`);
+                    console.log(`scheduleTestObj: ${scheduleTestDate}`);
                     console.log(`today: ${today}`);
                     // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
