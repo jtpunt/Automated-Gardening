@@ -401,6 +401,7 @@ let scheduleHelpers = {
 
                             self.scheduleObj[schedule_config['_id']] = job;
                             //console.log(`next invocation - ${self.getDateOfNextInvocation(schedule_config['_id'])}`);
+                        
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
                        
