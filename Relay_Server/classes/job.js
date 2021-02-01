@@ -204,7 +204,9 @@ var test = {
             second: 0,
             minute: 30,
             hour: 13,
-            dayOfWeek: [1, 3, 5]
+            date: 28,
+            month: 1,
+            year: 2021
         }
     },
     buildTestSchedule2: function(){
