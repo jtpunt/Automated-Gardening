@@ -135,7 +135,7 @@ class Job extends Schedule{
     constructor(schedule, relational, device, jobFunction){
         super(schedule, relational, device);
         this.jobFunction = jobFunction;
-        console.log(`job constructor Schedule - ${this.schedule}`);
+        console.log(`job constructor Schedule - ${JSON.stringify(this.schedule)}`);
         this.job = node_schedule.scheduleJob(this.schedule, this.jobFunction)
     }
     /*************************** Job METHODS ***************************/
