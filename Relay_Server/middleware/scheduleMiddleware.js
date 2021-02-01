@@ -242,15 +242,15 @@ let scheduleMiddleware = {
             // valid date based scheduling details
             if(date !== undefined && month !== undefined && year !== undefined){
                 if(date >= MIN_DATE && date <= MAX_DATE)
-                    validSchedule['date'] = date;
+                    validDate['date'] = date;
                 else 
                     throw new Error(`Date input must be >= ${MIN_DATE} or <= ${MAX_DATE}`);
                 if(month >= MIN_MONTH && month <= MAX_MONTH)
-                    validSchedule['month'] = month;
+                    validDate['month'] = month;
                 else 
                     throw new Error(`Month input must be >= ${MIN_MONTH} or <= ${MAX_MONTH}`);
                 if(year >= MIN_YEAR){
-                    validSchedule['year'] = year;
+                    validDate['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
                     let scheduleTestDate = new Date(Date.UTC(year, month, date, hour, minute, second));  
                     console.log(`hour: ${hour}`);
