@@ -92,7 +92,7 @@ var scheduleMethods = {
                 },
                 on_end_schedule_time = {
                     ... newSchedule['schedule']['end_date'],
-                    ... newSchedule['schedule']['end_time']  
+                    ... newSchedule['schedule']['start_time']  
                 },
                 off_end_schedule_time = {
                     ... newSchedule['schedule']['end_date'],
