@@ -254,8 +254,8 @@ let scheduleMiddleware = {
                     validDate['year'] = year;
                     //let scheduleTestDate = new Date(year, month, date, hour, minute, second, 0);
                     let scheduleTestDate = new Date(Date.UTC(year, month, date));  
-                    console.log("Date Obj: ", scheduleTestDate.toISOString());
-                    console.log(`time hour: ${scheduleTestDate.getHours()}`);
+                    console.log(`scheduleTestObj: ${scheduleTestDate.toISOString()}`);
+                    console.log(`today: ${today.toISOString()}`);
                     // if(scheduleTestObj < today) 
                     //     throw new Error("Schedule must occur in the future!");
                     // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
