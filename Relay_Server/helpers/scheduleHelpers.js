@@ -402,6 +402,7 @@ let scheduleHelpers = {
                             self.scheduleObj[schedule_config['_id']] = job;
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
+                        self.getDateOfNextInvocation(schedule_config['_id']);
                         self.startActiveSchedules(activateRelayFn, context);
                     }).catch(function(err){
                         console.log(`Error caught: ${err}`);
