@@ -369,6 +369,25 @@ let scheduleHelpers = {
                                 device_gpio     = schedule_config['device']['gpio'],
                                 desired_state   = schedule_config['device']['desired_state'];
 
+                            let second = schedule_config['schedule']['second'],
+                                minute = schedule_config['schedule']['minute'],
+                                hour   = schedule_config['schedule']['hour'],
+                                date   = schedule_config['schedule']['date'],
+                                month  = schedule_config['schedule']['month'],
+                                year   = schedule_config['schedule']['year'];
+
+                            if(date >= 0 && month >= 0 && year){
+                                let today     = new Date(),
+                                    timestamp = new Date(year, month, date, hour, minute, second);
+                                if(timestamp < today){
+                                    console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
+                                    delete schedule_config['schedule']['date'];
+                                    delete schedule_config['schedule']['month'];
+                                    delete schedule_config['schedule']['year'];
+                                    console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
+                                }
+                            }
+
                             let jobArgs = startScheduleId ? 
                                 [self.deleteSchedule, self, startScheduleId.toString()] :
                                 [activateRelayFn, context, device_gpio, desired_state];

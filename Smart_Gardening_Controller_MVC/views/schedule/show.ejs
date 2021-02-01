@@ -11,6 +11,9 @@
      *
      * if no matches are found, the device's GPIO is used by default
      */
+     	let timestamp = new Date(),
+     		timestampOptions = {hour: 'numeric', minute: 'numeric', second: 'numeric', hour12:true};
+     	timestamp.setHours(schedule['schedule']['hour'],schedule['schedule']['minute'],schedule['schedule']['second']);
 
         let matchFound = false;
         relaySettings.forEach(function(relaySetting){ 
@@ -30,17 +33,17 @@
 		}
 
 %>
-    		<td><%=schedule['schedule']['hour']%>:<%=schedule['schedule']['minute']%>:<%=schedule['schedule']['second']%></td>
+    		<td><%=timestamp.toLocaleString('en-us', timestampOptions)%></td>
 			<% 
 				if(schedule['schedule']['dayOfWeek'] && schedule['schedule']['dayOfWeek'].length) { 
 					schedule['schedule']['dayOfWeek'] = schedule['schedule']['dayOfWeek'].map(function(day){
 						switch(day){
-							case 0: return "S ";
-							case 1: return "M ";
+							case 0: return "S";
+							case 1: return "M";
 							case 2: return "T";
-							case 3: return "W ";
-							case 4: return "Th ";
-							case 5: return "F ";
+							case 3: return "W";
+							case 4: return "Th";
+							case 5: return "F";
 							case 6: return "S ";
 						}
 					})
@@ -53,7 +56,7 @@
 				} 
 			%>
 			<% 
-				if(schedule['schedule']['month'] && schedule['schedule']['date'] && schedule['schedule']['year']) { 
+				if(schedule['schedule']['month'] >= 0 && schedule['schedule']['date'] >= 0 && schedule['schedule']['year']) { 
 			%>
 				<td><%=schedule['schedule']['month']%>/<%=schedule['schedule']['date']%>/<%=schedule['schedule']['year']%></td>
 			<% 
