@@ -106,25 +106,25 @@ var scheduleMethods = {
                     // off_end_schedule_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
                 }
                 let on_schedule = { // on schedule
-                    ... newSchedule,
+                    // ... newSchedule,
                     schedule: on_start_time,
                     device: device_start,
                     relational: {}
                 },
                 off_schedule   = { // off schedule
-                    ... newSchedule, 
+                    // ... newSchedule, 
                     schedule: off_end_time,
                     device: device_end,
                     relational: {}
                 },
                 on_end_schedule = {
-                    ... newSchedule,
+                    // ... newSchedule,
                     schedule: on_end_schedule_time,
                     device: device_start,
                     relational: {}
                 },
                 off_end_schedule = {
-                    ... newSchedule,
+                    // ... newSchedule,
                     schedule: off_end_schedule_time,
                     device: device_end,
                     relational: {}
