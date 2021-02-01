@@ -21,7 +21,7 @@ let scheduleHelpers = {
         return this.scheduleObj[schedule_id].schedule_config;
     },
     getDateOfNextInvocation: function(schedule_id){
-        let job = th6is.getScheduleJobById(schedule_id);
+        let job = this.getScheduleJobById(schedule_id);
         if(!job) 
             return job;
         return job.nextInvocationDate;
@@ -400,8 +400,7 @@ let scheduleHelpers = {
                                 .build()
 
                             self.scheduleObj[schedule_config['_id']] = job;
-                            //console.log(`next invocation - ${self.getDateOfNextInvocation(schedule_config['_id'])}`);
-                        
+                            console.log(`next invocation - ${self.getDateOfNextInvocation(schedule_config['_id'])}`);
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
                        
