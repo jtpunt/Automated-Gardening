@@ -236,7 +236,8 @@ let scheduleMiddleware = {
             let validDate = {},
                 date      = sanitize_input(dateObj['date'])  || undefined,
                 month     = sanitize_input(dateObj['month']),
-                year      = Number(dateObj['year']) || undefined;
+                year      = Number(dateObj['year']) || undefined,
+                today     = new Date();
 
 
             // valid date based scheduling details
