@@ -99,6 +99,8 @@ var scheduleMethods = {
                     ... newSchedule['schedule']['end_date'],
                     ... newSchedule['schedule']['end_time'] 
                 }
+                console.log(`on_end_schedule_time: ${JSON.stringify(on_end_schedule_time)}`);
+                console.log(`off_end_schedule_time: ${JSON.stringify(off_end_schedule_time)}`);
                 if(newSchedule['schedule']['dayOfWeek']){
                     on_start_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
                     off_end_time['dayOfWeek'] = newSchedule['schedule']['dayOfWeek'];
@@ -129,6 +131,8 @@ var scheduleMethods = {
                     device: device_end,
                     relational: {}
                 }
+                console.log(`on_end_schedule: ${JSON.stringify(on_end_schedule)}`);
+                console.log(`off_end_schedule: ${JSON.stringify(off_end_schedule)}`);
                 let start_date = newSchedule['schedule']['start_date'],
                     end_date   = newSchedule['schedule']['end_date'];
 
