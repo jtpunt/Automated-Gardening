@@ -193,7 +193,7 @@ var scheduleMethods = {
                         on_end_schedule['relational']['startScheduleId'] = onScheduleId;
 
                         let on_end_schedule_args = [
-                            off_end_schedule, 
+                            on_end_schedule, 
                             scheduleHelper.deleteSchedule, 
                             scheduleHelper, 
                             onScheduleId
