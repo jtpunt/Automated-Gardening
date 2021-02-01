@@ -267,7 +267,6 @@ let scheduleMiddleware = {
                     }else{
                         console.log(`scheduleTestDate > today`);
                     }
-                    console.log(`scheduleObj: ${JSON.stringify(scheduleObj)}`);
                 }else 
                     throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
