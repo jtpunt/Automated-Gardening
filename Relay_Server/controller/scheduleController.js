@@ -122,13 +122,13 @@ var scheduleMethods = {
                 on_end_schedule = {
                     // ... newSchedule,
                     schedule: on_end_schedule_time,
-                    device: undefined,
+                    device: device_start,
                     relational: {}
                 },
                 off_end_schedule = {
                     // ... newSchedule,
                     schedule: off_end_schedule_time,
-                    device: undefined,
+                    device: device_end,
                     relational: {}
                 }
                 console.log(`on_end_schedule: ${JSON.stringify(on_end_schedule)}`);
