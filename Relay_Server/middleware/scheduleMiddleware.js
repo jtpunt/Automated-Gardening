@@ -174,7 +174,9 @@ let scheduleMiddleware = {
         let schedule_config = req.body,
             schedule        = schedule_config['schedule'],
             start_time      = schedule['start_time'],
-            end_time        = schedule['end_time'];
+            end_time        = schedule['end_time'],
+            start_date      = schedule['start_date'],
+            end_date        = schedule['end_date'];
 
         console.log(`req.body: ${JSON.stringify(req.body)}`);
         // if we use short circuit evaluation on schedule['second'] to assign a value, and if schedule['second'] is 0, then this value will be ignored
@@ -183,16 +185,13 @@ let scheduleMiddleware = {
         console.log(`in validateScheduleInputs with ${JSON.stringify(schedule)}`);
 
 
-        let buildSchedule = function(schedule){
+        let buildValidSchedule = function(schedule){
             if(schedule === undefined) return schedule;
             let validSchedule = {}
             const 
                 second    = sanitize_input(schedule['second']),
                 minute    = sanitize_input(schedule['minute']),
                 hour      = sanitize_input(schedule['hour']),
-                date      = Number(schedule['date'])  || undefined,
-                month     = sanitize_input(schedule['month']),
-                year      = Number(schedule['year']) || undefined,
                 dayOfWeek = (schedule['dayOfWeek']) ? Array.from(schedule['dayOfWeek']) : undefined,
                 today     = new Date();
             console.log(`Trying to validate schedule - ${second}`);
@@ -220,7 +219,6 @@ let scheduleMiddleware = {
                     throw new Error(`Minute input must be >= ${MIN_HOUR} or <= ${MAX_HOUR}`)
             }else 
                 throw new Error("Invalid hour input!");
-                
             // Validate Inputs for Day of Week Based Scheduling
             if(dayOfWeek !== undefined && dayOfWeek.length){
                 console.log(`validating dayOfWeek: ${dayOfWeek}`);
@@ -232,8 +230,17 @@ let scheduleMiddleware = {
                 });
                 validSchedule['dayOfWeek'] = dayOfWeekArr; 
             }
+            return validSchedule;
+        }
+        let buildValidDate = function(dateObj){
+            let validDate = {},
+                date      = sanitize_input(dateObj['date'])  || undefined,
+                month     = sanitize_input(dateObj['month']),
+                year      = Number(dateObj['year']) || undefined;
+
+
             // valid date based scheduling details
-            else if(date !== undefined && month !== undefined && year !== undefined){
+            if(date !== undefined && month !== undefined && year !== undefined){
                 if(date >= MIN_DATE && date <= MAX_DATE)
                     validSchedule['date'] = date;
                 else 
@@ -255,10 +262,10 @@ let scheduleMiddleware = {
                     //     throw new Error("Schedule must occur in the future!");
                     // if the schedule is past the start date, start it anyway. otherwise, an invalid cronjob will be created
                     if(scheduleTestDate < today){
-                        console.log(`scheduleTestDate < today`);
-                        delete scheduleObj['date'];
-                        delete scheduleObj['month'];
-                        delete scheduleObj['year'];
+                        throw new Error("ScheduleTestDate < today");
+                        // delete scheduleObj['date'];
+                        // delete scheduleObj['month'];
+                        // delete scheduleObj['year'];
                     }else{
                         console.log(`scheduleTestDate > today`);
                     }
@@ -266,13 +273,17 @@ let scheduleMiddleware = {
                 }else 
                     throw new Error(`Year input must be >= ${MIN_MONTH}  or <= ${MAX_MONTH}`);
             }
-            return validSchedule;
         }
+
         try{
             if(start_time)
-                schedule_config['schedule']['start_time'] = buildSchedule(start_time);
+                schedule_config['schedule']['start_time'] = buildValidSchedule(start_time);
             if(end_time)
-                schedule_config['schedule']['end_time'] = buildSchedule(end_time);
+                schedule_config['schedule']['end_time'] = buildValidSchedule(end_time);
+            if(start_date)
+                schedule_config['schedule']['start_date'] = buildValidDate(start_date);
+            if(end_date)
+                schedule_config['schedule']['end_date'] = buildValidDate(end_date);
             console.log(`schedule_config before adding to req.body: ${JSON.stringify(schedule_config)}`);
             req.body = schedule_config;
             console.log(`req.body: ${JSON.stringify(req.body)}`);
