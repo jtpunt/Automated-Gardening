@@ -401,6 +401,8 @@ let scheduleHelpers = {
                                     console.log(`timestamp: ${timestamp} - today: ${today}`);
                                     console.log(`timestamp > today? ${timestamp > today}`);
                                     console.log(`startScheduleId: ${startScheduleId} needs to be deleted`);
+                                    self.deleteSchedule(startScheduleId);
+                                    self.deleteSchedule(endScheduleId);
 
 
                                 }
