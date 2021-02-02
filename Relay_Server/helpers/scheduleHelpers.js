@@ -368,6 +368,7 @@ let scheduleHelpers = {
                             console.log(`schedule_config: ${schedule_config}`);
 
                             let startScheduleId = schedule_config['relational']['startScheduleId'],
+                                endScheduleId   = schedule_config['relational']['endScheduleId'],
                                 device_gpio     = schedule_config['device']['gpio'],
                                 desired_state   = schedule_config['device']['desired_state'];
 
@@ -388,6 +389,9 @@ let scheduleHelpers = {
                                     delete schedule_config['schedule']['month'];
                                     delete schedule_config['schedule']['year'];
                                     console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
+                                }
+                                if(endScheduleId){
+                                    console.log("Current date is passed the end schedule date, schedule needs to be deleted");
                                 }
                             }
 
