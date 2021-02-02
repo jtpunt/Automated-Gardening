@@ -385,20 +385,23 @@ let scheduleHelpers = {
                                     timestamp = new Date(year, month, date, hour, minute, second);
                                 // node-schedule cannot create jobs that are set for a date in the past
                                 // the quick fix is to remove the date, month and year attributes
-                                if(timestamp < today){
+                                if(startScheduleId && timestamp < today){
                                     console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
                                     delete schedule_config['schedule']['date'];
                                     delete schedule_config['schedule']['month'];
                                     delete schedule_config['schedule']['year'];
                                     console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
                                 }
-                                // end schedule
+                                // if the current date is passed the end schedule's timestamp, this means that the
+                                // the schedule set (prevSchedule, endSchedule, nextSchedule, endSchedule - processed in this order)
+                                // failed to be removed from the database, remove the end schedule and it's associated start schedule
+                                // from local memory and from mongo
                                 if(endScheduleId && timestamp < today){
                                     console.log("Current date is passed the end schedule date, schedule needs to be deleted");
                                     console.log(`timestamp: ${timestamp} - today: ${today}`);
                                     console.log(`timestamp > today? ${timestamp > today}`);
                                     console.log(`startScheduleId: ${startScheduleId} needs to be deleted`);
-                                    
+
 
                                 }
                             }
