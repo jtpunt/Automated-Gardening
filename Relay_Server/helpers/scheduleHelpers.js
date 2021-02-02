@@ -384,7 +384,7 @@ let scheduleHelpers = {
                                 let today     = new Date(),
                                     timestamp = new Date(year, month, date, hour, minute, second);
                                 //
-                                if(startScheduleId && timestamp < today){
+                                if(timestamp < today){
                                     console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
                                     delete schedule_config['schedule']['date'];
                                     delete schedule_config['schedule']['month'];
