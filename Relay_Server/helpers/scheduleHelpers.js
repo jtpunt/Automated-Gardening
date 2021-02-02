@@ -383,7 +383,8 @@ let scheduleHelpers = {
                             if(date >= 0 && month >= 0 && year){
                                 let today     = new Date(),
                                     timestamp = new Date(year, month, date, hour, minute, second);
-                                //
+                                // node-schedule cannot create jobs that are set for a date in the past
+                                // the quick fix is to remove the date, month and year attributes
                                 if(timestamp < today){
                                     console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
                                     delete schedule_config['schedule']['date'];
@@ -392,8 +393,10 @@ let scheduleHelpers = {
                                     console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
                                 }
                                 // end schedule
-                                if(endScheduleId && timestamp > today){
+                                if(endScheduleId){
                                     console.log("Current date is passed the end schedule date, schedule needs to be deleted");
+                                    console.log(`timestamp: ${timestamp} - today: ${today}`);
+                                    console.log(`timestamp > today? ${timestamp > today}`);
                                 }
                             }
 
