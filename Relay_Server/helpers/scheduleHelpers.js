@@ -390,7 +390,8 @@ let scheduleHelpers = {
                                     delete schedule_config['schedule']['year'];
                                     console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
                                 }
-                                if(endScheduleId){
+                                // end schedule
+                                if(endScheduleId && timestamp > today){
                                     console.log("Current date is passed the end schedule date, schedule needs to be deleted");
                                 }
                             }
