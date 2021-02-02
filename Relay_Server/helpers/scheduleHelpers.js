@@ -393,10 +393,13 @@ let scheduleHelpers = {
                                     console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
                                 }
                                 // end schedule
-                                if(endScheduleId){
+                                if(endScheduleId && timestamp < today){
                                     console.log("Current date is passed the end schedule date, schedule needs to be deleted");
                                     console.log(`timestamp: ${timestamp} - today: ${today}`);
                                     console.log(`timestamp > today? ${timestamp > today}`);
+                                    console.log(`startScheduleId: ${startScheduleId} needs to be deleted`);
+                                    
+
                                 }
                             }
 
