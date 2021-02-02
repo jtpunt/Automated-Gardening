@@ -303,19 +303,21 @@ let scheduleHelpers = {
             if(desired_state == true && offScheduleId){ // 'on' schedule
                 console.log("Processing 'on' schedule");
                 if(offScheduleId in this.scheduleObj){
-                    let activesToday = false;
+                    let activeToday = false;
                     let datebased_timestamp = new Date();
                     // check date, month, year, dayOfWeek
-                    // if(job.date && job.month && job.year){
-                    //     datebased_timestamp = new Date(job.year, job.month, job.date, job.hour, job.minute, job.second);
-                    // }
+                    if(job.date && job.month && job.year){
+                        datebased_timestamp = new Date(job.year, job.month, job.date, job.hour, job.minute, job.second);
+                        console.log(`datebased_timestamp: ${datebased_timestamp}`);
+                    }
+
                     if(job.dayOfWeek && job.dayOfWeek.length){
                         let numDay = datebased_timestamp.getDay();
                         if(job.dayOfWeek.includes(numDay)){
                             activesToday = true;
                         }
                     }
-                    if(activesToday){
+                    if(activeToday){
                         let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
                             off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
                         console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
@@ -369,6 +371,7 @@ let scheduleHelpers = {
                                 device_gpio     = schedule_config['device']['gpio'],
                                 desired_state   = schedule_config['device']['desired_state'];
 
+                            // should put this code in the job class
                             let second = schedule_config['schedule']['second'],
                                 minute = schedule_config['schedule']['minute'],
                                 hour   = schedule_config['schedule']['hour'],
