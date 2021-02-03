@@ -609,26 +609,6 @@ let scheduleHelpers = {
             self.deleteSchedule(endScheduleId);
             self.deleteSchedule(startScheduleId);
         }
-    },
-    deleteSchedules: function(...schedule_ids){
-        let self = this;
-
-        schedule_ids.forEach(function(schedule_id){
-           
-            Scheduler.findByIdAndRemove(schedule_id, (err) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                }
-                else{
-                    console.log("Canceling schedule");
-                    self.cancelSchedule(schedule_id);
-                    console.log("Back in deleteSchedules fn from cancelSchedule fn");
-                    delete self.scheduleObj[schedule_id];
-                    console.log(`Size of array: ${Object.keys(self.scheduleObj).length}`);
-                }
-            });
-        });
     }
 }
 module.exports = scheduleHelpers;
