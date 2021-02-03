@@ -599,7 +599,7 @@ let scheduleHelpers = {
                 throw err;
             }
             else{
-                try{
+                // try{
                     // let schedules = [schedule_id];
                     // if(prevScheduleId){
 
