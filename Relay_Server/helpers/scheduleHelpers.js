@@ -690,20 +690,19 @@ let scheduleHelpers = {
 
                     // }
                     console.log(`associated schedules found: ${schedules.toString()}`);
-                    self.scheduleObj[schedule_id]['job'].cancel();
                     console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
                     delete self.scheduleObj[schedule_id];
                     console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
                 }
-                catch(err){
-                    console.log(`Error: ${err.toString()}`);
+                // catch(err){
+                //     console.log(`Error: ${err.toString()}`);
 
-                    self.scheduleObj[schedule_id]['job'].cancel();
-                    console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
-                    delete self.scheduleObj[schedule_id];
+                //     self.scheduleObj[schedule_id]['job'].cancel();
+                //     console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
+                //     delete self.scheduleObj[schedule_id];
 
-                    console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
-                }
+                //     console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
+                // }
                 
                 // }else{
 
