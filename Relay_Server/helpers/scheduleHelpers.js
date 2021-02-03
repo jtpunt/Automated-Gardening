@@ -609,113 +609,125 @@ let scheduleHelpers = {
             self.deleteSchedule(endScheduleId);
             self.deleteSchedule(startScheduleId);
         }
+    },
+    deleteSchedules: function(...schedule_ids){
+        let self = this;
+
+        schedule_ids.forEach(function(schedule_id){
+           
+            Scheduler.findByIdAndRemove(schedule_id, (err) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                }
+                else{
+                    console.log("Canceling schedule");
+                    self.cancelSchedule(schedule_id);
+                    console.log("Back in deleteSchedules fn from cancelSchedule fn");
+                    delete self.scheduleObj[schedule_id];
+                    console.log(`Size of array: ${Object.keys(self.scheduleObj).length}`);
+                }
+            });
+        });
+    },
+    getScheduleSet: function(schedule_id){
+        let self = this,
+            job  = self.getScheduleJobById(schedule_id);
+            prevScheduleId = job.prevScheduleId,
+            nextScheduleId = job.nextScheduleId,
+            startScheduleId = job.startScheduleId,
+            endScheduleId   = job.endScheduleId,
+            schedules = [schedule_id];
+
+        if(prevScheduleId){
+
+            let prevJob = self.getScheduleJobById(prevScheduleId);
+            if(prevJob){
+                schedules.push(job.prevScheduleId.toString());
+                if(self.doesScheduleExist(prevJob.endScheduleId)){
+                    schedules.push(prevJob.endScheduleId.toString());
+                }
+            }
+            if(self.doesScheduleExist(job.endScheduleId)){
+                // end schedule wont have a set prev or next schedule
+                console.log(`endScheduleId: ${job.endScheduleId}`);
+                schedules.push(job.endScheduleId.toString());
+
+            }   
+        }else if(nextScheduleId){
+            let nextJob = self.getScheduleJobById(nextScheduleId);
+            if(nextJob){
+                schedules.push(nextScheduleId);
+                if(self.doesScheduleExist(nextJob.endScheduleId)){
+                    schedules.push(nextJob.endScheduleId.toString());
+                }
+            }
+            if(self.doesScheduleExist(job.endScheduleId)){
+                // end schedule wont have a set prev or next schedule
+                console.log(`endScheduleId: ${job.endScheduleId}`);
+                schedules.push(job.endScheduleId.toString());
+            }   
+        }else if(startScheduleId){
+            console.log(`Associated Start Schedule Found`);
+            let startJob = self.getScheduleJobById(startScheduleId);
+            if(startJob){
+                 // start schedule wont have a set prev or next schedule since it would mess up a lot of functions in this file
+                console.log(`startScheduleId: ${startScheduleId}`);
+                schedules.push(startScheduleId.toString());
+                // get the schedule associated with the startScheduleId
+                // see if the schedule is associated with an on or off schedule
+                // retrieve that on or off schedule if it exists and delete it       
+                if(startJob.nextScheduleId){
+                    let nextJob = self.getScheduleJobById(startJob.nextScheduleId);
+                    if(nextJob){
+                        // end schedule wont have a set prev or next schedule
+                        console.log(`nextScheduleId: ${startJob.nextScheduleId}`);
+                        schedules.push(startJob.nextScheduleId.toString());
+                        if(self.doesScheduleExist(nextJob.endScheduleId)){
+                            schedules.push(nextJob.endScheduleId.toString());
+                        }
+                    }
+                }
+                if(startJob.prevScheduleId){
+                    let prevJob = self.getScheduleJobById(startJob.prevScheduleId);
+                    if(prevJob){
+                        // end schedule wont have a set prev or next schedule
+                        console.log(`endScheduleId: ${startJob.prevScheduleId}`);
+                        schedules.push(startJob.prevScheduleId.toString());
+                        if(self.doesScheduleExist(prevJob.endScheduleId)){
+                            schedules.push(prevJob.endScheduleId.toString());
+                        }
+                    }
+                }
+            }
+
+        }else if(endScheduleId){
+            let endJob = self.getScheduleJobById(endScheduleId);
+            if(endJob){
+                console.log(`Associated End Schedule Found`);
+                schedules.push(endScheduleId.toString());
+
+                let nextJob = self.getScheduleJobById(endJob.nextScheduleId),
+                    prevJob = self.getScheduleJobById(endJob.prevScheduleId);
+                if(nextJob){
+                    console.log(`endScheduleId: ${endJob.nextScheduleId}`);
+                    schedules.push(endJob.nextScheduleId);
+                    if(self.doesScheduleExist(nextJob.endScheduleId())){
+                        schedules.push(nextJob.endScheduleId.toString());
+                    }
+                }
+                if(prevJob){
+                    console.log(`endScheduleId: ${endJob.prevScheduleId}`);
+                    schedules.push(endJob.prevScheduleId.toString());
+                    if(self.doesScheduleExist(prevJob.endScheduleId)){
+                        schedules.push(prevJob.endScheduleId.toString());
+                    }
+                }
+            }
+        }else{
+            console.log(`Unknown schedule found`);
+        }
+        return schedules;
     }
 }
 module.exports = scheduleHelpers;
-
-
- // try{
-                    // let schedules = [schedule_id];
-                    // if(prevScheduleId){
-
-                    //     let prevJob = self.getScheduleJobById(prevScheduleId);
-                    //     if(prevJob){
-                    //         schedules.push(job.prevScheduleId.toString());
-                    //         if(self.doesScheduleExist(prevJob.endScheduleId)){
-                    //             schedules.push(prevJob.endScheduleId.toString());
-                    //         }
-                    //     }
-                    //     if(self.doesScheduleExist(job.endScheduleId)){
-                    //         // end schedule wont have a set prev or next schedule
-                    //         console.log(`endScheduleId: ${job.endScheduleId}`);
-                    //         schedules.push(job.endScheduleId.toString());
-
-                    //     }   
-                    // }else if(nextScheduleId){
-                    //     let nextJob = self.getScheduleJobById(nextScheduleId);
-                    //     if(nextJob){
-                    //         schedules.push(nextScheduleId);
-                    //         if(self.doesScheduleExist(nextJob.endScheduleId)){
-                    //             schedules.push(nextJob.endScheduleId.toString());
-                    //         }
-                    //     }
-                    //     if(self.doesScheduleExist(job.endScheduleId)){
-                    //         // end schedule wont have a set prev or next schedule
-                    //         console.log(`endScheduleId: ${job.endScheduleId}`);
-                    //         schedules.push(job.endScheduleId.toString());
-                    //     }   
-                    // }else if(startScheduleId){
-                    //     console.log(`Associated Start Schedule Found`);
-                    //     let startJob = self.getScheduleJobById(startScheduleId);
-                    //     if(startJob){
-                    //          // start schedule wont have a set prev or next schedule since it would mess up a lot of functions in this file
-                    //         console.log(`startScheduleId: ${startScheduleId}`);
-                    //         schedules.push(startScheduleId.toString());
-                    //         // get the schedule associated with the startScheduleId
-                    //         // see if the schedule is associated with an on or off schedule
-                    //         // retrieve that on or off schedule if it exists and delete it       
-                    //         if(startJob.nextScheduleId){
-                    //             let nextJob = self.getScheduleJobById(startJob.nextScheduleId);
-                    //             if(nextJob){
-                    //                 // end schedule wont have a set prev or next schedule
-                    //                 console.log(`nextScheduleId: ${startJob.nextScheduleId}`);
-                    //                 schedules.push(startJob.nextScheduleId.toString());
-                    //                 if(self.doesScheduleExist(nextJob.endScheduleId)){
-                    //                     schedules.push(nextJob.endScheduleId.toString());
-                    //                 }
-                    //             }
-                    //         }
-                    //         if(startJob.prevScheduleId){
-                    //             let prevJob = self.getScheduleJobById(startJob.prevScheduleId);
-                    //             if(prevJob){
-                    //                 // end schedule wont have a set prev or next schedule
-                    //                 console.log(`endScheduleId: ${startJob.prevScheduleId}`);
-                    //                 schedules.push(startJob.prevScheduleId.toString());
-                    //                 if(self.doesScheduleExist(prevJob.endScheduleId)){
-                    //                     schedules.push(prevJob.endScheduleId.toString());
-                    //                 }
-                    //             }
-                    //         }
-                    //     }
-
-                    // }else if(endScheduleId){
-                    //     let endJob = self.getScheduleJobById(endScheduleId);
-                    //     if(endJob){
-                    //         console.log(`Associated End Schedule Found`);
-                    //         schedules.push(endScheduleId.toString());
-
-                    //         let nextJob = self.getScheduleJobById(endJob.nextScheduleId),
-                    //             prevJob = self.getScheduleJobById(endJob.prevScheduleId);
-                    //         if(nextJob){
-                    //             console.log(`endScheduleId: ${endJob.nextScheduleId}`);
-                    //             schedules.push(endJob.nextScheduleId);
-                    //             if(self.doesScheduleExist(nextJob.endScheduleId())){
-                    //                 schedules.push(nextJob.endScheduleId.toString());
-                    //             }
-                    //         }
-                    //         if(prevJob){
-                    //             console.log(`endScheduleId: ${endJob.prevScheduleId}`);
-                    //             schedules.push(endJob.prevScheduleId.toString());
-                    //             if(self.doesScheduleExist(prevJob.endScheduleId)){
-                    //                 schedules.push(prevJob.endScheduleId.toString());
-                    //             }
-                    //         }
-                    //     }
-                    // }else{
-                    //     console.log(`Unknown schedule found`);
-
-                    // }
-                    // console.log(`associated schedules found: ${schedules.toString()}`);
-                    // console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
-                    // delete self.scheduleObj[schedule_id];
-                    // console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
-                // }
-                // catch(err){
-                //     console.log(`Error: ${err.toString()}`);
-
-                //     self.scheduleObj[schedule_id]['job'].cancel();
-                //     console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
-                //     delete self.scheduleObj[schedule_id];
-
-                //     console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
-                // }
