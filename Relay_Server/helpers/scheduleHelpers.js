@@ -723,7 +723,7 @@ let scheduleHelpers = {
             self.deleteSchedule(endScheduleId);
             self.deleteSchedule(startScheduleId);
         }
-    }
+    },
     deleteSchedules: function(...schedule_ids){
         let self = this;
 
