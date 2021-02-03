@@ -82,11 +82,8 @@ let scheduleHelpers = {
         }
         
     },
-    createSchedule: async function(new_schedule_config, fn, context, ...args){
+    createSchedule: async function(new_schedule_config, ...jobArgs){
         let self            = this,
-            device_gpio     = new_schedule_config['device']['gpio'],
-            desired_state   = new_schedule_config['device']['desired_state'],
-            jobArgs         = [fn, context, ...args, device_gpio, desired_state],
             job             = new JobBuilder()
                 .withSchedule(new_schedule_config['schedule'])
                 .withRelational(new_schedule_config['relational'])
@@ -304,19 +301,14 @@ let scheduleHelpers = {
                 console.log("Processing 'on' schedule");
                 if(offScheduleId in this.scheduleObj){
                     let activeToday = false;
-                    let datebased_timestamp = new Date();
-                    // check date, month, year, dayOfWeek
-                    if(job.date && job.month && job.year){
-                        datebased_timestamp = new Date(job.year, job.month, job.date, job.hour, job.minute, job.second);
-                        console.log(`datebased_timestamp: ${datebased_timestamp}`);
-                    }
-
+                    // checking date, month, and year is not needed. getSchedules fn will remove these 3 attributes
+                    // if that schedule's timestamp is past today's date. This is added to create a valid node-schedule job,
+                    // since you cannot create a node-schedule job within the past
                     if(job.dayOfWeek && job.dayOfWeek.length){
                         let numDay = datebased_timestamp.getDay();
-                        if(job.dayOfWeek.includes(numDay)){
+                        if(job.dayOfWeek.includes(numDay))
                             activeToday = true;
-                        }
-                    }else{
+                    }else{ // regular everyday schedule detected
                         activeToday = true;
                     }
                     if(activeToday){
