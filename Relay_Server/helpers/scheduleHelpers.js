@@ -403,8 +403,8 @@ let scheduleHelpers = {
                                     console.log(`timestamp > today? ${timestamp > today}`);
                                     console.log(`startScheduleId: ${startScheduleId} needs to be deleted`);
                                     console.log(`current schedule: ${schedule_config['_id']} needs to be deleted!`);
-                                    // self.deleteSchedule(startScheduleId);
-                                    // self.deleteSchedule(endScheduleId);
+                                    self.deleteSchedule(startScheduleId);
+                                    self.deleteSchedule(schedule_config['_id']);
 
 
                                 }
