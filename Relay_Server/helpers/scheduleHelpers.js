@@ -582,7 +582,7 @@ let scheduleHelpers = {
     deleteSchedule: function(schedule_id){
         console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this,
-            job  = self.getScheduleJobById(schedule_id),
+            job  = self.getScheduleJobById(schedule_id);
             // prevScheduleId = job.prevScheduleId,
             // nextScheduleId = job.nextScheduleId,
             // startScheduleId = job.startScheduleId,
