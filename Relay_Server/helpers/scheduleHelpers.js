@@ -453,10 +453,10 @@ let scheduleHelpers = {
             updated_device        = updated_schedule_config['device'],
             updated_schedule      = updated_schedule_config['schedule'],
             updated_relational    = updated_schedule_config['relational'],
-            updated_device_gpio   = updated_device['device']['gpio'],
-            updated_desired_state = updated_device['device']['desired_state']
-            onScheduleId          = updated_relational['relational']['prevScheduleId'],
-            offScheduleId         = updated_relational['relational']['nextScheduleId'],
+            updated_device_gpio   = updated_device['gpio'],
+            updated_desired_state = updated_device['desired_state']
+            onScheduleId          = updated_relational['prevScheduleId'],
+            offScheduleId         = updated_relational['nextScheduleId'],
             job                   = self.getScheduleJobById(schedule_id);
         if(!job){
             console.log(`job is null`);
