@@ -721,7 +721,7 @@ let scheduleHelpers = {
         if(job){
             let endScheduleId = job.endScheduleId;
             self.deleteSchedule(endScheduleId);
-            setTimeout(self.deleteSchedule(startScheduleId, 1000)); // wait for the job at startScheduleId to turn the outlet off before deleting it
+            setTimeout(self.deleteSchedule(startScheduleId), 1000); // wait for the job at startScheduleId to turn the outlet off before deleting it
             //self.deleteSchedule(startScheduleId);
         }
     },
