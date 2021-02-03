@@ -716,7 +716,7 @@ let scheduleHelpers = {
     },
     deleteStartAndEndSchedules(startScheduleId){
         let self = this,
-            job  = self.getScheduleJobById(schedule_id);
+            job  = self.getScheduleJobById(startScheduleId);
 
         if(job){
             let endScheduleId = job.endScheduleId;
