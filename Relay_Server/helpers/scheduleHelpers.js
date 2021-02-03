@@ -383,9 +383,10 @@ let scheduleHelpers = {
                             if(date >= 0 && month >= 0 && year){
                                 let today     = new Date(),
                                     timestamp = new Date(year, month, date, hour, minute, second);
+
                                 // node-schedule cannot create jobs that are set for a date in the past
                                 // the quick fix is to remove the date, month and year attributes
-                                if(startScheduleId && timestamp < today){
+                                if(endScheduleId && timestamp < today){ // we processing a start schedule
                                     console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
                                     delete schedule_config['schedule']['date'];
                                     delete schedule_config['schedule']['month'];
@@ -396,13 +397,13 @@ let scheduleHelpers = {
                                 // the schedule set (prevSchedule, endSchedule, nextSchedule, endSchedule - processed in this order)
                                 // failed to be removed from the database, remove the end schedule and it's associated start schedule
                                 // from local memory and from mongo
-                                if(endScheduleId && timestamp < today){
+                                if(startScheduleId && timestamp < today){ // we are processing an end schedule
                                     console.log("Current date is passed the end schedule date, schedule needs to be deleted");
                                     console.log(`timestamp: ${timestamp} - today: ${today}`);
                                     console.log(`timestamp > today? ${timestamp > today}`);
                                     console.log(`startScheduleId: ${startScheduleId} needs to be deleted`);
-                                    self.deleteSchedule(startScheduleId);
-                                    self.deleteSchedule(endScheduleId);
+                                    // self.deleteSchedule(startScheduleId);
+                                    // self.deleteSchedule(endScheduleId);
 
 
                                 }
