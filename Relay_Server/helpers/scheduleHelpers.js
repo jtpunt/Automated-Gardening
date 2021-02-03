@@ -69,15 +69,19 @@ let scheduleHelpers = {
         if(!job){
             console.log("Schedule config is NULL");
         }else{
-            let jobArgs = [fn, context, job.gpio, job.desired_state],
-                job     = new JobBuilder()
+            let restartSchedule = job.rescheduleJob;
+            // did the job not get registered as new again and restart?
+            if(!restartSchedule){ 
+                let jobArgs = [fn, context, job.gpio, job.desired_state],
+                    job     = new JobBuilder()
                     .withSchedule(job.schedule)
                     .withRelational(job.relational)
                     .withDevice(job.device)
                     .withJobFunction(...jobArgs)
                     .build()
 
-            self.scheduleObj[schedule_id] = job;
+                self.scheduleObj[schedule_id] = job;
+            }
             self.startActiveSchedules(activateRelayFn, context);
         }
         
@@ -609,26 +613,6 @@ let scheduleHelpers = {
             self.deleteSchedule(endScheduleId);
             self.deleteSchedule(startScheduleId);
         }
-    },
-    deleteSchedules: function(...schedule_ids){
-        let self = this;
-
-        schedule_ids.forEach(function(schedule_id){
-           
-            Scheduler.findByIdAndRemove(schedule_id, (err) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                }
-                else{
-                    console.log("Canceling schedule");
-                    self.cancelSchedule(schedule_id);
-                    console.log("Back in deleteSchedules fn from cancelSchedule fn");
-                    delete self.scheduleObj[schedule_id];
-                    console.log(`Size of array: ${Object.keys(self.scheduleObj).length}`);
-                }
-            });
-        });
     },
     getScheduleSet: function(schedule_id){
         let self = this,
