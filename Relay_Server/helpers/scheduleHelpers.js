@@ -690,7 +690,7 @@ let scheduleHelpers = {
                     //     console.log(`Unknown schedule found`);
 
                     // }
-                    console.log(`associated schedules found: ${schedules.toString()}`);
+                    // console.log(`associated schedules found: ${schedules.toString()}`);
                     console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
                     delete self.scheduleObj[schedule_id];
                     console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
