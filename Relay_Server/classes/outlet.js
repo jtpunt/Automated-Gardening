@@ -1,4 +1,5 @@
 const Gpio = require('onoff').Gpio;
+//https://www.npmjs.com/package/onoff
 class RelaySettings{
 	#relayId
 	#direction
@@ -23,7 +24,12 @@ class RelaySettings{
 	get relayType(){
 		return this.#relayType;
 	}
-	
+	set gpio(gpio){
+		this.#gpio = gpio;
+	}
+	set direction(direction){
+		this.#direction = direction;
+	}
 }
 class Outlet extends RelaySettings{
 	#outlet
@@ -56,6 +62,12 @@ class Outlet extends RelaySettings{
 			if(initialState) desired_state ^= 1;
 			this.outlet.writeSync(desired_state);
 		}
+	}
 
+	updateOutlet(gpio, direction){
+		this.outlet.unexport();
+		this.gpio = gpio;
+		this.direction = direction;
+		this.outlet = new Gpio(this.gpio, this.direction);
 	}
 }
