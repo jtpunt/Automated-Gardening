@@ -714,6 +714,16 @@ let scheduleHelpers = {
             }
         });
     },
+    deleteStartAndEndSchedules(startScheduleId){
+        let self = this,
+            job  = self.getScheduleJobById(schedule_id);
+
+        if(job){
+            let endScheduleId = job.endScheduleId;
+            self.deleteSchedule(endScheduleId);
+            self.deleteSchedule(startScheduleId);
+        }
+    }
     deleteSchedules: function(...schedule_ids){
         let self = this;
 

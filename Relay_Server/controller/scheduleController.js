@@ -172,7 +172,7 @@ var scheduleMethods = {
 
                         let off_end_schedule_args = [
                             off_end_schedule, 
-                            scheduleHelper.deleteSchedule, 
+                            scheduleHelper.deleteStartAndEndSchedules, 
                             scheduleHelper, 
                             offScheduleId
                         ]
@@ -194,7 +194,7 @@ var scheduleMethods = {
 
                         let on_end_schedule_args = [
                             on_end_schedule, 
-                            scheduleHelper.deleteSchedule, 
+                            scheduleHelper.deleteStartAndEndSchedules, 
                             scheduleHelper, 
                             onScheduleId
                         ]
