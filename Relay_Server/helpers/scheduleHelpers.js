@@ -721,7 +721,7 @@ let scheduleHelpers = {
         if(job){
             let endScheduleId = job.endScheduleId;
             self.deleteSchedule(endScheduleId);
-            let deleteFn =  function(){ deleteSchedule.call(self, startScheduleId); };
+            let deleteFn =  function(){ self.deleteSchedule.call(self, startScheduleId); };
             // calling just self.deleteSchedule within self.timeout will result in an error - callback must be a function
             setTimeout(deleteFn, 1000); // wait for the job at startScheduleId to turn the outlet off before deleting it
             //self.deleteSchedule(startScheduleId);
