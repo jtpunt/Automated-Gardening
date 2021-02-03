@@ -589,8 +589,9 @@ let scheduleHelpers = {
             // endScheduleId   = job.endScheduleId;
 
 
-
-        self.cancelSchedule(schedule_id);
+        if(job !== undefined){ // has the job been processed to local memory?
+            self.cancelSchedule(schedule_id);
+        }
 
         Scheduler.findByIdAndRemove(schedule_id, (err) => {
             if(err){
