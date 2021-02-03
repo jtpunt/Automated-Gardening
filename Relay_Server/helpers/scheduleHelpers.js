@@ -585,18 +585,56 @@ let scheduleHelpers = {
             // startScheduleId = job.startScheduleId,
             // endScheduleId   = job.endScheduleId;
 
-
-        if(job !== undefined){ // has the job been processed to local memory?
-            self.cancelSchedule(schedule_id);
-        }
-
         Scheduler.findByIdAndRemove(schedule_id, (err) => {
             if(err){
                 console.log(err);
                 throw err;
             }
             else{
-                // try{
+                if(job !== undefined){ // has the job been processed to local memory?
+                    self.cancelSchedule(schedule_id);
+                }
+                console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
+                delete self.scheduleObj[schedule_id];
+                console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
+            }
+        });
+    },
+    deleteStartAndEndSchedules(startScheduleId){
+        let self = this,
+            job  = self.getScheduleJobById(startScheduleId);
+
+        if(job){
+            let endScheduleId = job.endScheduleId;
+            self.deleteSchedule(endScheduleId);
+            self.deleteSchedule(startScheduleId);
+        }
+    },
+    deleteSchedules: function(...schedule_ids){
+        let self = this;
+
+        schedule_ids.forEach(function(schedule_id){
+           
+            Scheduler.findByIdAndRemove(schedule_id, (err) => {
+                if(err){
+                    console.log(err);
+                    throw err;
+                }
+                else{
+                    console.log("Canceling schedule");
+                    self.cancelSchedule(schedule_id);
+                    console.log("Back in deleteSchedules fn from cancelSchedule fn");
+                    delete self.scheduleObj[schedule_id];
+                    console.log(`Size of array: ${Object.keys(self.scheduleObj).length}`);
+                }
+            });
+        });
+    }
+}
+module.exports = scheduleHelpers;
+
+
+ // try{
                     // let schedules = [schedule_id];
                     // if(prevScheduleId){
 
@@ -688,9 +726,9 @@ let scheduleHelpers = {
 
                     // }
                     // console.log(`associated schedules found: ${schedules.toString()}`);
-                    console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
-                    delete self.scheduleObj[schedule_id];
-                    console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
+                    // console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
+                    // delete self.scheduleObj[schedule_id];
+                    // console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
                 // }
                 // catch(err){
                 //     console.log(`Error: ${err.toString()}`);
@@ -701,48 +739,3 @@ let scheduleHelpers = {
 
                 //     console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
                 // }
-                
-                // }else{
-
-                    // check to see if the schedule is currently active
-
-                    // self.scheduleArr[index]['job'].cancel();
-                    // console.log(`Size of array Before removal: ${self.scheduleArr.length}`);
-                    // self.scheduleArr.splice(index, 1);
-                    // console.log(`Size of array after removal: ${self.scheduleArr.length}`);
-                // }
-            }
-        });
-    },
-    deleteStartAndEndSchedules(startScheduleId){
-        let self = this,
-            job  = self.getScheduleJobById(startScheduleId);
-
-        if(job){
-            let endScheduleId = job.endScheduleId;
-            self.deleteSchedule(endScheduleId);
-            self.deleteSchedule(startScheduleId);
-        }
-    },
-    deleteSchedules: function(...schedule_ids){
-        let self = this;
-
-        schedule_ids.forEach(function(schedule_id){
-           
-            Scheduler.findByIdAndRemove(schedule_id, (err) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                }
-                else{
-                    console.log("Canceling schedule");
-                    self.cancelSchedule(schedule_id);
-                    console.log("Back in deleteSchedules fn from cancelSchedule fn");
-                    delete self.scheduleObj[schedule_id];
-                    console.log(`Size of array: ${Object.keys(self.scheduleObj).length}`);
-                }
-            });
-        });
-    }
-}
-module.exports = scheduleHelpers;
