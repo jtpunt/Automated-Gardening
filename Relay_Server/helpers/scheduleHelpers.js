@@ -367,7 +367,8 @@ let scheduleHelpers = {
                         schedule_configs.forEach(function(schedule_config){
                             console.log(`schedule_config: ${schedule_config}`);
 
-                            let startScheduleId = schedule_config['relational']['startScheduleId'],
+                            let continueWithBuild = true,
+                                startScheduleId = schedule_config['relational']['startScheduleId'],
                                 endScheduleId   = schedule_config['relational']['endScheduleId'],
                                 device_gpio     = schedule_config['device']['gpio'],
                                 desired_state   = schedule_config['device']['desired_state'];
@@ -406,23 +407,25 @@ let scheduleHelpers = {
                                     self.deleteSchedule(startScheduleId);
                                     self.deleteSchedule(schedule_config['_id']);
 
-
+                                    continueWithBuild = false;
                                 }
                             }
+                            if(continueWithBuild){
+                                let jobArgs = startScheduleId ? 
+                                    [self.deleteSchedule, self, startScheduleId.toString()] :
+                                    [activateRelayFn, context, device_gpio, desired_state];
 
-                            let jobArgs = startScheduleId ? 
-                                [self.deleteSchedule, self, startScheduleId.toString()] :
-                                [activateRelayFn, context, device_gpio, desired_state];
+                                let job = new JobBuilder()
+                                    .withSchedule(schedule_config['schedule'])
+                                    .withRelational(schedule_config['relational'])
+                                    .withDevice(schedule_config['device'])
+                                    .withJobFunction(...jobArgs)
+                                    .build()
 
-                            let job = new JobBuilder()
-                                .withSchedule(schedule_config['schedule'])
-                                .withRelational(schedule_config['relational'])
-                                .withDevice(schedule_config['device'])
-                                .withJobFunction(...jobArgs)
-                                .build()
-
-                            self.scheduleObj[schedule_config['_id']] = job;
-                            console.log(`next invocation - ${self.getDateOfNextInvocation(schedule_config['_id'])}`);
+                                self.scheduleObj[schedule_config['_id']] = job;
+                                console.log(`next invocation - ${self.getDateOfNextInvocation(schedule_config['_id'])}`);
+                            }
+                            
                         });
                         console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
                        
