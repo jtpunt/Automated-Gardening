@@ -721,7 +721,7 @@ let scheduleHelpers = {
         if(job){
             let endScheduleId = job.endScheduleId;
             self.deleteSchedule(endScheduleId);
-            self.deleteSchedule(startScheduleId);
+            //self.deleteSchedule(startScheduleId);
         }
     },
     deleteSchedules: function(...schedule_ids){
