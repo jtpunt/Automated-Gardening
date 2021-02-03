@@ -314,8 +314,10 @@ let scheduleHelpers = {
                     if(job.dayOfWeek && job.dayOfWeek.length){
                         let numDay = datebased_timestamp.getDay();
                         if(job.dayOfWeek.includes(numDay)){
-                            activesToday = true;
+                            activeToday = true;
                         }
+                    }else{
+                        activeToday = true;
                     }
                     if(activeToday){
                         let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
