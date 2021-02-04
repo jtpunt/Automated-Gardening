@@ -15,7 +15,10 @@ var outletHelpers = {
             return outlet_id in this.outletObj;
         },
         getOutletIdByGpio(gpio){
-
+            for(const [outlet_id, outlet] of Object.entries(self.outletObj)){
+                if(gpio === outlet.gpio) return outlet_id;
+            }
+            return undefined;
         },
         // NOT COMPLETE - myGpio is not set
         createOutlet: function(newOutlet){
