@@ -5,49 +5,37 @@ class RelaySettings{
 	#direction
 	#gpio
 	#relayType
-	constuctor(relayId, direction, gpio, relayType){
-		this.#relayId 	= relayId;
-		this.#direction = direction;
-		this.#gpio 		= gpio;
-		this.#relayType = relayType;
-
+	constuctor(relaySettings){
+		this.#relayId 	= relaySettings['relayId'];
+		this.#direction = relaySettings['direction'];
+		this.#gpio 		= relaySettings['gpio'];
+		this.#relayType = relaySettings['relayType'];
 	}
-	get relayId() {
-		return this.#relayId;
-	}
-	get direction(){
-		return this.#direction;
-	}
-	get gpio(){
-		return this.#gpio;
-	}
-	get relayType(){
-		return this.#relayType;
-	}
-	set gpio(gpio){
-		this.#gpio = gpio;
-	}
-	set direction(direction){
-		this.#direction = direction;
-	}
+	/*************************** RelaySettings GETTERS ***************************/
+	get relayId() {  return this.#relayId;	 }
+	get direction(){ return this.#direction; }
+	get gpio()     { return this.#gpio; 	 }
+	get relayType(){ return this.#relayType; }
+	/*************************** RelaySettings SETTERS ***************************/
+	set direction(direction){ this.#direction = direction; }
+	set gpio(gpio)			{ this.#gpio      = gpio; 	   }
+	set relayType(relayType){ this.#relayType = relayType; }
 }
 class Outlet extends RelaySettings{
 	#outlet
 	#initialState 
-	constuctor(relayId, direction, gpio, relayType){
-		super(relayId, direction, gpio, relayType);
-		this.#outlet = new Gpio(this.gpio, this.direction);
+	#options = { reconfigureDirection: true; }
+	constuctor(relaySettings){
+		super(relaySettings);
+		this.#outlet = new Gpio(this.gpio, this.direction, this.options);
 		// if readSync() is 1 after initializing the GPIO, this does not mean it's on, it's really off
 		// store the initialState so we can return the correct status and activate the outlet to the
 		// correct state
 		this.#initialState = this.outlet.readSync();
 	}
-	get outlet(){
-		return this.#outlet;
-	}
-	get initialState(){
-		return this.#initialState;
-	}
+	get outlet()	  { return this.#outlet;	   }
+	get initialState(){ return this.#initialState; }
+	get options()     { return this.#options;      }
 	get status(){
 		let current_state = this.outlet.readSync();
 		if(initialState) current_state ^= 1;
@@ -63,11 +51,27 @@ class Outlet extends RelaySettings{
 			this.outlet.writeSync(desired_state);
 		}
 	}
-
+	set reconfigureDirection(direction){
+		this.#direction = direction;
+		this.#outlet.setDirection(direction);
+	}
 	updateOutlet(gpio, direction){
 		this.outlet.unexport();
 		this.gpio = gpio;
 		this.direction = direction;
 		this.outlet = new Gpio(this.gpio, this.direction);
+	}
+}
+class OutletBuilder(){
+	withRelaySettings(relaySettings){
+		this.relaySettings = relaySettings;
+		return this;
+	}
+	withOutlet(outlet){
+		this.outlet = outlet;
+		return this;
+	}
+	build(){
+		return new Outlet();
 	}
 }

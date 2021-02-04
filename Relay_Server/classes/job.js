@@ -123,12 +123,12 @@ class Schedule extends Relational{
         this.year      = newSchedule['year'];
         this.dayOfWeek = newSchedule['dayOfWeek'];
     }
-    set second(second)      { this.#second = second;       }
-    set minute(minute)      { this.#minute = minute;       }
-    set hour(hour)          { this.#hour = hour;           }
-    set date(date)          { this.#date = date;           }
-    set month(month)        { this.#month = month;         }
-    set year(year)          { this.#year = year;           }
+    set second(second)      { this.#second    = second;    }
+    set minute(minute)      { this.#minute    = minute;    }
+    set hour(hour)          { this.#hour      = hour;      }
+    set date(date)          { this.#date      = date;      }
+    set month(month)        { this.#month     = month;     }
+    set year(year)          { this.#year      = year;      }
     set dayOfWeek(dayOfWeek){ this.#dayOfWeek = dayOfWeek; }
 }
 class Job extends Schedule{
@@ -266,26 +266,26 @@ let jobFnArgs1 = [test.print1, test, "hello"],
     jobFnArgs2 = [test.print2, test, "yowhatup"];
 
 
-let job = new JobBuilder()
-    .withSchedule(testSchedule1)
-    .withRelational(testRelational1)
-    .withDevice(testDevice1)
-    .withJobFunction(...jobFnArgs1)
-    .build()
+// let job = new JobBuilder()
+//     .withSchedule(testSchedule1)
+//     .withRelational(testRelational1)
+//     .withDevice(testDevice1)
+//     .withJobFunction(...jobFnArgs1)
+//     .build()
 
-console.log(`next nextInvocation: ${job.nextInvocationDate}`)
-console.log(`schedule1: ${JSON.stringify(job.schedule)}`);
-console.log(`relational: ${JSON.stringify(job.relational)}`)
-job.schedule = testSchedule2;
-let updatedJobFn = test.buildJobFn(...jobFnArgs2);
-job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
-console.log(`schedule2: ${JSON.stringify(job.schedule)}`);
-console.log(`job: ${JSON.stringify(job)}`)
+// console.log(`next nextInvocation: ${job.nextInvocationDate}`)
+// console.log(`schedule1: ${JSON.stringify(job.schedule)}`);
+// console.log(`relational: ${JSON.stringify(job.relational)}`)
+// job.schedule = testSchedule2;
+// let updatedJobFn = test.buildJobFn(...jobFnArgs2);
+// job.updateSchedJobAndDevice(testDevice2, testSchedule2, updatedJobFn);
+// console.log(`schedule2: ${JSON.stringify(job.schedule)}`);
+// console.log(`job: ${JSON.stringify(job)}`)
 // let result = job.rescheduleJob;
 // job.cancelJob; 
 //job.cancelNextJob(); 
-console.log(job.timestamp);
-console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
-console.log(`device: ${JSON.stringify(job.device)}`)
-console.log(`desired_state: ${job.desired_state}`);
-module.exports = JobBuilder;
+// console.log(job.timestamp);
+// console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
+// console.log(`device: ${JSON.stringify(job.device)}`)
+// console.log(`desired_state: ${job.desired_state}`);
+// module.exports = JobBuilder;
