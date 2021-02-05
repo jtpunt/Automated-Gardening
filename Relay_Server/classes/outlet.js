@@ -22,13 +22,13 @@ class RelaySettings{
 	set relayType(relayType){ this.#relayType = relayType; }
 }
 class Outlet{
-	#outlet
-	#initialState 
-	#options
-	#direction
+	// #outlet
+	// #initialState 
+	// #options
+	// #direction
 	constuctor(relay_settings){
 		// super(relay_settings);
-		this.#options = { reconfigureDirection: true };
+		this.options = { reconfigureDirection: true };
 		console.log(`in outlet const with: ${JSON.stringify(relay_settings)}`);
 		// this.#outlet = new Gpio(this.gpio, this.direction, this.options);
 		// // if readSync() is 1 after initializing the GPIO, this does not mean it's on, it's really off
