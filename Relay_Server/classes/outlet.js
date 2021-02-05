@@ -75,3 +75,4 @@ class OutletBuilder(){
 		return new Outlet();
 	}
 }
+module.exports = Outlet;

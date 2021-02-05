@@ -2,7 +2,7 @@ let Scheduler       = require("../models/scheduler"),
     Device          = require("../models/device"),
     node_schedule   = require('node-schedule'),
     ip              = require("ip"),
-    JobBuilder      = require("../classes/job");
+    JobBuilder      = require("../classes/job"),
     localIP         = ip.address();
 
 let scheduleHelpers = {
