@@ -40,10 +40,10 @@ class Outlet extends RelaySettings{
 	get initialState(){ return this.#initialState; }
 	get options()     { return this.#options;      }
 	get status(){
-		// let current_state = this.outlet.readSync();
-		// if(this.#initialState) current_state ^= 1;
-		// return current_state;
-		return (this.#initialState) ? this.outlet.readSync() ^= 1 : this.outlet.readSync();
+		let current_state = this.outlet.readSync();
+		if(this.#initialState) current_state ^= 1;
+		return current_state;
+		//return (this.#initialState) ? this.outlet.readSync() ^= 1 : this.outlet.readSync();
 	}
 	set activate(desired_state){
 		if(this.status === desired_state){
