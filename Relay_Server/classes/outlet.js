@@ -25,6 +25,7 @@ class Outlet extends RelaySettings{
 	#outlet
 	#initialState 
 	#options
+	#direction
 	constuctor(relay_settings){
 		console.log(`in outlet const with: ${JSON.stringify(relay_settings)}`);
 		// super(relay_settings);
