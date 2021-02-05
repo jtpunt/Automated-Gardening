@@ -188,55 +188,30 @@ var outletHelpers = {
         //         }
         //     }
         // },
-        activateRelay: function(gpio_input, desired_state) {
+        activateRelay: function(outletId){
             let self     = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input),
                 outlet   = outletHelpers.getOutletById(outletId);
             if(outlet){
                 outlet.activate = desired_state;
-            }else{
-                console.log("outlet not found");
             }
-            console.log("in activateRelay\n");
-            // if(index !== -1){
-            //     let status = self.getStatus(gpio_input);
-            //     console.log(`Status: ${status}, desired_state: ${desired_state}`);
-            //     // typeof status === "Number"
-            //     // typeof desired_state === "Boolean"
-            //     if(status === Number(desired_state)){
-            //         console.log("Device is already in the desired state!");
-            //         return;
-            //     }else{
-            //         console.log("Desired State: " + desired_state);
-            //         if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
-            //             console.log("desired state is opposite due to initialState");
-            //             desired_state ^= 1;
-            //         }
-            //         self.outletArr[index]['outlet'].writeSync(Number(desired_state));  
-            //         console.log("Outlet " + gpio_input + " activated on " + new Date().toISOString() + " to " + desired_state + "\n");      
-            //     }
 
-                
-            // }else{
-            //     console.log(`index: ${index}, gpio_input: ${gpio_input}`);
-            // }
         },
-        getStatus: function(gpio_input){
-            let self = this,
+        activateRelayByGpio: function(gpio_input, desired_state) {
+            let self     = this,
                 outletId = outletHelpers.getOutletIdByGpio(gpio_input),
+            self.activateRelay(outletId);
+        },
+        getStatusByGpio: function(outletId){
+            let self = this,
                 outlet   = outletHelpers.getOutletById(outletId);
             if(outlet){
                 return outlet.status;
             }
-            // console.log("In getStatus\n");
-            // if(index !== -1){
-            //     console.log("Outlet Found!\n");
-            //     let curState = self.outletArr[index]['outlet'].readSync();
-            //     if(self.outletArr[index]['initialState'] === 1){ // seems like 1 is equal to on, but it is opposite and means 1 is off
-            //         curState ^= 1;
-            //     }
-            //     return curState;
-            // }
+        },
+        getStatusByGpio: function(gpio_input){
+            let self = this,
+                outletId = outletHelpers.getOutletIdByGpio(gpio_input),
+            self.getStatus(outletId);
         },
         // findOutletByGpio: function(gpio_input){
         //     return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
@@ -250,8 +225,8 @@ module.exports = outletHelpers;
 outletHelpers.getOutletSetup();
 let status = outletHelpers.getStatus(3);
 console.log(`status: ${status}`);
-outletHelpers.activateRelay(3, 1);
-status = outletHelpers.getStatus(3);
+outletHelpers.activateRelayByGpio(3, 1);
+status = outletHelpers.getStatusByGpio(3);
 console.log(`status: ${status}`);
 let outletId = outletHelpers.getOutletIdByGpio(3);
 console.log(`outletId found? - ${outletId}`);
