@@ -223,11 +223,10 @@ var outletHelpers = {
         },
         getStatus: function(gpio_input){
             let self = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input);
-            if(outletId){
-                if(self.doesOutletExist(outletId)){
-                    return self.outletObj[outletId].status;
-                }
+                outletId = outletHelpers.getOutletIdByGpio(gpio_input),
+                outlet   = outletHelpers.getOutletById(outletId);
+            if(outlet){
+                return outlet.status;
             }
             // console.log("In getStatus\n");
             // if(index !== -1){
