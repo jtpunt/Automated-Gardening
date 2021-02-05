@@ -43,49 +43,56 @@ var outletHelpers = {
         getOutletSetup: function(){
             var self = this;
             console.log("in getOutlets\n");
-
-            Device.findOne({
-                local_ip: localIP, 
-                deviceType: "Relay Server"
-            }, (err, myDevice) => {
-                if(err){
-                    console.log(err);
-                    throw err;
-                }
-                else{
-                    console.log("My Device: ", myDevice);
-                    if(myDevice){
-                        console.log("Test: ", myDevice);
-                        myDevice['gpio'].forEach(function(myGpio){
-                            RelaySettings.findOne({
-                                relayId: myDevice["_id"], 
-                                gpio: myGpio
-                            }, function(err, relay_config){
-                                if(err){
-                                    console.log(err.toString());
-                                    throw err;
-                                }else{
-                                    let outlet = new Outlet(relay_config);
-                                    // var myOutlet = new Gpio(myGpio, relay_config["direction"]);
-                                    // var initialState = myOutlet.readSync();
-                                    // console.log("Initial State:", initialState);
-                                    // self.setOutlet({
-                                    //     id: myDevice['_id'], 
-                                    //     gpio: myGpio, 
-                                    //     initialState: initialState, 
-                                    //     outlet: myOutlet
-                                    // });
-                                    // console.log("Status: ", self.getStatus(myGpio));
-                                }
-                            });
-                        });
-                        console.log(self.outletArr);
-                    }else{
-                        throw "No configuration found for this device!"
-                    }
-                }
-            });
-        },
+            let relay_config = {
+                id: "test",
+                relayId: "12344"
+                direction: "high",
+                gpio: 3,
+                relayType: "light"
+            }
+            let outlet = new Outlet(relay_config);
+        //     Device.findOne({
+        //         local_ip: localIP, 
+        //         deviceType: "Relay Server"
+        //     }, (err, myDevice) => {
+        //         if(err){
+        //             console.log(err);
+        //             throw err;
+        //         }
+        //         else{
+        //             console.log("My Device: ", myDevice);
+        //             if(myDevice){
+        //                 console.log("Test: ", myDevice);
+        //                 myDevice['gpio'].forEach(function(myGpio){
+        //                     RelaySettings.findOne({
+        //                         relayId: myDevice["_id"], 
+        //                         gpio: myGpio
+        //                     }, function(err, relay_config){
+        //                         if(err){
+        //                             console.log(err.toString());
+        //                             throw err;
+        //                         }else{
+        //                             let outlet = new Outlet(relay_config);
+        //                             // var myOutlet = new Gpio(myGpio, relay_config["direction"]);
+        //                             // var initialState = myOutlet.readSync();
+        //                             // console.log("Initial State:", initialState);
+        //                             // self.setOutlet({
+        //                             //     id: myDevice['_id'], 
+        //                             //     gpio: myGpio, 
+        //                             //     initialState: initialState, 
+        //                             //     outlet: myOutlet
+        //                             // });
+        //                             // console.log("Status: ", self.getStatus(myGpio));
+        //                         }
+        //                     });
+        //                 });
+        //                 console.log(self.outletArr);
+        //             }else{
+        //                 throw "No configuration found for this device!"
+        //             }
+        //         }
+        //     });
+        // },
         // setOutlet: function(newOutletObj){
         //     this.outletArr.push(newOutletObj);   
         // },
