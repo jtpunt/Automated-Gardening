@@ -44,8 +44,7 @@ class Outlet extends RelaySettings{
 		return current_state;
 	}
 	set activate(desired_state){
-		let current_state = this.status(),
-			desired_state = Number(desired_state);
+		let current_state = this.status();
 		if(current_state === desired_state){
 			console.log("Device is already in the desired state!");
 		}else{
