@@ -92,7 +92,7 @@ var outletHelpers = {
         //             }
         //         }
         //     });
-        // },
+        },
         // setOutlet: function(newOutletObj){
         //     this.outletArr.push(newOutletObj);   
         // },
