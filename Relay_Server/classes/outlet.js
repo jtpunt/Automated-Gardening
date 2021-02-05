@@ -66,6 +66,7 @@ class Outlet{
 }
 class OutletBuilder{
 	withRelaySettings(relay_settings){
+		console.log(`in withRelaySettings: ${JSON.stringify(relay_settings)}`);
 		this.relay_settings = relay_settings;
 		return this;
 	}
