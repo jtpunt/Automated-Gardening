@@ -50,7 +50,9 @@ var outletHelpers = {
                 gpio: 3,
                 relayType: "light"
             }
-            let outlet = new Outlet(relay_config);
+            let outlet = new OutletBuilder()
+                .withRelaySettings(relay_config)
+                .build();
             console.log(`outlet: ${JSON.stringify(outlet)}`);
         //     Device.findOne({
         //         local_ip: localIP, 

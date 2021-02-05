@@ -64,4 +64,13 @@ class Outlet{
 		this.outlet = new Gpio(this.gpio, this.direction);
 	}
 }
-module.exports = Outlet;
+class OutletBuilder{
+	withRelaySettings(relay_settings){
+		this.relay_settings = relay_settings;
+		return this;
+	}
+	build(){
+		return new Outlet(this.relay_settings);
+	}
+}
+module.exports = OutletBuilder;
