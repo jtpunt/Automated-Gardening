@@ -29,7 +29,7 @@ class Outlet{
 	constuctor(relay_settings){
 		console.log(`in outlet const with: ${JSON.stringify(relay_settings)}`);
 		// super(relay_settings);
-		// this.#options = { reconfigureDirection: true };
+		this.#options = { reconfigureDirection: true };
 		// this.#outlet = new Gpio(this.gpio, this.direction, this.options);
 		// // if readSync() is 1 after initializing the GPIO, this does not mean it's on, it's really off
 		// // store the initialState so we can return the correct status and activate the outlet to the
