@@ -24,11 +24,10 @@ class RelaySettings{
 class Outlet extends RelaySettings{
 	#outlet
 	#initialState 
-	#options
+	#options = { reconfigureDirection: true }
 	#direction
 	constructor(relay_settings){
 		super(relay_settings);
-		this.#options = { reconfigureDirection: true };
 		console.log(`in outlet const with: ${JSON.stringify(relay_settings)}`);
 		this.#outlet = new Gpio(this.gpio, this.direction, this.options);
 		// if readSync() is 1 after initializing the GPIO, this does not mean it's on, it's really off
