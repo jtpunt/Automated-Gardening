@@ -12,17 +12,19 @@ var express            = require("express"),
     scheduleMiddleware = require("../middleware/scheduleMiddleware"),
     outletMiddleware   = require("../middleware/outletMiddleware"),
     scheduleHelper     = require("../helpers/scheduleHelpers"),
+    outletHelper       = require("../helpers/outletHelpers"),
     ip                 = require("ip"),
     localIP            = ip.address(),
     router             = express.Router();
 var APPROVED_GPIO = [2, 3];
 
-process.on('SIGINT', () => {
-    outletController.releaseGpioMem();
-})
+// process.on('SIGINT', () => {
+//     outletController.releaseGpioMem();
+// })
 try{
-    outletController.adjustForIPChange();
-    outletController.getOutletSetup();
+    // outletController.adjustForIPChange();
+    // outletController.getOutletSetup();
+    outletHelper.getOutletSetup();
     scheduleHelper.getSchedules(outletController.activateRelay, outletController);
 }catch(err){
     console.log(err);
@@ -145,7 +147,7 @@ router.get('/status/:id', function(req, res){
         res.write("400: ", "GPIO input given is not a number!");
         res.status(400).end();
     }else{
-        let status = outletController.getStatus(gpio_input);
+        let status = outletHelper.getStatusByGpio(gpio_input);
         console.log("Status: ", status);
         res.write(status.toString());
         res.status(200).end();
