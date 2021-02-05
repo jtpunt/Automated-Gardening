@@ -21,7 +21,7 @@ class RelaySettings{
 	set gpio(gpio)			{ this.#gpio      = gpio; 	   }
 	set relayType(relayType){ this.#relayType = relayType; }
 }
-class Outlet{
+class Outlet extends RelaySettings{
 	#outlet
 	#initialState 
 	#options
