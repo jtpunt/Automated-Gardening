@@ -28,7 +28,7 @@ class Outlet extends RelaySettings{
 	#direction
 	constuctor(relaySettings){
 		console.log(`in outlet const with: ${JSON.stringify(relaySettings)}`);
-		// super(relaySettings);
+		super(relaySettings);
 		// this.#options = { reconfigureDirection: true };
 		// this.#outlet = new Gpio(this.gpio, this.direction, this.options);
 		// // if readSync() is 1 after initializing the GPIO, this does not mean it's on, it's really off
