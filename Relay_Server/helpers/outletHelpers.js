@@ -55,6 +55,8 @@ var outletHelpers = {
                 .build();
             console.log(`outlet: ${JSON.stringify(outlet)}`);
             console.log(`status: ${outlet.status}`);
+            console.log(`activate: ${outlet.activate}`);
+            console.log(`status: ${outlet.status}`);
         //     Device.findOne({
         //         local_ip: localIP, 
         //         deviceType: "Relay Server"
@@ -229,3 +231,6 @@ var outletHelpers = {
 module.exports = outletHelpers;
 
 outletHelpers.getOutletSetup();
+let outletId = outletHelpers.getOutletIdByGpio(3);
+console.log(`outletId found? - ${outletId}`);
+
