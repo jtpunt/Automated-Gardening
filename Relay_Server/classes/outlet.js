@@ -40,13 +40,13 @@ class Outlet extends RelaySettings{
 	get initialState(){ return this.#initialState; }
 	get options()     { return this.#options;      }
 	get status(){
-		let current_state = this.outlet.readSync();
-		if(this.#initialState) current_state ^= 1;
-		return current_state;
+		// let current_state = this.outlet.readSync();
+		// if(this.#initialState) current_state ^= 1;
+		// return current_state;
+		return (this.#initialState) ? this.outlet.readSync() ^= 1 : this.outlet.readSync();
 	}
 	set activate(desired_state){
-		let current_state = this.status;
-		if(current_state === desired_state){
+		if(this.status === desired_state){
 			console.log("Device is already in the desired state!");
 		}else{
 			if(this.#initialState) desired_state ^= 1;
