@@ -198,7 +198,7 @@ var outletHelpers = {
         },
         activateRelayByGpio: function(gpio_input, desired_state) {
             let self     = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input),
+                outletId = outletHelpers.getOutletIdByGpio(gpio_input);
             self.activateRelay(outletId);
         },
         getStatus: function(outletId){
@@ -210,8 +210,8 @@ var outletHelpers = {
         },
         getStatusByGpio: function(gpio_input){
             let self = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input),
-            self.getStatus(outletId);
+                outletId = outletHelpers.getOutletIdByGpio(gpio_input);
+            return self.getStatus(outletId);
         },
         // findOutletByGpio: function(gpio_input){
         //     return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
