@@ -1,6 +1,6 @@
 var Device        = require("../models/device"),
     RelaySettings = require("../models/relaySettings"),
-    Outlet        = require("../classes/outlet"),
+    OutletBuilder = require("../classes/outlet"),
     ip            = require("ip"),
     fs            = require("fs"),
     path          = require("path"),
