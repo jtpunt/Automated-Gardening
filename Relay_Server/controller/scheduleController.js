@@ -62,7 +62,7 @@ var scheduleMethods = {
             }
         }
     },
-    createSchedulesReq: (scheduleHelper, outletController) => {
+    createSchedulesReq: (scheduleHelper, outletHelper) => {
         return async function(req, res, next){
              var newSchedule = req.body;
              if(
@@ -159,8 +159,8 @@ var scheduleMethods = {
                     }else{
                         let off_schedule_args = [
                             off_schedule, 
-                            outletController.activateRelay, 
-                            outletController,
+                            outletHelper.activateRelayByGpio, 
+                            outletHelper,
                             Number(off_schedule['device']['gpio']), 
                             Boolean(off_schedule['device']['desired_state'])
                         ]
@@ -182,8 +182,8 @@ var scheduleMethods = {
 
                         let on_schedule_args = [
                             on_schedule, 
-                            outletController.activateRelay, 
-                            outletController,
+                            outletHelper.activateRelayByGpio, 
+                            outletHelper,
                             Number(on_schedule['device']['gpio']), 
                             Boolean(on_schedule['device']['desired_state'])
                         ]
@@ -203,7 +203,7 @@ var scheduleMethods = {
 
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
                         scheduleHelper.updateScheduleRelationship(onScheduleId, on_schedule);
-                        scheduleHelper.startActiveSchedules(outletController.activateRelay, outletController);
+                        scheduleHelper.startActiveSchedules(outletHelper.activateRelayByGpio, outletHelper);
                     }
                     
                 }
@@ -268,8 +268,8 @@ var scheduleMethods = {
                     }else{
                         let off_schedule_args = [
                             off_schedule, 
-                            outletController.activateRelay, 
-                            outletController,
+                            outletHelper.activateRelayByGpio, 
+                            outletHelper,
                             Number(off_schedule['device']['gpio']), 
                             Boolean(off_schedule['device']['desired_state'])
                         ]
@@ -279,8 +279,8 @@ var scheduleMethods = {
 
                         let on_schedule_args = [
                             on_schedule, 
-                            outletController.activateRelay, 
-                            outletController,
+                            outletHelper.activateRelayByGpio, 
+                            outletHelper,
                             Number(on_schedule['device']['gpio']), 
                             Boolean(on_schedule['device']['desired_state'])
                         ]
@@ -348,8 +348,8 @@ var scheduleMethods = {
                         // create the off schedule and grab the id
                         let off_schedule_args = [
                             off_schedule, 
-                            outletController.activateRelay, 
-                            outletController,
+                            outletHelper.activateRelayByGpio, 
+                            outletHelper,
                             Number(off_schedule['device']['gpio']), 
                             Boolean(off_schedule['device']['desired_state'])
                         ]
@@ -359,8 +359,8 @@ var scheduleMethods = {
                         console.log(`on_schedule: ${JSON.stringify(on_schedule)}`);
                         let on_schedule_args = [
                             on_schedule, 
-                            outletController.activateRelay, 
-                            outletController,
+                            outletHelper.activateRelayByGpio, 
+                            outletHelper,
                             Number(on_schedule['device']['gpio']), 
                             Boolean(on_schedule['device']['desired_state'])
                         ]
@@ -369,7 +369,7 @@ var scheduleMethods = {
                         off_schedule['relational']['prevScheduleId'] = onScheduleId; // associate the off schedule with the on schedule - 'prevScheduleId'
 
                         scheduleHelper.updateScheduleRelationship(offScheduleId, off_schedule);
-                        scheduleHelper.startActiveSchedules(outletController.activateRelay, outletController);
+                        scheduleHelper.startActiveSchedules(outletHelper.activateRelayByGpio, outletHelper);
                     }
                 }
             }
@@ -401,8 +401,8 @@ var scheduleMethods = {
                 }else{
                     let off_schedule_args = [
                         off_schedule, 
-                        outletController.activateRelay, 
-                        outletController,
+                        outletHelper.activateRelayByGpio, 
+                        outletHelper,
                         Number(off_schedule['device']['gpio']), 
                         Boolean(off_schedule['device']['desired_state'])
                     ]
@@ -415,7 +415,7 @@ var scheduleMethods = {
             res.status(200).end();
         }
     },
-    updateScheduleReq: (scheduleHelper, outletController) => {
+    updateScheduleReq: (scheduleHelper, outletHelper) => {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
             var updatedSchedule = req.body;
@@ -434,19 +434,19 @@ var scheduleMethods = {
             if(!scheduleHelper.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
             else{
-                scheduleHelper.editSchedule(schedule_id, my_schedule, outletController.activateRelay, outletController);
+                scheduleHelper.editSchedule(schedule_id, my_schedule, outletHelper.activateRelayByGpio, outletHelper);
                 console.log("Successfully Updated!");
                 res.status(200).send("Successfully updated!");
             }
         }
     },
-    resumeScheduleReq: (scheduleHelper) => {
+    resumeScheduleReq: (scheduleHelper, outletHelper) => {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
             if(!scheduleHelper.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
             else{
-                scheduleHelper.resumeSchedule(schedule_id, outletController.activateRelay, outletController);
+                scheduleHelper.resumeSchedule(schedule_id, outletHelper.activateRelayByGpio, outletHelper);
                 let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
                 if(nextInvocationDate === undefined)
                     res.status(400).send(`Schedule id ${schedule_id} did not successfully resume`);

@@ -94,7 +94,7 @@ router.post('/schedule',
     scheduleMiddleware.checkScheduleInputs,
     scheduleMiddleware.validateScheduleInputs,
     outletMiddleware.isGpioConfigured(outletController),
-    scheduleController.createSchedulesReq(scheduleHelper, outletController)
+    scheduleController.createSchedulesReq(scheduleHelper, outletHelper)
 );
 router.get('/schedule/:schedule_id', function(req, res) {
     Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
@@ -111,8 +111,8 @@ router.get('/schedule/:schedule_id', function(req, res) {
 // edit an existing schedule
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
-    outletMiddleware.isGpioConfigured(outletController),
-    scheduleController.updateScheduleReq(scheduleHelper, outletController)
+    outletMiddleware.isGpioConfigured(outletHelper),
+    scheduleController.updateScheduleReq(scheduleHelper, outletHelper)
 );
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
