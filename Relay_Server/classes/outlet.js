@@ -24,9 +24,10 @@ class RelaySettings{
 class Outlet extends RelaySettings{
 	#outlet
 	#initialState 
-	#options = { reconfigureDirection: true }
+	#options
 	constuctor(relaySettings){
 		super(relaySettings);
+		this.#options = { reconfigureDirection: true };
 		this.#outlet = new Gpio(this.gpio, this.direction, this.options);
 		// if readSync() is 1 after initializing the GPIO, this does not mean it's on, it's really off
 		// store the initialState so we can return the correct status and activate the outlet to the
