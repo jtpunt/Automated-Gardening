@@ -189,30 +189,26 @@ var outletHelpers = {
         //     }
         // },
         activateRelay: function(outletId, desired_state){
-            let self     = this,
-                outlet   = outletHelpers.getOutletById(outletId);
+            let outlet = this.getOutletById(outletId);
             if(outlet){
                 outlet.activate = desired_state;
             }
 
         },
         activateRelayByGpio: function(gpio_input, desired_state) {
-            let self     = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input);
+            let outletId = this.getOutletIdByGpio(gpio_input);
             self.activateRelay(outletId, desired_state);
         },
         getStatus: function(outletId){
-            let self = this,
-                outlet   = outletHelpers.getOutletById(outletId);
+            let outlet = this.getOutletById(outletId);
             if(!outlet){
                 return outlet;
             }
             return outlet.status;
         },
         getStatusByGpio: function(gpio_input){
-            let self = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input);
-            return self.getStatus(outletId);
+            let outletId = this.getOutletIdByGpio(gpio_input);
+            return this.getStatus(outletId);
         },
         // findOutletByGpio: function(gpio_input){
         //     return this.outletArr.findIndex((outlet) => outlet['gpio'] === gpio_input);
