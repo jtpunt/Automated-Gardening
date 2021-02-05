@@ -204,9 +204,10 @@ var outletHelpers = {
         getStatus: function(outletId){
             let self = this,
                 outlet   = outletHelpers.getOutletById(outletId);
-            if(outlet){
-                return outlet.status;
+            if(!outlet){
+                return outlet;
             }
+            return outlet.status;
         },
         getStatusByGpio: function(gpio_input){
             let self = this,
