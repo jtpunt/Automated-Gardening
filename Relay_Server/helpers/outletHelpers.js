@@ -195,7 +195,7 @@ var outletHelpers = {
             if(outlet){
                 outlet.activate = desired_state;
             }else{
-
+                console.log("outlet not found");
             }
             console.log("in activateRelay\n");
             // if(index !== -1){
@@ -251,7 +251,7 @@ module.exports = outletHelpers;
 outletHelpers.getOutletSetup();
 let status = outletHelpers.getStatus(3);
 console.log(`status: ${status}`);
-outletHelpers.activateRelay(3, 1);
+outletHelpers.activateRelay(2, 1);
 status = outletHelpers.getStatus(3);
 console.log(`status: ${status}`);
 let outletId = outletHelpers.getOutletIdByGpio(3);
