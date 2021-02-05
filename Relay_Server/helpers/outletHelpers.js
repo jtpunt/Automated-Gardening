@@ -188,7 +188,7 @@ var outletHelpers = {
                 outletId = outletHelpers.getOutletIdByGpio(gpio_input);
             if(outletId){
                 if(self.doesOutletExist(outletId)){
-                    let outlet = outletObj[outletId];
+                    let outlet = self.outletObj[outletId];
                     outlet.activate = desired_state;
                 }else{
 
