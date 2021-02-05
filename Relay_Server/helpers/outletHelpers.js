@@ -20,6 +20,11 @@ var outletHelpers = {
             }
             return undefined;
         },
+        getOutletById(outletId){
+            if(!this.doesOutletExist(outletId))
+                return null;
+            return this.sheduleObj[outletId];
+        },
         // NOT COMPLETE - myGpio is not set
         // createOutlet: function(newOutlet){
         //     let self = this;
@@ -185,14 +190,12 @@ var outletHelpers = {
         // },
         activateRelay: function(gpio_input, desired_state) {
             let self     = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input);
-            if(outletId){
-                if(self.doesOutletExist(outletId)){
-                    let outlet = self.outletObj[outletId];
-                    outlet.activate = desired_state;
-                }else{
+                outletId = outletHelpers.getOutletIdByGpio(gpio_input),
+                outlet   = outletHelpers.getOutletById(outletId);
+            if(outlet){
+                outlet.activate = desired_state;
+            }else{
 
-                }
             }
             console.log("in activateRelay\n");
             // if(index !== -1){
