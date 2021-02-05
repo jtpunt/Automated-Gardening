@@ -224,7 +224,7 @@ var outletHelpers = {
 module.exports = outletHelpers;
 
 outletHelpers.getOutletSetup();
-let status = outletHelpers.getStatus(3);
+let status = outletHelpers.getStatusByGpio(3);
 console.log(`status: ${status}`);
 outletHelpers.activateRelayByGpio(3, 1);
 status = outletHelpers.getStatusByGpio(3);
