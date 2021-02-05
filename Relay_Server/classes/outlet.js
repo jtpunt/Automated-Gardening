@@ -49,7 +49,7 @@ class Outlet extends RelaySettings{
 		if(current_state === desired_state){
 			console.log("Device is already in the desired state!");
 		}else{
-			if(initialState) desired_state ^= 1;
+			if(this.#initialState) desired_state ^= 1;
 			this.outlet.writeSync(desired_state);
 		}
 	}
