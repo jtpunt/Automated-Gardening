@@ -51,6 +51,7 @@ var outletHelpers = {
                 relayType: "light"
             }
             let outlet = new Outlet(relay_config);
+            console.log(`outlet: ${JSON.stringify(outlet)}`);
         //     Device.findOne({
         //         local_ip: localIP, 
         //         deviceType: "Relay Server"
