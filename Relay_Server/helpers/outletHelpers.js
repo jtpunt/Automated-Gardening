@@ -248,7 +248,7 @@ module.exports = outletHelpers;
 outletHelpers.getOutletSetup();
 let status = outletHelpers.getStatus(3);
 outletHelpers.activateRelay(3, 1);
-let status = outletHelpers.getStatus(3);
+status = outletHelpers.getStatus(3);
 let outletId = outletHelpers.getOutletIdByGpio(3);
 console.log(`outletId found? - ${outletId}`);
 
