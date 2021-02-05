@@ -201,7 +201,7 @@ var outletHelpers = {
                 outletId = outletHelpers.getOutletIdByGpio(gpio_input),
             self.activateRelay(outletId);
         },
-        getStatusByGpio: function(outletId){
+        getStatus: function(outletId){
             let self = this,
                 outlet   = outletHelpers.getOutletById(outletId);
             if(outlet){
