@@ -188,7 +188,7 @@ var outletHelpers = {
         //         }
         //     }
         // },
-        activateRelay: function(outletId){
+        activateRelay: function(outletId, desired_state){
             let self     = this,
                 outlet   = outletHelpers.getOutletById(outletId);
             if(outlet){
@@ -199,7 +199,7 @@ var outletHelpers = {
         activateRelayByGpio: function(gpio_input, desired_state) {
             let self     = this,
                 outletId = outletHelpers.getOutletIdByGpio(gpio_input);
-            self.activateRelay(outletId);
+            self.activateRelay(outletId, desired_state);
         },
         getStatus: function(outletId){
             let self = this,
