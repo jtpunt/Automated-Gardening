@@ -36,33 +36,33 @@ class Outlet{
 		// // correct state
 		// this.#initialState = this.outlet.readSync();
 	}
-	get outlet()	  { return this.#outlet;	   }
-	get initialState(){ return this.#initialState; }
-	get options()     { return this.#options;      }
-	get status(){
-		let current_state = this.outlet.readSync();
-		if(initialState) current_state ^= 1;
-		return current_state;
-	}
-	set activate(desired_state){
-		let current_state = this.status();
-		if(current_state === desired_state){
-			console.log("Device is already in the desired state!");
-		}else{
-			if(initialState) desired_state ^= 1;
-			this.outlet.writeSync(desired_state);
-		}
-	}
-	set reconfigureDirection(direction){
-		this.#direction = direction;
-		this.#outlet.setDirection(direction);
-	}
-	updateOutlet(gpio, direction){
-		this.outlet.unexport();
-		this.gpio = gpio;
-		this.direction = direction;
-		this.outlet = new Gpio(this.gpio, this.direction);
-	}
+	// get outlet()	  { return this.#outlet;	   }
+	// get initialState(){ return this.#initialState; }
+	// get options()     { return this.#options;      }
+	// get status(){
+	// 	let current_state = this.outlet.readSync();
+	// 	if(initialState) current_state ^= 1;
+	// 	return current_state;
+	// }
+	// set activate(desired_state){
+	// 	let current_state = this.status();
+	// 	if(current_state === desired_state){
+	// 		console.log("Device is already in the desired state!");
+	// 	}else{
+	// 		if(initialState) desired_state ^= 1;
+	// 		this.outlet.writeSync(desired_state);
+	// 	}
+	// }
+	// set reconfigureDirection(direction){
+	// 	this.#direction = direction;
+	// 	this.#outlet.setDirection(direction);
+	// }
+	// updateOutlet(gpio, direction){
+	// 	this.outlet.unexport();
+	// 	this.gpio = gpio;
+	// 	this.direction = direction;
+	// 	this.outlet = new Gpio(this.gpio, this.direction);
+	// }
 }
 class OutletBuilder{
 	withRelaySettings(relay_settings){
