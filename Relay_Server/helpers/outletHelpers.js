@@ -82,7 +82,7 @@ var outletHelpers = {
                                 let outlet = new OutletBuilder()
                                     .withRelaySettings(relay_config)
                                     .build();
-                                self.outletObj[relay_config['relayId']] = outlet;
+                                self.outletObj[relay_config['_id']] = outlet;
                                 
                             }
                             console.log(`outlets: ${JSON.stringify(self.outletObj)}`);
