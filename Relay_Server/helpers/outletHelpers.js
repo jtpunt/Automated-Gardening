@@ -53,9 +53,10 @@ var outletHelpers = {
             let outlet = new OutletBuilder()
                 .withRelaySettings(relay_config)
                 .build();
+            self.outletObj[relay_config['relayId']] = outlet;
             console.log(`outlet: ${JSON.stringify(outlet)}`);
             console.log(`status: ${outlet.status}`);
-            console.log(`activate: ${outlet.activate}`);
+            outlet.activate = 1;
             console.log(`status: ${outlet.status}`);
         //     Device.findOne({
         //         local_ip: localIP, 
