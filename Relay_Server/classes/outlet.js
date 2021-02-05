@@ -1,26 +1,26 @@
 let Gpio = require('onoff').Gpio;
 //https://www.npmjs.com/package/onoff
-class RelaySettings{
-	#relayId
-	#direction
-	#gpio
-	#relayType
-	constuctor(relaySettings){
-		this.#relayId 	= relaySettings['relayId'];
-		this.#direction = relaySettings['direction'];
-		this.#gpio 		= relaySettings['gpio'];
-		this.#relayType = relaySettings['relayType'];
-	}
-	/*************************** RelaySettings GETTERS ***************************/
-	get relayId() {  return this.#relayId;	 }
-	get direction(){ return this.#direction; }
-	get gpio()     { return this.#gpio; 	 }
-	get relayType(){ return this.#relayType; }
-	/*************************** RelaySettings SETTERS ***************************/
-	set direction(direction){ this.#direction = direction; }
-	set gpio(gpio)			{ this.#gpio      = gpio; 	   }
-	set relayType(relayType){ this.#relayType = relayType; }
-}
+// class RelaySettings{
+// 	#relayId
+// 	#direction
+// 	#gpio
+// 	#relayType
+// 	constuctor(relaySettings){
+// 		this.#relayId 	= relaySettings['relayId'];
+// 		this.#direction = relaySettings['direction'];
+// 		this.#gpio 		= relaySettings['gpio'];
+// 		this.#relayType = relaySettings['relayType'];
+// 	}
+// 	/*************************** RelaySettings GETTERS ***************************/
+// 	get relayId() {  return this.#relayId;	 }
+// 	get direction(){ return this.#direction; }
+// 	get gpio()     { return this.#gpio; 	 }
+// 	get relayType(){ return this.#relayType; }
+// 	/*************************** RelaySettings SETTERS ***************************/
+// 	set direction(direction){ this.#direction = direction; }
+// 	set gpio(gpio)			{ this.#gpio      = gpio; 	   }
+// 	set relayType(relayType){ this.#relayType = relayType; }
+// }
 class Outlet{
 	// #outlet
 	// #initialState 
