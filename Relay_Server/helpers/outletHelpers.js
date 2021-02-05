@@ -23,7 +23,7 @@ var outletHelpers = {
         getOutletById(outletId){
             if(!this.doesOutletExist(outletId))
                 return null;
-            return this.sheduleObj[outletId];
+            return this.outletObj[outletId];
         },
         // NOT COMPLETE - myGpio is not set
         // createOutlet: function(newOutlet){
