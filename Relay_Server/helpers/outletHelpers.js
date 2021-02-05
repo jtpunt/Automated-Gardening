@@ -54,6 +54,7 @@ var outletHelpers = {
                 .withRelaySettings(relay_config)
                 .build();
             console.log(`outlet: ${JSON.stringify(outlet)}`);
+            console.log(`status: ${outlet.status}`);
         //     Device.findOne({
         //         local_ip: localIP, 
         //         deviceType: "Relay Server"
