@@ -45,7 +45,7 @@ var outletHelpers = {
             console.log("in getOutlets\n");
             let relay_config = {
                 id: "test",
-                relayId: "12344"
+                relayId: "12344",
                 direction: "high",
                 gpio: 3,
                 relayType: "light"
