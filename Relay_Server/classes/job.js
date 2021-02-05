@@ -288,4 +288,4 @@ let jobFnArgs1 = [test.print1, test, "hello"],
 // console.log(`next nextInvocation: ${job.nextInvocationDate}}`)
 // console.log(`device: ${JSON.stringify(job.device)}`)
 // console.log(`desired_state: ${job.desired_state}`);
-// module.exports = JobBuilder;
+module.exports = JobBuilder;
