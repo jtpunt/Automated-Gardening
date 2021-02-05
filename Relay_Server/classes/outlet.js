@@ -71,6 +71,7 @@ class OutletBuilder{
 		return this;
 	}
 	build(){
+		console.log(`in OutletBuilder with: ${JSON.stringify(this.relay_settings)}`);
 		return new Outlet(this.relay_settings);
 	}
 }
