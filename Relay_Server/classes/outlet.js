@@ -35,7 +35,7 @@ class Outlet extends RelaySettings{
 		// store the initialState so we can return the correct status and activate the outlet to the
 		// correct state
 		this.#initialState = this.outlet.readSync();
-		console.log(`initialState: ${initialState}`);
+		console.log(`initialState: ${this.#initialState}`);
 	}
 	get outlet()	  { return this.#outlet;	   }
 	get initialState(){ return this.#initialState; }
