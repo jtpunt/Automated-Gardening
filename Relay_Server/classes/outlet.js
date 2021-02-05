@@ -5,7 +5,7 @@ class RelaySettings{
 	#direction
 	#gpio
 	#relayType
-	constuctor(relaySettings){
+	constructor(relaySettings){
 		this.#relayId 	= relaySettings['relayId'];
 		this.#direction = relaySettings['direction'];
 		this.#gpio 		= relaySettings['gpio'];
