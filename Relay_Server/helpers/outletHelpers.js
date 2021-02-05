@@ -190,10 +190,10 @@ var outletHelpers = {
         // },
         activateRelay: function(gpio_input, desired_state) {
             let self     = this,
-                outletId = outletHelpers.getOutletIdByGpio(gpio_input);
-            let outlet   = outletHelpers.getOutletById(outletId);
-            if(outletId && self.doesOutletExist(outletId)){
-                self.outletObj[outletId].activate = desired_state;
+                outletId = outletHelpers.getOutletIdByGpio(gpio_input),
+                outlet   = outletHelpers.getOutletById(outletId);
+            if(outlet){
+                outlet.activate = desired_state;
             }else{
 
             }
