@@ -26,6 +26,7 @@ class Outlet extends RelaySettings{
 	#initialState 
 	#options
 	constuctor(relaySettings){
+		console.log("in outlet constuctor");
 		super(relaySettings);
 		this.#options = { reconfigureDirection: true };
 		this.#outlet = new Gpio(this.gpio, this.direction, this.options);
