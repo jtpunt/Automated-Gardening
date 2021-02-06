@@ -140,9 +140,9 @@ router.get('/schedule/:schedule_id/resume',
     middleware.verifyAdminAccount, 
     scheduleController.resumeScheduleReq(scheduleHelper)
 );
-router.get('/status/:id', function(req, res){
+router.get('/status/:gpio', outletMiddleware.isGpioConfigured(outletHelper), function(req, res){
     console.log("in /status/:id route\n");
-    var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
+    var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
     if(Number.isNaN(gpio_input)){
         res.write("400: ", "GPIO input given is not a number!");
         res.status(400).end();
@@ -155,16 +155,16 @@ router.get('/status/:id', function(req, res){
     // validateInput(gpio_input, res, outletHelper.getStatus, outletHelper);
 });
 // really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
-router.get('/activate/:gpio', function(req, res){
+router.get('/activate/:gpio', outletMiddleware.isGpioConfigured(outletHelper), function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
     console.log("is a valid number!\n");
     outletHelper.toggleRelay(gpio_input);
     res.status(200).end();
 });
-router.get('/activate/:id/:desired_state', middleware.verifyAdminAccount, function(req, res){
+router.get('/activate/:gpio/:desired_state', outletMiddleware.isGpioConfigured(outletHelper), middleware.verifyAdminAccount, function(req, res){
     console.log("in /:id route\n");
-    var gpio_input = Number(req.params.id); // convert our string to a number, since '2' !== 2
+    var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
     var desired_state = Boolean(req.params.desired_state);
     if(Number.isNaN(gpio_input)){
         res.write("400: ", "GPIO input given is not a number!");
@@ -175,7 +175,7 @@ router.get('/activate/:id/:desired_state', middleware.verifyAdminAccount, functi
     }
     else{
         console.log("is a valid number!\n");
-        outletController.activateRelay(gpio_input, desired_state);
+        outletHelper.activateRelayByGpio(gpio_input, desired_state);
         res.status(200).end();
     }
 });
