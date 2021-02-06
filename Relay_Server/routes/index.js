@@ -16,7 +16,6 @@ var express            = require("express"),
     ip                 = require("ip"),
     localIP            = ip.address(),
     router             = express.Router();
-var APPROVED_GPIO = [2, 3];
 
 // process.on('SIGINT', () => {
 //     outletController.releaseGpioMem();

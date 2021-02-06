@@ -11,7 +11,28 @@
         	<input type="text" id="id" name="device[id]" value="<%=device['_id']%>" hidden required>
         </div>
         <div class="form-group row">
-        	<label class="col-sm-6 col-form-label" for="gpio">Set GPIO: </label>
+            <label class="col-sm-6 col-form-label" for="device[relaySettingId]">Set Relay: </label>
+                <select class="col-sm-20" name="device[relaySettingId]">
+                <option value="-1" selected="selected" disabled>Select Your Relay Settings:</option>
+
+                <% 
+                    /* 
+                     * Show what that GPIO turns on/off (water pump, light, ac unit).
+                     */
+                        relaySettings.forEach(function(relaySetting){ 
+                            if(relaySetting['relayId'].toString() === device['_id'].toString()
+                            ){
+                                matchFound = true;
+                %>
+                                <option value=<%=relaySetting['_id']%>><%=relaySetting['relayType']%></option>
+                <%
+                            }
+                        });
+                %>
+                </select>
+        </div>
+        <div class="form-group row">
+        	<label class="col-sm-6 col-form-label" for="device[gpio]">Set GPIO: </label>
 				<select class="col-sm-20" name="device[gpio]">
         		<option value="-1" selected="selected" disabled>Select Your GPIO:</option>
 

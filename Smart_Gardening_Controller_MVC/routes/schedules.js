@@ -34,7 +34,8 @@ function buildSchedule(mySchedule){
     console.log(`buildSchedule: ${JSON.stringify(mySchedule)}`);
     if(mySchedule['device']['id'] !== null && mySchedule['device']['id'] !== undefined)
         obj['device']['id'] = mySchedule['device']['id'];
-
+    if(mySchedule['device']['relaySettingsId'] !== null && mySchedule['device']['relaySettingsId'] !== undefined)
+        obj['device']['relaySettingsId'] = mySchedule['device']['relaySettingsId'];
     if(mySchedule['device']['gpio'] !== null && mySchedule['device']['gpio'] !== undefined)
         obj['device']['gpio'] = Number(mySchedule['device']['gpio']);
     
@@ -154,11 +155,12 @@ function buildSchedule(mySchedule){
             if(Number(mySchedule['relational']['nextScheduleId']) !== 0)// 'none' was selected, which has a value of 0
                 obj['relational']['nextScheduleId'] = mySchedule['relational']['nextScheduleId'];
         }
-        if(mySchedule['relational']['endScheduleId'] !== null && mySchedule['relational']['endScheduleId'] !== undefined)
+        if(mySchedule['relational']['endScheduleId'] !== null && mySchedule['relational']['endScheduleId'] !== undefined){
             if(Number(mySchedule['relational']['endScheduleId']) !== 0)
                 obj['relational']['endScheduleId'] = mySchedule['relational']['endScheduleId'];
-
         }
+
+    }
 
     return obj;
 }

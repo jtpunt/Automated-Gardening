@@ -5,6 +5,10 @@ var scheduleSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Device"
         },
+        relaySettingsId:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "RelaySettings"
+        },
         gpio: Number,
         desired_state: Boolean
     }, 
