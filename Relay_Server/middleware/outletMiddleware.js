@@ -1,15 +1,12 @@
 var outletMiddleware = {
     isGpioConfigured: (outletHelper) => {
         return function(req, res, next){
-            let newSchedule = req.body,
-            	requestedGpio = req.params.gpio;
+            let requestedGpio = -1;
             if("gpio" in req.body){
                 console.log(`req.body found: ${JSON.stringify(req.body)}`);
-            }else{
-                console.log(`req.body not found: ${JSON.stringify(req.body)}`);
-            }
-            if("gpio" in req.params){
-                console.log(`req.params: ${JSON.stringify(req.params)}`);
+                requestedGpio = req.body.gpio;
+            }else if("gpio" in req.params){
+                requestedGpio = req.params.gpio;
             }else{
                 console.log(`req.params: ${JSON.stringify(req.params)}`);
             }
