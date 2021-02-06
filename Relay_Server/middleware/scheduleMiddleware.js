@@ -145,6 +145,8 @@ let scheduleMiddleware = {
                     // id - mongodb id representing our relay device - required
                     if(newSchedule['device']['id'] === undefined)
                         throw new Error("Device id not found!");
+                    if(newSchedule['device']['relaySettingsId'] === undefined)
+                        throw new Error("relaySettings id not found!");
                     // gpio port that controls our relay switch - required
                     if(newSchedule['device']['gpio'] === undefined)
                         throw new Error("Device GPIO not found!");
@@ -158,6 +160,7 @@ let scheduleMiddleware = {
                     }
                     sanitizedSchedule['device'] = {
                         id: newSchedule['device']['id'],
+                        relaySettingsId: newSchedule['device']['relaySettingsId'],
                         gpio: Number(newSchedule['device']['gpio']),
                         desired_state: newSchedule['device']['desired_state']
                     }
