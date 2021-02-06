@@ -10,7 +10,7 @@ var outletMiddleware = {
             }else{
                 console.log(`req.params: ${JSON.stringify(req.params)}`);
             }
-            console.log(`in outletMiddleware with: ${JSON.stringify(req.params)}`);
+            console.log(`in outletMiddleware with: ${JSON.stringify(req.body)}`);
             if(outletHelper.getOutletIdByGpio(requestedGpio) === undefined){
                 res.status(404).send("Invalid GPIO input");
             }else{
