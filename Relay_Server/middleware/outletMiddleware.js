@@ -3,12 +3,12 @@ var outletMiddleware = {
         return function(req, res, next){
             let newSchedule = req.body,
             	requestedGpio = req.params.gpio;
-            if(req.body){
+            if("gpio" in req.body){
                 console.log(`req.body found: ${JSON.stringify(req.body)}`);
             }else{
                 console.log(`req.body not found: ${JSON.stringify(req.body)}`);
             }
-            if(req.params){
+            if("gpio" in req.params){
                 console.log(`req.params: ${JSON.stringify(req.params)}`);
             }else{
                 console.log(`req.params: ${JSON.stringify(req.params)}`);
