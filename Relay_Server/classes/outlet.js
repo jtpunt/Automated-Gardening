@@ -65,9 +65,9 @@ class Outlet extends RelaySettings{
 	}
 	toggle(){
 		if(this.status === 0){
-			this.activate(1);
+			this.activate = 1;
 		}else{
-			this.activate(0);
+			this.activate = 0;
 		}
 	}
 }
