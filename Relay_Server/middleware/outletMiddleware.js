@@ -4,9 +4,9 @@ var outletMiddleware = {
             let requestedGpio = -1;
             if("gpio" in req.body){
                 console.log(`req.body found: ${JSON.stringify(req.body)}`);
-                requestedGpio = req.body.gpio;
+                requestedGpio = Number(req.body.gpio);
             }else if("gpio" in req.params){
-                requestedGpio = req.params.gpio;
+                requestedGpio = Number(req.params.gpio);
             }else{
                 console.log(`req.params: ${JSON.stringify(req.params)}`);
             }
