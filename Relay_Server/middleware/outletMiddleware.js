@@ -2,7 +2,7 @@ var outletMiddleware = {
     isGpioConfigured: (outletHelper) => {
         return function(req, res, next){
             let requestedGpio = -1;
-            if("device" in req.body){
+            if("device['gpio']" in req.body){
                 console.log(`req.body found: ${JSON.stringify(req.body)}`);
                 requestedGpio = Number(req.body.device.gpio);
             }else if("gpio" in req.params){
