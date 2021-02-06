@@ -93,7 +93,7 @@ router.post('/schedule',
     middleware.verifyAdminAccount, 
     scheduleMiddleware.checkScheduleInputs,
     scheduleMiddleware.validateScheduleInputs,
-    outletMiddleware.isGpioConfigured(outletController),
+    outletMiddleware.isGpioConfigured(outletHelper),
     scheduleController.createSchedulesReq(scheduleHelper, outletHelper)
 );
 router.get('/schedule/:schedule_id', function(req, res) {
@@ -159,7 +159,7 @@ router.get('/activate/:gpio', function(req, res){
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
     console.log("is a valid number!\n");
-    outletController.toggleRelay(gpio_input);
+    outletHelper.toggleRelay(gpio_input);
     res.status(200).end();
 });
 router.get('/activate/:id/:desired_state', middleware.verifyAdminAccount, function(req, res){

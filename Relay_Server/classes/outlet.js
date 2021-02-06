@@ -63,6 +63,13 @@ class Outlet extends RelaySettings{
 		this.direction = direction;
 		this.outlet = new Gpio(this.gpio, this.direction);
 	}
+	toggle(){
+		if(this.status === 0){
+			this.activate(1);
+		}else{
+			this.activate(0);
+		}
+	}
 }
 class OutletBuilder{
 	withRelaySettings(relay_settings){
