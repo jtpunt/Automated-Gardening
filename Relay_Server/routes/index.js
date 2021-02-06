@@ -162,21 +162,25 @@ router.get('/activate/:gpio', outletMiddleware.isGpioConfigured(outletHelper), f
     outletHelper.toggleRelay(gpio_input);
     res.status(200).end();
 });
-router.get('/activate/:gpio/:desired_state', outletMiddleware.isGpioConfigured(outletHelper), middleware.verifyAdminAccount, function(req, res){
-    console.log("in /:id route\n");
-    var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
-    var desired_state = Boolean(req.params.desired_state);
-    if(Number.isNaN(gpio_input)){
-        res.write("400: ", "GPIO input given is not a number!");
-        res.status(400).end();
-    }else if(typeof desired_state === "boolean"){
-        res.write("400: ", "Input given must be 'on' or 'off'");
-        res.status(400).end();
+router.get('/activate/:gpio/:desired_state', 
+    middleware.verifyAdminAccount, 
+    outletMiddleware.isGpioConfigured(outletHelper), 
+    function(req, res){
+        console.log("in /:id route\n");
+        var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
+        var desired_state = Boolean(req.params.desired_state);
+        if(Number.isNaN(gpio_input)){
+            res.write("400: ", "GPIO input given is not a number!");
+            res.status(400).end();
+        }else if(typeof desired_state === "boolean"){
+            res.write("400: ", "Input given must be 'on' or 'off'");
+            res.status(400).end();
+        }
+        else{
+            console.log("is a valid number!\n");
+            outletHelper.activateRelayByGpio(gpio_input, desired_state);
+            res.status(200).end();
+        }
     }
-    else{
-        console.log("is a valid number!\n");
-        outletHelper.activateRelayByGpio(gpio_input, desired_state);
-        res.status(200).end();
-    }
-});
+);
 module.exports = router;
