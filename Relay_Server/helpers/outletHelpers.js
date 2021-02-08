@@ -191,6 +191,7 @@ var outletHelpers = {
         this.activateRelayById(outletId, desired_state);
     },
     toggleRelayById: function(outletId){
+        console.log(`in toggleRelayById: ${outletId}`);
         let outlet = this.getOutletById(outletId);
         if(outlet)
             outlet.toggle;
