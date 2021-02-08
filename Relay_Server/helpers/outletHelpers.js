@@ -198,6 +198,7 @@ var outletHelpers = {
             console.log(`outlet not found with id: ${outletId}`);
     },
     toggleRelayByGpio: function(gpio_input){
+        console.log(`in toggleRelayByGpio`);
         let outletId = this.getOutletIdByGpio(gpio_input);
         this.toggleRelayById(outletId);
     },
