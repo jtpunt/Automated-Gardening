@@ -196,7 +196,7 @@ var outletHelpers = {
             outlet.toggle;
     },
     toggleRelayByGpio: function(gpio_input){
-        let outletId = this.getOutletIdByGpio(gpio_input),
+        let outletId = this.getOutletIdByGpio(gpio_input);
         this.toggleRelayById(outletId);
     },
     getStatusById: function(outletId){
