@@ -11,6 +11,13 @@ var outletHelpers = {
     doesOutletExist(outlet_id){
         return outlet_id in this.outletObj;
     },
+    doesGpioExist(gpio){
+        let self = this;
+        for(const [outlet_id, outlet] of Object.entries(self.outletObj)){
+            if(gpio === outlet.gpio) return true;
+        }
+        return false;
+    },
     getOutletIdByGpio(gpio){
         let self = this;
         for(const [outlet_id, outlet] of Object.entries(self.outletObj)){
@@ -174,21 +181,25 @@ var outletHelpers = {
     //         }
     //     }
     // },
-    activateRelay: function(outletId, desired_state){
+    activateRelayById: function(outletId, desired_state){
         let outlet = this.getOutletById(outletId);
         if(outlet)
             outlet.activate = desired_state;
     },
     activateRelayByGpio: function(gpio_input, desired_state) {
         let outletId = this.getOutletIdByGpio(gpio_input);
-        this.activateRelay(outletId, desired_state);
+        this.activateRelayById(outletId, desired_state);
     },
-    toggleRelay: function(gpio_input){
+    toggleRelayById: function(outletId){
+        let outlet = this.getOutletById(outletId);
+        if(outlet)
+            outlet.toggle;
+    },
+    toggleRelayByGpio: function(gpio_input){
         let outletId = this.getOutletIdByGpio(gpio_input),
-            outlet = this.getOutletById(outletId);
-        outlet.toggle();
+        this.toggleRelayById(outletId);
     },
-    getStatus: function(outletId){
+    getStatusById: function(outletId){
         let outlet = this.getOutletById(outletId);
         if(!outlet)
             return outlet;

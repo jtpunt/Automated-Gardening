@@ -158,7 +158,7 @@ router.get('/activate/:gpio', outletMiddleware.isGpioConfigured(outletHelper), f
     console.log("in /:id route\n");
     var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
     console.log("is a valid number!\n");
-    outletHelper.toggleRelay(gpio_input);
+    outletHelper.toggleRelayByGpio(gpio_input);
     res.status(200).end();
 });
 router.get('/activate/:gpio/:desired_state', 
