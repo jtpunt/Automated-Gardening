@@ -207,7 +207,7 @@ var outletHelpers = {
     },
     getStatusByGpio: function(gpio_input){
         let outletId = this.getOutletIdByGpio(gpio_input);
-        return this.getStatus(outletId);
+        return this.getStatusById(outletId);
     }
 }
 module.exports = outletHelpers;
