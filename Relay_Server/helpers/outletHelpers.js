@@ -194,6 +194,8 @@ var outletHelpers = {
         let outlet = this.getOutletById(outletId);
         if(outlet)
             outlet.toggle;
+        else
+            console.log(`outlet not found with id: ${outletId}`);
     },
     toggleRelayByGpio: function(gpio_input){
         let outletId = this.getOutletIdByGpio(gpio_input);
