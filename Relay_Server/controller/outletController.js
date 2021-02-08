@@ -52,6 +52,7 @@ var outletController = {
                 res.status(404).send(`Gpio - ${gpio_input} is not set up with the system. `);
             }else{
                 outletHelper.toggleRelayByGpio(gpio_input);
+                console.log(`toggling relay - gpio - ${gpio_input}`);
                 res.status(200).end();
             }
         }
