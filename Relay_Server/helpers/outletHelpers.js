@@ -191,17 +191,12 @@ var outletHelpers = {
         this.activateRelayById(outletId, desired_state);
     },
     toggleRelayById: function(outletId){
-        console.log(`in toggleRelayById: ${outletId}`);
         let outlet = this.getOutletById(outletId);
         if(outlet)
             outlet.toggle();
-        else
-            console.log(`outlet not found with id: ${outletId}`);
     },
     toggleRelayByGpio: function(gpio_input){
-        console.log(`in toggleRelayByGpio`);
         let outletId = this.getOutletIdByGpio(gpio_input);
-        console.log(`outletId: ${outletId}`);
         this.toggleRelayById(outletId);
     },
     getStatusById: function(outletId){

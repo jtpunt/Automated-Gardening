@@ -139,20 +139,10 @@ router.get('/schedule/:schedule_id/resume',
     middleware.verifyAdminAccount, 
     scheduleController.resumeScheduleReq(scheduleHelper)
 );
-router.get('/status/:gpio', outletMiddleware.isGpioConfigured(outletHelper), function(req, res){
-    console.log("in /status/:id route\n");
-    var gpio_input = Number(req.params.gpio); // convert our string to a number, since '2' !== 2
-    if(Number.isNaN(gpio_input)){
-        res.write("400: ", "GPIO input given is not a number!");
-        res.status(400).end();
-    }else{
-        let status = outletHelper.getStatusByGpio(gpio_input);
-        console.log("Status: ", status);
-        res.write(status.toString());
-        res.status(200).end();
-    }
-    // validateInput(gpio_input, res, outletHelper.getStatus, outletHelper);
-});
+router.get('/status/:gpio', 
+    outletMiddleware.isGpioConfigured(outletHelper), 
+    outletController.getStatusByGpioReq(outletHelper)
+);
 // really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
 router.get('/activate/:gpio', 
     outletMiddleware.isGpioConfigured(outletHelper), 
