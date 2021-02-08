@@ -64,7 +64,6 @@ class Outlet extends RelaySettings{
 		this.outlet = new Gpio(this.gpio, this.direction);
 	}
 	toggle(){
-		console.log(`in toggle method`);
 		if(this.status === 0){
 			this.activate = 1;
 		}else{
