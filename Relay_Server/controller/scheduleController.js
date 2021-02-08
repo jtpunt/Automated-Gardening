@@ -7,7 +7,7 @@ var scheduleMethods = {
     cancelScheduleReq(scheduleHelper){
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
-            if(!self.doesScheduleExist(schedule_id))
+            if(!scheduleHelper.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
             else{
                 let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
@@ -23,7 +23,7 @@ var scheduleMethods = {
     cancelNextScheduleReq(scheduleHelper){
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
-            if(!self.doesScheduleExist(schedule_id))
+            if(!scheduleHelper.doesScheduleExist(schedule_id))
                 res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
             else{
                 let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
