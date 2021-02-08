@@ -36,7 +36,7 @@ var outletController = {
     },
     getStatusByIdReq: function(outletHelper){
         return function(req, res, next){
-            var outletId = req.params.outletId,
+            var outletId = req.params.outletId;
             if(!outletHelper.doesOutletExist(ouletId)){
                  res.status(404).send(`Outlet id - ${outletId} does not exist`);
             }else{
