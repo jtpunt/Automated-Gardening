@@ -51,7 +51,7 @@ var outletController = {
             if(!outletHelper.doesGpioExist(gpio_input)){
                 res.status(404).send(`Gpio - ${gpio_input} is not set up with the system. `);
             }else{
-                outletHelper.toggleByGpio(gpio_input);
+                outletHelper.toggleRelayByGpio(gpio_input);
                 res.status(200).end();
             }
         }

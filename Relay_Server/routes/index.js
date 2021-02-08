@@ -156,7 +156,7 @@ router.get('/status/:gpio', outletMiddleware.isGpioConfigured(outletHelper), fun
 // really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
 router.get('/activate/:gpio', 
     outletMiddleware.isGpioConfigured(outletHelper), 
-    outletController.toggleRelayByGpioReq(outletHelper)
+    outletController.toggleByGpioReq(outletHelper)
 );
 router.get('/activate/:gpio/:desired_state', 
     middleware.verifyAdminAccount, 
