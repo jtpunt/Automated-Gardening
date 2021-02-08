@@ -194,7 +194,7 @@ var outletHelpers = {
         console.log(`in toggleRelayById: ${outletId}`);
         let outlet = this.getOutletById(outletId);
         if(outlet)
-            outlet.toggle;
+            outlet.toggle();
         else
             console.log(`outlet not found with id: ${outletId}`);
     },
