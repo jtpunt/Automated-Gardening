@@ -139,18 +139,32 @@ router.get('/schedule/:schedule_id/resume',
     middleware.verifyAdminAccount, 
     scheduleController.resumeScheduleReq(scheduleHelper)
 );
-router.get('/status/:gpio', 
+
+
+/* Outlet routes */
+router.get('/status/gpio/:gpio', 
     outletMiddleware.isGpioConfigured(outletHelper), 
     outletController.getStatusByGpioReq(outletHelper)
 );
+router.get(`/status/outlet/:outletId`,
+    outletController.getStatusByIdReq(outletHelper)
+);
 // really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
-router.get('/activate/:gpio', 
+router.get('/toggle/gpio/:gpio', 
     outletMiddleware.isGpioConfigured(outletHelper), 
     outletController.toggleByGpioReq(outletHelper)
 );
-router.get('/activate/:gpio/:desired_state', 
+router.get('/toggle/outlet/:outletId', 
+    outletController.toggleByIdReq(outletHelper)
+);
+router.get('/activate/gpio/:gpio/:desired_state', 
     middleware.verifyAdminAccount, 
     outletMiddleware.isGpioConfigured(outletHelper), 
     outletController.activateOutletByGpioReq(outletHelper)
+);
+router.get('/activate/outlet/:outletId/:desired_state', 
+    middleware.verifyAdminAccount, 
+    outletMiddleware.isGpioConfigured(outletHelper), 
+    outletController.activateOutletByIdReq(outletHelper)
 );
 module.exports = router;

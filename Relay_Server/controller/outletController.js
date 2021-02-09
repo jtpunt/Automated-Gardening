@@ -48,12 +48,8 @@ var outletController = {
     toggleByGpioReq: function(outletHelper){
         return function(req, res, next){
             var gpio_input = Number(req.params.gpio);
-            if(!outletHelper.doesGpioExist(gpio_input)){
-                res.status(404).send(`Gpio - ${gpio_input} is not set up with the system. `);
-            }else{
-                outletHelper.toggleRelayByGpio(gpio_input);
-                res.status(200).end();
-            }
+            outletHelper.toggleRelayByGpio(gpio_input);
+            res.status(200).end();
         }
     },
     toggleByIdReq: function(outletHelper){
