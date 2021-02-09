@@ -147,6 +147,7 @@ router.get('/status/gpio/:gpio',
     outletController.getStatusByGpioReq(outletHelper)
 );
 router.get(`/status/outlet/:outletId`,
+    outletMiddleware.isOutletConfigured(outletHelper),
     outletController.getStatusByIdReq(outletHelper)
 );
 // really only toggles the relay - if it's on, this will turn it off. if it's off, this will turn it on. etc.
@@ -155,6 +156,7 @@ router.get('/toggle/gpio/:gpio',
     outletController.toggleByGpioReq(outletHelper)
 );
 router.get('/toggle/outlet/:outletId', 
+    outletMiddleware.isOutletConfigured(outletHelper),
     outletController.toggleByIdReq(outletHelper)
 );
 router.get('/activate/gpio/:gpio/:desired_state', 
@@ -164,7 +166,7 @@ router.get('/activate/gpio/:gpio/:desired_state',
 );
 router.get('/activate/outlet/:outletId/:desired_state', 
     middleware.verifyAdminAccount, 
-    outletMiddleware.isGpioConfigured(outletHelper), 
+    outletMiddleware.isOutletConfigured(outletHelper),
     outletController.activateOutletByIdReq(outletHelper)
 );
 module.exports = router;
