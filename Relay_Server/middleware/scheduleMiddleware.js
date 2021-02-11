@@ -181,7 +181,7 @@ let scheduleMiddleware = {
             else
                 next();
         }
-    }
+    },
     validateScheduleInputs(req, res, next){
         let schedule_config = req.body,
             schedule        = schedule_config['schedule'],
