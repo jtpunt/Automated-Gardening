@@ -121,18 +121,16 @@ router.delete('/schedule/:schedule_id',
     scheduleController.deleteScheduleReq(scheduleHelper)
 );
 
+router.post('/schedule/:schedule_id/cancel', 
+    middleware.verifyAdminAccount, 
+    scheduleMiddleware.doesScheduleExist(scheduleHelper),
+    scheduleController.cancelScheduleReq(scheduleHelper)
+);
 
 // Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', 
     scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.getDateOfNextInvocationReq(scheduleHelper)
-);
-
-
-router.post('/schedule/:schedule_id/cancel', 
-    middleware.verifyAdminAccount, 
-    scheduleMiddleware.doesScheduleExist(scheduleHelper),
-    scheduleController.cancelScheduleReq(scheduleHelper)
 );
 
 router.post('/schedule/:schedule_id/cancel/next', 
