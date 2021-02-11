@@ -395,6 +395,13 @@ var scheduleMethods = {
                 res.status(200).send(nextInvocation.toString());
         }
     },
+    getScheduleReq(scheduleHelper){
+        return function(req, res, next){
+            let schedule_id    = req.params.schedule_id,
+                schedule       = scheduleHelper.getScheduleById(schedule_id);
+            res.status(200).send(schedule);
+        }
+    }
     getSchedulesReq(scheduleHelper){
         return function(req, res, next){
             res.status(200).send(scheduleHelper.scheduleObj);

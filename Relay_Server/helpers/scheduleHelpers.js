@@ -10,6 +10,11 @@ let scheduleHelpers = {
     doesScheduleExist: function(schedule_id){
         return schedule_id in this.scheduleObj;
     },
+    getScheduleById: function(schedule_id){
+        if(!this.doesScheduleExist(schedule_id))
+            return null;
+        return this.scheduleObj[schedule_id].schedule;
+    },
     getScheduleJobById: function(schedule_id){
         if(!this.doesScheduleExist(schedule_id))
             return null;

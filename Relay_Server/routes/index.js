@@ -95,19 +95,13 @@ router.post('/schedule',
     outletMiddleware.isGpioConfigured(outletHelper),
     scheduleController.createSchedulesReq(scheduleHelper, outletHelper)
 );
-router.get('/schedule/:schedule_id', function(req, res) {
-    Scheduler.findById(req.params.schedule_id, (err, foundSchedule) =>{
-        if(err) {
-            res.redirect("back");
-        }
-        else{
-            console.log(foundSchedule);
-            res.write(JSON.stringify(foundSchedule));
-            res.status(200).end();
-        }
-    }); 
-});
+
 router.route(`/schedule/:schedule_id`)
+    .get(
+        middleware.verifyAdminAccount,
+        scheduleMiddleware.doesScheduleExist(scheduleHelper),
+        scheduleController.getScheduleReq(scheduleHelper)
+    )
     .put(
         middleware.verifyAdminAccount,  
         outletMiddleware.isGpioConfigured(outletHelper),
@@ -119,19 +113,7 @@ router.route(`/schedule/:schedule_id`)
         scheduleMiddleware.doesScheduleExist(scheduleHelper),
         scheduleController.deleteScheduleReq(scheduleHelper)
     );
-// edit an existing schedule
-// router.put('/schedule/:schedule_id', 
-//     middleware.verifyAdminAccount,  
-//     outletMiddleware.isGpioConfigured(outletHelper),
-//     scheduleMiddleware.doesScheduleExist(scheduleHelper),
-//     scheduleController.updateScheduleReq(scheduleHelper, outletHelper)
-// );
-// // delete an existing schedule
-// router.delete('/schedule/:schedule_id', 
-//     middleware.verifyAdminAccount,
-//     scheduleMiddleware.doesScheduleExist(scheduleHelper),
-//     scheduleController.deleteScheduleReq(scheduleHelper)
-// );
+
 router.post('/schedule/:schedule_id/cancel', 
     middleware.verifyAdminAccount, 
     scheduleMiddleware.doesScheduleExist(scheduleHelper),
