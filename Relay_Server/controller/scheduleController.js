@@ -1,65 +1,28 @@
 var scheduleMethods = {
-    getSchedulesReq(scheduleHelper){
-        return function(req, res, next){
-            res.status(200).send(scheduleHelper.scheduleObj);
-        }
-    },
-    cancelScheduleReq(scheduleHelper){
-        return function(req, res, next){
-            var schedule_id = req.params.schedule_id;
-            if(!scheduleHelper.doesScheduleExist(schedule_id))
-                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
-            else{
-                let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
-                if(nextInvocationDate === undefined)
-                    res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
-                else{
-                    scheduleHelper.cancelSchedule(schedule_id);
-                    res.status(200).send(`Schedule id ${schedule_id} with next invocation date of ${nextInvocationDate} has been canceled.`);
-                }
-            }
-        }
-    },
     cancelNextScheduleReq(scheduleHelper){
         return function(req, res, next){
-            var schedule_id = req.params.schedule_id;
-            if(!scheduleHelper.doesScheduleExist(schedule_id))
-                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
+            let schedule_id        = req.params.schedule_id,
+                nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
+            if(nextInvocationDate === undefined)
+                res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
             else{
-                let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
-                if(nextInvocationDate === undefined)
-                    res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
-                else{
-                    scheduleHelper.cancelNextSchedule(schedule_id);
-                    res.status(200).send(`Schedule id ${schedule_id} with next invocation date of ${nextInvocationDate} has been canceled.`);
-                }
-            }
-        }
-    },
-    getDateOfNextInvocationReq: (scheduleHelper) => {
-        return function(req, res, next){
-            let schedule_id = req.params.schedule_id;
-            if(!scheduleHelper.doesScheduleExist(schedule_id))
-                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
-            else{
-                let nextInvocation = scheduleHelper.getDateOfNextInvocation(schedule_id);
-                if(nextInvocation === undefined)
-                    res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
-                else
-                    res.status(200).send(nextInvocation.toString());
+                scheduleHelper.cancelNextSchedule(schedule_id);
+                res.status(200).send(`Schedule id ${schedule_id} with next invocation date of ${nextInvocationDate} has been canceled.`);
             }
             
         }
     },
-    deleteScheduleReq: (scheduleHelper) => {
+    cancelScheduleReq(scheduleHelper){
         return function(req, res, next){
-            let schedule_id = req.params.schedule_id;
-            if(!scheduleHelper.doesScheduleExist(schedule_id))
-                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
+            let schedule_id        = req.params.schedule_id,
+                nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
+            if(nextInvocationDate === undefined)
+                res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
             else{
-                scheduleHelper.deleteSchedule(schedule_id);
-                res.status(200).send(`Schedule id - ${schedule_id} has been successfully deleted!`);
+                scheduleHelper.cancelSchedule(schedule_id);
+                res.status(200).send(`Schedule id ${schedule_id} with next invocation date of ${nextInvocationDate} has been canceled.`);
             }
+            
         }
     },
     createSchedulesReq: (scheduleHelper, outletHelper) => {
@@ -415,44 +378,60 @@ var scheduleMethods = {
             res.status(200).end();
         }
     },
+    deleteScheduleReq: (scheduleHelper) => {
+        return function(req, res, next){
+            let schedule_id = req.params.schedule_id;
+            scheduleHelper.deleteSchedule(schedule_id);
+            res.status(200).send(`Schedule id - ${schedule_id} has been successfully deleted!`);
+        }
+    },
+    getDateOfNextInvocationReq: (scheduleHelper) => {
+        return function(req, res, next){
+            let schedule_id    = req.params.schedule_id,
+                nextInvocation = scheduleHelper.getDateOfNextInvocation(schedule_id);
+            if(nextInvocation === undefined)
+                res.status(404).send(`Next Invocation Date Not Found For Schedule id - ${schedule_id}`);
+            else
+                res.status(200).send(nextInvocation.toString());
+        }
+    },
+    getSchedulesReq(scheduleHelper){
+        return function(req, res, next){
+            res.status(200).send(scheduleHelper.scheduleObj);
+        }
+    },
     updateScheduleReq: (scheduleHelper, outletHelper) => {
         return function(req, res, next){
-            var schedule_id = req.params.schedule_id;
-            var updatedSchedule = req.body;
-                // validate newSchedule['device']['gpio'] is a gpio that is currently being used in the system
-            console.log(`updatedSchedule: ${JSON.stringify(updatedSchedule)}`);
-            let prevScheduleId = updatedSchedule['relational']['prevScheduleId'],
-                nextScheduleId = updatedSchedule['relational']['nextScheduleId'],
-                my_schedule = {
+            let schedule_id     = req.params.schedule_id,
+                updatedSchedule = req.body;
+                prevScheduleId  = updatedSchedule['relational']['prevScheduleId'],
+                nextScheduleId  = updatedSchedule['relational']['nextScheduleId'],
+                my_schedule     = {
                     ... updatedSchedule,
                     schedule:   updatedSchedule['schedule']['start_time'] || 
                                 updatedSchedule['schedule']['end_time']
                 };
-                
+            console.log(`updatedSchedule: ${JSON.stringify(updatedSchedule)}`);
             my_schedule['relational']['prevScheduleId'] = updatedSchedule['relational']['prevScheduleId'],
             my_schedule['relational']['nextScheduleId'] = updatedSchedule['relational']['nextScheduleId']
-            if(!scheduleHelper.doesScheduleExist(schedule_id))
-                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
-            else{
-                scheduleHelper.editSchedule(schedule_id, my_schedule, outletHelper.activateRelayByGpio, outletHelper);
-                console.log("Successfully Updated!");
-                res.status(200).send("Successfully updated!");
-            }
+
+            scheduleHelper.editSchedule(schedule_id, my_schedule, outletHelper.activateRelayByGpio, outletHelper);
+            console.log("Successfully Updated!");
+            res.status(200).send("Successfully updated!");
+            
         }
     },
     resumeScheduleReq: (scheduleHelper, outletHelper) => {
         return function(req, res, next){
             var schedule_id = req.params.schedule_id;
-            if(!scheduleHelper.doesScheduleExist(schedule_id))
-                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
-            else{
-                scheduleHelper.resumeSchedule(schedule_id, outletHelper.activateRelayByGpio, outletHelper);
-                let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
-                if(nextInvocationDate === undefined)
-                    res.status(400).send(`Schedule id ${schedule_id} did not successfully resume`);
-                else
-                    res.status(200).send(`Schedule id - ${schedule_id} has successfully resumed on ${nextInvocationDate}`);
-            }
+
+            scheduleHelper.resumeSchedule(schedule_id, outletHelper.activateRelayByGpio, outletHelper);
+            let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
+            if(nextInvocationDate === undefined)
+                res.status(400).send(`Schedule id ${schedule_id} did not successfully resume`);
+            else
+                res.status(200).send(`Schedule id - ${schedule_id} has successfully resumed on ${nextInvocationDate}`);
+            
         }
     }
 }

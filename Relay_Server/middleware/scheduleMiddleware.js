@@ -173,6 +173,15 @@ let scheduleMiddleware = {
             res.status(404).send(exc.toString());
         }
     },
+    doesScheduleExist(scheduleHelper){
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+            if(!scheduleHelper.doesScheduleExist(schedule_id))
+                res.status(404).send(`Schedule id - ${schedule_id} does not exist!`);
+            else
+                next();
+        }
+    }
     validateScheduleInputs(req, res, next){
         let schedule_config = req.body,
             schedule        = schedule_config['schedule'],

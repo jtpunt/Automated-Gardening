@@ -111,32 +111,38 @@ router.get('/schedule/:schedule_id', function(req, res) {
 router.put('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,  
     outletMiddleware.isGpioConfigured(outletHelper),
+    scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.updateScheduleReq(scheduleHelper, outletHelper)
 );
 // delete an existing schedule
 router.delete('/schedule/:schedule_id', 
     middleware.verifyAdminAccount,
+    scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.deleteScheduleReq(scheduleHelper)
 );
 
 
 // Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', 
+    scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.getDateOfNextInvocationReq(scheduleHelper)
 );
 
 
 router.post('/schedule/:schedule_id/cancel', 
     middleware.verifyAdminAccount, 
+    scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.cancelScheduleReq(scheduleHelper)
 );
 
 router.post('/schedule/:schedule_id/cancel/next', 
     middleware.verifyAdminAccount,
+    scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.cancelNextScheduleReq(scheduleHelper)
 );
 router.get('/schedule/:schedule_id/resume', 
     middleware.verifyAdminAccount, 
+    scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.resumeScheduleReq(scheduleHelper)
 );
 
