@@ -107,32 +107,41 @@ router.get('/schedule/:schedule_id', function(req, res) {
         }
     }); 
 });
+router.route(`/schedule/:schedule_id`)
+    .put(
+        middleware.verifyAdminAccount,  
+        outletMiddleware.isGpioConfigured(outletHelper),
+        scheduleMiddleware.doesScheduleExist(scheduleHelper),
+        scheduleController.updateScheduleReq(scheduleHelper, outletHelper)
+    )
+    .delete(
+        middleware.verifyAdminAccount,
+        scheduleMiddleware.doesScheduleExist(scheduleHelper),
+        scheduleController.deleteScheduleReq(scheduleHelper)
+    );
 // edit an existing schedule
-router.put('/schedule/:schedule_id', 
-    middleware.verifyAdminAccount,  
-    outletMiddleware.isGpioConfigured(outletHelper),
-    scheduleMiddleware.doesScheduleExist(scheduleHelper),
-    scheduleController.updateScheduleReq(scheduleHelper, outletHelper)
-);
-// delete an existing schedule
-router.delete('/schedule/:schedule_id', 
-    middleware.verifyAdminAccount,
-    scheduleMiddleware.doesScheduleExist(scheduleHelper),
-    scheduleController.deleteScheduleReq(scheduleHelper)
-);
-
+// router.put('/schedule/:schedule_id', 
+//     middleware.verifyAdminAccount,  
+//     outletMiddleware.isGpioConfigured(outletHelper),
+//     scheduleMiddleware.doesScheduleExist(scheduleHelper),
+//     scheduleController.updateScheduleReq(scheduleHelper, outletHelper)
+// );
+// // delete an existing schedule
+// router.delete('/schedule/:schedule_id', 
+//     middleware.verifyAdminAccount,
+//     scheduleMiddleware.doesScheduleExist(scheduleHelper),
+//     scheduleController.deleteScheduleReq(scheduleHelper)
+// );
 router.post('/schedule/:schedule_id/cancel', 
     middleware.verifyAdminAccount, 
     scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.cancelScheduleReq(scheduleHelper)
 );
-
 // Returns the date of the next planned invocation of our schedule
 router.get('/schedule/:schedule_id/date', 
     scheduleMiddleware.doesScheduleExist(scheduleHelper),
     scheduleController.getDateOfNextInvocationReq(scheduleHelper)
 );
-
 router.post('/schedule/:schedule_id/cancel/next', 
     middleware.verifyAdminAccount,
     scheduleMiddleware.doesScheduleExist(scheduleHelper),
