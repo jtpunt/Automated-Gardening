@@ -98,7 +98,7 @@ router.post('/schedule',
 
 router.route(`/schedule/:schedule_id`)
     .get(
-        middleware.verifyAdminAccount,
+        // middleware.verifyAdminAccount,
         scheduleMiddleware.doesScheduleExist(scheduleHelper),
         scheduleController.getScheduleReq(scheduleHelper)
     )
