@@ -401,7 +401,7 @@ var scheduleMethods = {
                 schedule       = scheduleHelper.getScheduleById(schedule_id);
             res.status(200).send(schedule);
         }
-    }
+    },
     getSchedulesReq(scheduleHelper){
         return function(req, res, next){
             res.status(200).send(scheduleHelper.scheduleObj);
