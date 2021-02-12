@@ -7,40 +7,6 @@ let Scheduler       = require("../models/scheduler"),
 
 let scheduleHelpers = {
     scheduleObj: {},
-    doesScheduleExist: function(schedule_id){
-        return schedule_id in this.scheduleObj;
-    },
-    getScheduleById: function(schedule_id){
-        if(!this.doesScheduleExist(schedule_id))
-            return null;
-        return this.scheduleObj[schedule_id].schedule;
-    },
-    getScheduleJobById: function(schedule_id){
-        if(!this.doesScheduleExist(schedule_id))
-            return null;
-        return this.scheduleObj[schedule_id];
-    },
-    getScheduleConfigById: function(schedule_id){
-        if(!this.doesScheduleExist(schedule_id))
-            return null;
-        return this.scheduleObj[schedule_id].schedule_config;
-    },
-    getDateOfNextInvocation: function(schedule_id){
-        let job = this.getScheduleJobById(schedule_id);
-        if(!job) 
-            return job;
-        return job.nextInvocationDate;
-        //return job.nextInvocationDate;        
-    },
-    // invalidates any job. All  planned invocations will be canceled
-    cancelSchedule: function(schedule_id){
-        let job = this.getScheduleJobById(schedule_id);
-        if(job){
-            console.log(`Next Schedule before ${job.nextInvocationDate} being canceled`);
-            job.cancelJob();
-            console.log(`Next Schedule after being ${job.nextInvocationDate} canceled`)
-        }
-    },
     // invalidates the next planned invocation
     cancelNextSchedule: function(schedule_id, activateRelayFn, context){
         let job = this.getScheduleJobById(schedule_id);
@@ -50,46 +16,14 @@ let scheduleHelpers = {
             console.log(`Next Schedule after being ${job.nextInvocationDate} canceled`)
         }
     },
-    startActiveSchedules: function(activateRelayFn, context){
-        let self  = this,
-            today = new Date();
-
-        for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
-            console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
-            if(!job.nextScheduleId)
-                console.log("nextScheduleId is undefined");
-            else{
-                console.log(`nextScheduleId is not undefined`);
-                let isScheduleActive = self.scheduleIsActive(schedule_id, today);
-                if(isScheduleActive === true)
-                    activateRelayFn.call(context, job.gpio, job.desired_state);
-            }
+    // invalidates any job. All  planned invocations will be canceled
+    cancelSchedule: function(schedule_id){
+        let job = this.getScheduleJobById(schedule_id);
+        if(job){
+            console.log(`Next Schedule before ${job.nextInvocationDate} being canceled`);
+            job.cancelJob();
+            console.log(`Next Schedule after being ${job.nextInvocationDate} canceled`)
         }
-    },
-    resumeSchedule: function(schedule_id, fn, context){
-        let self  = this,
-            today = new Date(w),
-            job   = self.getScheduleJobById(schedule_id);
-            
-        if(!job){
-            console.log("Schedule config is NULL");
-        }else{
-            let restartSchedule = job.rescheduleJob;
-            // did the job not get registered as new again and restart?
-            if(!restartSchedule){ 
-                let jobArgs = [fn, context, job.gpio, job.desired_state],
-                    job     = new JobBuilder()
-                    .withSchedule(job.schedule)
-                    .withRelational(job.relational)
-                    .withDevice(job.device)
-                    .withJobFunction(...jobArgs)
-                    .build()
-
-                self.scheduleObj[schedule_id] = job;
-            }
-            self.startActiveSchedules(activateRelayFn, context);
-        }
-        
     },
     createSchedule: async function(new_schedule_config, ...jobArgs){
         let self            = this,
@@ -111,338 +45,47 @@ let scheduleHelpers = {
             return schedule_id;
         }
     },
-    // Finds schedules (by the GPIO we are checking against) that would occur on the same day
-    // and returns the indices refering to those schedules in our scheduleArr
-    findSameDaySchedulesAndRetIds: function(schedule_config){
-        let self      = this,
-            date      = schedule_config['schedule']['date'],
-            month     = schedule_config['schedule']['month'],
-            year      = schedule_config['schedule']['year'],
-            gpio      = Number(schedule_config['device']['gpio']),
-            dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : null,
-            timestamp = new Date(),
-            indices   = [],
-            intersect = function(a, b){
-                return a.filter(Set.prototype.has, new Set(b));
-            };
-            
-        console.log(`schedule_config in findSameDay..${JSON.stringify(schedule_config)}`);
-
-        // recurrence based scheduling
-        if(dayOfWeek && dayOfWeek.length){ 
-            console.log("Recurrence Based Scheduling");
-            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
-            for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
-                let sched_second    = job.second,
-                    sched_minute    = job.minute,
-                    sched_hour      = job.hour,
-                    sched_date      = job.date,
-                    sched_month     = job.month,
-                    sched_year      = job.year,
-                    sched_gpio      = job.gpio,
-                    sched_dayOfWeek = job.dayOfWeek ? Array.from(job.dayOfWeek) : null;
-                if(job.nextScheduleId && gpio === sched_gpio){
-                    // recurrence based schedule compared to recurrence based scheduling
-                    if(sched_dayOfWeek && sched_dayOfWeek.length){
-                        // the times these schedules are set for are all the same for recurrence based scheduling
-                        let common_days = intersect(dayOfWeek, sched_dayOfWeek);
-                        // are there common days between these recurrence-based schedules?
-                        if(common_days.length > 0)
-                            indices.push(schedule_id);
-                    }
-                    // recurrence based scheduling compared to date based scheduling
-                    else if (sched_date && sched_month  && sched_year){
-                        let sched_timestamp = new Date(sched_year, sched_month, sched_date, sched_hour, sched_minute, sched_second);
-                        let sched_numDay = sched_timestamp.getDay();
-                        if(dayOfWeek.includes(sched_numDay))
-                            indices.push(schedule_id);
-                    }
-                    // otherwise, recurrence based scheduling compared check to daily 1 time - off schedules
-                    else
-                        indices.push(schedule_id);
-                }
-            }
-        }
-        // date based scheduling
-        else if(date && month && year){ 
-            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
-            for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
-                let sched_date      = job.date,
-                    sched_month     = job.month,
-                    sched_year      = job.year,
-                    sched_gpio      = job.gpio,
-                    sched_dayOfWeek = (job.dayOfWeek) ? Array.from(job.dayOfWeek) : null;
-                
-                if(job.nextScheduleId && gpio === sched_gpio){
-                    // date based scheduling compared to recurrence based scheduling
-                    if(sched_dayOfWeek && sched_dayOfWeek.length){
-                        let datebased_timestamp = new Date(year, month, date, hour, minute, second);
-                        let datebased_numDay = datebased_timestamp.getDay();
-                        
-                        if(sched_dayOfWeek.includes(datebased_numDay))
-                            indices.push(schedule_id);
-                    }
-                    // date based scheduling compared to date based scheduling
-                    else if (sched_date && sched_month && sched_year){
-                        if(date === sched_date && month === sched_month && year === sched_year)
-                            indices.push(schedule_id);
-                    }
-                    // otherwise, date based scheduling compared check to 1 time - off schedules
-                    else
-                        indices.push(schedule_id);
-                }
-            }
-        }
-        // otherwise, everyday 1 time - off schedules
-        else{
-            console.log(`everyday 1 time schedules`);
-            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
-            for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
-                let sched_date      = job.date,
-                    sched_month     = job.month,
-                    sched_year      = job.year,
-                    sched_gpio      = job.gpio,
-                    sched_dayOfWeek = (job.dayOfWeek) ? Array.from(job.dayOfWeek) : null;
-                console.log(`Iterating through schedules`);
-                if(job.nextScheduleId && gpio === sched_gpio){
-                //if(schedule_obj["_id"] !== schedule_id){
-                    // everyday 1 time - off schedules compared to recurrence based scheduling
-                    if(sched_dayOfWeek && sched_dayOfWeek.length)
-                        indices.push(schedule_id);
-                    // everyday 1 time - off schedules compared to date based scheduling
-                    else if (sched_date && sched_month && sched_year)
-                        indices.push(schedule_id);
-                    // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
-                    else
-                        indices.push(schedule_id);
-                }else{
-                    console.log(`nextScheduleId: ${job.nextScheduleId}`);
-                }
-            }
-        }
-        console.log(`schedule ids: ${indices}`);
-        return indices;
-    },
-    isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
-        let self              = this,
-            conflictMsg       = "",
-            buildTimeStamp    = (schedule) => { return new Date((new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']));},
-            new_on_timestamp  = buildTimeStamp(on_schedule_config['schedule']),
-            new_off_timestamp = buildTimeStamp(off_schedule_config['schedule']),
-            schedule_ids      = self.findSameDaySchedulesAndRetIds(on_schedule_config);
-        
-        schedule_ids.forEach(function(schedule_id){
-            let sched_on_job          = self.scheduleObj[schedule_id],
-                sched_off_mongo_id    = sched_on_job.nextScheduleId,
-                sched_on_timestamp    = sched_on_job.timestamp;
-
-             if(self.doesScheduleExist(sched_off_mongo_id)){
-                let sched_off_timestamp = self.scheduleObj[sched_off_mongo_id].timestamp;
-                if(new_on_timestamp <= sched_on_timestamp && new_off_timestamp >= sched_off_timestamp)
-                    conflictMsg += `Schedule is overlapping. `;
-            }
-            
-        });
-        console.log(`conflictMsg: ${conflictMsg}`);
-        return conflictMsg;
-    },
-    isScheduleConflicting: function(schedule_config){
-        let self           = this,
-            conflictMsg    = "",
-            buildTimeStamp = (schedule) => { return new Date((new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']));},
-            timestamp      = buildTimeStamp(schedule_config['schedule']);
-    
-        console.log("in isScheduleConflicting");
-        let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_id){
-            // is there a schedule conflict?
-            if(isScheduleConflicting){
-                console.log("In handleScheduleConflictsMsg");
-                    
-                let sched_on_job     = self.scheduleObj[schedule_id],
-                    offScheduleId    = sched_on_job.schedule_config['relational']['nextScheduleId'],
-                    on_timestamp     = sched_on_job.timestamp;
-                
-                if(self.doesScheduleExist(offScheduleId)){
-                    let off_timestamp       = self.scheduleObj[offScheduleId].timestamp,
-                        timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true },
-                        fixed_on_timestamp  = on_timestamp.toLocaleString('en-US', timestamp_options),
-                        fixed_timestamp     = timestamp.toLocaleString('en-US', timestamp_options),
-                        fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
-                        
-                    return `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}`;
-                }
-            }else // No Schedule Conflict Found
-                return "";
-            
-        }
-        
-        let schedule_ids = self.findSameDaySchedulesAndRetIds(schedule_config);
-        console.log(`same day schedule ids: ${schedule_ids}`);
-        schedule_ids.forEach(function(schedule_id){
-            if(self.doesScheduleExist(schedule_id)){
-                let isScheduleConflicting = self.scheduleIsActive(schedule_id, timestamp);
-
-                conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_id);
-            }
-        });4
-        return conflictMsg;
-    },
-    // Finds the next_schedule_config that's associated with the prev_schedule_config
-    // and returns the boolean result of whether the 2nd argument, timestamp is greater than or equal to 
-    // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
-    // the next_schedule_config object
-    // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
-    scheduleIsActive: function(schedule_id, timestamp){
-        let self   = this,
-            result = false;
-        
-        let job = self.getScheduleJobById(schedule_id);
-
-        if(!job){
-            console.log(`job is null`);
-        }else{
-            let desired_state = job.desired_state,
-                onScheduleId  = job.prevScheduleId,
-                offScheduleId = job.nextScheduleId;
-             console.log(`in scheduleIsActive`);
-            // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
-            if(desired_state == true && offScheduleId){ // 'on' schedule
-                console.log("Processing 'on' schedule");
-                if(offScheduleId in this.scheduleObj){
-                    let activeToday = false;
-                    // checking date, month, and year is not needed. getSchedules fn will remove these 3 attributes
-                    // if that schedule's timestamp is past today's date. This is added to create a valid node-schedule job,
-                    // since you cannot create a node-schedule job within the past
-                    if(job.dayOfWeek && job.dayOfWeek.length){
-                        let numDay = datebased_timestamp.getDay();
-                        if(job.dayOfWeek.includes(numDay))
-                            activeToday = true;
-                    }else{ // regular everyday schedule detected
-                        activeToday = true;
-                    }
-                    if(activeToday){
-                        let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
-                            off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
-                        console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
-                        console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
-                        if(off_schedule_timestamp < on_schedule_timestamp)
-                            off_schedule_timestamp.setDate(off_schedule_timestamp.getDate() + 1);
-
-                        if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
-                            result = true;
-                    }else{
-                        console.log(`dayOfWeek does not activate today`);
-                    }
-                }else{ // schedule not found
-                    console.log("Off Schedule not found!!");
-                }
-                
-            }else{
-                console.log(`off schedule - desired_state: ${desired_state} - typeof - ${typeof desired_state}`);
-                console.log(`onScheduleId - ${onScheduleId}`);
-                console.log(`offScheduleId - ${offScheduleId}`);
-            }
-
-        }
-        return result;
-    },
-    // gets all the schedules for this device from the database and stores them in the scheduleArr
-    // if the schedule is active, then the associated outlet is activated
-    getSchedules: function(activateRelayFn, context){
+    // schedule_id - the mongo id of the schedule we are trying to access and delete
+    // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
+    // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
+    deleteSchedule: function(schedule_id){
+        console.log(`In deleteSchedule Function with ${schedule_id}`);
         let self = this,
-            sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
+            job  = self.getScheduleJobById(schedule_id);
+            // prevScheduleId = job.prevScheduleId,
+            // nextScheduleId = job.nextScheduleId,
+            // startScheduleId = job.startScheduleId,
+            // endScheduleId   = job.endScheduleId;
 
-        Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, function(err, myDevices){
+        Scheduler.findByIdAndRemove(schedule_id, (err) => {
             if(err){
                 console.log(err);
-            }else{
-                
-                try{
-                   let deviceSchedulePromise = async () => { return await Scheduler.find({'device.id': myDevices["_id"]}); }
-                   
-                    deviceSchedulePromise().then(function(result){
-                        console.log(`result: ${result}`);
-                        return result;
-                    }, function(err){
-                        console.log(`err: ${err}`);
-                    }).then(function(schedule_configs){
-                        console.log(`schedule_configs: ${schedule_configs}`);
-                        schedule_configs.forEach(function(schedule_config){
-                            console.log(`schedule_config: ${schedule_config}`);
-
-                            let continueWithBuild = true,
-                                startScheduleId = schedule_config['relational']['startScheduleId'],
-                                endScheduleId   = schedule_config['relational']['endScheduleId'],
-                                device_gpio     = schedule_config['device']['gpio'],
-                                desired_state   = schedule_config['device']['desired_state'];
-
-                            // should put this code in the job class
-                            let second = schedule_config['schedule']['second'],
-                                minute = schedule_config['schedule']['minute'],
-                                hour   = schedule_config['schedule']['hour'],
-                                date   = schedule_config['schedule']['date'],
-                                month  = schedule_config['schedule']['month'],
-                                year   = schedule_config['schedule']['year'];
-
-                            if(date >= 0 && month >= 0 && year){
-                                let today     = new Date(),
-                                    timestamp = new Date(year, month, date, hour, minute, second);
-
-                                // node-schedule cannot create jobs that are set for a date in the past
-                                // the quick fix is to remove the date, month and year attributes
-                                if(endScheduleId && timestamp < today){ // we processing a start schedule
-                                    console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
-                                    delete schedule_config['schedule']['date'];
-                                    delete schedule_config['schedule']['month'];
-                                    delete schedule_config['schedule']['year'];
-                                    console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
-                                }
-                                // if the current date is passed the end schedule's timestamp, this means that the
-                                // the schedule set (prevSchedule, endSchedule, nextSchedule, endSchedule - processed in this order)
-                                // failed to be removed from the database, remove the end schedule and it's associated start schedule
-                                // from local memory and from mongo
-                                if(startScheduleId && timestamp < today){ // we are processing an end schedule
-                                    console.log("Current date is passed the end schedule date, schedule needs to be deleted");
-                                    console.log(`timestamp: ${timestamp} - today: ${today}`);
-                                    console.log(`timestamp > today? ${timestamp > today}`);
-                                    console.log(`startScheduleId: ${startScheduleId} needs to be deleted`);
-                                    console.log(`current schedule: ${schedule_config['_id']} needs to be deleted!`);
-                                    self.deleteSchedule(startScheduleId);
-                                    self.deleteSchedule(schedule_config['_id']);
-
-                                    continueWithBuild = false;
-                                }
-                            }
-                            if(continueWithBuild){
-                                let jobArgs = startScheduleId ? 
-                                    [self.deleteSchedule, self, startScheduleId.toString()] :
-                                    [activateRelayFn, context, device_gpio, desired_state];
-
-                                let job = new JobBuilder()
-                                    .withSchedule(schedule_config['schedule'])
-                                    .withRelational(schedule_config['relational'])
-                                    .withDevice(schedule_config['device'])
-                                    .withJobFunction(...jobArgs)
-                                    .build()
-
-                                self.scheduleObj[schedule_config['_id']] = job;
-                                console.log(`next invocation - ${self.getDateOfNextInvocation(schedule_config['_id'])}`);
-                            }
-                            
-                        });
-                        console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
-                       
-                        self.startActiveSchedules(activateRelayFn, context);
-                    }).catch(function(err){
-                        console.log(`Error caught: ${err}`);
-                    })
-                   
-                }catch(err){
-                    console.log(`Error caught: ${err}`);
+                throw err;
+            }
+            else{
+                if(job !== undefined){ // has the job been processed to local memory?
+                    self.cancelSchedule(schedule_id);
                 }
+                console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
+                delete self.scheduleObj[schedule_id];
+                console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
             }
         });
     },
+    deleteStartAndEndSchedules(startScheduleId){
+        let self = this,
+            job  = self.getScheduleJobById(startScheduleId);
+
+        if(job){
+            let endScheduleId = job.endScheduleId;
+            self.deleteSchedule(endScheduleId);
+            self.deleteSchedule(startScheduleId);
+        }
+    },
+    doesScheduleExist: function(schedule_id){
+        return schedule_id in this.scheduleObj;
+    },
+
     // schedule_id - the mongo id of the schedule we are trying to access and update
     // updated_schedule_config - the updated schedule configuration
     // activateRelayFn - the function that turns the outlet on/off
@@ -566,58 +209,231 @@ let scheduleHelpers = {
                 }
             });
         }
-       
     },
-    updateScheduleRelationship: function(schedule_id, updated_schedule_config){
-        let self = this;
+    // Finds schedules (by the GPIO we are checking against) that would occur on the same day
+    // and returns the indices refering to those schedules in our scheduleArr
+    findSameDaySchedulesAndRetIds: function(schedule_config){
+        let self      = this,
+            date      = schedule_config['schedule']['date'],
+            month     = schedule_config['schedule']['month'],
+            year      = schedule_config['schedule']['year'],
+            gpio      = Number(schedule_config['device']['gpio']),
+            dayOfWeek = (schedule_config['schedule']['dayOfWeek']) ? Array.from(schedule_config['schedule']['dayOfWeek']) : null,
+            timestamp = new Date(),
+            indices   = [],
+            intersect = function(a, b){
+                return a.filter(Set.prototype.has, new Set(b));
+            };
+            
+        console.log(`schedule_config in findSameDay..${JSON.stringify(schedule_config)}`);
 
-        Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
-            if(err){
-                console.log(err)
-            }else{
-                console.log("successfully updated schedule");
-                console.log(`Schedule before: ${JSON.stringify(self.scheduleObj[schedule_id].schedule_config)}`);
-                self.scheduleObj[schedule_id].relational = updated_schedule_config['relational'];
-                console.log(`Schedule After: ${JSON.stringify(self.scheduleObj[schedule_id].schedule_config)}`);
+        // recurrence based scheduling
+        if(dayOfWeek && dayOfWeek.length){ 
+            console.log("Recurrence Based Scheduling");
+            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
+            for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
+                let sched_second    = job.second,
+                    sched_minute    = job.minute,
+                    sched_hour      = job.hour,
+                    sched_date      = job.date,
+                    sched_month     = job.month,
+                    sched_year      = job.year,
+                    sched_gpio      = job.gpio,
+                    sched_dayOfWeek = job.dayOfWeek ? Array.from(job.dayOfWeek) : null;
+                if(job.nextScheduleId && gpio === sched_gpio){
+                    // recurrence based schedule compared to recurrence based scheduling
+                    if(sched_dayOfWeek && sched_dayOfWeek.length){
+                        // the times these schedules are set for are all the same for recurrence based scheduling
+                        let common_days = intersect(dayOfWeek, sched_dayOfWeek);
+                        // are there common days between these recurrence-based schedules?
+                        if(common_days.length > 0)
+                            indices.push(schedule_id);
+                    }
+                    // recurrence based scheduling compared to date based scheduling
+                    else if (sched_date && sched_month  && sched_year){
+                        let sched_timestamp = new Date(sched_year, sched_month, sched_date, sched_hour, sched_minute, sched_second);
+                        let sched_numDay = sched_timestamp.getDay();
+                        if(dayOfWeek.includes(sched_numDay))
+                            indices.push(schedule_id);
+                    }
+                    // otherwise, recurrence based scheduling compared check to daily 1 time - off schedules
+                    else
+                        indices.push(schedule_id);
+                }
             }
-        });
+        }
+        // date based scheduling
+        else if(date && month && year){ 
+            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
+            for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
+                let sched_date      = job.date,
+                    sched_month     = job.month,
+                    sched_year      = job.year,
+                    sched_gpio      = job.gpio,
+                    sched_dayOfWeek = (job.dayOfWeek) ? Array.from(job.dayOfWeek) : null;
+                
+                if(job.nextScheduleId && gpio === sched_gpio){
+                    // date based scheduling compared to recurrence based scheduling
+                    if(sched_dayOfWeek && sched_dayOfWeek.length){
+                        let datebased_timestamp = new Date(year, month, date, hour, minute, second);
+                        let datebased_numDay = datebased_timestamp.getDay();
+                        
+                        if(sched_dayOfWeek.includes(datebased_numDay))
+                            indices.push(schedule_id);
+                    }
+                    // date based scheduling compared to date based scheduling
+                    else if (sched_date && sched_month && sched_year){
+                        if(date === sched_date && month === sched_month && year === sched_year)
+                            indices.push(schedule_id);
+                    }
+                    // otherwise, date based scheduling compared check to 1 time - off schedules
+                    else
+                        indices.push(schedule_id);
+                }
+            }
+        }
+        // otherwise, everyday 1 time - off schedules
+        else{
+            console.log(`everyday 1 time schedules`);
+            // loop through our schedules and find another schedule that runs on same days as the schedule we are trying to add
+            for(const [schedule_id, job] of Object.entries(self.scheduleObj)){
+                let sched_date      = job.date,
+                    sched_month     = job.month,
+                    sched_year      = job.year,
+                    sched_gpio      = job.gpio,
+                    sched_dayOfWeek = (job.dayOfWeek) ? Array.from(job.dayOfWeek) : null;
+                console.log(`Iterating through schedules`);
+                if(job.nextScheduleId && gpio === sched_gpio){
+                //if(schedule_obj["_id"] !== schedule_id){
+                    // everyday 1 time - off schedules compared to recurrence based scheduling
+                    if(sched_dayOfWeek && sched_dayOfWeek.length)
+                        indices.push(schedule_id);
+                    // everyday 1 time - off schedules compared to date based scheduling
+                    else if (sched_date && sched_month && sched_year)
+                        indices.push(schedule_id);
+                    // otherwise, 1 time - off schedules compared check to everyday 1 time - off schedules
+                    else
+                        indices.push(schedule_id);
+                }else{
+                    console.log(`nextScheduleId: ${job.nextScheduleId}`);
+                }
+            }
+        }
+        console.log(`schedule ids: ${indices}`);
+        return indices;
     },
-    // // schedule_id - the mongo id of the schedule we are trying to access and delete
-    // // Removes the schedule in the scheduleArr and deletes any schedules (next/prev/start/endScheduleId's) that are associated with it
-    // // 1/8/2021 - deleting should turn off the associated outlet if it is somehow turned on
-    deleteSchedule: function(schedule_id){
-        console.log(`In deleteSchedule Function with ${schedule_id}`);
+    getDateOfNextInvocation: function(schedule_id){
+        let job = this.getScheduleJobById(schedule_id);
+        if(!job) 
+            return job;
+        return job.nextInvocationDate;       
+    },
+    getScheduleConfigById: function(schedule_id){
+        if(!this.doesScheduleExist(schedule_id))
+            return null;
+        return this.scheduleObj[schedule_id].schedule_config;
+    },
+    getScheduleJobById: function(schedule_id){
+        if(!this.doesScheduleExist(schedule_id))
+            return null;
+        return this.scheduleObj[schedule_id];
+    },
+     // gets all the schedules for this device from the database and stores them in the scheduleArr
+    // if the schedule is active, then the associated outlet is activated
+    getSchedules: function(activateRelayFn, context){
         let self = this,
-            job  = self.getScheduleJobById(schedule_id);
-            // prevScheduleId = job.prevScheduleId,
-            // nextScheduleId = job.nextScheduleId,
-            // startScheduleId = job.startScheduleId,
-            // endScheduleId   = job.endScheduleId;
+            sanitize_input = (input) => {return (Number(input) === 0) ? Number(input) : Number(input) || undefined};
 
-        Scheduler.findByIdAndRemove(schedule_id, (err) => {
+        Device.findOne({local_ip: localIP, deviceType: "Relay Server"}, function(err, myDevices){
             if(err){
                 console.log(err);
-                throw err;
-            }
-            else{
-                if(job !== undefined){ // has the job been processed to local memory?
-                    self.cancelSchedule(schedule_id);
+            }else{
+                
+                try{
+                   let deviceSchedulePromise = async () => { return await Scheduler.find({'device.id': myDevices["_id"]}); }
+                   
+                    deviceSchedulePromise().then(function(result){
+                        console.log(`result: ${result}`);
+                        return result;
+                    }, function(err){
+                        console.log(`err: ${err}`);
+                    }).then(function(schedule_configs){
+                        console.log(`schedule_configs: ${schedule_configs}`);
+                        schedule_configs.forEach(function(schedule_config){
+                            console.log(`schedule_config: ${schedule_config}`);
+
+                            let continueWithBuild = true,
+                                startScheduleId = schedule_config['relational']['startScheduleId'],
+                                endScheduleId   = schedule_config['relational']['endScheduleId'],
+                                device_gpio     = schedule_config['device']['gpio'],
+                                desired_state   = schedule_config['device']['desired_state'];
+
+                            // should put this code in the job class
+                            let second = schedule_config['schedule']['second'],
+                                minute = schedule_config['schedule']['minute'],
+                                hour   = schedule_config['schedule']['hour'],
+                                date   = schedule_config['schedule']['date'],
+                                month  = schedule_config['schedule']['month'],
+                                year   = schedule_config['schedule']['year'];
+
+                            if(date >= 0 && month >= 0 && year){
+                                let today     = new Date(),
+                                    timestamp = new Date(year, month, date, hour, minute, second);
+
+                                // node-schedule cannot create jobs that are set for a date in the past
+                                // the quick fix is to remove the date, month and year attributes
+                                if(endScheduleId && timestamp < today){ // we processing a start schedule
+                                    console.log(`schedule_config will create invalid job with stored date: ${JSON.stringify(schedule_config)}`)
+                                    delete schedule_config['schedule']['date'];
+                                    delete schedule_config['schedule']['month'];
+                                    delete schedule_config['schedule']['year'];
+                                    console.log(`schedule_config fixed? - ${JSON.stringify(schedule_config)}`);
+                                }
+                                // if the current date is passed the end schedule's timestamp, this means that the
+                                // the schedule set (prevSchedule, endSchedule, nextSchedule, endSchedule - processed in this order)
+                                // failed to be removed from the database, remove the end schedule and it's associated start schedule
+                                // from local memory and from mongo
+                                if(startScheduleId && timestamp < today){ // we are processing an end schedule
+                                    console.log("Current date is passed the end schedule date, schedule needs to be deleted");
+                                    console.log(`timestamp: ${timestamp} - today: ${today}`);
+                                    console.log(`timestamp > today? ${timestamp > today}`);
+                                    console.log(`startScheduleId: ${startScheduleId} needs to be deleted`);
+                                    console.log(`current schedule: ${schedule_config['_id']} needs to be deleted!`);
+                                    self.deleteSchedule(startScheduleId);
+                                    self.deleteSchedule(schedule_config['_id']);
+
+                                    continueWithBuild = false;
+                                }
+                            }
+                            if(continueWithBuild){
+                                let jobArgs = startScheduleId ? 
+                                    [self.deleteSchedule, self, startScheduleId.toString()] :
+                                    [activateRelayFn, context, device_gpio, desired_state];
+
+                                let job = new JobBuilder()
+                                    .withSchedule(schedule_config['schedule'])
+                                    .withRelational(schedule_config['relational'])
+                                    .withDevice(schedule_config['device'])
+                                    .withJobFunction(...jobArgs)
+                                    .build()
+
+                                self.scheduleObj[schedule_config['_id']] = job;
+                                console.log(`next invocation - ${self.getDateOfNextInvocation(schedule_config['_id'])}`);
+                            }
+                            
+                        });
+                        console.log(`Done processing schedules: ${JSON.stringify(self.scheduleObj)}`);
+                       
+                        self.startActiveSchedules(activateRelayFn, context);
+                    }).catch(function(err){
+                        console.log(`Error caught: ${err}`);
+                    })
+                   
+                }catch(err){
+                    console.log(`Error caught: ${err}`);
                 }
-                console.log(`Size of array Before removal: ${Object.keys(self.scheduleObj).length}`);
-                delete self.scheduleObj[schedule_id];
-                console.log(`Size of array after removal: ${Object.keys(self.scheduleObj).length}`);
             }
         });
-    },
-    deleteStartAndEndSchedules(startScheduleId){
-        let self = this,
-            job  = self.getScheduleJobById(startScheduleId);
-
-        if(job){
-            let endScheduleId = job.endScheduleId;
-            self.deleteSchedule(endScheduleId);
-            self.deleteSchedule(startScheduleId);
-        }
     },
     getScheduleSet: function(schedule_id){
         let self = this,
@@ -717,6 +533,184 @@ let scheduleHelpers = {
             console.log(`Unknown schedule found`);
         }
         return schedules;
+    },
+    isScheduleConflicting: function(schedule_config){
+        let self           = this,
+            conflictMsg    = "",
+            buildTimeStamp = (schedule) => { return new Date((new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']));},
+            timestamp      = buildTimeStamp(schedule_config['schedule']);
+    
+        console.log("in isScheduleConflicting");
+        let handleScheduleConflictsMsg = function(isScheduleConflicting, schedule_id){
+            // is there a schedule conflict?
+            if(isScheduleConflicting){
+                console.log("In handleScheduleConflictsMsg");
+                    
+                let sched_on_job     = self.scheduleObj[schedule_id],
+                    offScheduleId    = sched_on_job.schedule_config['relational']['nextScheduleId'],
+                    on_timestamp     = sched_on_job.timestamp;
+                
+                if(self.doesScheduleExist(offScheduleId)){
+                    let off_timestamp       = self.scheduleObj[offScheduleId].timestamp,
+                        timestamp_options   = { hour: 'numeric', minute: 'numeric', hour12: true },
+                        fixed_on_timestamp  = on_timestamp.toLocaleString('en-US', timestamp_options),
+                        fixed_timestamp     = timestamp.toLocaleString('en-US', timestamp_options),
+                        fixed_off_timestamp = off_timestamp.toLocaleString('en-US', timestamp_options);
+                        
+                    return `New Schedule timestamp - ${fixed_timestamp} Conflicts with ON - ${fixed_on_timestamp} and OFF - ${fixed_off_timestamp}`;
+                }
+            }else // No Schedule Conflict Found
+                return "";
+            
+        }
+        
+        let schedule_ids = self.findSameDaySchedulesAndRetIds(schedule_config);
+        console.log(`same day schedule ids: ${schedule_ids}`);
+        schedule_ids.forEach(function(schedule_id){
+            if(self.doesScheduleExist(schedule_id)){
+                let isScheduleConflicting = self.scheduleIsActive(schedule_id, timestamp);
+
+                conflictMsg += handleScheduleConflictsMsg(isScheduleConflicting, schedule_id);
+            }
+        });
+        return conflictMsg;
+    },
+    isScheduleOverlapping: function(on_schedule_config, off_schedule_config){
+        let self              = this,
+            conflictMsg       = "",
+            buildTimeStamp    = (schedule) => { return new Date((new Date).setHours(schedule['hour'], schedule['minute'], schedule['second']));},
+            new_on_timestamp  = buildTimeStamp(on_schedule_config['schedule']),
+            new_off_timestamp = buildTimeStamp(off_schedule_config['schedule']),
+            schedule_ids      = self.findSameDaySchedulesAndRetIds(on_schedule_config);
+        
+        schedule_ids.forEach(function(schedule_id){
+            let sched_on_job          = self.scheduleObj[schedule_id],
+                sched_off_mongo_id    = sched_on_job.nextScheduleId,
+                sched_on_timestamp    = sched_on_job.timestamp;
+
+             if(self.doesScheduleExist(sched_off_mongo_id)){
+                let sched_off_timestamp = self.scheduleObj[sched_off_mongo_id].timestamp;
+                if(new_on_timestamp <= sched_on_timestamp && new_off_timestamp >= sched_off_timestamp)
+                    conflictMsg += `Schedule is overlapping. `;
+            }
+            
+        });
+        console.log(`conflictMsg: ${conflictMsg}`);
+        return conflictMsg;
+    },
+    resumeSchedule: function(schedule_id, fn, context){
+        let self  = this,
+            today = new Date(w),
+            job   = self.getScheduleJobById(schedule_id);
+            
+        if(!job){
+            console.log("Schedule config is NULL");
+        }else{
+            let restartSchedule = job.rescheduleJob;
+            // did the job not get registered as new again and restart?
+            if(!restartSchedule){ 
+                let jobArgs = [fn, context, job.gpio, job.desired_state],
+                    job     = new JobBuilder()
+                    .withSchedule(job.schedule)
+                    .withRelational(job.relational)
+                    .withDevice(job.device)
+                    .withJobFunction(...jobArgs)
+                    .build()
+
+                self.scheduleObj[schedule_id] = job;
+            }
+            self.startActiveSchedules(activateRelayFn, context);
+        }
+        
+    },
+    startActiveSchedules: function(activateRelayFn, context){
+        let self  = this,
+            today = new Date();
+
+        for(const [schedule_id, job] of Object.entries(this.scheduleObj)){
+            console.log(`key: ${schedule_id} value: ${JSON.stringify(job)}`);
+            if(!job.nextScheduleId)
+                console.log("nextScheduleId is undefined");
+            else{
+                console.log(`nextScheduleId is not undefined`);
+                let isScheduleActive = self.scheduleIsActive(schedule_id, today);
+                if(isScheduleActive === true)
+                    activateRelayFn.call(context, job.gpio, job.desired_state);
+            }
+        }
+    },
+    // Finds the next_schedule_config that's associated with the prev_schedule_config
+    // and returns the boolean result of whether the 2nd argument, timestamp is greater than or equal to 
+    // the timestamp within the prev_schedule_config object and is also less tan the timestamp within 
+    // the next_schedule_config object
+    // Comparison does not use date, or day of week, but assumes these schedules are happening on the same day
+    scheduleIsActive: function(schedule_id, timestamp){
+        let self   = this,
+            result = false;
+        
+        let job = self.getScheduleJobById(schedule_id);
+
+        if(!job){
+            console.log(`job is null`);
+        }else{
+            let desired_state = job.desired_state,
+                onScheduleId  = job.prevScheduleId,
+                offScheduleId = job.nextScheduleId;
+             console.log(`in scheduleIsActive`);
+            // schedules could be loaded out of order. For example, we could be looking at the schedule that turns the outlet off. we need to first look at the schedule that turns the outlet on
+            if(desired_state == true && offScheduleId){ // 'on' schedule
+                console.log("Processing 'on' schedule");
+                if(offScheduleId in this.scheduleObj){
+                    let activeToday = false;
+                    // checking date, month, and year is not needed. getSchedules fn will remove these 3 attributes
+                    // if that schedule's timestamp is past today's date. This is added to create a valid node-schedule job,
+                    // since you cannot create a node-schedule job within the past
+                    if(job.dayOfWeek && job.dayOfWeek.length){
+                        let numDay = datebased_timestamp.getDay();
+                        if(job.dayOfWeek.includes(numDay))
+                            activeToday = true;
+                    }else{ // regular everyday schedule detected
+                        activeToday = true;
+                    }
+                    if(activeToday){
+                        let on_schedule_timestamp  = self.scheduleObj[schedule_id].timestamp,
+                            off_schedule_timestamp = self.scheduleObj[offScheduleId].timestamp;
+                        console.log(`on_schedule_timestamp: ${on_schedule_timestamp}`)
+                        console.log(`off_schedule_timestamp: ${off_schedule_timestamp}`);
+                        if(off_schedule_timestamp < on_schedule_timestamp)
+                            off_schedule_timestamp.setDate(off_schedule_timestamp.getDate() + 1);
+
+                        if(timestamp >= on_schedule_timestamp && timestamp < off_schedule_timestamp)
+                            result = true;
+                    }else{
+                        console.log(`dayOfWeek does not activate today`);
+                    }
+                }else{ // schedule not found
+                    console.log("Off Schedule not found!!");
+                }
+                
+            }else{
+                console.log(`off schedule - desired_state: ${desired_state} - typeof - ${typeof desired_state}`);
+                console.log(`onScheduleId - ${onScheduleId}`);
+                console.log(`offScheduleId - ${offScheduleId}`);
+            }
+
+        }
+        return result;
+    },
+    updateScheduleRelationship: function(schedule_id, updated_schedule_config){
+        let self = this;
+
+        Scheduler.findByIdAndUpdate(schedule_id, {$set: updated_schedule_config}, (err, schedule) => {
+            if(err){
+                console.log(err)
+            }else{
+                console.log("successfully updated schedule");
+                console.log(`Schedule before: ${JSON.stringify(self.scheduleObj[schedule_id].schedule_config)}`);
+                self.scheduleObj[schedule_id].relational = updated_schedule_config['relational'];
+                console.log(`Schedule After: ${JSON.stringify(self.scheduleObj[schedule_id].schedule_config)}`);
+            }
+        });
     }
 }
 module.exports = scheduleHelpers;

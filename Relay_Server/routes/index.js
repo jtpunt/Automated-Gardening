@@ -83,18 +83,17 @@ router.delete('/device/:device_id', function(req, res) {
         }
     });
 });
-// returns all schedules
-router.get('/schedule', 
-    scheduleController.getSchedulesReq(scheduleHelper)
-);
-// add a new chedule
-router.post('/schedule', 
-    middleware.verifyAdminAccount, 
-    scheduleMiddleware.checkScheduleInputs,
-    scheduleMiddleware.validateScheduleInputs,
-    outletMiddleware.isGpioConfigured(outletHelper),
-    scheduleController.createSchedulesReq(scheduleHelper, outletHelper)
-);
+router.route(`/schedule`)
+    // returns all schedules
+    .get(scheduleController.getSchedulesReq(scheduleHelper))
+    // add a new chedule
+    .post(
+        middleware.verifyAdminAccount, 
+        scheduleMiddleware.checkScheduleInputs,
+        scheduleMiddleware.validateScheduleInputs,
+        outletMiddleware.isGpioConfigured(outletHelper),
+        scheduleController.createSchedulesReq(scheduleHelper, outletHelper)
+    );
 
 router.route(`/schedule/:schedule_id`)
     .get(
