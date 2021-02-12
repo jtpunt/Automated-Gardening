@@ -402,9 +402,29 @@ var scheduleMethods = {
             res.status(200).send(schedule);
         }
     },
+    getScheduleConfigReq(scheduleHelper){
+        return function(req, res, next){
+            let schedule_id     = req.params.schedule_id,
+                schedule_config = scheduleHelper.getScheduleConfigById(schedule_id);
+            res.status(200).send(schedule_config);
+        }
+    }
     getSchedulesReq(scheduleHelper){
         return function(req, res, next){
             res.status(200).send(scheduleHelper.scheduleObj);
+        }
+    },
+    resumeScheduleReq: (scheduleHelper, outletHelper) => {
+        return function(req, res, next){
+            var schedule_id = req.params.schedule_id;
+
+            scheduleHelper.resumeSchedule(schedule_id, outletHelper.activateRelayByGpio, outletHelper);
+            let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
+            if(nextInvocationDate === undefined)
+                res.status(400).send(`Schedule id ${schedule_id} did not successfully resume`);
+            else
+                res.status(200).send(`Schedule id - ${schedule_id} has successfully resumed on ${nextInvocationDate}`);
+            
         }
     },
     updateScheduleReq: (scheduleHelper, outletHelper) => {
@@ -425,19 +445,6 @@ var scheduleMethods = {
             scheduleHelper.editSchedule(schedule_id, my_schedule, outletHelper.activateRelayByGpio, outletHelper);
             console.log("Successfully Updated!");
             res.status(200).send("Successfully updated!");
-            
-        }
-    },
-    resumeScheduleReq: (scheduleHelper, outletHelper) => {
-        return function(req, res, next){
-            var schedule_id = req.params.schedule_id;
-
-            scheduleHelper.resumeSchedule(schedule_id, outletHelper.activateRelayByGpio, outletHelper);
-            let nextInvocationDate = scheduleHelper.getDateOfNextInvocation(schedule_id);
-            if(nextInvocationDate === undefined)
-                res.status(400).send(`Schedule id ${schedule_id} did not successfully resume`);
-            else
-                res.status(200).send(`Schedule id - ${schedule_id} has successfully resumed on ${nextInvocationDate}`);
             
         }
     }

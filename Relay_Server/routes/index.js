@@ -100,7 +100,7 @@ router.route(`/schedule/:schedule_id`)
     .get(
         // middleware.verifyAdminAccount,
         scheduleMiddleware.doesScheduleExist(scheduleHelper),
-        scheduleController.getScheduleReq(scheduleHelper)
+        scheduleController.getScheduleConfigReq(scheduleHelper)
     )
     .put(
         middleware.verifyAdminAccount,  
