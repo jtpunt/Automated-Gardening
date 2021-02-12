@@ -29,60 +29,6 @@ try{
     console.log(err);
     // could probably throw an error here, catch it in the server.js file for further error handling
 }
-
-router.get('/device', function(req, res) {
-    Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-        if(err){
-            console.log(err);
-        }else{
-            
-        }
-    });
-});
-router.post('/device', function(req, res) {
-    Device.find({local_ip: localIP, deviceType: "Relay Server"}, (err, myDevice) => {
-        if(err){
-            console.log(err);
-        }else{
-            
-        }
-    });
-});
-router.get('/device/:device_id', function(req, res) {
-    Device.findById(req.param.device_id, (err, myDevice) => {
-        if(err){
-            console.log(err);
-        }else{
-            
-        }
-    });
-});
-router.patch('/device/:device_id', function(req, res) {
-    var newSchedule = { 
-        local_ip: req.body.local_ip, 
-        gpio: req.body.gpio,
-        minute: req.body.minute,
-        hour: req.body.hour,
-    };
-    Device.findByIdAndUpdate(req.param.device_id, {$set: updatedGpios}, (err, myDevice) => {
-        if(err){
-            console.log(err);
-        }else{
-            outlets.forEach(function(outlet) {
-                
-            });
-        }
-    });
-});
-router.delete('/device/:device_id', function(req, res) {
-    Device.findByIdAndDelete(req.param.device_id, (err, myDevice) => {
-        if(err){
-            console.log(err);
-        }else{
-            
-        }
-    });
-});
 router.route(`/schedule`)
     // returns all schedules
     .get(scheduleController.getSchedulesReq(scheduleHelper))
