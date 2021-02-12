@@ -402,16 +402,16 @@ var scheduleMethods = {
             res.status(200).send(schedule);
         }
     },
+    getSchedulesReq(scheduleHelper){
+        return function(req, res, next){
+            res.status(200).send(scheduleHelper.scheduleObj);
+        }
+    },
     getScheduleConfigReq(scheduleHelper){
         return function(req, res, next){
             let schedule_id     = req.params.schedule_id,
                 schedule_config = scheduleHelper.getScheduleConfigById(schedule_id);
             res.status(200).send(schedule_config);
-        }
-    }
-    getSchedulesReq(scheduleHelper){
-        return function(req, res, next){
-            res.status(200).send(scheduleHelper.scheduleObj);
         }
     },
     resumeScheduleReq: (scheduleHelper, outletHelper) => {
