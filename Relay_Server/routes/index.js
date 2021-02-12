@@ -1,8 +1,3 @@
-//const Gpio = require('onoff').Gpio; //include onoff to interact with the GPIO
-//var schedule      = require('node-schedule');
-//var Scheduler     = require("../models/scheduler");
-// Living room lights use 'out' with an initial state of 0, otherwise, set to 'high' with an initial state of 1
-
 var express            = require("express"),
     schedule           = require('node-schedule'),
     Device             = require("../models/device"),
@@ -22,7 +17,6 @@ var express            = require("express"),
 // })
 try{
     // outletController.adjustForIPChange();
-    // outletController.getOutletSetup();
     outletHelper.getOutletSetup();
     scheduleHelper.getSchedules(outletHelper.activateRelayByGpio, outletHelper);
 }catch(err){
