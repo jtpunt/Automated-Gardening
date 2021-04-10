@@ -4,7 +4,6 @@ var express        = require("express"),
     mongoose       = require("mongoose"),
     passport       = require("passport"),
     LocalStrategy  = require("passport-local"),
-    ejs            = require("ejs"),
     methodOverride = require("method-override"),
     Sensor         = require("./models/sensor"),
     Chart          = require("./models/chart"),
@@ -51,7 +50,6 @@ mongoose.connect(connStr, options, function(err){
 // seedDB();
 
 app.set('view engine', 'ejs');
-// app.engine('ejs', require('ejs').__express);
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
