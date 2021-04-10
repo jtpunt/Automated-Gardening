@@ -53,7 +53,7 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
-app.use('/static', express.static('public')); // static directory is going to be our directory called public
+app.use('/static', express.static(__dirname + '/public')); // static directory is going to be our directory called public
 
 app.use(methodOverride("_method")); // _method is what we are telling it to look for
 app.use(flash()); // must be used before passport configuration, flash also require
