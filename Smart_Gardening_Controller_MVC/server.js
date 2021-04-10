@@ -50,7 +50,7 @@ mongoose.connect(connStr, options, function(err){
 // seedDB();
 
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+app.set('views', '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
 app.use('/static', express.static('public')); // static directory is going to be our directory called public
