@@ -50,6 +50,7 @@ mongoose.connect(connStr, options, function(err){
 // seedDB();
 
 app.set('view engine', 'ejs');
+app.engine('ejs', require('ejs').__express);
 app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({extended: true}));
 // app.use(express.static(__dirname + "/public"));
